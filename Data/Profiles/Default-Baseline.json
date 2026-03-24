@@ -1,0 +1,82 @@
+{
+  "profileId": "default",
+  "profileName": "Default Baseline",
+  "description": "Standard security baseline suitable for general organizations. Mirrors the hardcoded defaults in PSGuerrilla core modules.",
+  "version": "2.1.0",
+
+  "threatScoring": {
+    "weights": {
+      "knownAttackerIp": 100,
+      "reauthFromCloud": 60,
+      "impossibleTravel": 70,
+      "riskyAction": 50,
+      "riskyActionFromCloud": 30,
+      "concurrentSessions": 45,
+      "suspiciousCountry": 40,
+      "bruteForceAttempt": 20,
+      "bruteForceSuccess": 55,
+      "userAgentAnomaly": 30,
+      "oauthFromCloud": 25,
+      "afterHoursLogin": 15,
+      "cloudLoginsOnly": 15,
+      "newDevice": 10,
+      "newDeviceFromCloud": 35,
+      "adminPrivilegeEscalation": 60,
+      "emailForwardingRule": 45,
+      "driveExternalSharing": 25,
+      "bulkFileDownload": 40,
+      "highRiskOAuthApp": 55,
+      "userSuspension": 20,
+      "twoSvDisablement": 50,
+      "domainWideDelegation": 80,
+      "workspaceSettingChange": 35
+    },
+    "thresholds": {
+      "critical": 100,
+      "high": 60,
+      "medium": 30,
+      "low": 1
+    }
+  },
+
+  "auditScoring": {
+    "severityWeights": {
+      "Critical": 10,
+      "High": 6,
+      "Medium": 3,
+      "Low": 1,
+      "Info": 0
+    },
+    "warnMultiplier": 0.5,
+    "failMultiplier": 1.0
+  },
+
+  "guerrillaScore": {
+    "componentWeights": {
+      "posture": 0.40,
+      "threats": 0.30,
+      "coverage": 0.15,
+      "trend": 0.15
+    },
+    "labels": {
+      "fortress": { "min": 90, "label": "FORTRESS", "color": "Sage" },
+      "defendedPosition": { "min": 75, "label": "DEFENDED POSITION", "color": "Sage" },
+      "contestedGround": { "min": 60, "label": "CONTESTED GROUND", "color": "Gold" },
+      "exposedFlank": { "min": 40, "label": "EXPOSED FLANK", "color": "Amber" },
+      "underSiege": { "min": 20, "label": "UNDER SIEGE", "color": "DeepOrange" },
+      "overrun": { "min": 0, "label": "OVERRUN", "color": "DarkRed" }
+    }
+  },
+
+  "surveillance": {
+    "bruteForceThreshold": 5,
+    "bruteForceWindowMinutes": 15,
+    "cloudLoginMinCount": 3,
+    "afterHoursStart": 20,
+    "afterHoursEnd": 6,
+    "businessDays": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    "lookbackDays": 30
+  },
+
+  "theaters": ["Fortification", "Reconnaissance", "Surveillance", "Watchtower"]
+}

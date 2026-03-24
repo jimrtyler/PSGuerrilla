@@ -1,0 +1,176 @@
+{
+  "categoryId": "eidtnt",
+  "categoryName": "Entra ID Tenant Configuration",
+  "categoryDescription": "Checks related to tenant-wide settings, user and guest access configuration, external collaboration policies, cross-tenant access, security defaults, licensing, administrative units, domain configuration, diagnostic logging, and notification settings",
+  "checks": [
+    {
+      "id": "EIDTNT-001",
+      "name": "Tenant-Wide Settings Export",
+      "description": "A comprehensive export of all tenant-wide configuration settings establishes a known-good baseline for change detection and disaster recovery. Without a documented baseline, it is impossible to determine whether current settings have drifted from their intended state or whether an attacker has modified tenant configuration to weaken security controls. This baseline should be captured at initial configuration and updated whenever authorized changes are made.",
+      "severity": "Info",
+      "subcategory": "Tenant Baseline",
+      "recommendedValue": "Complete tenant configuration baseline exported and stored in a version-controlled repository with regular snapshots",
+      "remediationSteps": "Export all tenant-wide settings using Microsoft Graph API including authorization policies, authentication method policies, consent policies, cross-tenant access settings, and directory settings. Store the export in a secure, version-controlled repository and establish a scheduled process to capture periodic snapshots. Compare current settings against the baseline regularly to detect unauthorized or unintended configuration drift.",
+      "compliance": {
+        "nistSp80053": ["CM-2"]
+      }
+    },
+    {
+      "id": "EIDTNT-002",
+      "name": "User Settings Review",
+      "description": "Tenant-wide user settings control whether standard users can register applications, consent to applications accessing company data, create security groups, and read other users' directory information. Overly permissive user settings enable shadow IT, unauthorized application integrations, and group sprawl that expand the attack surface. These settings should be restricted to prevent standard users from performing actions that should require administrative oversight.",
+      "severity": "High",
+      "subcategory": "User Settings",
+      "recommendedValue": "Users cannot register applications, user consent restricted to verified publishers, group creation limited to authorized users",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/UserSettings",
+      "remediationSteps": "Navigate to Entra ID > User settings and review each setting. Disable 'Users can register applications' to prevent uncontrolled app registration sprawl. Restrict user consent settings to allow consent only for apps from verified publishers with low-risk permissions. Limit who can create Microsoft 365 groups and security groups to designated administrators or group owners.",
+      "compliance": {
+        "nistSp80053": ["AC-6"],
+        "cisM365": ["1.3"]
+      }
+    },
+    {
+      "id": "EIDTNT-003",
+      "name": "Guest User Access Restrictions",
+      "description": "Guest users are external identities invited to collaborate with the organization. By default, guest users may have overly broad visibility into the directory, including the ability to enumerate users, groups, and applications. Unrestricted guest access allows external parties to map the organization's identity structure, identify high-value targets, and gather intelligence for subsequent attacks. Guest permissions should be restricted to the minimum required for collaboration.",
+      "severity": "High",
+      "subcategory": "Guest Access",
+      "recommendedValue": "Guest user access restricted to properties and memberships of their own directory objects only",
+      "remediationSteps": "Navigate to Entra ID > External Identities > External collaboration settings and review the guest user access restrictions. Set guest user access to the most restrictive option that limits guests to properties and memberships of their own directory objects. Verify that guests cannot enumerate the full user list, group memberships, or application registrations by testing with a guest account.",
+      "compliance": {
+        "nistSp80053": ["AC-14"],
+        "mitreAttack": ["T1078.004"],
+        "cisM365": ["1.3.1"]
+      }
+    },
+    {
+      "id": "EIDTNT-004",
+      "name": "Guest Invitation Restrictions",
+      "description": "Guest invitation settings control who can invite external users to the tenant, ranging from allowing any user to invite guests to restricting invitations to administrators only. Permissive invitation settings allow standard users to invite external parties without oversight, potentially introducing unvetted external identities with access to organizational resources. Invitation restrictions should align with the organization's external collaboration governance requirements.",
+      "severity": "Medium",
+      "subcategory": "Guest Access",
+      "recommendedValue": "Guest invitations restricted to users with specific admin roles or guest inviter role, with no self-service guest access enabled",
+      "remediationSteps": "Navigate to Entra ID > External Identities > External collaboration settings and review the guest invite settings. Restrict guest invitations to users assigned the Guest Inviter role or specific administrator roles rather than allowing all members to invite. Disable the option for guests to invite other guests to prevent uncontrolled invitation chains and establish an approval workflow for guest invitation requests.",
+      "compliance": {
+        "nistSp80053": ["AC-14"],
+        "cisM365": ["1.3.1"]
+      }
+    },
+    {
+      "id": "EIDTNT-005",
+      "name": "External Collaboration Settings",
+      "description": "External collaboration settings define the scope of domains from which guest users can be invited and which external organizations can collaborate with the tenant. Without domain restrictions, guests can be invited from any external organization, including competitors, sanctioned entities, or attacker-controlled tenants. Domain allowlists or blocklists should be configured to limit collaboration to approved partner organizations and prevent unauthorized external access.",
+      "severity": "High",
+      "subcategory": "External Collaboration",
+      "recommendedValue": "External collaboration restricted to specific allowed domains with a deny list for known high-risk domains",
+      "remediationSteps": "Navigate to Entra ID > External Identities > External collaboration settings and configure collaboration restrictions. Implement either an allowlist of approved partner domains or a blocklist of known high-risk and competitor domains based on your organization's collaboration model. Review and update the domain list quarterly to reflect changes in partner relationships and ensure that collaboration restrictions align with data classification and information sharing policies.",
+      "compliance": {
+        "nistSp80053": ["AC-20"],
+        "cisM365": ["1.3.1"]
+      }
+    },
+    {
+      "id": "EIDTNT-006",
+      "name": "Azure B2B Cross-Tenant Access Policies",
+      "description": "Cross-tenant access policies provide granular control over how users authenticate and access resources when collaborating with external Entra ID tenants. Default cross-tenant access settings may allow broad inbound and outbound access that does not align with organizational security requirements. Properly configured cross-tenant access policies enable trusted B2B collaboration while preventing unauthorized access from untrusted tenants and controlling which users can access external resources.",
+      "severity": "High",
+      "subcategory": "Cross-Tenant",
+      "recommendedValue": "Default cross-tenant access policy set to block with explicit allow rules for approved partner tenants only",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/CompanyRelationshipsMenuBlade/~/CrossTenantAccessSettings",
+      "remediationSteps": "Navigate to Entra ID > External Identities > Cross-tenant access settings and review the default inbound and outbound access settings. Configure the default policy to restrict both inbound and outbound access, then create organization-specific policies for approved partner tenants with appropriate access controls. Enable trust settings for partner tenants to accept their MFA claims and device compliance where appropriate, reducing authentication friction for trusted collaborations.",
+      "compliance": {
+        "nistSp80053": ["AC-20"],
+        "cisM365": ["1.3.1"]
+      }
+    },
+    {
+      "id": "EIDTNT-007",
+      "name": "Security Defaults Enabled/Disabled Status",
+      "description": "Security defaults provide a baseline set of identity security mechanisms including MFA registration requirements, MFA challenges for administrators, and blocking legacy authentication. Organizations using Conditional Access policies should have security defaults disabled to avoid conflicts, but tenants without Conditional Access that also have security defaults disabled have no baseline protection against common identity attacks. This check verifies that either security defaults or equivalent Conditional Access policies are actively protecting the tenant.",
+      "severity": "Critical",
+      "subcategory": "Security Defaults",
+      "recommendedValue": "Security defaults enabled for tenants without Conditional Access. For tenants with Conditional Access, security defaults disabled with equivalent or stronger CA policies in place",
+      "remediationSteps": "Check whether security defaults are enabled in Entra ID > Properties > Manage security defaults. If security defaults are disabled, verify that Conditional Access policies provide equivalent or stronger protection including MFA for all users, legacy authentication blocking, and MFA for administrative actions. If neither security defaults nor equivalent Conditional Access policies are in place, enable security defaults immediately as a baseline protection measure.",
+      "compliance": {
+        "nistSp80053": ["IA-2", "AC-2"],
+        "mitreAttack": ["T1078"],
+        "cisM365": ["1.1.1"]
+      }
+    },
+    {
+      "id": "EIDTNT-008",
+      "name": "License Inventory and Utilization",
+      "description": "A comprehensive inventory of assigned licenses and their utilization rates provides visibility into available security features and identifies potential gaps where licensed capabilities are not being used. Organizations may be paying for advanced security features such as Entra ID P2, Microsoft Defender for Identity, or Microsoft Sentinel that are not fully deployed or configured. Understanding the license landscape ensures all purchased security capabilities are activated and utilized.",
+      "severity": "Info",
+      "subcategory": "Licensing",
+      "recommendedValue": "All licenses inventoried with utilization tracking and all security-related licensed features fully deployed and configured",
+      "remediationSteps": "Review the license assignment summary in the Microsoft 365 admin center or Entra ID > Licenses > Overview. Identify security-relevant licenses such as Entra ID P1/P2, Microsoft Defender for Identity, and Microsoft 365 E5 Security. Verify that features included in each license are actively configured and deployed, and create a plan to activate any unused security capabilities that are already licensed.",
+      "compliance": {
+        "nistSp80053": ["CM-8"]
+      }
+    },
+    {
+      "id": "EIDTNT-009",
+      "name": "Administrative Unit Configuration",
+      "description": "Administrative units provide delegated administrative scope by grouping users, groups, and devices into logical containers with specific administrators assigned to manage only those objects. Without administrative units, delegated administrators may have broader access than intended, or administrative boundaries may not align with organizational structure. Properly configured administrative units enforce least-privilege delegation and prevent administrative overreach.",
+      "severity": "Info",
+      "subcategory": "Administrative Units",
+      "recommendedValue": "Administrative units configured to align with organizational delegation model with restricted management administrative units used for sensitive objects",
+      "remediationSteps": "Review existing administrative unit configuration in Entra ID > Roles and administrators > Administrative units. Evaluate whether the current structure aligns with your organizational delegation requirements and whether sensitive objects such as privileged accounts are protected by restricted management administrative units. Create or modify administrative units as needed to ensure administrators can only manage objects within their designated scope.",
+      "compliance": {
+        "nistSp80053": ["AC-2"]
+      }
+    },
+    {
+      "id": "EIDTNT-010",
+      "name": "Custom Domain Configuration",
+      "description": "Custom domains registered in the tenant define the email address and sign-in suffixes used by the organization. Unverified or unauthorized domains may indicate misconfiguration or an attacker attempting to establish a presence in the tenant. Each custom domain should be verified through DNS records and periodically reviewed to ensure all domains are still owned by the organization and that DNS verification records remain intact.",
+      "severity": "Info",
+      "subcategory": "Domain Configuration",
+      "recommendedValue": "All custom domains verified, actively managed, and with DNS verification records intact",
+      "remediationSteps": "Review all custom domains registered in Entra ID > Custom domain names and verify that each domain is still owned by the organization and that DNS verification records are properly configured. Remove any domains that are no longer in use or that cannot be verified as organization-owned. Ensure that domain DNS registrations are protected with registrar locks and that domain expiration dates are monitored to prevent unintentional domain loss.",
+      "compliance": {
+        "nistSp80053": ["CM-8"]
+      }
+    },
+    {
+      "id": "EIDTNT-011",
+      "name": "Diagnostic Settings for Audit and Sign-In Logs",
+      "description": "Entra ID generates audit logs and sign-in logs that are critical for security monitoring, incident investigation, and compliance reporting. Without diagnostic settings configured to export these logs to a durable storage location such as a Log Analytics workspace, Azure Storage account, or SIEM, logs are retained for only a limited period within Entra ID and may be unavailable during incident investigation. Attackers actively target logging configuration to disable or evade detection.",
+      "severity": "High",
+      "subcategory": "Logging",
+      "recommendedValue": "All Entra ID log categories (audit, sign-in, non-interactive sign-in, service principal sign-in, managed identity sign-in, provisioning) exported to a Log Analytics workspace or SIEM",
+      "remediationSteps": "Navigate to Entra ID > Monitoring > Diagnostic settings and create or verify a diagnostic setting that exports all log categories to a Log Analytics workspace, Azure Storage account, or Event Hub for SIEM ingestion. Ensure all available log categories are selected including audit logs, sign-in logs, non-interactive sign-in logs, service principal sign-in logs, managed identity sign-in logs, and provisioning logs. Verify that the destination storage has appropriate retention policies and access controls configured.",
+      "compliance": {
+        "nistSp80053": ["AU-2", "AU-3", "AU-6"],
+        "mitreAttack": ["T1562.008"],
+        "cisM365": ["3.1"]
+      }
+    },
+    {
+      "id": "EIDTNT-012",
+      "name": "Audit Log Retention Settings",
+      "description": "Audit log retention determines how long historical security events are available for investigation, compliance reporting, and forensic analysis. Insufficient retention periods may result in critical evidence being unavailable when investigating incidents that are discovered weeks or months after the initial compromise. Organizations should retain audit logs for at least 1 year to support incident response timelines and meet common regulatory requirements.",
+      "severity": "High",
+      "subcategory": "Logging",
+      "recommendedValue": "Audit logs retained for a minimum of 1 year in an immutable storage location with at least 90 days immediately queryable",
+      "remediationSteps": "Review the retention settings on the Log Analytics workspace, Azure Storage account, or SIEM destination where Entra ID logs are exported. Configure retention for at least 365 days for all Entra ID log categories to support incident investigation and compliance requirements. Ensure that at least 90 days of logs are immediately queryable without restore operations, and implement immutable storage or write-once policies to prevent tampering with historical log data.",
+      "compliance": {
+        "nistSp80053": ["AU-11"],
+        "cisM365": ["3.1"]
+      }
+    },
+    {
+      "id": "EIDTNT-013",
+      "name": "Notification Settings Audit",
+      "description": "Entra ID notification settings control who receives alerts for critical security events such as users at risk, weekly digest reports, and administrative notifications. Misconfigured notification settings may result in security alerts being sent to inactive mailboxes, former employees, or not being sent at all. Proper notification routing ensures that security-relevant events reach the appropriate personnel for timely investigation and response.",
+      "severity": "Medium",
+      "subcategory": "Notifications",
+      "recommendedValue": "All security notifications routed to active, monitored mailboxes belonging to current security operations personnel",
+      "remediationSteps": "Review notification settings across Entra ID including Identity Protection notification recipients, password reset notification settings, and technical notification contacts. Verify that all notification recipients are current employees with actively monitored mailboxes and update any references to former employees or inactive distribution lists. Configure notifications to be sent to a security operations distribution list rather than individual users to ensure continuity when personnel changes occur.",
+      "compliance": {
+        "nistSp80053": ["AU-5"]
+      }
+    }
+  ]
+}

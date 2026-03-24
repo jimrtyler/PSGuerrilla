@@ -1,0 +1,46 @@
+{
+  "categoryId": "m365audit",
+  "categoryName": "Unified Audit & Logging",
+  "categoryDescription": "Assesses the configuration and operational status of Microsoft 365 unified audit logging, retention policies, and search capabilities to ensure comprehensive activity tracking for security investigations, compliance, and incident response.",
+  "checks": [
+    {
+      "id": "M365AUDIT-001",
+      "name": "Unified Audit Log enabled",
+      "description": "The Microsoft 365 Unified Audit Log records user and administrator activities across Exchange Online, SharePoint Online, OneDrive, Azure AD, Microsoft Teams, and other services, providing the foundational data source for security investigations. If unified auditing is disabled, the organization loses visibility into critical activities such as mailbox access, file sharing, permission changes, and administrative operations. Disabling the audit log is a known adversary technique used to cover tracks after compromising a tenant.",
+      "severity": "Critical",
+      "subcategory": "Audit Configuration",
+      "recommendedValue": "Unified Audit Log enabled organization-wide with no per-user or per-mailbox overrides disabling auditing",
+      "remediationSteps": "Verify that unified audit logging is enabled by running Get-AdminAuditLogConfig and confirming that UnifiedAuditLogIngestionEnabled is set to True. If auditing is disabled, enable it immediately and investigate the audit history to determine when and by whom it was disabled, as this may indicate a security compromise. Set up a monitoring alert to detect any future attempts to disable the unified audit log and restrict the permissions required to modify audit log settings to a minimal set of trusted administrators.",
+      "compliance": {
+        "nistSp80053": ["AU-2", "AU-3"],
+        "mitreAttack": ["T1562.008"],
+        "cisM365": ["3.1.1"]
+      }
+    },
+    {
+      "id": "M365AUDIT-002",
+      "name": "Audit log retention policy",
+      "description": "By default, Microsoft 365 audit log records are retained for 180 days (or 90 days for standard licenses), which may be insufficient for detecting long-running attacks or meeting regulatory compliance requirements. Advanced persistent threats may operate within an environment for months before detection, and without adequate log retention, the forensic evidence needed for investigation may have already been purged. Extending audit log retention ensures that historical activity data is available when needed.",
+      "severity": "High",
+      "subcategory": "Audit Configuration",
+      "recommendedValue": "Audit log retention set to at least 365 days; priority activity types retained for longer periods; logs exported to external SIEM for long-term storage",
+      "remediationSteps": "Configure audit log retention policies in the Microsoft Purview compliance portal to retain all audit log records for at least 365 days, extending retention for high-priority record types such as MailItemsAccessed, FileAccessed, and UserLoggedIn. For organizations with Microsoft 365 E5 or equivalent licensing, configure 10-year retention policies for critical audit record types to support long-term forensic investigations. Implement log export to an external SIEM or log analytics platform such as Microsoft Sentinel for long-term storage and advanced correlation beyond the native retention period.",
+      "compliance": {
+        "nistSp80053": ["AU-11"],
+        "cisM365": ["3.1.2"]
+      }
+    },
+    {
+      "id": "M365AUDIT-003",
+      "name": "Audit log search capability",
+      "description": "The ability to effectively search and analyze audit log data is critical for security investigations, compliance audits, and incident response activities. Without verified search capability and trained personnel, audit log data that exists cannot be leveraged during time-sensitive security incidents. Organizations must ensure that audit log search tools are accessible, functional, and that response procedures include audit log analysis.",
+      "severity": "Medium",
+      "subcategory": "Audit Operations",
+      "recommendedValue": "Audit log search accessible to security team; search queries tested and documented for common investigation scenarios; SIEM integration operational",
+      "remediationSteps": "Verify that members of the security operations and incident response teams have the appropriate role assignments (Audit Logs or View-Only Audit Logs role) to search the unified audit log. Create and document standard search queries for common investigation scenarios such as mailbox compromise, unauthorized file access, and administrative privilege escalation. Test the audit log search functionality regularly and validate that SIEM integration is ingesting and indexing audit events correctly for automated detection and correlation.",
+      "compliance": {
+        "nistSp80053": ["AU-6"]
+      }
+    }
+  ]
+}

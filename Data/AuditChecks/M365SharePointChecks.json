@@ -1,0 +1,71 @@
+{
+  "categoryId": "m365spo",
+  "categoryName": "SharePoint & OneDrive Security",
+  "categoryDescription": "Assesses SharePoint Online and OneDrive for Business sharing, access control, and data protection configurations to prevent unauthorized data exposure and ensure secure collaboration with internal and external users.",
+  "checks": [
+    {
+      "id": "M365SPO-001",
+      "name": "External sharing settings",
+      "description": "SharePoint Online external sharing settings control whether and how content can be shared with users outside the organization. Overly permissive sharing settings such as allowing anonymous sharing links can lead to uncontrolled data exposure and make it impossible to track who has accessed corporate content. Restricting external sharing to authenticated guests with verified identities is essential for maintaining data governance.",
+      "severity": "High",
+      "subcategory": "Sharing Controls",
+      "recommendedValue": "External sharing limited to existing guests or new and existing guests with authentication required; anonymous sharing links disabled",
+      "remediationSteps": "Navigate to the SharePoint admin center sharing settings and configure the organization-level sharing to 'New and existing guests' or 'Existing guests only' based on your collaboration requirements. Disable anonymous access links (Anyone links) to ensure all external access requires authentication and can be tracked. Review site-level sharing overrides to ensure no individual sites have more permissive sharing settings than the organizational default.",
+      "compliance": {
+        "nistSp80053": ["AC-21"],
+        "cisM365": ["7.2.1"]
+      }
+    },
+    {
+      "id": "M365SPO-002",
+      "name": "Guest access expiration",
+      "description": "Guest access to SharePoint and OneDrive content without an expiration policy leads to perpetual external access that is rarely reviewed or revoked. Former partners, vendors, and collaborators may retain access to sensitive corporate content long after the business relationship has ended. Configuring automatic guest access expiration ensures that external sharing is time-limited and requires periodic re-authorization.",
+      "severity": "Medium",
+      "subcategory": "Sharing Controls",
+      "recommendedValue": "Guest access expiration set to 30-90 days; sharing links expire within 30 days",
+      "remediationSteps": "Configure the guest access expiration policy in the SharePoint admin center to automatically expire guest permissions after 30 to 90 days based on organizational data sensitivity requirements. Set sharing link expiration to a maximum of 30 days for external sharing links to prevent long-lived access tokens. Implement a recurring guest access review process to audit active external sharing and remove access that is no longer needed.",
+      "compliance": {
+        "nistSp80053": ["AC-2(3)"],
+        "cisM365": ["7.2.3"]
+      }
+    },
+    {
+      "id": "M365SPO-003",
+      "name": "Default sharing link type",
+      "description": "The default sharing link type determines the initial permission level when users create sharing links, and a permissive default increases the likelihood of accidental oversharing. If the default is set to 'Anyone' or 'Organization-wide,' users may inadvertently share sensitive documents with a broader audience than intended. Setting the default to 'Specific people' ensures users make a conscious choice about who receives access to shared content.",
+      "severity": "Medium",
+      "subcategory": "Sharing Controls",
+      "recommendedValue": "Default sharing link type set to 'Specific people' with 'View' permission level",
+      "remediationSteps": "Set the default sharing link type to 'Specific people' in the SharePoint admin center to require users to explicitly specify recipients when sharing. Configure the default link permission to 'View' rather than 'Edit' to enforce a least-privilege approach to shared content. Educate users on the differences between sharing link types and the importance of selecting the most restrictive link type appropriate for their sharing scenario.",
+      "compliance": {
+        "nistSp80053": ["AC-3"],
+        "cisM365": ["7.2.2"]
+      }
+    },
+    {
+      "id": "M365SPO-004",
+      "name": "Site creation restrictions",
+      "description": "Unrestricted site creation in SharePoint Online allows any user to create new sites, teams, and associated resources without governance oversight. Uncontrolled site proliferation leads to inconsistent security settings, ungoverned data repositories, and difficulty enforcing classification and retention policies. Restricting site creation to authorized personnel or requiring an approval workflow ensures proper governance from the point of creation.",
+      "severity": "Medium",
+      "subcategory": "Governance",
+      "recommendedValue": "Site creation restricted to authorized administrators or governed through an approval process; Microsoft 365 group creation restricted",
+      "remediationSteps": "Restrict self-service site creation in the SharePoint admin center by disabling the ability for users to create new sites directly. Implement a site provisioning request process that routes creation requests through an approval workflow ensuring appropriate classification, sharing settings, and ownership are established. If self-service creation must be allowed, configure default sensitivity labels and sharing policies that are automatically applied to newly created sites.",
+      "compliance": {
+        "nistSp80053": ["CM-6"],
+        "cisM365": ["7.2.4"]
+      }
+    },
+    {
+      "id": "M365SPO-005",
+      "name": "DLP policy configuration",
+      "description": "Data Loss Prevention policies in SharePoint Online and OneDrive detect and protect sensitive information such as personally identifiable information, financial data, and health records from being shared inappropriately. Without DLP policies, users can inadvertently share documents containing sensitive data with external users or through unmonitored channels. DLP policies provide automated detection, user notification, and blocking of sensitive data exposure.",
+      "severity": "High",
+      "subcategory": "Data Protection",
+      "recommendedValue": "DLP policies configured for all regulated data types with user notifications and sharing blocks for external sharing of sensitive content",
+      "remediationSteps": "Create DLP policies targeting SharePoint Online and OneDrive locations that detect sensitive information types relevant to your regulatory requirements such as PII, PCI, or HIPAA data. Configure policy rules to display user notifications with guidance on proper handling when sensitive content is detected, and block external sharing of documents containing high-sensitivity data. Enable incident reports to notify the compliance team of policy matches and review the DLP activity reports to tune policy accuracy and reduce false positives.",
+      "compliance": {
+        "nistSp80053": ["AC-4", "SC-7"]
+      }
+    }
+  ]
+}

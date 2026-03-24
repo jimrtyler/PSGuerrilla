@@ -1,0 +1,165 @@
+{
+  "categoryId": "adkerb",
+  "categoryName": "AD Kerberos Security",
+  "categoryDescription": "Checks related to Kerberos authentication security including Kerberoasting, AS-REP roasting, delegation abuse, and encryption configuration",
+  "checks": [
+    {
+      "id": "ADKERB-001",
+      "name": "Kerberoastable Accounts",
+      "description": "User accounts with Service Principal Names (SPNs) are vulnerable to Kerberoasting, where any authenticated domain user can request a service ticket encrypted with the account's password hash and attempt offline cracking. This attack requires no special privileges and is difficult to detect. Each SPN-bearing user account represents a potential credential exposure vector",
+      "severity": "High",
+      "subcategory": "SPN Security",
+      "recommendedValue": "Minimal user accounts with SPNs. All Kerberoastable accounts identified, documented with business justification, and protected with 25+ character passwords or migrated to gMSA",
+      "remediationSteps": "Enumerate Kerberoastable accounts using Get-ADUser -Filter {ServicePrincipalName -ne '$null'} -Properties ServicePrincipalName. For each account: (1) evaluate if the SPN is still needed, (2) remove unnecessary SPNs, (3) migrate to Group Managed Service Accounts where possible, (4) for remaining accounts ensure passwords are 25+ characters and rotated regularly. Monitor for Kerberos TGS requests targeting sensitive accounts via Event ID 4769",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)"],
+        "mitreAttack": ["T1558.003"],
+        "anssi": ["R36"],
+        "cisAd": ["7.1.1"]
+      }
+    },
+    {
+      "id": "ADKERB-002",
+      "name": "Kerberoastable with Weak Encryption",
+      "description": "SPN-bearing user accounts configured to use RC4 or DES encryption are significantly easier to crack via Kerberoasting than those using AES. RC4 (ARCFOUR-HMAC-MD5) tickets can be cracked orders of magnitude faster than AES tickets on modern GPU hardware. Accounts explicitly configured with weak encryption types or lacking AES keys represent the highest-priority Kerberoasting targets",
+      "severity": "Critical",
+      "subcategory": "SPN Security",
+      "recommendedValue": "All SPN-bearing accounts support AES256 encryption. No accounts restricted to RC4 or DES encryption types. msDS-SupportedEncryptionTypes includes AES flags on all service accounts",
+      "remediationSteps": "Query SPN-bearing user accounts and check their msDS-SupportedEncryptionTypes attribute. Accounts with value 0 (not set) default to RC4. Accounts with only RC4 (0x4) or DES (0x1, 0x2, 0x3) flags are vulnerable. Rotate passwords on all affected accounts after enabling AES support in the domain to generate AES keys. Set msDS-SupportedEncryptionTypes to include AES128 (0x8) and AES256 (0x10) flags",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)", "SC-12"],
+        "mitreAttack": ["T1558.003"],
+        "anssi": ["R36", "R37"],
+        "cisAd": ["7.1.2"]
+      }
+    },
+    {
+      "id": "ADKERB-003",
+      "name": "AS-REP Roastable Accounts",
+      "description": "Accounts with the DONT_REQUIRE_PREAUTH flag set allow any user to request an AS-REP containing encrypted material that can be cracked offline without any prior authentication. Unlike Kerberoasting, AS-REP Roasting does not even require a valid domain account in some configurations, making it an attractive initial access technique for attackers with only network access to a domain controller",
+      "severity": "High",
+      "subcategory": "Pre-Authentication",
+      "recommendedValue": "No accounts with 'Do not require Kerberos preauthentication' flag set. Zero AS-REP Roastable accounts",
+      "remediationSteps": "Identify accounts using Get-ADUser -Filter {DoesNotRequirePreAuth -eq $true -and Enabled -eq $true}. Enable Kerberos pre-authentication on all accounts. There is rarely a legitimate reason to disable pre-authentication in modern environments. Rotate passwords on all previously vulnerable accounts as they may have already been targeted. Monitor for Event ID 4768 with pre-authentication type 0",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)"],
+        "mitreAttack": ["T1558.004"],
+        "anssi": ["R36"],
+        "cisAd": ["7.2.1"]
+      }
+    },
+    {
+      "id": "ADKERB-004",
+      "name": "Unconstrained Delegation - Computers",
+      "description": "Computer accounts with unconstrained delegation (TrustedForDelegation) cache the TGT of any user who authenticates to them. If an attacker compromises such a machine, they can extract cached TGTs and impersonate any user including Domain Admins. Combined with the SpoolSample or PrinterBug coercion attack, an attacker can force a domain controller to authenticate and capture its TGT, leading to full domain compromise",
+      "severity": "Critical",
+      "subcategory": "Delegation",
+      "recommendedValue": "No computer accounts with unconstrained delegation except domain controllers (which inherently require it). All other delegation migrated to constrained or resource-based constrained delegation",
+      "remediationSteps": "Identify computers with unconstrained delegation using Get-ADComputer -Filter {TrustedForDelegation -eq $true} -Properties TrustedForDelegation. Exclude domain controllers from findings. For remaining computers, migrate to constrained delegation by identifying the specific services they need to delegate to, then configure msDS-AllowedToDelegateTo. Add sensitive accounts to the Protected Users group to prevent their TGTs from being cached. Mark high-value accounts as 'Account is sensitive and cannot be delegated'",
+      "compliance": {
+        "nistSp80053": ["AC-6"],
+        "mitreAttack": ["T1558.001"],
+        "anssi": ["R35"],
+        "cisAd": ["7.3.1"]
+      }
+    },
+    {
+      "id": "ADKERB-005",
+      "name": "Unconstrained Delegation - Users",
+      "description": "User accounts with unconstrained delegation are even more dangerous than computer accounts with the same setting, as user accounts are more easily compromised through credential theft, phishing, or password attacks. Any service running under a user account with unconstrained delegation can impersonate any user who authenticates to it, providing a direct path to domain compromise",
+      "severity": "Critical",
+      "subcategory": "Delegation",
+      "recommendedValue": "No user accounts with unconstrained delegation. All user account delegation migrated to constrained or resource-based constrained delegation",
+      "remediationSteps": "Identify users with unconstrained delegation using Get-ADUser -Filter {TrustedForDelegation -eq $true} -Properties TrustedForDelegation. This is almost never a legitimate configuration for user accounts. Remove the unconstrained delegation flag and configure constrained delegation to specific services if delegation is required. Rotate the account password immediately as the account may have been targeted",
+      "compliance": {
+        "nistSp80053": ["AC-6"],
+        "mitreAttack": ["T1558.001"],
+        "anssi": ["R35"],
+        "cisAd": ["7.3.2"]
+      }
+    },
+    {
+      "id": "ADKERB-006",
+      "name": "Constrained Delegation Analysis",
+      "description": "Constrained delegation limits which services an account can delegate to via the msDS-AllowedToDelegateTo attribute, but misconfiguration can still enable privilege escalation. Delegation to LDAP, CIFS, or HOST services on domain controllers can be abused to perform DCSync attacks, access DC file shares, or execute commands as the delegated user. Each constrained delegation entry should be reviewed for security impact",
+      "severity": "High",
+      "subcategory": "Delegation",
+      "recommendedValue": "All constrained delegation entries documented with business justification. No delegation to sensitive services (LDAP, CIFS, HOST, WSMAN) on domain controllers",
+      "remediationSteps": "Enumerate constrained delegation using Get-ADObject -Filter {msDS-AllowedToDelegateTo -ne '$null'} -Properties msDS-AllowedToDelegateTo. Review each delegation target. Flag any delegation to DC services (especially LDAP, CIFS, HOST, HTTP, WSMAN) as high risk. Remove unnecessary delegation entries and document legitimate ones with business justification. Consider migrating to resource-based constrained delegation for improved security",
+      "compliance": {
+        "nistSp80053": ["AC-6"],
+        "mitreAttack": ["T1550.003"],
+        "cisAd": ["7.3.3"]
+      }
+    },
+    {
+      "id": "ADKERB-007",
+      "name": "Resource-Based Constrained Delegation",
+      "description": "Resource-based constrained delegation (RBCD) allows the target resource to control which accounts can delegate to it via the msDS-AllowedToActOnBehalfOfOtherIdentity attribute. While more secure by design than traditional constrained delegation, RBCD can be abused if an attacker gains write access to a computer object to configure unauthorized delegation paths. This is a common post-exploitation technique",
+      "severity": "High",
+      "subcategory": "Delegation",
+      "recommendedValue": "All RBCD configurations documented and audited. No unauthorized entries in msDS-AllowedToActOnBehalfOfOtherIdentity. Write access to computer objects restricted to authorized administrators only",
+      "remediationSteps": "Enumerate RBCD configurations using Get-ADComputer -Filter {msDS-AllowedToActOnBehalfOfOtherIdentity -ne '$null'} -Properties msDS-AllowedToActOnBehalfOfOtherIdentity. Review each entry for business justification. Audit who has write access to computer objects in AD to identify potential RBCD abuse paths. Remove unauthorized RBCD entries. Implement monitoring for changes to the msDS-AllowedToActOnBehalfOfOtherIdentity attribute",
+      "compliance": {
+        "nistSp80053": ["AC-6"],
+        "mitreAttack": ["T1550.003"],
+        "cisAd": ["7.3.4"]
+      }
+    },
+    {
+      "id": "ADKERB-008",
+      "name": "Protocol Transition Abuse Paths",
+      "description": "Accounts configured for constrained delegation with protocol transition (TrustedToAuthForDelegation / T2A4D flag) can obtain service tickets on behalf of any user without that user actually authenticating via Kerberos. This S4U2Self capability allows the account to impersonate any user to the services it is allowed to delegate to, making it a powerful privilege escalation vector when combined with delegation to sensitive services",
+      "severity": "High",
+      "subcategory": "Delegation",
+      "recommendedValue": "Protocol transition (TrustedToAuthForDelegation) disabled on all accounts unless explicitly required and documented. No protocol transition accounts that can delegate to domain controller services",
+      "remediationSteps": "Identify accounts with protocol transition using Get-ADObject -Filter {TrustedToAuthForDelegation -eq $true} -Properties TrustedToAuthForDelegation,msDS-AllowedToDelegateTo. For each account, evaluate whether protocol transition is truly required (only needed when the initial authentication does not use Kerberos). Disable protocol transition where not needed. For remaining accounts, strictly limit the delegation targets and ensure no DC services are in scope",
+      "compliance": {
+        "nistSp80053": ["AC-6"],
+        "mitreAttack": ["T1550.003"],
+        "cisAd": ["7.3.5"]
+      }
+    },
+    {
+      "id": "ADKERB-009",
+      "name": "Kerberos Encryption Types",
+      "description": "Kerberos encryption types determine the strength of ticket encryption. DES and RC4 (ARCFOUR-HMAC-MD5) are cryptographically weak and should be disabled in favor of AES128 and AES256. RC4 in particular is targeted by Kerberoasting attacks as it is significantly faster to crack than AES-encrypted tickets. Enforcing AES-only encryption substantially increases the difficulty of offline credential attacks",
+      "severity": "High",
+      "subcategory": "Encryption",
+      "recommendedValue": "AES256_HMAC_SHA1 and AES128_HMAC_SHA1 as the only supported encryption types. DES and RC4 disabled via Group Policy and domain functional level",
+      "remediationSteps": "Configure via Group Policy: Computer Configuration > Policies > Windows Settings > Security Settings > Local Policies > Security Options > 'Network security: Configure encryption types allowed for Kerberos' = AES128_HMAC_SHA1, AES256_HMAC_SHA1, Future encryption types. Audit accounts with msDS-SupportedEncryptionTypes to identify those restricted to RC4. Ensure all service accounts have AES keys generated by rotating passwords after AES support is enabled at the domain level",
+      "compliance": {
+        "nistSp80053": ["SC-12", "SC-13"],
+        "mitreAttack": ["T1558"],
+        "anssi": ["R37"],
+        "cisAd": ["7.4.1"]
+      }
+    },
+    {
+      "id": "ADKERB-010",
+      "name": "Kerberos Ticket Lifetime",
+      "description": "Kerberos ticket lifetimes control how long authentication tickets remain valid. Excessively long TGT or service ticket lifetimes extend the window during which stolen tickets can be used for pass-the-ticket attacks. The default TGT lifetime of 10 hours and maximum renewal of 7 days should be reviewed to balance security with operational requirements",
+      "severity": "Medium",
+      "subcategory": "Ticket Policy",
+      "recommendedValue": "TGT maximum lifetime: 4-10 hours. Service ticket maximum lifetime: 600 minutes. Maximum ticket renewal: 7 days. Maximum clock skew: 5 minutes",
+      "remediationSteps": "Configure Kerberos policy in Default Domain Policy: Computer Configuration > Policies > Windows Settings > Security Settings > Account Policies > Kerberos Policy. Set maximum lifetime for service ticket (600 minutes), maximum lifetime for user ticket (10 hours or less), and maximum lifetime for user ticket renewal (7 days). For Tier 0 accounts, add them to the Protected Users group which automatically enforces a 4-hour TGT lifetime",
+      "compliance": {
+        "nistSp80053": ["AC-12"],
+        "cisAd": ["7.5.1"]
+      }
+    },
+    {
+      "id": "ADKERB-011",
+      "name": "Computer SPN Audit",
+      "description": "Service Principal Names on computer accounts define the services registered to run on each machine. Duplicate SPNs cause Kerberos authentication failures, while unauthorized SPNs may indicate rogue services or compromised machines. A clean SPN configuration is essential for Kerberos to function correctly and for maintaining an accurate service inventory",
+      "severity": "Info",
+      "subcategory": "SPN Security",
+      "recommendedValue": "No duplicate SPNs across the domain. All SPNs on computer accounts correspond to legitimate, documented services",
+      "remediationSteps": "Scan for duplicate SPNs using setspn -X in the forest or Get-ADObject queries. Remove or reassign duplicate SPNs to the correct accounts. Review SPNs on computer objects to identify any unauthorized or unexpected services. Use setspn -L <computername> to list SPNs per computer. Document all non-default SPNs with their business purpose",
+      "compliance": {
+        "nistSp80053": ["CM-8"],
+        "cisAd": ["7.1.3"]
+      }
+    }
+  ]
+}

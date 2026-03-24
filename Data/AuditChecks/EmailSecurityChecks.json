@@ -1,0 +1,337 @@
+{
+  "categoryId": "email",
+  "categoryName": "Email Security",
+  "categoryDescription": "Checks related to Gmail and email security configuration including authentication, routing, filtering, and data protection controls",
+  "checks": [
+    {
+      "id": "EMAIL-001",
+      "name": "SPF Record Validation",
+      "description": "Sender Policy Framework (SPF) records must exist and be valid for all domains. SPF prevents email spoofing by specifying which mail servers are authorized to send email on behalf of a domain",
+      "severity": "Critical",
+      "subcategory": "Email Authentication",
+      "recommendedValue": "Valid v=spf1 record published for all domains with -all or ~all qualifier",
+      "remediationUrl": "https://admin.google.com/ac/apps/gmail/authenticateemail",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Gmail > Authenticate email > Publish SPF record: v=spf1 include:_spf.google.com ~all for each domain",
+      "compliance": {
+        "nistSp80053": ["SI-8", "SC-7"],
+        "mitreAttack": ["T1566.001", "T1566.002"],
+        "cisBenchmark": ["2.1"]
+      }
+    },
+    {
+      "id": "EMAIL-002",
+      "name": "DKIM Signing Enabled",
+      "description": "DomainKeys Identified Mail (DKIM) signing must be enabled and valid for all domains. DKIM provides cryptographic proof that email content has not been tampered with in transit",
+      "severity": "Critical",
+      "subcategory": "Email Authentication",
+      "recommendedValue": "DKIM signing enabled with valid key published for all domains",
+      "remediationUrl": "https://admin.google.com/ac/apps/gmail/authenticateemail",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Gmail > Authenticate email > Generate DKIM key and publish DNS record for each domain",
+      "compliance": {
+        "nistSp80053": ["SI-8", "SC-8"],
+        "mitreAttack": ["T1566.001", "T1566.002"],
+        "cisBenchmark": ["2.2"]
+      }
+    },
+    {
+      "id": "EMAIL-003",
+      "name": "DMARC Policy Audit",
+      "description": "Domain-based Message Authentication, Reporting and Conformance (DMARC) policy must be set to reject or quarantine for all domains. A DMARC policy of none provides no protection against spoofing",
+      "severity": "Critical",
+      "subcategory": "Email Authentication",
+      "recommendedValue": "DMARC policy set to reject or quarantine for all domains",
+      "remediationUrl": "https://admin.google.com/ac/apps/gmail/authenticateemail",
+      "remediationSteps": "Publish DMARC TXT record at _dmarc.<domain> with p=reject or p=quarantine. Start with p=none for monitoring, then escalate to quarantine and finally reject",
+      "compliance": {
+        "nistSp80053": ["SI-8", "SC-7"],
+        "mitreAttack": ["T1566.001", "T1566.002", "T1036.005"],
+        "cisBenchmark": ["2.3"]
+      }
+    },
+    {
+      "id": "EMAIL-004",
+      "name": "MTA-STS Policy",
+      "description": "Mail Transfer Agent Strict Transport Security (MTA-STS) prevents TLS downgrade attacks and man-in-the-middle interception of email in transit by requiring authenticated TLS connections",
+      "severity": "Medium",
+      "subcategory": "Email Authentication",
+      "recommendedValue": "MTA-STS TXT record published and policy hosted at https://mta-sts.<domain>/.well-known/mta-sts.txt",
+      "remediationUrl": "https://admin.google.com/ac/apps/gmail/compliance",
+      "remediationSteps": "Publish _mta-sts.<domain> TXT record with v=STSv1; id=<unique_id> and host MTA-STS policy file at https://mta-sts.<domain>/.well-known/mta-sts.txt",
+      "compliance": {
+        "nistSp80053": ["SC-8", "SC-8(1)"],
+        "mitreAttack": ["T1557", "T1040"],
+        "cisBenchmark": ["2.4"]
+      }
+    },
+    {
+      "id": "EMAIL-005",
+      "name": "TLS Enforcement",
+      "description": "Transport Layer Security (TLS) should be required for email transmission to prevent eavesdropping. Compliance TLS settings ensure encrypted connections with specified partner domains",
+      "severity": "High",
+      "subcategory": "Email Authentication",
+      "recommendedValue": "TLS required for all outbound and inbound connections",
+      "remediationUrl": "https://admin.google.com/ac/apps/gmail/compliance",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Gmail > Compliance > Secure transport (TLS) compliance > Add rule requiring TLS for all domains or specific partner domains",
+      "compliance": {
+        "nistSp80053": ["SC-8", "SC-8(1)", "SC-23"],
+        "mitreAttack": ["T1557", "T1040"],
+        "cisBenchmark": ["2.5"]
+      }
+    },
+    {
+      "id": "EMAIL-006",
+      "name": "Email Allowlist/Blocklist Review",
+      "description": "Email allowlists and blocklists should be reviewed for overly permissive entries. Allowlisted senders bypass spam filtering and can be exploited if misconfigured",
+      "severity": "Medium",
+      "subcategory": "Email Routing",
+      "recommendedValue": "Minimal allowlist entries with no wildcard domains; blocklist actively maintained",
+      "remediationUrl": "https://admin.google.com/ac/apps/gmail/spam",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Gmail > Spam, phishing and malware > Review Email allowlists and Blocked senders lists for overly broad entries",
+      "compliance": {
+        "nistSp80053": ["SI-8", "SC-7(5)"],
+        "mitreAttack": ["T1566.001"],
+        "cisBenchmark": ["2.6"]
+      }
+    },
+    {
+      "id": "EMAIL-007",
+      "name": "Inbound Gateway Configuration",
+      "description": "Inbound email gateways should be properly configured to preserve sender authentication results. Misconfigured gateways can strip SPF/DKIM/DMARC headers or bypass security filtering",
+      "severity": "Medium",
+      "subcategory": "Email Routing",
+      "recommendedValue": "Inbound gateways configured with correct IP ranges and header preservation",
+      "remediationUrl": "https://admin.google.com/ac/apps/gmail/inboundgateway",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Gmail > Spam, phishing and malware > Inbound gateway > Verify gateway IPs and that authentication headers are preserved",
+      "compliance": {
+        "nistSp80053": ["SI-8", "SC-7"],
+        "mitreAttack": ["T1566.001", "T1566.002"],
+        "cisBenchmark": ["2.7"]
+      }
+    },
+    {
+      "id": "EMAIL-008",
+      "name": "Email Routing Rules Audit",
+      "description": "Email routing rules should be reviewed for suspicious or unauthorized configurations. Malicious routing rules can redirect email to attacker-controlled destinations",
+      "severity": "Medium",
+      "subcategory": "Email Routing",
+      "recommendedValue": "All routing rules reviewed and documented with business justification",
+      "remediationUrl": "https://admin.google.com/ac/apps/gmail/routing",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Gmail > Routing > Review all routing rules, default routing, and recipient maps for unauthorized entries",
+      "compliance": {
+        "nistSp80053": ["SI-4", "AU-6"],
+        "mitreAttack": ["T1114.003", "T1020"],
+        "cisBenchmark": ["2.8"]
+      }
+    },
+    {
+      "id": "EMAIL-009",
+      "name": "Auto-Forwarding Policy",
+      "description": "Automatic email forwarding to external addresses should be disabled to prevent data exfiltration. Attackers frequently set up forwarding rules after compromising an account",
+      "severity": "High",
+      "subcategory": "Email Routing",
+      "recommendedValue": "Auto-forwarding disabled for all organizational units",
+      "remediationUrl": "https://admin.google.com/ac/apps/gmail/enduseraccess",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Gmail > End User Access > Disable automatic forwarding for all OUs. Review existing forwarding rules via Gmail API",
+      "compliance": {
+        "nistSp80053": ["AC-4", "SC-7"],
+        "mitreAttack": ["T1114.003", "T1020"],
+        "cisBenchmark": ["2.9"]
+      }
+    },
+    {
+      "id": "EMAIL-010",
+      "name": "Delegate Access Settings",
+      "description": "Mail delegation allows users to grant other users read and send access to their mailbox. Excessive delegation can lead to unauthorized access and impersonation",
+      "severity": "Medium",
+      "subcategory": "Email Routing",
+      "recommendedValue": "Mail delegation restricted and reviewed periodically; no unexpected delegates",
+      "remediationUrl": "https://admin.google.com/ac/apps/gmail/enduseraccess",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Gmail > End User Access > Review mail delegation settings. Check individual users for unauthorized delegates via Gmail API",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-6(1)"],
+        "mitreAttack": ["T1098.002", "T1114.002"],
+        "cisBenchmark": ["2.10"]
+      }
+    },
+    {
+      "id": "EMAIL-011",
+      "name": "POP/IMAP Access Settings",
+      "description": "POP and IMAP access should be disabled unless specifically required. These legacy protocols bypass modern security controls and can be used for credential-based attacks",
+      "severity": "High",
+      "subcategory": "Email Routing",
+      "recommendedValue": "POP and IMAP disabled for all users",
+      "remediationUrl": "https://admin.google.com/ac/apps/gmail/enduseraccess",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Gmail > End User Access > Disable POP and IMAP access. Review individual user settings via Gmail API",
+      "compliance": {
+        "nistSp80053": ["AC-17(2)", "CM-7"],
+        "mitreAttack": ["T1078.004", "T1110"],
+        "cisBenchmark": ["2.11"]
+      }
+    },
+    {
+      "id": "EMAIL-012",
+      "name": "Spam and Phishing Filter Settings",
+      "description": "Enhanced spam and phishing filters should be enabled to provide maximum protection against social engineering attacks and malicious email campaigns",
+      "severity": "High",
+      "subcategory": "Email Protection",
+      "recommendedValue": "Enhanced spam filtering and aggressive phishing detection enabled",
+      "remediationUrl": "https://admin.google.com/ac/apps/gmail/spam",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Gmail > Spam, phishing and malware > Enable 'Be more aggressive when filtering spam' and all phishing protection options",
+      "compliance": {
+        "nistSp80053": ["SI-8", "SI-3"],
+        "mitreAttack": ["T1566.001", "T1566.002"],
+        "cisBenchmark": ["2.12"]
+      }
+    },
+    {
+      "id": "EMAIL-013",
+      "name": "Enhanced Pre-Delivery Message Scanning",
+      "description": "Enhanced pre-delivery message scanning uses advanced heuristics and sandboxing to detect malware and threats before messages are delivered to user inboxes",
+      "severity": "High",
+      "subcategory": "Email Protection",
+      "recommendedValue": "Enhanced pre-delivery message scanning enabled",
+      "remediationUrl": "https://admin.google.com/ac/apps/gmail/spam",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Gmail > Spam, phishing and malware > Enable 'Enhanced pre-delivery message scanning' to identify suspicious content",
+      "compliance": {
+        "nistSp80053": ["SI-3", "SI-8"],
+        "mitreAttack": ["T1566.001", "T1204.001"],
+        "cisBenchmark": ["2.13"]
+      }
+    },
+    {
+      "id": "EMAIL-014",
+      "name": "External Recipient Warning",
+      "description": "Users should be warned when sending email to recipients outside the organization to prevent accidental data disclosure and social engineering",
+      "severity": "Medium",
+      "subcategory": "Email Protection",
+      "recommendedValue": "External recipient warning enabled for all users",
+      "remediationUrl": "https://admin.google.com/ac/apps/gmail/enduseraccess",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Gmail > End User Access > Enable 'Warn users when they send messages outside the domain'",
+      "compliance": {
+        "nistSp80053": ["AC-4", "AT-2"],
+        "mitreAttack": ["T1048", "T1567"],
+        "cisBenchmark": ["2.14"]
+      }
+    },
+    {
+      "id": "EMAIL-015",
+      "name": "Attachment Safety Settings",
+      "description": "All attachment safety protections should be enabled to detect and block malicious file attachments including encrypted archives, anomalous file types, and scripts",
+      "severity": "High",
+      "subcategory": "Email Protection",
+      "recommendedValue": "All attachment protection options enabled with quarantine action",
+      "remediationUrl": "https://admin.google.com/ac/apps/gmail/safety",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Gmail > Safety > Attachments > Enable all protections: encrypted attachments, scripts from untrusted senders, and anomalous attachment types",
+      "compliance": {
+        "nistSp80053": ["SI-3", "SI-8"],
+        "mitreAttack": ["T1566.001", "T1204.002"],
+        "cisBenchmark": ["2.15"]
+      }
+    },
+    {
+      "id": "EMAIL-016",
+      "name": "Links and External Images Protection",
+      "description": "Link protection should be enabled to scan URLs for phishing and malware. External image proxying prevents tracking pixels and IP disclosure",
+      "severity": "High",
+      "subcategory": "Email Protection",
+      "recommendedValue": "URL scanning, click-time warnings, and external image proxying enabled",
+      "remediationUrl": "https://admin.google.com/ac/apps/gmail/safety",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Gmail > Safety > Links and external images > Enable 'Identify links behind shortened URLs', 'Scan linked images', and 'Show warning prompt for click on links to untrusted domains'",
+      "compliance": {
+        "nistSp80053": ["SI-3", "SI-8"],
+        "mitreAttack": ["T1566.002", "T1204.001"],
+        "cisBenchmark": ["2.16"]
+      }
+    },
+    {
+      "id": "EMAIL-017",
+      "name": "Spoofing and Authentication Protection",
+      "description": "Spoofing and authentication protections guard against domain spoofing, employee name spoofing, and unauthenticated email from domains that appear similar to the organization",
+      "severity": "Critical",
+      "subcategory": "Email Protection",
+      "recommendedValue": "All spoofing and authentication protections enabled with quarantine action",
+      "remediationUrl": "https://admin.google.com/ac/apps/gmail/safety",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Gmail > Safety > Spoofing and authentication > Enable all protections: domain spoofing, employee name spoofing, inbound email spoofing, and unauthenticated email",
+      "compliance": {
+        "nistSp80053": ["SI-8", "IA-9"],
+        "mitreAttack": ["T1566.001", "T1566.002", "T1036.005"],
+        "cisBenchmark": ["2.17"]
+      }
+    },
+    {
+      "id": "EMAIL-018",
+      "name": "Compliance Rules Audit",
+      "description": "Content compliance rules should be reviewed to ensure sensitive data is appropriately handled. Rules can enforce encryption, quarantine, or rejection based on content patterns",
+      "severity": "Medium",
+      "subcategory": "Data Loss Prevention",
+      "recommendedValue": "Content compliance rules configured for sensitive data types with appropriate actions",
+      "remediationUrl": "https://admin.google.com/ac/apps/gmail/compliance",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Gmail > Compliance > Content compliance > Review existing rules and create rules for sensitive content types (PII, financial data, health records)",
+      "compliance": {
+        "nistSp80053": ["AC-4", "SI-4", "SC-7"],
+        "mitreAttack": ["T1048", "T1567"],
+        "cisBenchmark": ["2.18"]
+      }
+    },
+    {
+      "id": "EMAIL-019",
+      "name": "DLP Rules Configuration",
+      "description": "Data Loss Prevention (DLP) rules should be configured to detect and prevent sensitive data from leaving the organization via email. DLP provides automated content inspection and policy enforcement",
+      "severity": "Medium",
+      "subcategory": "Data Loss Prevention",
+      "recommendedValue": "DLP rules configured for key data types (credit cards, SSNs, health records) with block or warn action",
+      "remediationUrl": "https://admin.google.com/ac/apps/gmail/compliance",
+      "remediationSteps": "Admin Console > Security > Data protection > Manage rules > Create DLP rules for Gmail that detect sensitive content patterns and apply appropriate actions",
+      "compliance": {
+        "nistSp80053": ["AC-4", "SC-7", "SI-4"],
+        "mitreAttack": ["T1048", "T1567", "T1020"],
+        "cisBenchmark": ["2.19"]
+      }
+    },
+    {
+      "id": "EMAIL-020",
+      "name": "Gmail Confidential Mode",
+      "description": "Gmail confidential mode allows senders to set expiration dates and revoke access to messages. Review whether this feature is enabled or restricted per organizational policy",
+      "severity": "Low",
+      "subcategory": "Data Loss Prevention",
+      "recommendedValue": "Gmail confidential mode enabled for users who handle sensitive data",
+      "remediationUrl": "https://admin.google.com/ac/apps/gmail/enduseraccess",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Gmail > End User Access > Review Gmail confidential mode settings and enable or restrict based on organizational requirements",
+      "compliance": {
+        "nistSp80053": ["AC-4", "SC-28"],
+        "mitreAttack": ["T1114.002"],
+        "cisBenchmark": ["2.20"]
+      }
+    },
+    {
+      "id": "EMAIL-021",
+      "name": "S/MIME Settings",
+      "description": "S/MIME provides end-to-end email encryption and digital signatures. If required by compliance, S/MIME certificates should be properly configured and managed",
+      "severity": "Low",
+      "subcategory": "Data Loss Prevention",
+      "recommendedValue": "S/MIME enabled if required by compliance; certificates properly managed",
+      "remediationUrl": "https://admin.google.com/ac/apps/gmail/enduseraccess",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Gmail > End User Access > S/MIME > Enable hosted S/MIME if required and ensure certificates are uploaded and valid",
+      "compliance": {
+        "nistSp80053": ["SC-8(1)", "SC-12"],
+        "mitreAttack": ["T1557", "T1040"],
+        "cisBenchmark": ["2.21"]
+      }
+    },
+    {
+      "id": "EMAIL-022",
+      "name": "Mail Forwarding Rule Enumeration",
+      "description": "All user-level mail forwarding rules should be enumerated and reviewed. Attackers commonly set up forwarding rules to maintain persistent access to email after account compromise",
+      "severity": "High",
+      "subcategory": "Email Routing",
+      "recommendedValue": "No unauthorized forwarding rules; all forwarding rules documented and approved",
+      "remediationUrl": "https://admin.google.com/ac/apps/gmail/enduseraccess",
+      "remediationSteps": "Enumerate forwarding rules via Gmail API for all users. Remove unauthorized forwarding addresses. Disable auto-forwarding at the OU level to prevent future abuse",
+      "compliance": {
+        "nistSp80053": ["AC-4", "SI-4", "AU-6"],
+        "mitreAttack": ["T1114.003", "T1020"],
+        "cisBenchmark": ["2.22"]
+      }
+    }
+  ]
+}

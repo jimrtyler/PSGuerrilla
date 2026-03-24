@@ -1,0 +1,279 @@
+{
+  "categoryId": "eidca",
+  "categoryName": "Entra ID Conditional Access",
+  "categoryDescription": "Checks related to Entra ID Conditional Access policy configuration, coverage, exclusions, MFA enforcement, device compliance, location controls, risk-based access, and session management",
+  "checks": [
+    {
+      "id": "EIDCA-001",
+      "name": "Full CA Policy Inventory",
+      "description": "A complete inventory of all Conditional Access policies with their settings should be maintained. This provides visibility into the security posture and enables gap analysis, change tracking, and compliance auditing across the tenant. Emulates inventory capabilities found in Maester, EntraFalcon, and ScubaGear.",
+      "severity": "Info",
+      "subcategory": "Policy Inventory",
+      "recommendedValue": "All Conditional Access policies documented with state, conditions, grant controls, and session controls",
+      "remediationSteps": "Navigate to the Entra admin center Conditional Access blade and export all policies. Review each policy for correct naming conventions, descriptions, and appropriate state (enabled, disabled, or report-only). Maintain a versioned record of all policy configurations for audit purposes.",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "compliance": {
+        "nistSp80053": [],
+        "mitreAttack": [],
+        "cisBenchmark": [],
+        "cisM365": ["5.2.1"],
+        "cisAzure": []
+      }
+    },
+    {
+      "id": "EIDCA-002",
+      "name": "CA Policy Coverage Gap Analysis",
+      "description": "All users and applications should be covered by at least one Conditional Access policy. Gaps in coverage leave users or applications without security controls such as MFA, device compliance, or location restrictions, creating attack vectors for unauthorized access.",
+      "severity": "High",
+      "subcategory": "Coverage Analysis",
+      "recommendedValue": "100% of active users and critical applications covered by at least one CA policy",
+      "remediationSteps": "Review all Conditional Access policies to identify users and applications that are not targeted by any policy. Create policies that cover uncovered users and applications with appropriate grant and session controls. Prioritize coverage for privileged accounts and business-critical applications.",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "compliance": {
+        "nistSp80053": ["AC-2", "AC-3"],
+        "mitreAttack": ["T1078.004"],
+        "cisBenchmark": [],
+        "cisM365": ["5.2.2"],
+        "cisAzure": []
+      }
+    },
+    {
+      "id": "EIDCA-003",
+      "name": "CA Policies in Report-Only Mode",
+      "description": "Conditional Access policies left in report-only mode do not enforce security controls and only log what would have happened. Policies that have completed testing should be switched to the enabled state to actively protect the environment.",
+      "severity": "Medium",
+      "subcategory": "Policy State",
+      "recommendedValue": "No policies in report-only mode unless actively being tested with a defined transition timeline",
+      "remediationSteps": "Review all Conditional Access policies currently in report-only mode and evaluate their sign-in log impact data. For policies that have been validated and show acceptable impact, change the state from report-only to enabled. Establish a policy lifecycle process that defines maximum report-only durations before enforcement.",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "compliance": {
+        "nistSp80053": [],
+        "mitreAttack": [],
+        "cisBenchmark": [],
+        "cisM365": ["5.2.1"],
+        "cisAzure": []
+      }
+    },
+    {
+      "id": "EIDCA-004",
+      "name": "CA Exclusion Group Analysis",
+      "description": "Users and groups excluded from Conditional Access policies bypass critical security controls. Exclusions should be minimized, documented with business justification, and regularly reviewed to prevent privilege creep and unauthorized access.",
+      "severity": "High",
+      "subcategory": "Exclusion Analysis",
+      "recommendedValue": "All exclusions documented with business justification and reviewed quarterly",
+      "remediationSteps": "Audit all Conditional Access policies to identify excluded users and groups. Document the business justification for each exclusion and establish an owner responsible for periodic review. Remove any exclusions that no longer have a valid business need and implement compensating controls where exclusions are required.",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "compliance": {
+        "nistSp80053": ["AC-6(1)"],
+        "mitreAttack": ["T1078.004"],
+        "cisBenchmark": [],
+        "cisM365": [],
+        "cisAzure": []
+      }
+    },
+    {
+      "id": "EIDCA-005",
+      "name": "Unprotected Groups in CA Exclusions",
+      "description": "Groups used in Conditional Access exclusions that lack ownership, membership reviews, or access restrictions can be exploited by attackers to bypass security policies. An attacker who adds themselves to an unprotected exclusion group effectively bypasses all CA controls targeting that group.",
+      "severity": "High",
+      "subcategory": "Exclusion Analysis",
+      "recommendedValue": "All CA exclusion groups have assigned owners, restricted membership management, and regular access reviews enabled",
+      "remediationSteps": "Identify all groups referenced in CA policy exclusions and verify each group has an assigned owner, restricted join/leave settings, and an active access review schedule. Enable Privileged Access Group features or restrict group membership changes to authorized administrators only. Remove any unmanaged or orphaned groups from CA exclusions immediately.",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/GroupsManagementMenuBlade/~/AllGroups",
+      "compliance": {
+        "nistSp80053": ["AC-6(1)", "AC-6(5)"],
+        "mitreAttack": ["T1078.004"],
+        "cisBenchmark": [],
+        "cisM365": [],
+        "cisAzure": []
+      }
+    },
+    {
+      "id": "EIDCA-006",
+      "name": "Break-Glass Account CA Exclusion Validation",
+      "description": "Emergency access (break-glass) accounts must be excluded from Conditional Access policies to ensure access during outages or misconfigurations, but these exclusions must be tightly controlled. Failure to properly configure break-glass exclusions can result in complete lockout during critical incidents or create unmonitored backdoor accounts.",
+      "severity": "Critical",
+      "subcategory": "Emergency Access",
+      "recommendedValue": "Exactly two break-glass accounts excluded from all CA policies with monitoring, alerts, and regular validation",
+      "remediationSteps": "Verify that dedicated break-glass accounts exist, are excluded from all Conditional Access policies, and are not used for daily operations. Configure Azure Monitor alerts to trigger on any sign-in activity from break-glass accounts. Test break-glass account access quarterly and store credentials securely in a physical safe or hardware security module.",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_UsersAndTenants/UserManagementMenuBlade/~/AllUsers",
+      "compliance": {
+        "nistSp80053": ["AC-2(2)"],
+        "mitreAttack": ["T1078.004"],
+        "cisBenchmark": [],
+        "cisM365": ["1.1.4"],
+        "cisAzure": []
+      }
+    },
+    {
+      "id": "EIDCA-007",
+      "name": "MFA Enforcement via Conditional Access",
+      "description": "Multi-factor authentication should be required for all users through Conditional Access policies to prevent credential-based attacks. Without MFA enforcement, compromised passwords alone grant full access to organizational resources, making this the single most impactful control against account takeover.",
+      "severity": "Critical",
+      "subcategory": "MFA Enforcement",
+      "recommendedValue": "MFA required for 100% of users across all cloud applications via Conditional Access",
+      "remediationSteps": "Create a Conditional Access policy targeting all users and all cloud applications with a grant control requiring multifactor authentication. Verify the policy covers all user types including guests and external collaborators. Monitor the sign-in logs to confirm MFA is being prompted and review the CA insights workbook for coverage gaps.",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "compliance": {
+        "nistSp80053": ["IA-2(1)", "IA-2(2)"],
+        "mitreAttack": ["T1078", "T1110"],
+        "cisBenchmark": [],
+        "cisM365": ["5.2.2.1"],
+        "cisAzure": []
+      }
+    },
+    {
+      "id": "EIDCA-008",
+      "name": "Legacy Authentication Blocking via CA",
+      "description": "Legacy authentication protocols such as IMAP, POP3, SMTP, and ActiveSync do not support modern authentication or MFA, making them a primary attack vector for password spray and brute-force attacks. Blocking legacy authentication through Conditional Access is essential to prevent these protocols from bypassing MFA controls.",
+      "severity": "Critical",
+      "subcategory": "Legacy Auth",
+      "recommendedValue": "All legacy authentication protocols blocked via Conditional Access for all users",
+      "remediationSteps": "Create a Conditional Access policy targeting all users and all cloud applications with the client apps condition set to Exchange ActiveSync clients and other clients, then set the grant control to block access. Verify the policy is in enabled state and monitor sign-in logs for any remaining legacy authentication attempts. Coordinate with application owners to migrate any remaining legacy protocol dependencies to modern authentication.",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "compliance": {
+        "nistSp80053": ["IA-2", "AC-17(2)"],
+        "mitreAttack": ["T1078", "T1110.001"],
+        "cisBenchmark": [],
+        "cisM365": ["5.2.2.3"],
+        "cisAzure": []
+      }
+    },
+    {
+      "id": "EIDCA-009",
+      "name": "Device Compliance Requirement in CA",
+      "description": "Conditional Access policies should require device compliance to ensure only managed and healthy devices can access organizational resources. Without device compliance requirements, unmanaged or compromised devices can access sensitive data, increasing the risk of data exfiltration and malware propagation.",
+      "severity": "High",
+      "subcategory": "Device Compliance",
+      "recommendedValue": "Device compliance or Hybrid Azure AD join required for access to all cloud applications",
+      "remediationSteps": "Create or update Conditional Access policies to require device compliance or Hybrid Azure AD join as a grant control for all cloud applications. Ensure Intune device compliance policies are configured with appropriate security baselines before enforcing this requirement. Use report-only mode initially to assess impact, then transition to enforcement after confirming managed device coverage is sufficient.",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "compliance": {
+        "nistSp80053": ["AC-17(2)", "CM-6"],
+        "mitreAttack": [],
+        "cisBenchmark": [],
+        "cisM365": ["5.2.2.2"],
+        "cisAzure": []
+      }
+    },
+    {
+      "id": "EIDCA-010",
+      "name": "Location-Based CA Policies Audit",
+      "description": "Location-based Conditional Access policies restrict access based on IP address ranges, countries, or named locations. Without location controls, attackers can authenticate from any geographic location, making it harder to detect and prevent unauthorized access from suspicious or high-risk regions.",
+      "severity": "Medium",
+      "subcategory": "Location Controls",
+      "recommendedValue": "Location-based policies configured to block or require additional controls for access from untrusted locations",
+      "remediationSteps": "Review existing named locations and ensure trusted corporate IP ranges and countries are accurately defined. Create Conditional Access policies that require MFA or block access from untrusted locations, particularly for privileged accounts and sensitive applications. Regularly update named location definitions as corporate network infrastructure changes.",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "compliance": {
+        "nistSp80053": ["AC-2(11)", "SC-7"],
+        "mitreAttack": [],
+        "cisBenchmark": [],
+        "cisM365": [],
+        "cisAzure": []
+      }
+    },
+    {
+      "id": "EIDCA-011",
+      "name": "Named Locations Configuration Review",
+      "description": "Named locations define trusted and untrusted network boundaries used by Conditional Access policies. Misconfigured named locations can result in overly permissive access from untrusted networks or unnecessarily restricted access from legitimate corporate locations.",
+      "severity": "Medium",
+      "subcategory": "Location Controls",
+      "recommendedValue": "All named locations accurately reflect current corporate network boundaries with trusted locations marked appropriately",
+      "remediationSteps": "Navigate to the Named Locations blade in the Entra admin center and review all configured locations for accuracy. Verify that trusted corporate IP ranges are up to date and that country-based locations align with organizational presence. Remove any stale or unused named locations and ensure trusted location flags are only applied to verified corporate networks.",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/NamedLocations",
+      "compliance": {
+        "nistSp80053": ["AC-2(11)"],
+        "mitreAttack": [],
+        "cisBenchmark": [],
+        "cisM365": [],
+        "cisAzure": []
+      }
+    },
+    {
+      "id": "EIDCA-012",
+      "name": "Sign-In Risk-Based CA Policies",
+      "description": "Sign-in risk-based Conditional Access policies use Azure AD Identity Protection signals to detect anomalous sign-in behavior such as impossible travel, anonymous IP usage, and credential leak detection. Without risk-based policies, compromised credentials can be used from suspicious locations or patterns without triggering additional verification.",
+      "severity": "High",
+      "subcategory": "Risk-Based Access",
+      "recommendedValue": "CA policies configured to require MFA or block access for medium and high sign-in risk levels",
+      "remediationSteps": "Create Conditional Access policies that target all users with the sign-in risk condition set to medium and high, requiring multifactor authentication as the grant control. Ensure Azure AD Identity Protection is enabled and properly licensed (requires Entra ID P2). Monitor the risky sign-ins report regularly and tune risk detection sensitivity based on organizational patterns.",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "compliance": {
+        "nistSp80053": ["IA-2(13)"],
+        "mitreAttack": ["T1078.004", "T1110"],
+        "cisBenchmark": [],
+        "cisM365": ["5.2.2.7"],
+        "cisAzure": []
+      }
+    },
+    {
+      "id": "EIDCA-013",
+      "name": "User Risk-Based CA Policies",
+      "description": "User risk-based Conditional Access policies respond to cumulative risk signals indicating a user account may be compromised, such as leaked credentials or anomalous activity patterns. Without user risk policies, accounts flagged as compromised by Identity Protection continue to operate normally without requiring password changes or additional verification.",
+      "severity": "High",
+      "subcategory": "Risk-Based Access",
+      "recommendedValue": "CA policies configured to require password change for high user risk and MFA for medium user risk",
+      "remediationSteps": "Create Conditional Access policies targeting all users with user risk conditions set to medium and high, requiring a secure password change as the grant control for high risk and MFA for medium risk. Ensure self-service password reset (SSPR) is enabled and registered for all users to allow automated remediation. Review the risky users report regularly and investigate accounts that remain at elevated risk levels.",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "compliance": {
+        "nistSp80053": ["IA-2(13)"],
+        "mitreAttack": ["T1078.004"],
+        "cisBenchmark": [],
+        "cisM365": ["5.2.2.8"],
+        "cisAzure": []
+      }
+    },
+    {
+      "id": "EIDCA-014",
+      "name": "Session Controls Audit",
+      "description": "Conditional Access session controls govern sign-in frequency and browser session persistence. Without proper session controls, users may remain authenticated indefinitely, increasing the window of opportunity for session hijacking and token theft attacks.",
+      "severity": "Medium",
+      "subcategory": "Session Controls",
+      "recommendedValue": "Sign-in frequency set to no more than 24 hours for sensitive applications with persistent browser sessions disabled",
+      "remediationSteps": "Review Conditional Access policies for session control configurations including sign-in frequency and persistent browser session settings. Configure sign-in frequency to appropriate intervals based on application sensitivity, with shorter intervals for privileged access. Disable persistent browser sessions for sensitive applications to ensure tokens expire and require re-authentication.",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "compliance": {
+        "nistSp80053": ["AC-12", "SC-10"],
+        "mitreAttack": [],
+        "cisBenchmark": [],
+        "cisM365": ["5.2.2.6"],
+        "cisAzure": []
+      }
+    },
+    {
+      "id": "EIDCA-015",
+      "name": "CA What-If Simulation for Attack Scenarios",
+      "description": "The Conditional Access What-If tool allows simulation of sign-in scenarios to validate policy behavior against common attack patterns. Without regular what-if testing, policy misconfigurations or gaps may go undetected until exploited by an attacker.",
+      "severity": "Info",
+      "subcategory": "Policy Analysis",
+      "recommendedValue": "Quarterly what-if simulations covering common attack scenarios including external attacker, compromised device, and legacy auth attempts",
+      "remediationSteps": "Use the Conditional Access What-If tool to simulate sign-in scenarios for common attack patterns such as external MFA bypass, legacy authentication attempts, unmanaged device access, and compromised credential usage. Document the results of each simulation and remediate any policies that fail to block the simulated attack. Incorporate what-if testing into the change management process for all CA policy modifications.",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/WhatIf",
+      "compliance": {
+        "nistSp80053": ["CA-8"],
+        "mitreAttack": ["T1078.004"],
+        "cisBenchmark": [],
+        "cisM365": [],
+        "cisAzure": []
+      }
+    },
+    {
+      "id": "EIDCA-016",
+      "name": "CA Policy Documentation Export",
+      "description": "A complete export of all Conditional Access policies should be generated for documentation, disaster recovery, and compliance audit purposes. Without documented policy exports, rebuilding CA policies after a tenant compromise or accidental deletion requires significant effort and may result in security gaps.",
+      "severity": "Info",
+      "subcategory": "Documentation",
+      "recommendedValue": "Full CA policy export generated and stored in a secure, versioned repository updated after each policy change",
+      "remediationSteps": "Export all Conditional Access policies using Microsoft Graph API or the Entra admin center and store the output in a secure, version-controlled repository. Establish an automated process to capture policy snapshots on a regular schedule or triggered by policy modifications. Include the export in your tenant disaster recovery plan and validate that policies can be restored from the export.",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "compliance": {
+        "nistSp80053": ["CM-2", "CM-6"],
+        "mitreAttack": [],
+        "cisBenchmark": [],
+        "cisM365": [],
+        "cisAzure": []
+      }
+    }
+  ]
+}

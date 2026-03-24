@@ -1,0 +1,320 @@
+{
+  "categoryId": "addom",
+  "categoryName": "AD Domain & Forest Configuration",
+  "categoryDescription": "Checks related to Active Directory domain and forest configuration, domain controller security, protocol hardening, and infrastructure health",
+  "checks": [
+    {
+      "id": "ADDOM-001",
+      "name": "Forest Functional Level",
+      "description": "The Active Directory forest functional level should be at Windows Server 2016 or higher to enable modern security features such as Privileged Access Management and improved Kerberos protections. Running older functional levels exposes the environment to attacks that leverage legacy protocol weaknesses",
+      "severity": "High",
+      "subcategory": "Forest Configuration",
+      "recommendedValue": "Windows Server 2016 or higher",
+      "remediationSteps": "Raise the forest functional level via Active Directory Domains and Trusts > Right-click the forest root > Raise Forest Functional Level. Ensure all domain controllers run a supported OS version before raising",
+      "compliance": {
+        "nistSp80053": ["CM-6", "SI-2"],
+        "mitreAttack": ["T1078.002"],
+        "cisBenchmark": ["18.3.1"],
+        "anssi": ["R1"],
+        "cisAd": ["1.1.1"]
+      }
+    },
+    {
+      "id": "ADDOM-002",
+      "name": "Domain Functional Level",
+      "description": "The Active Directory domain functional level should be at Windows Server 2016 or higher. Lower functional levels prevent the use of critical security features including Protected Users group functionality, authentication policies, and modern Kerberos armoring",
+      "severity": "High",
+      "subcategory": "Domain Configuration",
+      "recommendedValue": "Windows Server 2016 or higher",
+      "remediationSteps": "Raise the domain functional level via Active Directory Domains and Trusts > Right-click the domain > Raise Domain Functional Level. Verify all DCs in the domain are running a compatible OS version first",
+      "compliance": {
+        "nistSp80053": ["CM-6", "SI-2"],
+        "mitreAttack": ["T1078.002"],
+        "cisBenchmark": ["18.3.1"],
+        "anssi": ["R1"],
+        "cisAd": ["1.1.2"]
+      }
+    },
+    {
+      "id": "ADDOM-003",
+      "name": "Schema Version Identification",
+      "description": "The AD schema version should be documented and correspond to the latest supported version. An outdated schema may lack attributes required by modern security features and applications",
+      "severity": "Medium",
+      "subcategory": "Schema Configuration",
+      "recommendedValue": "Schema version corresponding to Windows Server 2022 (version 88) or later",
+      "remediationSteps": "Run adprep /forestprep and adprep /domainprep from the latest Windows Server installation media to update the schema. Verify the objectVersion attribute on CN=Schema,CN=Configuration,DC=domain",
+      "compliance": {
+        "nistSp80053": ["CM-6", "CM-2"],
+        "mitreAttack": ["T1078.002"],
+        "cisBenchmark": ["18.3.1"],
+        "cisAd": ["1.1.3"]
+      }
+    },
+    {
+      "id": "ADDOM-004",
+      "name": "Domain Controller Inventory",
+      "description": "All domain controllers should be inventoried with their OS version, patch level, and location. Untracked domain controllers represent a significant security risk as they may miss patches or be compromised without detection",
+      "severity": "High",
+      "subcategory": "Domain Controllers",
+      "recommendedValue": "All domain controllers documented with current OS version, site membership, and patch status",
+      "remediationSteps": "Query all DC computer objects from the Domain Controllers OU. Verify each DC is accounted for, running a supported OS, and receiving regular patches. Remove or demote any unauthorized DCs immediately",
+      "compliance": {
+        "nistSp80053": ["CM-8", "CM-8(1)"],
+        "mitreAttack": ["T1018", "T1078.002"],
+        "cisBenchmark": ["1.1"],
+        "anssi": ["R8"],
+        "cisAd": ["1.2.1"]
+      }
+    },
+    {
+      "id": "ADDOM-005",
+      "name": "Obsolete OS on Domain Controllers",
+      "description": "Domain controllers running end-of-life operating systems (Windows Server 2012 R2 or earlier) do not receive security updates and are vulnerable to known exploits. These represent critical infrastructure risk as compromising a DC gives full domain control",
+      "severity": "Critical",
+      "subcategory": "Domain Controllers",
+      "recommendedValue": "All domain controllers running Windows Server 2019 or later with current patches",
+      "remediationSteps": "Plan migration of DCs running obsolete OS versions. Build new DCs on Windows Server 2022, transfer FSMO roles if needed, replicate, then demote and decommission old DCs. Prioritize this remediation as legacy DCs are actively targeted",
+      "compliance": {
+        "nistSp80053": ["SI-2", "CM-6", "SA-22"],
+        "mitreAttack": ["T1210", "T1078.002"],
+        "cisBenchmark": ["18.3.1"],
+        "anssi": ["R8"],
+        "cisAd": ["1.2.2"]
+      }
+    },
+    {
+      "id": "ADDOM-006",
+      "name": "FSMO Role Holder Identification",
+      "description": "The five FSMO roles (Schema Master, Domain Naming Master, RID Master, PDC Emulator, Infrastructure Master) should be documented and placed on appropriate domain controllers. Knowing role placement is essential for disaster recovery and operational awareness",
+      "severity": "Info",
+      "subcategory": "Domain Configuration",
+      "recommendedValue": "All FSMO roles documented, placed on reliable DCs, and included in DR planning",
+      "remediationSteps": "Run 'netdom query fsmo' or query the AD schema and domain partitions to identify role holders. Document roles and verify they are on highly available DCs. Transfer roles if current holders are inappropriate",
+      "compliance": {
+        "nistSp80053": ["CP-2", "CM-8"],
+        "mitreAttack": ["T1018"],
+        "cisAd": ["1.1.4"]
+      }
+    },
+    {
+      "id": "ADDOM-007",
+      "name": "AD Replication Health",
+      "description": "Active Directory replication failures can lead to inconsistent security policy application, stale credentials remaining valid, and split-brain scenarios. Persistent replication failures may also indicate a compromised or rogue DC",
+      "severity": "High",
+      "subcategory": "Replication",
+      "recommendedValue": "All domain controllers replicating successfully with no errors in the last 24 hours",
+      "remediationSteps": "Run 'repadmin /replsummary' and 'repadmin /showrepl' to identify failures. Investigate and resolve DNS issues, network connectivity problems, or USN rollback conditions. Monitor replication status as part of routine operations",
+      "compliance": {
+        "nistSp80053": ["SC-36", "CP-10"],
+        "mitreAttack": ["T1207"],
+        "cisBenchmark": ["18.3.1"],
+        "cisAd": ["1.3.1"]
+      }
+    },
+    {
+      "id": "ADDOM-008",
+      "name": "Tombstone Lifetime Configuration",
+      "description": "The tombstone lifetime defines how long deleted objects are retained before permanent removal and determines the maximum offline time for a DC before it must be rebuilt. A value too low can cause lingering objects; the default of 60 days should be increased to 180 days for modern environments",
+      "severity": "Medium",
+      "subcategory": "Directory Configuration",
+      "recommendedValue": "180 days",
+      "remediationSteps": "Modify the tombstoneLifetime attribute on CN=Directory Service,CN=Windows NT,CN=Services,CN=Configuration,DC=domain. Set to 180 using ADSIEdit or PowerShell. Ensure AD Recycle Bin is enabled before modifying",
+      "compliance": {
+        "nistSp80053": ["CP-9", "CP-10"],
+        "mitreAttack": ["T1485"],
+        "cisAd": ["1.4.1"]
+      }
+    },
+    {
+      "id": "ADDOM-009",
+      "name": "AD Recycle Bin Status",
+      "description": "The Active Directory Recycle Bin allows recovery of deleted objects with all attributes intact. Without it, restoring accidentally or maliciously deleted objects requires authoritative restore from backup, which causes significant downtime",
+      "severity": "Medium",
+      "subcategory": "Directory Configuration",
+      "recommendedValue": "Enabled",
+      "remediationSteps": "Enable AD Recycle Bin via Active Directory Administrative Center > right-click domain > Enable Recycle Bin, or run Enable-ADOptionalFeature 'Recycle Bin Feature' in PowerShell. Note: this action is irreversible",
+      "compliance": {
+        "nistSp80053": ["CP-9", "CP-10"],
+        "mitreAttack": ["T1485"],
+        "cisBenchmark": ["18.3.1"],
+        "cisAd": ["1.4.2"]
+      }
+    },
+    {
+      "id": "ADDOM-010",
+      "name": "Sites and Subnets Configuration",
+      "description": "All IP subnets in use should be assigned to AD sites. Missing subnet-to-site mappings cause clients to authenticate against suboptimal DCs, potentially sending credentials across WAN links in cleartext and degrading security posture",
+      "severity": "Medium",
+      "subcategory": "Sites & Replication",
+      "recommendedValue": "All IP subnets mapped to appropriate AD sites with no orphaned subnets",
+      "remediationSteps": "Review AD Sites and Services > Subnets container. Cross-reference with network documentation to identify unmapped subnets. Create subnet objects for all production networks and associate them with the correct site",
+      "compliance": {
+        "nistSp80053": ["SC-7", "CM-6"],
+        "mitreAttack": ["T1557"],
+        "cisAd": ["1.5.1"]
+      }
+    },
+    {
+      "id": "ADDOM-011",
+      "name": "Site Link Configuration",
+      "description": "AD site links should be configured with appropriate cost, replication interval, and schedule to ensure timely replication while respecting network constraints. Misconfigured site links can delay security policy propagation",
+      "severity": "Low",
+      "subcategory": "Sites & Replication",
+      "recommendedValue": "Site links configured with appropriate costs and replication intervals of 15-60 minutes depending on link capacity",
+      "remediationSteps": "Review AD Sites and Services > Inter-Site Transports > IP. Verify each site link has appropriate cost values, replication interval (default 180 minutes is often too long), and schedule. Adjust based on network topology",
+      "compliance": {
+        "nistSp80053": ["SC-36", "CM-6"],
+        "mitreAttack": ["T1557"],
+        "cisAd": ["1.5.2"]
+      }
+    },
+    {
+      "id": "ADDOM-012",
+      "name": "DNS Zone Security",
+      "description": "AD-integrated DNS zones should use secure dynamic updates only. Allowing nonsecure updates enables attackers to poison DNS records, redirect authentication traffic, and perform adversary-in-the-middle attacks against domain-joined systems",
+      "severity": "High",
+      "subcategory": "DNS Security",
+      "recommendedValue": "Secure dynamic updates only on all AD-integrated DNS zones",
+      "remediationSteps": "Open DNS Manager > Right-click each AD-integrated zone > Properties > General tab > Change Dynamic Updates to 'Secure only'. Review all forward and reverse lookup zones. Verify DNSSEC signing if applicable",
+      "compliance": {
+        "nistSp80053": ["SC-20", "SC-21"],
+        "mitreAttack": ["T1557", "T1584.002"],
+        "cisBenchmark": ["18.5.4"],
+        "anssi": ["R29"],
+        "cisAd": ["1.6.1"]
+      }
+    },
+    {
+      "id": "ADDOM-013",
+      "name": "LDAP Signing Requirements",
+      "description": "LDAP signing must be required on all domain controllers to prevent adversary-in-the-middle attacks on LDAP traffic. Without signing, attackers can intercept and modify LDAP queries and responses, potentially escalating privileges or exfiltrating data",
+      "severity": "Critical",
+      "subcategory": "Protocol Security",
+      "recommendedValue": "LDAP server signing requirement set to 'Require signing' on all DCs",
+      "remediationSteps": "Configure via Group Policy: Computer Configuration > Policies > Windows Settings > Security Settings > Local Policies > Security Options > 'Domain controller: LDAP server signing requirements' = 'Require signing'. Apply to the Domain Controllers OU",
+      "compliance": {
+        "nistSp80053": ["SC-8", "SC-8(1)", "SC-23"],
+        "mitreAttack": ["T1557"],
+        "cisBenchmark": ["2.3.5.1"],
+        "anssi": ["R25"],
+        "nsaAsd": ["LDAP-1"],
+        "cisAd": ["2.1.1"]
+      }
+    },
+    {
+      "id": "ADDOM-014",
+      "name": "LDAP Channel Binding",
+      "description": "LDAP channel binding tokens prevent relay attacks by cryptographically binding the LDAP session to the TLS channel. Without channel binding, attackers can relay LDAP authentication to gain unauthorized access",
+      "severity": "High",
+      "subcategory": "Protocol Security",
+      "recommendedValue": "LDAP channel binding set to 'Always' on all domain controllers",
+      "remediationSteps": "Set the registry value LdapEnforceChannelBinding to 2 (Always) at HKLM\\System\\CurrentControlSet\\Services\\NTDS\\Parameters on all DCs. Test with value 1 (When Supported) first to identify incompatible clients",
+      "compliance": {
+        "nistSp80053": ["SC-8", "SC-8(1)", "SC-23"],
+        "mitreAttack": ["T1557"],
+        "cisBenchmark": ["18.3.5"],
+        "anssi": ["R25"],
+        "nsaAsd": ["LDAP-2"],
+        "cisAd": ["2.1.2"]
+      }
+    },
+    {
+      "id": "ADDOM-015",
+      "name": "SMB Signing Requirements",
+      "description": "SMB signing must be required on all domain controllers to prevent adversary-in-the-middle and relay attacks on SMB traffic. SMB relay attacks can be used to gain SYSTEM-level access on domain controllers, leading to full domain compromise",
+      "severity": "Critical",
+      "subcategory": "Protocol Security",
+      "recommendedValue": "SMB signing required on all domain controllers and member servers",
+      "remediationSteps": "Configure via Group Policy: Computer Configuration > Policies > Windows Settings > Security Settings > Local Policies > Security Options > 'Microsoft network server: Digitally sign communications (always)' = Enabled. Apply to Domain Controllers OU and all server OUs",
+      "compliance": {
+        "nistSp80053": ["SC-8", "SC-8(1)"],
+        "mitreAttack": ["T1557", "T1021.002"],
+        "cisBenchmark": ["2.3.8.1", "2.3.8.2"],
+        "anssi": ["R26"],
+        "nsaAsd": ["SMB-1"],
+        "cisAd": ["2.2.1"]
+      }
+    },
+    {
+      "id": "ADDOM-016",
+      "name": "NTLMv1 Usage Detection",
+      "description": "NTLMv1 is a severely weakened authentication protocol that can be cracked in seconds with modern hardware. Any NTLMv1 usage in the environment must be identified and eliminated as it exposes credentials to trivial offline attacks",
+      "severity": "Critical",
+      "subcategory": "Protocol Security",
+      "recommendedValue": "Zero NTLMv1 authentication events detected; LAN Manager authentication level set to refuse NTLMv1",
+      "remediationSteps": "Enable NTLM auditing via Group Policy: Computer Configuration > Policies > Windows Settings > Security Settings > Local Policies > Security Options > 'Network security: Restrict NTLM' settings. Review event logs for NTLMv1 usage and remediate applications, then set 'Network security: LAN Manager authentication level' to 'Send NTLMv2 response only. Refuse LM & NTLM'",
+      "compliance": {
+        "nistSp80053": ["IA-5(2)", "SC-8"],
+        "mitreAttack": ["T1557", "T1003"],
+        "cisBenchmark": ["2.3.8.4"],
+        "anssi": ["R27"],
+        "nsaAsd": ["NTLM-1"],
+        "cisAd": ["2.3.1"]
+      }
+    },
+    {
+      "id": "ADDOM-017",
+      "name": "NTLMv2 Enforcement",
+      "description": "The LAN Manager authentication level should be configured to send only NTLMv2 responses and refuse LM and NTLMv1. While NTLMv2 is still less secure than Kerberos, it is significantly stronger than NTLMv1 and should be the minimum NTLM standard",
+      "severity": "High",
+      "subcategory": "Protocol Security",
+      "recommendedValue": "LAN Manager authentication level set to 'Send NTLMv2 response only. Refuse LM & NTLM' (level 5)",
+      "remediationSteps": "Configure via Group Policy: Computer Configuration > Policies > Windows Settings > Security Settings > Local Policies > Security Options > 'Network security: LAN Manager authentication level' = 'Send NTLMv2 response only. Refuse LM & NTLM'. Test thoroughly before enforcement",
+      "compliance": {
+        "nistSp80053": ["IA-5(2)", "SC-8"],
+        "mitreAttack": ["T1557", "T1003"],
+        "cisBenchmark": ["2.3.8.4"],
+        "anssi": ["R27"],
+        "nsaAsd": ["NTLM-2"],
+        "cisAd": ["2.3.2"]
+      }
+    },
+    {
+      "id": "ADDOM-018",
+      "name": "Null Session Enumeration",
+      "description": "Anonymous (null session) access to Active Directory allows unauthenticated attackers to enumerate users, groups, shares, and domain information. This reconnaissance data is used to plan credential attacks and lateral movement",
+      "severity": "High",
+      "subcategory": "Access Control",
+      "recommendedValue": "Null session enumeration disabled; RestrictAnonymous and RestrictAnonymousSAM set to prevent anonymous access",
+      "remediationSteps": "Configure via Group Policy: Computer Configuration > Policies > Windows Settings > Security Settings > Local Policies > Security Options > Set 'Network access: Restrict anonymous access to Named Pipes and Shares' = Enabled, 'Network access: Do not allow anonymous enumeration of SAM accounts' = Enabled, 'Network access: Do not allow anonymous enumeration of SAM accounts and shares' = Enabled",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-14"],
+        "mitreAttack": ["T1087.002", "T1069.002"],
+        "cisBenchmark": ["2.3.10.5", "2.3.10.6"],
+        "anssi": ["R30"],
+        "cisAd": ["2.4.1"]
+      }
+    },
+    {
+      "id": "ADDOM-019",
+      "name": "Print Spooler on Domain Controllers",
+      "description": "The Print Spooler service on domain controllers enables the PrintNightmare (CVE-2021-34527) and SpoolSample/PrinterBug attacks. An attacker can coerce a DC to authenticate to an attacker-controlled server, enabling credential relay and unconstrained delegation abuse",
+      "severity": "High",
+      "subcategory": "Domain Controllers",
+      "recommendedValue": "Print Spooler service disabled on all domain controllers",
+      "remediationSteps": "Disable the Print Spooler service on all domain controllers via Group Policy: Computer Configuration > Policies > Windows Settings > Security Settings > System Services > Print Spooler > Startup Mode = Disabled. Apply to the Domain Controllers OU. Verify no print functionality depends on DCs",
+      "compliance": {
+        "nistSp80053": ["CM-7", "CM-7(1)"],
+        "mitreAttack": ["T1187", "T1210"],
+        "cisBenchmark": ["5.2"],
+        "anssi": ["R9"],
+        "cisAd": ["1.2.3"]
+      }
+    },
+    {
+      "id": "ADDOM-020",
+      "name": "DSRM Password Configuration",
+      "description": "The Directory Services Restore Mode (DSRM) password provides local administrator access to a domain controller when booted in recovery mode. An attacker with physical or remote access who knows the DSRM password can extract the entire AD database. The DSRM password should be unique per DC and rotated regularly",
+      "severity": "Medium",
+      "subcategory": "Domain Controllers",
+      "recommendedValue": "DSRM password unique per DC, rotated annually, and stored securely. DsrmAdminLogonBehavior set to 0 to prevent network DSRM logon",
+      "remediationSteps": "Reset DSRM passwords using 'ntdsutil > set dsrm password' on each DC. Set the registry value DsrmAdminLogonBehavior to 0 at HKLM\\System\\CurrentControlSet\\Control\\Lsa to prevent DSRM account from being used for network logon. Document and securely store passwords",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)", "AC-6"],
+        "mitreAttack": ["T1003", "T1078.002"],
+        "anssi": ["R10"],
+        "cisAd": ["1.2.4"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,233 @@
+{
+  "version": "1.0",
+  "missionMode": {
+    "reporting": true,
+    "monitoring": true
+  },
+  "environments": {
+    "googleWorkspace": {
+      "enabled": true,
+      "audit": {
+        "enabled": true,
+        "targetOU": "/",
+        "categories": {
+          "authentication": true,
+          "emailSecurity": true,
+          "driveSecurity": true,
+          "oauthSecurity": true,
+          "adminManagement": true,
+          "collaboration": true,
+          "deviceManagement": true,
+          "loggingAlerting": true
+        }
+      },
+      "monitoring": {
+        "enabled": true,
+        "intervalMinutes": 15,
+        "detections": {
+          "cloudIpLogins": true,
+          "knownAttackerIps": true,
+          "reauthFromCloudIp": true,
+          "oauthFromCloudIp": true,
+          "impossibleTravel": true,
+          "suspiciousCountryLogins": true,
+          "afterHoursLogins": true,
+          "bruteForce": true,
+          "concurrentSessions": true,
+          "newDeviceDetection": true,
+          "highRiskOAuthApps": true,
+          "domainWideDelegation": true,
+          "adminPrivilegeEscalations": true,
+          "userSuspensions": true,
+          "twoStepDisablement": true,
+          "emailForwardingRules": true,
+          "driveExternalSharing": true,
+          "bulkFileDownloads": true,
+          "workspaceSettingChanges": true,
+          "riskySensitiveActions": true,
+          "knownCompromisedUsers": true,
+          "remediationTracking": true,
+          "userAgentAnomalies": true
+        }
+      }
+    },
+    "activeDirectory": {
+      "enabled": true,
+      "audit": {
+        "enabled": true,
+        "categories": {
+          "domainForest": true,
+          "trusts": true,
+          "privilegedAccounts": true,
+          "passwordPolicy": true,
+          "kerberos": true,
+          "aclDelegation": true,
+          "groupPolicy": true,
+          "logonScripts": true,
+          "certificateServices": true,
+          "staleObjects": true
+        }
+      },
+      "monitoring": {
+        "enabled": true,
+        "intervalMinutes": 15,
+        "detections": {
+          "domainAdminsChanges": true,
+          "enterpriseAdminsChanges": true,
+          "privilegedGroupChanges": true,
+          "adminSdHolderAcl": true,
+          "serviceAccountCreation": true,
+          "sensitivePasswordChanges": true,
+          "computerAccountCreation": true,
+          "gpoChanges": true,
+          "gpoLinkChanges": true,
+          "delegationChanges": true,
+          "ouPermissionChanges": true,
+          "trustChanges": true,
+          "dcSyncPermissions": true,
+          "replicationAnomalies": true,
+          "krbtgtChanges": true,
+          "certTemplateChanges": true,
+          "certEnrollmentAnomalies": true,
+          "dnsRecordChanges": true,
+          "schemaChanges": true,
+          "ldapAnomalies": true
+        }
+      }
+    },
+    "entraAzure": {
+      "enabled": true,
+      "audit": {
+        "enabled": true,
+        "categories": {
+          "conditionalAccess": true,
+          "authenticationMethods": true,
+          "pim": true,
+          "applications": true,
+          "federation": true,
+          "tenantConfig": true,
+          "azureIAM": true
+        }
+      },
+      "monitoring": {
+        "enabled": true,
+        "intervalMinutes": 15,
+        "detections": {
+          "riskySignIns": true,
+          "impossibleTravel": true,
+          "unfamiliarProperties": true,
+          "anonymousIp": true,
+          "malwareIp": true,
+          "leakedCredentials": true,
+          "passwordSpray": true,
+          "anomalousToken": true,
+          "cloudIpSignIns": true,
+          "vpnTorSignIns": true,
+          "foreignCountrySignIns": true,
+          "privilegedRoleChanges": true,
+          "globalAdminAssignment": true,
+          "conditionalAccessChanges": true,
+          "servicePrincipalCredentials": true,
+          "appPermissionGrants": true,
+          "federationChanges": true,
+          "guestInvitations": true,
+          "authMethodChanges": true,
+          "auditLogGaps": true
+        }
+      }
+    },
+    "m365": {
+      "enabled": true,
+      "audit": {
+        "enabled": true,
+        "categories": {
+          "m365Services": true
+        }
+      },
+      "monitoring": {
+        "enabled": true,
+        "intervalMinutes": 15,
+        "detections": {
+          "transportRuleChanges": true,
+          "forwardingRules": true,
+          "auditLogDisablement": true,
+          "dlpPolicyChanges": true,
+          "externalSharingChanges": true,
+          "bulkFileExfiltration": true,
+          "teamsExternalAccess": true,
+          "eDiscoverySearches": true,
+          "powerAutomateFlows": true,
+          "defenderAlertChanges": true
+        }
+      }
+    },
+    "intune": {
+      "enabled": true,
+      "audit": {
+        "enabled": true,
+        "categories": {
+          "intune": true
+        }
+      }
+    }
+  },
+  "reporting": {
+    "formats": ["html", "csv", "json"],
+    "sections": {
+      "executiveSummary": true,
+      "technicalDetail": true,
+      "remediationPlaybook": true,
+      "remediationScripts": true,
+      "deltaReport": true,
+      "quickWins": true,
+      "budgetJustification": false,
+      "threatActorProfiles": false
+    },
+    "frameworks": {
+      "nist800171": true,
+      "cisBenchmarks": true,
+      "mitreAttack": true,
+      "anssi": false,
+      "ferpa": true,
+      "coppa": true,
+      "cipa": true,
+      "stateEdtech": true,
+      "stateRequirements": {
+        "enabled": false,
+        "states": []
+      }
+    }
+  },
+  "alerting": {
+    "channels": []
+  },
+  "credentials": {
+    "strategy": "secretManagement",
+    "vaultName": "PSGuerrilla",
+    "references": {
+      "googleWorkspace": {
+        "type": "serviceAccount",
+        "vaultKey": "GUERRILLA_GWS_SA",
+        "scopes": [
+          "https://www.googleapis.com/auth/admin.directory.user.readonly",
+          "https://www.googleapis.com/auth/admin.directory.domain.readonly",
+          "https://www.googleapis.com/auth/admin.directory.device.mobile.readonly",
+          "https://www.googleapis.com/auth/admin.directory.orgunit.readonly",
+          "https://www.googleapis.com/auth/apps.alerts",
+          "https://www.googleapis.com/auth/admin.reports.audit.readonly"
+        ]
+      },
+      "microsoftGraph": {
+        "type": "appRegistration",
+        "vaultKey": "GUERRILLA_GRAPH_SECRET",
+        "tenantIdVaultKey": "GUERRILLA_GRAPH_TENANT",
+        "clientIdVaultKey": "GUERRILLA_GRAPH_CLIENTID",
+        "authMethod": "clientSecret"
+      },
+      "activeDirectory": {
+        "type": "currentUser",
+        "authMethod": "kerberos"
+      }
+    }
+  }
+}

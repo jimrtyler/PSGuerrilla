@@ -1,0 +1,165 @@
+{
+  "categoryId": "adtrust",
+  "categoryName": "AD Trust Relationships",
+  "categoryDescription": "Checks related to Active Directory trust relationships, trust security configuration, SID filtering, and hybrid identity trust posture",
+  "checks": [
+    {
+      "id": "ADTRUST-001",
+      "name": "Trust Relationships Enumeration",
+      "description": "All trust relationships should be inventoried to establish a complete picture of the authentication boundary. Undocumented trusts expand the attack surface by allowing users from external domains to access resources",
+      "severity": "Info",
+      "subcategory": "Trust Inventory",
+      "recommendedValue": "All trust relationships documented with business justification, direction, type, and owner",
+      "remediationSteps": "Run Get-ADTrust -Filter * to enumerate all trusts. Document each trust with its direction, type (forest, external, shortcut, realm), transitivity, and business justification. Review and remove any trusts that no longer serve a business need",
+      "compliance": {
+        "nistSp80053": ["AC-20", "CA-3"],
+        "mitreAttack": ["T1482"],
+        "cisAd": ["3.1.1"]
+      }
+    },
+    {
+      "id": "ADTRUST-002",
+      "name": "Trust Direction Analysis",
+      "description": "Inbound trusts allow external domain users to authenticate into your domain. Each inbound or bidirectional trust should be reviewed to ensure that the trusted domain maintains adequate security controls. A compromised trusted domain can be used to attack your environment",
+      "severity": "Medium",
+      "subcategory": "Trust Configuration",
+      "recommendedValue": "All trust directions justified and documented. Bidirectional trusts converted to one-way where possible to reduce attack surface",
+      "remediationSteps": "Review each trust direction using Get-ADTrust -Filter *. For bidirectional trusts, evaluate whether both directions are required. Convert to one-way trusts where the business need only requires one direction. Document the justification for all inbound trust paths",
+      "compliance": {
+        "nistSp80053": ["AC-20", "AC-4"],
+        "mitreAttack": ["T1482", "T1078.002"],
+        "cisAd": ["3.1.2"]
+      }
+    },
+    {
+      "id": "ADTRUST-003",
+      "name": "Trust Transitivity Analysis",
+      "description": "Transitive trusts extend authentication paths beyond direct trust partners, potentially creating unintended access paths through chains of trusted domains. Each transitive trust should be evaluated for the extended attack surface it creates",
+      "severity": "Medium",
+      "subcategory": "Trust Configuration",
+      "recommendedValue": "All transitive trusts documented with full transitivity path analysis. External trusts preferred over forest trusts when transitivity is not required",
+      "remediationSteps": "Map all transitive trust paths to identify indirect authentication routes. For forest trusts, understand that all child domains are transitively trusted. Consider using external (non-transitive) trusts when only specific domain access is needed",
+      "compliance": {
+        "nistSp80053": ["AC-20", "AC-4"],
+        "mitreAttack": ["T1482", "T1078.002"],
+        "cisAd": ["3.1.3"]
+      }
+    },
+    {
+      "id": "ADTRUST-004",
+      "name": "SID Filtering Status",
+      "description": "SID filtering removes SIDs from foreign domains in authentication tokens, preventing SID history injection attacks. Without SID filtering, an attacker who compromises a trusted domain can craft tickets containing privileged SIDs (such as Enterprise Admins) from your domain, achieving full compromise",
+      "severity": "Critical",
+      "subcategory": "Trust Security",
+      "recommendedValue": "SID filtering (quarantine) enabled on all external and forest trusts",
+      "remediationSteps": "Verify SID filtering status using 'netdom trust /domain:trusted.domain /Quarantine'. Enable SID filtering with 'netdom trust /domain:trusted.domain /Quarantine:Yes'. Note: SID filtering is enabled by default on external trusts but must be verified on forest trusts where it may have been deliberately disabled",
+      "compliance": {
+        "nistSp80053": ["AC-4", "AC-6"],
+        "mitreAttack": ["T1134.005"],
+        "cisBenchmark": ["18.3.1"],
+        "anssi": ["R32"],
+        "cisAd": ["3.2.1"]
+      }
+    },
+    {
+      "id": "ADTRUST-005",
+      "name": "SID History Abuse Detection",
+      "description": "SID history is intended for domain migrations but can be abused to inject privileged SIDs into user tokens across trust boundaries. Attackers who compromise a trusted domain can add Enterprise Admin or Domain Admin SIDs to the SID history of any account they control",
+      "severity": "Critical",
+      "subcategory": "Trust Security",
+      "recommendedValue": "No accounts with SID history values referencing privileged groups. SID history cleaned up after all migrations complete",
+      "remediationSteps": "Search for accounts with SID history using Get-ADUser -Filter {SIDHistory -like '*'} -Properties SIDHistory. Identify any SID history entries that reference privileged groups (Domain Admins, Enterprise Admins, etc.). Clean up SID history after migration using Remove-ADUser with the SIDHistory parameter. Enable SID filtering on trusts",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-6(1)"],
+        "mitreAttack": ["T1134.005"],
+        "anssi": ["R32"],
+        "cisAd": ["3.2.2"]
+      }
+    },
+    {
+      "id": "ADTRUST-006",
+      "name": "Selective Authentication Status",
+      "description": "Selective authentication restricts which users from a trusted domain can authenticate to resources in your domain by requiring explicit permissions on each resource. Without it, all authenticated users from the trusted domain can access any resource they have permissions to, expanding the attack surface significantly",
+      "severity": "High",
+      "subcategory": "Trust Security",
+      "recommendedValue": "Selective authentication enabled on all forest trusts. Allowed-to-Authenticate permissions granted only on required resources",
+      "remediationSteps": "Enable selective authentication on forest trusts via Active Directory Domains and Trusts > Properties of the trust > Authentication tab > Select 'Selective authentication'. Then grant 'Allowed to Authenticate' permission on specific computer objects that external users need to access",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-4", "AC-6"],
+        "mitreAttack": ["T1482", "T1078.002"],
+        "anssi": ["R33"],
+        "cisAd": ["3.2.3"]
+      }
+    },
+    {
+      "id": "ADTRUST-007",
+      "name": "Azure AD Hybrid Trust Security",
+      "description": "Hybrid identity configurations connecting on-premises AD with Azure AD create additional attack paths. Azure AD Connect, pass-through authentication agents, and federation services can be targeted to pivot between cloud and on-premises environments",
+      "severity": "Medium",
+      "subcategory": "Hybrid Identity",
+      "recommendedValue": "Azure AD Connect running latest version on a hardened, dedicated server. PHS preferred over PTA/federation. Seamless SSO disabled if not required. Cloud-only break-glass accounts configured",
+      "remediationSteps": "Review Azure AD Connect configuration and ensure it runs on a Tier 0 hardened server. Evaluate switching from federation or PTA to Password Hash Sync (PHS) for reduced attack surface. If using Seamless SSO, ensure the AZUREADSSOACC computer account password is rotated. Verify cloud-only emergency access accounts exist",
+      "compliance": {
+        "nistSp80053": ["IA-2", "AC-20", "SC-8"],
+        "mitreAttack": ["T1078.004", "T1649"],
+        "cisAd": ["3.3.1"]
+      }
+    },
+    {
+      "id": "ADTRUST-008",
+      "name": "Foreign Domain Trust Enumeration",
+      "description": "Trusts with domains outside the organization extend the security boundary to entities with potentially different security standards. Foreign domain trusts should receive additional scrutiny as the trusting organization cannot control the security posture of the external domain",
+      "severity": "Medium",
+      "subcategory": "Trust Inventory",
+      "recommendedValue": "All foreign domain trusts documented with external security assessment, contractual security requirements, and annual review",
+      "remediationSteps": "Identify trusts with domains outside the organization using Get-ADTrust -Filter *. For each external trust, verify that a security agreement is in place, SID filtering is enabled, selective authentication is configured, and the trust is reviewed annually",
+      "compliance": {
+        "nistSp80053": ["AC-20", "CA-3", "SA-9"],
+        "mitreAttack": ["T1482", "T1078.002"],
+        "cisAd": ["3.1.4"]
+      }
+    },
+    {
+      "id": "ADTRUST-009",
+      "name": "Orphaned Trust Detection",
+      "description": "Orphaned trusts reference domains that no longer exist or are no longer reachable. These stale trust objects may retain credentials and create confusion during security audits. They should be removed to reduce unnecessary attack surface and maintain a clean trust topology",
+      "severity": "Medium",
+      "subcategory": "Trust Hygiene",
+      "recommendedValue": "No orphaned or unresolvable trust relationships present",
+      "remediationSteps": "Enumerate all trusts and attempt to validate each by resolving the trusted domain name and testing the trust with 'netdom trust /verify'. Remove orphaned trusts where the partner domain no longer exists or is unreachable using 'netdom trust /Remove' or Active Directory Domains and Trusts",
+      "compliance": {
+        "nistSp80053": ["CM-6", "AC-20"],
+        "mitreAttack": ["T1482"],
+        "cisAd": ["3.4.1"]
+      }
+    },
+    {
+      "id": "ADTRUST-010",
+      "name": "Trust Key Age and Rotation",
+      "description": "Trust passwords (inter-realm keys) should be rotated regularly. Stale trust keys increase the window for credential-based attacks. By default, trust passwords rotate every 30 days, but this should be verified as failed rotations can go undetected",
+      "severity": "High",
+      "subcategory": "Trust Security",
+      "recommendedValue": "Trust passwords rotated within the last 30 days. Automatic trust password rotation not disabled",
+      "remediationSteps": "Check the trust password last set date by examining the trustAuthOutgoing attribute or running 'netdom trust /domain:trusted.domain /verify'. If the trust password is stale, reset it using 'netdom trust /domain:trusted.domain /Reset'. Verify that no GPO or registry setting has disabled automatic trust password rotation",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)", "SC-12"],
+        "mitreAttack": ["T1482", "T1550.003"],
+        "cisAd": ["3.2.4"]
+      }
+    },
+    {
+      "id": "ADTRUST-011",
+      "name": "Trust Hierarchy Visualization",
+      "description": "A complete trust topology map should be maintained showing all trust relationships, directions, types, and transitivity paths. This visualization is essential for understanding the full authentication boundary and identifying unexpected access paths",
+      "severity": "Info",
+      "subcategory": "Trust Inventory",
+      "recommendedValue": "Up-to-date trust topology diagram maintained and reviewed quarterly",
+      "remediationSteps": "Generate a trust topology map using automated tools or manually document all trust relationships including direction, type, transitivity, SID filtering status, and selective authentication status. Update the diagram whenever trusts are added, modified, or removed. Include the map in security documentation and review quarterly",
+      "compliance": {
+        "nistSp80053": ["AC-20", "PL-2"],
+        "mitreAttack": ["T1482"],
+        "cisAd": ["3.1.5"]
+      }
+    }
+  ]
+}

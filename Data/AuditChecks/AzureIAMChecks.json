@@ -1,0 +1,134 @@
+{
+  "categoryId": "aziam",
+  "categoryName": "Azure IAM & Resource Security",
+  "categoryDescription": "Evaluates Azure subscription-level identity and access management controls, resource security configurations, and infrastructure protection settings to ensure least-privilege access and defense-in-depth across Azure environments.",
+  "checks": [
+    {
+      "id": "AZIAM-001",
+      "name": "Subscription-level role assignments audit",
+      "description": "Subscription-level role assignments grant broad permissions across all resources within a subscription. Overly permissive or stale assignments at this scope can allow lateral movement and unauthorized access to sensitive workloads. Regular audits ensure that only authorized personnel retain subscription-wide privileges.",
+      "severity": "High",
+      "subcategory": "Role Assignments",
+      "recommendedValue": "Minimize subscription-level role assignments; prefer resource group or resource-level scoping",
+      "remediationSteps": "Review all subscription-level role assignments in Azure IAM and remove any that are stale, unnecessary, or overly broad. Reassign permissions at the resource group or individual resource level where possible. Implement a recurring quarterly access review using Azure AD Access Reviews for subscription-scoped roles.",
+      "compliance": {
+        "nistSp80053": ["AC-2", "AC-6"],
+        "cisAzure": ["1.23"]
+      }
+    },
+    {
+      "id": "AZIAM-002",
+      "name": "Users with Azure IAM roles directly on resources",
+      "description": "Direct role assignments to individual users on Azure resources bypass group-based access governance and make permission tracking difficult. This practice increases the risk of orphaned permissions when users change roles or leave the organization. Group-based assignments provide better auditability and lifecycle management.",
+      "severity": "Medium",
+      "subcategory": "Role Assignments",
+      "recommendedValue": "Assign roles to Azure AD groups rather than directly to individual users",
+      "remediationSteps": "Identify all direct user-to-resource role assignments using Azure Resource Graph or the IAM blade. Create appropriate Azure AD security groups for each access pattern and migrate individual assignments to group-based assignments. Remove the direct user assignments after confirming group membership grants equivalent access.",
+      "compliance": {
+        "nistSp80053": ["AC-6(1)"],
+        "cisAzure": ["1.23"]
+      }
+    },
+    {
+      "id": "AZIAM-003",
+      "name": "Resource group permission analysis",
+      "description": "Resource groups serve as logical containers for Azure resources and their IAM assignments cascade to all contained resources. Misconfigured resource group permissions can inadvertently grant access to sensitive resources such as databases, key vaults, or virtual machines. Analyzing these permissions ensures consistent enforcement of least-privilege principles.",
+      "severity": "Medium",
+      "subcategory": "Role Assignments",
+      "recommendedValue": "Apply least-privilege role assignments at the resource group level with documented justification",
+      "remediationSteps": "Enumerate all role assignments at each resource group using Get-AzRoleAssignment and review for excessive permissions such as Owner or Contributor roles granted to broad groups. Downgrade overly permissive roles to more specific built-in roles like Reader or specific resource provider roles. Document the business justification for each resource group role assignment and schedule periodic reviews.",
+      "compliance": {
+        "nistSp80053": ["AC-6"]
+      }
+    },
+    {
+      "id": "AZIAM-004",
+      "name": "Azure Key Vault access policy audit",
+      "description": "Azure Key Vault stores cryptographic keys, secrets, and certificates critical to application security and data protection. Overly permissive access policies can expose secrets to unauthorized users or service principals, leading to credential theft or data breaches. Both access policy and RBAC authorization models must be audited for least-privilege adherence.",
+      "severity": "High",
+      "subcategory": "Key Management",
+      "recommendedValue": "Use Azure RBAC for Key Vault access control; restrict Get/List/Set permissions to minimum required principals",
+      "remediationSteps": "Review all Key Vault access policies or RBAC assignments and remove any principals with unnecessary permissions such as Purge or full key management rights. Migrate from the legacy access policy model to Azure RBAC-based authorization for finer-grained control and auditability. Enable Key Vault logging to a Log Analytics workspace and set up alerts for suspicious access patterns.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "SC-12"],
+        "cisAzure": ["8.5"]
+      }
+    },
+    {
+      "id": "AZIAM-005",
+      "name": "Storage account security settings",
+      "description": "Azure Storage accounts often contain sensitive business data, backups, and application state that must be protected at rest and in transit. Misconfigured settings such as allowing public blob access, disabling HTTPS enforcement, or using legacy TLS versions create significant data exposure risks. Storage account security settings must be hardened to prevent unauthorized access and data leakage.",
+      "severity": "High",
+      "subcategory": "Data Protection",
+      "recommendedValue": "Enforce HTTPS-only transfer, disable public blob access, require TLS 1.2 minimum, enable infrastructure encryption",
+      "remediationSteps": "Set the minimum TLS version to 1.2, enable HTTPS-only transfer, and disable public blob access on all storage accounts. Enable infrastructure encryption for double encryption at rest and configure private endpoints to restrict network access. Review shared access signatures and access keys, rotate keys on a regular schedule, and prefer Azure AD authentication over key-based access.",
+      "compliance": {
+        "nistSp80053": ["SC-8", "SC-28"],
+        "cisAzure": ["3.1"]
+      }
+    },
+    {
+      "id": "AZIAM-006",
+      "name": "Network Security Group rules audit",
+      "description": "Network Security Groups control inbound and outbound traffic flow to Azure resources and are a primary network segmentation mechanism. Overly permissive NSG rules, such as allowing unrestricted inbound access from the internet on management ports, expose resources to brute-force attacks and exploitation. Regular audits of NSG rules are essential to maintain a secure network perimeter.",
+      "severity": "High",
+      "subcategory": "Network Security",
+      "recommendedValue": "Deny all inbound internet traffic by default; allow only required ports from specific source IP ranges",
+      "remediationSteps": "Review all NSG rules for overly permissive entries, particularly any rules allowing inbound traffic from 0.0.0.0/0 or Any on ports such as 22, 3389, 445, or 1433. Replace broad allow rules with specific source IP ranges or service tags and remove unused rules. Enable NSG flow logs and integrate with Azure Network Watcher for continuous monitoring of traffic patterns and anomaly detection.",
+      "compliance": {
+        "nistSp80053": ["SC-7"],
+        "cisAzure": ["6.1"]
+      }
+    },
+    {
+      "id": "AZIAM-007",
+      "name": "Azure Policy compliance status",
+      "description": "Azure Policy enforces organizational standards and assesses compliance at scale across Azure resources. Non-compliant resources indicate configuration drift from security baselines, potentially exposing the environment to risks that governance controls are designed to prevent. Monitoring policy compliance ensures that deployed resources consistently meet security and regulatory requirements.",
+      "severity": "Medium",
+      "subcategory": "Governance",
+      "recommendedValue": "All assigned policies should report 95% or higher compliance; non-compliant resources should have documented exceptions",
+      "remediationSteps": "Review the Azure Policy compliance dashboard to identify non-compliant resources and prioritize remediation based on policy severity. Use remediation tasks to automatically fix non-compliant resources where supported by the policy effect (DeployIfNotExists, Modify). For resources that cannot be made compliant, create documented policy exemptions with expiration dates and business justification.",
+      "compliance": {
+        "nistSp80053": ["CM-6"],
+        "cisAzure": ["2.1"]
+      }
+    },
+    {
+      "id": "AZIAM-008",
+      "name": "Management group structure review",
+      "description": "Management groups provide a hierarchical structure for organizing subscriptions and applying governance controls at scale. A poorly designed or flat management group structure makes it difficult to enforce differentiated policies for production, development, and sandbox environments. Reviewing the hierarchy ensures that policy inheritance and role assignments align with organizational security requirements.",
+      "severity": "Info",
+      "subcategory": "Governance",
+      "recommendedValue": "Implement a management group hierarchy that separates production, development, and sandbox environments with appropriate policy assignments",
+      "remediationSteps": "Review the current management group hierarchy and ensure it reflects organizational boundaries such as business units, environments, and workload classifications. Apply restrictive policies at higher management group levels for broad enforcement and allow exceptions at lower levels only with documented justification. Ensure the root management group has minimal direct role assignments and that sensitive subscriptions are placed in appropriately governed management groups.",
+      "compliance": {
+        "nistSp80053": ["AC-2"]
+      }
+    },
+    {
+      "id": "AZIAM-009",
+      "name": "Custom RBAC role definitions",
+      "description": "Custom Azure RBAC roles provide tailored permissions beyond what built-in roles offer, but they can inadvertently grant excessive or dangerous action combinations. Poorly scoped custom roles with wildcard permissions or overly broad assignable scopes create privilege escalation paths. Each custom role must be reviewed to ensure it follows least-privilege principles and does not combine sensitive operations.",
+      "severity": "Medium",
+      "subcategory": "Role Assignments",
+      "recommendedValue": "Minimize custom role definitions; avoid wildcard actions; restrict assignable scopes to specific management groups or subscriptions",
+      "remediationSteps": "List all custom RBAC role definitions and review their actions, notActions, dataActions, and assignable scopes for overly permissive configurations. Remove any wildcard permissions (*/*, Microsoft.*/*, etc.) and replace with specific action strings required for the role's function. Document the business justification for each custom role and evaluate whether a built-in role or combination of built-in roles could replace the custom definition.",
+      "compliance": {
+        "nistSp80053": ["AC-6"],
+        "cisAzure": ["1.23"]
+      }
+    },
+    {
+      "id": "AZIAM-010",
+      "name": "Resource locks configuration",
+      "description": "Azure resource locks prevent accidental deletion or modification of critical resources such as production databases, networking components, and key vaults. Without resource locks, users with sufficient permissions can inadvertently destroy infrastructure, causing service outages and potential data loss. Applying CanNotDelete or ReadOnly locks to critical resources provides an additional safety layer beyond RBAC.",
+      "severity": "Medium",
+      "subcategory": "Governance",
+      "recommendedValue": "Apply CanNotDelete locks on all production resource groups and critical individual resources",
+      "remediationSteps": "Identify all production and business-critical resource groups and resources that should be protected from accidental deletion or modification. Apply CanNotDelete locks at the resource group level for production environments and ReadOnly locks for immutable infrastructure components. Document the lock strategy and ensure that operational procedures include lock removal steps when intentional changes are required, with appropriate change management approval.",
+      "compliance": {
+        "nistSp80053": ["CM-6"]
+      }
+    }
+  ]
+}

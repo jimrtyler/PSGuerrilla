@@ -1,0 +1,330 @@
+{
+  "categoryId": "adcs",
+  "categoryName": "AD Certificate Services",
+  "categoryDescription": "Checks related to Active Directory Certificate Services (AD CS) security, certificate template vulnerabilities, ESC attack vectors, and PKI configuration",
+  "checks": [
+    {
+      "id": "ADCS-001",
+      "name": "CA Server Inventory",
+      "description": "An inventory of all Certificate Authority servers in the environment provides the foundation for AD CS security assessment. This includes Enterprise CAs, Standalone CAs, their roles (Root vs Subordinate), operating system versions, and published certificate templates. Understanding the PKI hierarchy is essential for identifying the attack surface",
+      "severity": "Info",
+      "subcategory": "PKI Inventory",
+      "recommendedValue": "Complete CA inventory documented with CA type, role, OS version, and published templates for each CA server",
+      "remediationSteps": "Enumerate all CA servers by querying the PKI Enrollment Services container in AD (CN=Enrollment Services,CN=Public Key Services,CN=Services,CN=Configuration). Document each CA's type (Enterprise/Standalone), role (Root/Subordinate), hostname, operating system version, and published certificate templates. Verify that all CA servers are running supported OS versions and have current patches.",
+      "compliance": {
+        "nistSp80053": ["CM-8", "CM-8(1)", "IA-5(2)"],
+        "mitreAttack": ["T1649"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADCS-002",
+      "name": "ESC1 - Enrollee Supplies Subject Alternative Name",
+      "description": "ESC1 occurs when a certificate template allows the enrollee to specify a Subject Alternative Name (SAN) in the certificate request, has Client Authentication or any EKU that permits authentication, and allows enrollment by low-privileged users. An attacker can request a certificate with a SAN for any domain user including Domain Admins, then use the certificate to authenticate as that user",
+      "severity": "Critical",
+      "subcategory": "Certificate Abuse",
+      "recommendedValue": "No certificate templates with CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT that allow low-privileged enrollment and have authentication EKUs",
+      "remediationSteps": "Identify templates where msPKI-Certificate-Name-Flag includes CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT (0x1), the template has Client Authentication or Smart Card Logon EKU, and enrollment is permitted for non-admin users. Remove the CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT flag, restrict enrollment permissions to privileged groups, or remove the authentication EKU. If SAN specification is operationally required, implement CA Manager approval.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "IA-5(2)", "CM-6"],
+        "mitreAttack": ["T1649", "T1556"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_adcs_esc1"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADCS-003",
+      "name": "ESC2 - Any Purpose Extended Key Usage",
+      "description": "ESC2 occurs when a certificate template specifies the Any Purpose EKU (OID 2.5.29.37.0) or no EKU at all (SubCA template equivalent). Certificates with Any Purpose EKU can be used for any purpose including client authentication, server authentication, and code signing. Combined with enrollee-controlled SANs or low enrollment requirements, this enables domain compromise",
+      "severity": "Critical",
+      "subcategory": "Certificate Abuse",
+      "recommendedValue": "No certificate templates with Any Purpose EKU or empty EKU that allow low-privileged enrollment",
+      "remediationSteps": "Identify templates where pKIExtendedKeyUsage contains the Any Purpose OID (2.5.29.37.0) or is empty, and enrollment is permitted for non-admin users. Replace the Any Purpose EKU with specific required EKUs (e.g., Client Authentication only). If a SubCA template, restrict enrollment to Enterprise Admins only. Implement CA Manager approval for any remaining templates with broad EKUs.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "IA-5(2)", "CM-6"],
+        "mitreAttack": ["T1649", "T1556"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_adcs_esc2"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADCS-004",
+      "name": "ESC3 - Enrollment Agent Template Abuse Condition 1",
+      "description": "ESC3 Condition 1 identifies certificate templates that have the Certificate Request Agent EKU (OID 1.3.6.1.4.1.311.20.2.1) and allow enrollment by low-privileged users. An Enrollment Agent certificate allows its holder to enroll in other templates on behalf of any user, potentially including templates with authentication EKUs that normally require CA Manager approval",
+      "severity": "High",
+      "subcategory": "Certificate Abuse",
+      "recommendedValue": "Certificate Request Agent templates restricted to authorized enrollment agents only; not enrollable by low-privileged users",
+      "remediationSteps": "Identify templates with the Certificate Request Agent EKU that allow enrollment by non-administrative users. Restrict enrollment permissions on these templates to a dedicated Enrollment Agent security group. Configure Enrollment Agent restrictions on the CA to limit which templates and users enrollment agents can enroll for. Monitor Certificate Request Agent certificate issuance.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "IA-5(2)", "CM-6"],
+        "mitreAttack": ["T1649"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_adcs_esc3"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADCS-005",
+      "name": "ESC3 - Enrollment Agent Template Abuse Condition 2",
+      "description": "ESC3 Condition 2 identifies certificate templates that accept enrollment on behalf of other users (require an enrollment agent signature) and have an authentication EKU. When combined with ESC3 Condition 1, an attacker who obtains an Enrollment Agent certificate can enroll for authentication certificates on behalf of any user, including Domain Admins",
+      "severity": "High",
+      "subcategory": "Certificate Abuse",
+      "recommendedValue": "Templates requiring enrollment agent signatures restricted to specific target users via enrollment agent restrictions on the CA",
+      "remediationSteps": "Identify templates that require an authorized signature with the Certificate Request Agent application policy and have Client Authentication or Smart Card Logon EKU. Configure Enrollment Agent restrictions on the CA to limit which templates these enrollment agents can enroll for and which users they can enroll on behalf of. This is configured in the CA properties under Enrollment Agents restrictions.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "IA-5(2)", "CM-6"],
+        "mitreAttack": ["T1649"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_adcs_esc3"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADCS-006",
+      "name": "ESC4 - Vulnerable Certificate Template ACLs",
+      "description": "ESC4 occurs when low-privileged users have write permissions on certificate template objects in AD, allowing them to modify template attributes to create an ESC1, ESC2, or ESC3 condition. An attacker with write access can add CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT, change the EKU, modify enrollment permissions, or alter other security-relevant attributes to enable certificate-based privilege escalation",
+      "severity": "Critical",
+      "subcategory": "Certificate Abuse",
+      "recommendedValue": "No write permissions on certificate template objects for non-administrative principals",
+      "remediationSteps": "Enumerate ACLs on all certificate template objects in CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration. Remove WriteDACL, WriteOwner, WriteProperty, and GenericAll/GenericWrite ACEs for non-administrative principals. Only Enterprise Admins and designated PKI administrators should have write access to template objects. Monitor for ACL changes on certificate template objects.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-3", "IA-5(2)"],
+        "mitreAttack": ["T1649", "T1222.001"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_adcs_esc4"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADCS-007",
+      "name": "ESC4 - Vulnerable Certificate Template Ownership",
+      "description": "If a certificate template object is owned by a non-administrative principal, that principal can modify the template's DACL to grant themselves write access and then modify the template to create exploitable conditions. Template ownership should be restricted to Enterprise Admins or the domain's PKI administration group",
+      "severity": "Critical",
+      "subcategory": "Certificate Abuse",
+      "recommendedValue": "All certificate template objects owned by Enterprise Admins or designated PKI administrators",
+      "remediationSteps": "Check the Owner field on every certificate template object in CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration. Transfer ownership of any incorrectly owned templates to Enterprise Admins using Set-Acl or the Security tab in adsiedit.msc. Investigate how non-admin accounts became owners to prevent recurrence.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-3"],
+        "mitreAttack": ["T1649", "T1222.001"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_adcs_esc4"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADCS-008",
+      "name": "ESC5 - Vulnerable PKI Object ACLs",
+      "description": "ESC5 covers write permissions on other PKI-related AD objects beyond certificate templates, including the CA server's AD object, the NTAuthCertificates object, the Enrollment Services container, and the Certificate Templates container. Write access to these objects can allow an attacker to add rogue CAs, modify enrollment settings, or publish malicious templates",
+      "severity": "High",
+      "subcategory": "Certificate Abuse",
+      "recommendedValue": "No write permissions on PKI container objects for non-administrative principals; write access limited to Enterprise Admins",
+      "remediationSteps": "Audit ACLs on all objects under CN=Public Key Services,CN=Services,CN=Configuration including the Enrollment Services container, AIA container, NTAuthCertificates object, and Certificate Templates container. Remove write permissions for non-administrative principals. Ensure the CA computer object in AD does not have write permissions for broad groups. Monitor these objects for unauthorized changes.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-3", "IA-5(2)"],
+        "mitreAttack": ["T1649", "T1222.001"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_adcs_esc5"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADCS-009",
+      "name": "ESC6 - EDITF_ATTRIBUTESUBJECTALTNAME2 Flag",
+      "description": "When the EDITF_ATTRIBUTESUBJECTALTNAME2 flag is enabled on a CA, any certificate request can include a user-defined Subject Alternative Name regardless of the template configuration. This effectively makes every template on the CA vulnerable to ESC1-style attacks where an attacker specifies a SAN for a privileged user",
+      "severity": "Critical",
+      "subcategory": "Certificate Abuse",
+      "recommendedValue": "EDITF_ATTRIBUTESUBJECTALTNAME2 flag disabled on all CA servers",
+      "remediationSteps": "Check the CA configuration using certutil -getreg policy\\EditFlags on each CA server. If the EDITF_ATTRIBUTESUBJECTALTNAME2 flag (0x00040000) is set, remove it using certutil -setreg policy\\EditFlags -EDITF_ATTRIBUTESUBJECTALTNAME2. Restart the CertSvc service after the change. Review all recently issued certificates for unexpected SANs that may indicate prior exploitation.",
+      "compliance": {
+        "nistSp80053": ["CM-6", "IA-5(2)", "AC-6"],
+        "mitreAttack": ["T1649", "T1556"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_adcs_esc6"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADCS-010",
+      "name": "ESC7 - Vulnerable CA ACLs",
+      "description": "ESC7 occurs when a non-admin principal has ManageCA or ManageCertificates permissions on the CA. ManageCA allows modifying CA configuration including enabling EDITF_ATTRIBUTESUBJECTALTNAME2 (creating an ESC6 condition). ManageCertificates allows approving pending certificate requests, bypassing CA Manager approval requirements on sensitive templates",
+      "severity": "Critical",
+      "subcategory": "Certificate Abuse",
+      "recommendedValue": "ManageCA and ManageCertificates permissions restricted to designated CA administrators only",
+      "remediationSteps": "Review CA security permissions using certsrv.msc > Properties > Security tab or certutil -getacl. Remove ManageCA permissions from non-administrative principals. Remove ManageCertificates from any principal that is not an authorized certificate manager. Document all principals with CA management permissions. Implement separation of duties between CA administrators and certificate managers.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-6(1)", "AC-5"],
+        "mitreAttack": ["T1649"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_adcs_esc7"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADCS-011",
+      "name": "ESC8 - NTLM Relay to AD CS HTTP Endpoints",
+      "description": "ESC8 exploits the AD CS web enrollment (certsrv) and Certificate Enrollment Service (CES) HTTP endpoints that accept NTLM authentication. An attacker can coerce authentication from a domain controller or privileged account and relay the NTLM authentication to the CA HTTP endpoint to request a certificate as the relayed identity, leading to domain compromise",
+      "severity": "Critical",
+      "subcategory": "Certificate Abuse",
+      "recommendedValue": "No HTTP-based enrollment endpoints; if required, enforce HTTPS with Extended Protection for Authentication (EPA) enabled",
+      "remediationSteps": "Identify all CA web enrollment endpoints using Get-CertificateEnrollmentService and checking IIS bindings. Disable HTTP-based enrollment endpoints and require HTTPS. Enable Extended Protection for Authentication on IIS to prevent NTLM relay. Alternatively, disable the web enrollment role entirely and use only the DCOM-based enrollment interface. Disable NTLM authentication on CA servers where possible.",
+      "compliance": {
+        "nistSp80053": ["SC-8", "SC-23", "IA-5(2)"],
+        "mitreAttack": ["T1649", "T1557", "T1187"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_adcs_esc8"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADCS-012",
+      "name": "ESC9 - No Security Extension",
+      "description": "ESC9 exploits the absence of the szOID_NTDS_CA_SECURITY_EXT security extension in issued certificates. Without this extension and when StrongCertificateBindingEnforcement is not set to 2, an attacker who can modify a user's UPN attribute (via GenericWrite on the user object) can request a certificate, change the UPN back, and use the certificate to authenticate as the modified identity",
+      "severity": "High",
+      "subcategory": "Certificate Abuse",
+      "recommendedValue": "StrongCertificateBindingEnforcement set to 2 on all domain controllers; CT_FLAG_NO_SECURITY_EXTENSION not set on authentication templates",
+      "remediationSteps": "Check for templates with CT_FLAG_NO_SECURITY_EXTENSION (0x80000) in msPKI-Enrollment-Flag. Remove this flag from all authentication-capable templates. Set the registry value StrongCertificateBindingEnforcement to 2 under HKLM\\SYSTEM\\CurrentControlSet\\Services\\Kdc on all domain controllers to enforce strong certificate mapping. Test certificate-based authentication after enabling enforcement.",
+      "compliance": {
+        "nistSp80053": ["IA-5(2)", "CM-6", "AC-6"],
+        "mitreAttack": ["T1649", "T1098"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_adcs_esc9"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADCS-013",
+      "name": "ESC11 - RPC Relay Without Encryption",
+      "description": "ESC11 targets the AD CS RPC enrollment interface (ICertPassage) when the CA does not enforce encryption on the RPC connection. Similar to ESC8 for HTTP, an attacker can relay NTLM authentication to the unencrypted RPC endpoint to request certificates as the relayed identity. This affects the default DCOM-based enrollment interface",
+      "severity": "High",
+      "subcategory": "Certificate Abuse",
+      "recommendedValue": "IF_ENFORCEENCRYPTICERTREQUEST flag enabled on all CA servers to require RPC encryption",
+      "remediationSteps": "Check CA interface flags using certutil -getreg CA\\InterfaceFlags. Enable the IF_ENFORCEENCRYPTICERTREQUEST flag using certutil -setreg CA\\InterfaceFlags +IF_ENFORCEENCRYPTICERTREQUEST. Restart the CertSvc service. Verify that certificate enrollment still functions correctly from domain-joined clients after enabling encryption enforcement.",
+      "compliance": {
+        "nistSp80053": ["SC-8", "SC-8(1)", "IA-5(2)"],
+        "mitreAttack": ["T1649", "T1557"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_adcs_esc11"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADCS-014",
+      "name": "ESC13 - Issuance Policy OID Group Link",
+      "description": "ESC13 exploits the linkage between certificate issuance policy OIDs and AD security groups through the msDS-OIDToGroupLink attribute. When a certificate template has an issuance policy that maps to a security group, anyone who enrolls in that template effectively gains membership in the linked group for the duration of certificate-based authentication",
+      "severity": "High",
+      "subcategory": "Certificate Abuse",
+      "recommendedValue": "No issuance policy OIDs linked to privileged security groups; msDS-OIDToGroupLink only on non-sensitive groups",
+      "remediationSteps": "Query all OID objects in CN=OID,CN=Public Key Services,CN=Services,CN=Configuration for the msDS-OIDToGroupLink attribute. Identify any OIDs linked to privileged groups (Domain Admins, Enterprise Admins, etc.). Remove the msDS-OIDToGroupLink attribute from OIDs linked to sensitive groups. If the linkage is operationally required, restrict enrollment on templates using the issuance policy to authorized principals only.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "IA-5(2)", "CM-6"],
+        "mitreAttack": ["T1649", "T1098"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_adcs_esc13"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADCS-015",
+      "name": "ESC15 - Application Policies in Schema v1 Templates",
+      "description": "ESC15 (also known as EKUwu) exploits Schema Version 1 certificate templates where the Application Policies extension can be specified by the enrollee in the certificate request. Because Schema v1 templates do not enforce the Application Policies from the template, an attacker can add Client Authentication or any other EKU to the issued certificate, regardless of the template configuration",
+      "severity": "Medium",
+      "subcategory": "Certificate Abuse",
+      "recommendedValue": "No Schema v1 templates published that allow low-privileged enrollment; migrate all required templates to Schema v2 or later",
+      "remediationSteps": "Identify all Schema v1 templates (msPKI-Template-Schema-Version = 1) that are published on Enterprise CAs. Migrate Schema v1 templates to Schema v2 or later by creating new templates based on the v1 template with explicit EKU enforcement. Restrict enrollment on any remaining v1 templates to administrative accounts only. Unpublish v1 templates that are no longer required.",
+      "compliance": {
+        "nistSp80053": ["CM-6", "IA-5(2)"],
+        "mitreAttack": ["T1649"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADCS-016",
+      "name": "ESC16 - UPN SAN Misconfiguration",
+      "description": "ESC16 exploits a misconfiguration where StrongCertificateBindingEnforcement is set to 1 (compatibility mode) and certificate templates with CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT or CT_FLAG_SUBJECT_ALT_REQUIRE_UPN allow the enrollee to set the UPN in the SAN. The weak binding allows certificates to be mapped to users based on UPN alone without the OID security extension, enabling impersonation",
+      "severity": "High",
+      "subcategory": "Certificate Abuse",
+      "recommendedValue": "StrongCertificateBindingEnforcement set to 2; no templates allowing enrollee-specified UPN SAN with low-privileged enrollment",
+      "remediationSteps": "Set StrongCertificateBindingEnforcement to 2 on all domain controllers under HKLM\\SYSTEM\\CurrentControlSet\\Services\\Kdc. Review all templates that allow enrollee-specified subjects or require UPN in the SAN. Restrict enrollment on these templates to authorized principals. Test certificate-based authentication after enforcing strong binding to identify any incompatibilities before full rollout.",
+      "compliance": {
+        "nistSp80053": ["IA-5(2)", "CM-6", "AC-6"],
+        "mitreAttack": ["T1649", "T1556"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADCS-017",
+      "name": "EKEUwu - Extended Key Usage Abuse",
+      "description": "The EKEUwu attack targets certificate templates where the Extended Key Usage field can be influenced by the enrollee through the certificate request. This occurs with certain template configurations where the EKU is not strictly enforced by the template, allowing an attacker to add authentication EKUs to certificates that were not intended for authentication purposes",
+      "severity": "High",
+      "subcategory": "Certificate Abuse",
+      "recommendedValue": "All certificate templates strictly enforce EKU from the template definition; no enrollee-controllable EKUs",
+      "remediationSteps": "Review all certificate templates for EKU enforcement. Ensure templates are Schema v2 or later where EKU enforcement is more robust. Remove unnecessary templates that do not strictly define and enforce EKUs. Test certificate requests to verify that the issued certificate EKU matches the template definition. Implement CA issuance policy modules that validate EKU in requests.",
+      "compliance": {
+        "nistSp80053": ["IA-5(2)", "CM-6"],
+        "mitreAttack": ["T1649"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADCS-018",
+      "name": "CA Auditing Configuration",
+      "description": "AD CS Certificate Authority auditing controls which certificate-related events are logged including certificate requests, issuance, revocation, and CA configuration changes. Without adequate CA auditing, exploitation of certificate-based attack vectors (ESC1-ESC16) cannot be detected or investigated, and unauthorized certificate issuance goes unnoticed",
+      "severity": "High",
+      "subcategory": "Logging & Monitoring",
+      "recommendedValue": "All CA audit categories enabled: Start/Stop, Backup/Restore, Certificate Issued, Certificate Revoked, Certificate Request, CA Security, CA Configuration Change",
+      "remediationSteps": "Configure CA auditing using certsrv.msc > CA Properties > Auditing tab. Enable all audit categories: Back up and restore the CA database, Change CA configuration, Change CA security settings, Issue and manage certificate requests, Revoke certificates and publish CRLs, Store and retrieve archived keys, Start and stop AD CS. Verify that the Windows Security event log has sufficient size and retention settings.",
+      "compliance": {
+        "nistSp80053": ["AU-2", "AU-3", "AU-12"],
+        "mitreAttack": ["T1649", "T1562.002"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADCS-019",
+      "name": "Certificate Template Enumeration",
+      "description": "A comprehensive enumeration of all certificate templates with their security-relevant attributes provides the baseline for ESC vulnerability assessment. This includes template schema version, enrollment permissions, EKU configuration, name flags, enrollment flags, authorized signatures requirement, and validity period. This information feeds into all ESC-specific checks",
+      "severity": "Info",
+      "subcategory": "PKI Inventory",
+      "recommendedValue": "Complete template inventory with security attributes documented; all templates reviewed for least-privilege enrollment and appropriate EKU",
+      "remediationSteps": "Enumerate all certificate templates from CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration using certutil -template or PowerShell. For each template, document: display name, schema version, enrollment permissions, EKU, name flags (ENROLLEE_SUPPLIES_SUBJECT), enrollment flags, authorized signatures requirement, validity period, and renewal period. Cross-reference published templates on each CA.",
+      "compliance": {
+        "nistSp80053": ["CM-8", "CM-8(1)", "IA-5(2)"],
+        "mitreAttack": ["T1649"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    }
+  ]
+}

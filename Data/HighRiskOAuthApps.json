@@ -1,0 +1,39 @@
+{
+    "version": "1.0.0",
+    "description": "Known high-risk OAuth application patterns for Google Workspace monitoring",
+    "lastUpdated": "2026-02-28",
+    "clientIds": [
+        "example-placeholder-do-not-use"
+    ],
+    "namePatterns": [
+        "(?i)password.*(?:manager|vault|sync)",
+        "(?i)email.*(?:backup|archive|export|migration)",
+        "(?i)mail.*(?:merge|blast|bulk)",
+        "(?i)data.*(?:export|extract|scrape|mine)",
+        "(?i)drive.*(?:sync|backup|clone|mirror)",
+        "(?i)contact.*(?:export|sync|scrape)",
+        "(?i)calendar.*(?:export|sync)",
+        "(?i)admin.*(?:tool|console|manager)",
+        "(?i)(?:phish|credential|harvest|spoof|impersonat)",
+        "(?i)screen.*(?:share|remote|control|access)",
+        "(?i)remote.*(?:access|desktop|control)",
+        "(?i)tunnel|proxy|vpn|tor",
+        "(?i)crypto.*(?:mine|miner|mining)",
+        "(?i)(?:keylog|keystroke|spy|monitor|surveil)"
+    ],
+    "dangerousScopePatterns": [
+        "https://mail.google.com",
+        "https://www.googleapis.com/auth/gmail.modify",
+        "https://www.googleapis.com/auth/gmail.compose",
+        "https://www.googleapis.com/auth/gmail.send",
+        "https://www.googleapis.com/auth/gmail.settings.basic",
+        "https://www.googleapis.com/auth/gmail.settings.sharing",
+        "https://www.googleapis.com/auth/drive",
+        "https://www.googleapis.com/auth/drive.file",
+        "https://www.googleapis.com/auth/admin.directory",
+        "https://www.googleapis.com/auth/admin.reports",
+        "https://www.googleapis.com/auth/cloud-platform",
+        "https://www.googleapis.com/auth/contacts",
+        "https://www.googleapis.com/auth/calendar"
+    ]
+}

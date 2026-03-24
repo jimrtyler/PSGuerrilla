@@ -1,0 +1,46 @@
+{
+  "categoryId": "m365pp",
+  "categoryName": "Power Platform Security",
+  "categoryDescription": "Evaluates Microsoft Power Platform governance controls including environment management, data loss prevention policies, and tenant isolation settings to prevent uncontrolled application development, data leakage, and unauthorized cross-tenant data flows.",
+  "checks": [
+    {
+      "id": "M365PP-001",
+      "name": "Environment creation restrictions",
+      "description": "By default, all users in a Microsoft 365 tenant can create new Power Platform environments, which spin up associated Dataverse databases and can host Power Apps and Power Automate flows with access to organizational data. Unrestricted environment creation leads to shadow IT sprawl where ungoverned applications are built with data connections that bypass IT security controls. Restricting environment creation to administrators ensures proper governance and prevents uncontrolled data exposure.",
+      "severity": "High",
+      "subcategory": "Governance",
+      "recommendedValue": "Environment creation restricted to Global Admins and Power Platform Admins only; all production environments managed through a formal provisioning process",
+      "remediationSteps": "Navigate to the Power Platform admin center and restrict environment creation to only Global Administrators and Power Platform Administrators by configuring the tenant-level setting. Implement a formal request and provisioning process for new environments that includes security review, data classification, and DLP policy assignment before environment creation. Audit existing environments to identify and decommission any ungoverned environments that were created before restrictions were put in place.",
+      "compliance": {
+        "nistSp80053": ["CM-7"],
+        "cisM365": ["9.1"]
+      }
+    },
+    {
+      "id": "M365PP-002",
+      "name": "DLP policy configuration",
+      "description": "Data Loss Prevention policies for Power Platform control which connectors can be used together within Power Apps and Power Automate flows, preventing unauthorized data movement between business and non-business data sources. Without DLP policies, users can create flows that automatically transfer corporate data from SharePoint, Dynamics 365, or Azure SQL to personal email, social media, or third-party cloud storage. DLP connector classification is the primary mechanism for preventing data exfiltration through citizen-developed applications.",
+      "severity": "High",
+      "subcategory": "Data Protection",
+      "recommendedValue": "Tenant-level DLP policy classifying business-critical connectors (SharePoint, Outlook, Dataverse) as Business and blocking their combination with non-business connectors; environment-level policies for specific use cases",
+      "remediationSteps": "Create a tenant-level DLP policy that classifies all connectors containing corporate data (such as SharePoint, Outlook, Dataverse, Azure SQL, and OneDrive) in the Business group and moves known non-business connectors to the Blocked group. Review the default connector classification to ensure that newly released connectors are automatically placed in the Non-Business group until reviewed and approved. Create environment-specific DLP policies for environments that require access to additional connectors beyond the tenant-level policy, ensuring they are at least as restrictive as the tenant policy.",
+      "compliance": {
+        "nistSp80053": ["AC-4"],
+        "cisM365": ["9.2"]
+      }
+    },
+    {
+      "id": "M365PP-003",
+      "name": "Tenant isolation settings",
+      "description": "Power Platform tenant isolation controls whether connectors in your tenant can establish connections to other Azure AD tenants, and whether other tenants can connect to yours. Without tenant isolation, users can create flows and apps that connect to external organizations' data sources, and external organizations can build automations that access your tenant's resources. Enabling tenant isolation prevents unauthorized cross-tenant data flows that could result in data leakage or supply chain compromise.",
+      "severity": "High",
+      "subcategory": "Tenant Security",
+      "recommendedValue": "Tenant isolation enabled with inbound and outbound restrictions; allow-listed exceptions only for approved partner tenants",
+      "remediationSteps": "Enable Power Platform tenant isolation in the Power Platform admin center to restrict both inbound and outbound cross-tenant connections by default. Configure an allow list of specific trusted partner tenant IDs that require cross-tenant connectivity for legitimate business scenarios. Review the allow list quarterly to remove tenants that no longer require cross-tenant access and monitor the audit logs for any cross-tenant connection attempts that are being blocked by the isolation policy.",
+      "compliance": {
+        "nistSp80053": ["AC-20"],
+        "cisM365": ["9.3"]
+      }
+    }
+  ]
+}

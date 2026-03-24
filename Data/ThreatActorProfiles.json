@@ -1,0 +1,139 @@
+{
+  "version": "2.1.0",
+  "description": "Threat actor profiles relevant to K-12 and education environments. Maps actor TTPs to PSGuerrilla detection indicators and MITRE ATT&CK techniques.",
+  "profiles": [
+    {
+      "id": "TA-EDU-001",
+      "name": "Credential Harvesters",
+      "description": "Actors who target education staff via phishing to harvest credentials. Often impersonate ed-tech platforms, district admin, or IT support. Primary goal is initial access for BEC or data theft.",
+      "targetSectors": ["K-12", "Higher Education"],
+      "sophistication": "Low",
+      "motivation": "Financial",
+      "ttps": {
+        "mitre": ["T1566.001", "T1566.002", "T1078.004", "T1114.002", "T1534"],
+        "indicators": ["knownAttackerIp", "bruteForceSuccess", "reauthFromCloud", "emailForwardingRule"],
+        "description": "Phishing emails leading to credential harvest pages. Successful access followed by email forwarding rule creation to intercept password resets and maintain persistence."
+      },
+      "matchCriteria": {
+        "requiredIndicators": ["bruteForceSuccess"],
+        "optionalIndicators": ["emailForwardingRule", "reauthFromCloud", "knownAttackerIp"],
+        "minOptionalMatch": 1,
+        "minThreatScore": 55
+      }
+    },
+    {
+      "id": "TA-EDU-002",
+      "name": "Ransomware Operators",
+      "description": "Groups targeting school districts with ransomware. Exploit weak authentication and unpatched systems for initial access, then move laterally through AD to deploy ransomware domain-wide.",
+      "targetSectors": ["K-12", "Municipal Government"],
+      "sophistication": "Medium",
+      "motivation": "Financial",
+      "ttps": {
+        "mitre": ["T1078.002", "T1078.004", "T1021.001", "T1486", "T1490", "T1047"],
+        "indicators": ["bruteForceSuccess", "adminPrivilegeEscalation", "knownAttackerIp", "concurrentSessions"],
+        "description": "Brute force or credential stuffing for initial access, privilege escalation to domain admin, lateral movement via RDP/WMI, shadow copy deletion, and ransomware deployment."
+      },
+      "matchCriteria": {
+        "requiredIndicators": ["adminPrivilegeEscalation"],
+        "optionalIndicators": ["bruteForceSuccess", "knownAttackerIp", "concurrentSessions"],
+        "minOptionalMatch": 1,
+        "minThreatScore": 60
+      }
+    },
+    {
+      "id": "TA-EDU-003",
+      "name": "Student Data Exfiltrators",
+      "description": "Actors targeting student PII (names, SSNs, grades, IEPs, health records) for identity theft or sale on dark markets. May be external attackers or compromised insider accounts.",
+      "targetSectors": ["K-12"],
+      "sophistication": "Low-Medium",
+      "motivation": "Financial / Identity Theft",
+      "ttps": {
+        "mitre": ["T1078.004", "T1530", "T1567", "T1114.002", "T1213"],
+        "indicators": ["bulkFileDownload", "driveExternalSharing", "emailForwardingRule", "domainWideDelegation"],
+        "description": "Compromise cloud accounts, then bulk download student records from Drive/SharePoint, create external sharing links, or set up email forwarding to exfiltrate data."
+      },
+      "matchCriteria": {
+        "requiredIndicators": ["bulkFileDownload"],
+        "optionalIndicators": ["driveExternalSharing", "emailForwardingRule", "domainWideDelegation"],
+        "minOptionalMatch": 0,
+        "minThreatScore": 40
+      }
+    },
+    {
+      "id": "TA-EDU-004",
+      "name": "OAuth Abusers",
+      "description": "Actors who trick users into granting OAuth permissions to malicious or over-permissioned applications. In K-12, often disguised as educational tools or classroom apps to bypass teacher suspicion.",
+      "targetSectors": ["K-12", "Higher Education"],
+      "sophistication": "Medium",
+      "motivation": "Espionage / Data Access",
+      "ttps": {
+        "mitre": ["T1550.001", "T1528", "T1098.003"],
+        "indicators": ["highRiskOAuthApp", "oauthFromCloud", "domainWideDelegation", "driveExternalSharing"],
+        "description": "Consent phishing via fake ed-tech app OAuth flows. Once granted, app tokens provide persistent access to mailbox, Drive, and directory data without credential theft."
+      },
+      "matchCriteria": {
+        "requiredIndicators": ["highRiskOAuthApp"],
+        "optionalIndicators": ["oauthFromCloud", "domainWideDelegation", "driveExternalSharing"],
+        "minOptionalMatch": 0,
+        "minThreatScore": 55
+      }
+    },
+    {
+      "id": "TA-EDU-005",
+      "name": "BEC / Wire Fraud Actors",
+      "description": "Business email compromise targeting school district finance departments. Impersonate superintendents, vendors, or construction contractors to redirect payments.",
+      "targetSectors": ["K-12", "Municipal Government"],
+      "sophistication": "Medium",
+      "motivation": "Financial",
+      "ttps": {
+        "mitre": ["T1566.001", "T1078.004", "T1114.002", "T1534", "T1656"],
+        "indicators": ["reauthFromCloud", "emailForwardingRule", "knownAttackerIp", "impossibleTravel"],
+        "description": "Compromise finance staff email via phishing, set up mail rules to hide replies, then send fraudulent payment instructions impersonating trusted vendors."
+      },
+      "matchCriteria": {
+        "requiredIndicators": ["emailForwardingRule"],
+        "optionalIndicators": ["reauthFromCloud", "knownAttackerIp", "impossibleTravel"],
+        "minOptionalMatch": 1,
+        "minThreatScore": 60
+      }
+    },
+    {
+      "id": "TA-EDU-006",
+      "name": "Insider Threat — Admin Abuse",
+      "description": "IT administrators or staff with elevated privileges who abuse access to student/employee data, modify grades, or sabotage systems. May be disgruntled employees or contractors.",
+      "targetSectors": ["K-12", "Higher Education"],
+      "sophistication": "Low",
+      "motivation": "Personal / Retaliatory",
+      "ttps": {
+        "mitre": ["T1078.003", "T1098", "T1070.001", "T1485", "T1529"],
+        "indicators": ["adminPrivilegeEscalation", "workspaceSettingChange", "twoSvDisablement", "bulkFileDownload"],
+        "description": "Legitimate admin credentials used to escalate privileges, disable security controls (2SV, audit logging), download bulk data, or modify critical workspace settings."
+      },
+      "matchCriteria": {
+        "requiredIndicators": ["workspaceSettingChange"],
+        "optionalIndicators": ["adminPrivilegeEscalation", "twoSvDisablement", "bulkFileDownload"],
+        "minOptionalMatch": 1,
+        "minThreatScore": 35
+      }
+    },
+    {
+      "id": "TA-EDU-007",
+      "name": "Account Takeover — Cloud Proxy",
+      "description": "Sophisticated actors using cloud infrastructure (AWS, GCP, Azure VMs) to proxy stolen credential access, avoiding IP-based detection. Common in targeted attacks against education.",
+      "targetSectors": ["K-12", "Higher Education", "General"],
+      "sophistication": "High",
+      "motivation": "Espionage / Financial",
+      "ttps": {
+        "mitre": ["T1078.004", "T1090.002", "T1538", "T1114.002"],
+        "indicators": ["reauthFromCloud", "riskyActionFromCloud", "newDeviceFromCloud", "oauthFromCloud", "impossibleTravel"],
+        "description": "Attacker uses compromised credentials from cloud proxy IPs. Initial access via cloud, followed by sensitive actions (mail read, Drive access, admin changes) all from hosting provider addresses."
+      },
+      "matchCriteria": {
+        "requiredIndicators": ["reauthFromCloud"],
+        "optionalIndicators": ["riskyActionFromCloud", "newDeviceFromCloud", "oauthFromCloud", "impossibleTravel"],
+        "minOptionalMatch": 1,
+        "minThreatScore": 60
+      }
+    }
+  ]
+}

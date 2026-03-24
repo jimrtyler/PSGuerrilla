@@ -1,0 +1,159 @@
+{
+  "categoryId": "adstale",
+  "categoryName": "AD Stale & Obsolete Objects",
+  "categoryDescription": "Checks related to inactive accounts, obsolete operating systems, orphaned objects, and directory hygiene",
+  "checks": [
+    {
+      "id": "ADSTALE-001",
+      "name": "Inactive User Accounts",
+      "description": "User accounts that have not been used for an extended period represent an unnecessary attack surface. Inactive accounts may still have valid credentials and group memberships, making them attractive targets for attackers who can compromise forgotten or shared credentials without triggering alerts tied to active users. Accounts inactive for more than 90 days should be reviewed and disabled",
+      "severity": "Medium",
+      "subcategory": "Inactive Accounts",
+      "recommendedValue": "No enabled user accounts inactive for more than 90 days; inactive accounts disabled or removed",
+      "remediationSteps": "Query user accounts where lastLogonTimestamp is older than 90 days and the account is enabled using Search-ADAccount -AccountInactive -TimeSpan 90 -UsersOnly. Verify with account owners or managers before taking action. Disable inactive accounts first, then delete after a 30-day grace period if unclaimed. Remove disabled accounts from all security groups. Implement automated lifecycle management",
+      "compliance": {
+        "nistSp80053": ["AC-2(3)"],
+        "mitreAttack": ["T1078.002"],
+        "cisAd": ["9.1.1"]
+      }
+    },
+    {
+      "id": "ADSTALE-002",
+      "name": "Inactive Computer Accounts",
+      "description": "Computer accounts that have not authenticated to the domain for an extended period indicate decommissioned, reimaged, or offline systems. These stale computer accounts retain their machine credentials and group memberships, and an attacker who recovers or resets the machine account password can authenticate as the computer, potentially accessing resources or performing Kerberos delegation attacks",
+      "severity": "Medium",
+      "subcategory": "Inactive Accounts",
+      "recommendedValue": "No enabled computer accounts inactive for more than 90 days; inactive accounts disabled or removed",
+      "remediationSteps": "Query computer accounts where lastLogonTimestamp is older than 90 days using Search-ADAccount -AccountInactive -TimeSpan 90 -ComputersOnly. Cross-reference with asset management systems to verify decommissioning status. Disable stale computer accounts and move to a Disabled Computers OU. Delete after a 60-day grace period if the system does not reconnect. Remove from security groups upon disabling",
+      "compliance": {
+        "nistSp80053": ["AC-2(3)"],
+        "mitreAttack": ["T1078.002"],
+        "cisAd": ["9.1.2"]
+      }
+    },
+    {
+      "id": "ADSTALE-003",
+      "name": "Disabled Accounts with Group Memberships",
+      "description": "Disabled user and computer accounts that retain membership in security groups continue to appear in group-based access control evaluations and can create confusion in access reviews. While disabled accounts cannot authenticate, their group memberships may be restored if the account is re-enabled, and the retained memberships inflate group sizes and complicate least-privilege analysis",
+      "severity": "Medium",
+      "subcategory": "Account Hygiene",
+      "recommendedValue": "All disabled accounts removed from all security groups except Domain Users",
+      "remediationSteps": "Identify disabled accounts with non-default group memberships using Get-ADUser -Filter {Enabled -eq $false} -Properties MemberOf. Remove all security group memberships (except the primary group) from disabled accounts. Implement an automated workflow that strips group memberships when accounts are disabled. Include group membership cleanup in the account deprovisioning process",
+      "compliance": {
+        "nistSp80053": ["AC-2(3)", "AC-6"],
+        "cisAd": ["9.2.1"]
+      }
+    },
+    {
+      "id": "ADSTALE-004",
+      "name": "Expired Passwords Not Disabled",
+      "description": "Accounts with passwords that have exceeded the maximum password age but remain enabled may indicate accounts that are not being actively managed. These accounts could have been compromised with credentials obtained through historical breaches or credential dumps, and the long-unchanged passwords increase the window for offline brute-force attacks",
+      "severity": "Medium",
+      "subcategory": "Account Hygiene",
+      "recommendedValue": "No accounts with passwords older than the maximum password age policy unless explicitly exempted as documented service accounts",
+      "remediationSteps": "Query accounts where PasswordLastSet is older than the maximum password age using Get-ADUser -Filter * -Properties PasswordLastSet,PasswordNeverExpires. Exclude accounts with PasswordNeverExpires that are documented service accounts. Force password reset at next logon for accounts with expired passwords. Disable accounts that are not claimed after notification. Review PasswordNeverExpires exemptions annually",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)"],
+        "mitreAttack": ["T1078.002"],
+        "cisAd": ["9.2.2"]
+      }
+    },
+    {
+      "id": "ADSTALE-005",
+      "name": "Obsolete OS Computers",
+      "description": "Domain-joined computers running obsolete operating systems (Windows XP, Windows Server 2003, Windows Vista, Windows Server 2008) that are no longer receiving any security updates represent high-risk assets. These systems contain known unpatched vulnerabilities that are actively exploited by attackers and cannot support modern security controls such as Credential Guard or LAPS",
+      "severity": "High",
+      "subcategory": "Operating Systems",
+      "recommendedValue": "No computers running Windows XP, Server 2003, Vista, or Server 2008 joined to the domain",
+      "remediationSteps": "Query computer accounts by operatingSystem attribute to identify obsolete OS versions. Verify that identified systems are still active using lastLogonTimestamp and ping tests. Create a migration plan to upgrade or replace obsolete systems. For systems that cannot be immediately upgraded, implement network isolation using VLANs and firewall rules. Disable computer accounts for confirmed decommissioned systems",
+      "compliance": {
+        "nistSp80053": ["SI-2", "CM-6"],
+        "mitreAttack": ["T1210"],
+        "anssi": ["R03"],
+        "cisAd": ["9.3.1"]
+      }
+    },
+    {
+      "id": "ADSTALE-006",
+      "name": "Unsupported OS Versions",
+      "description": "Domain-joined computers running operating systems that are past their end-of-support date (Windows 7, Windows 8.1, Windows Server 2008 R2, Windows Server 2012/R2) no longer receive regular security patches. While Extended Security Updates may be available for some, these systems present elevated risk and should be identified, tracked, and prioritized for migration to supported platforms",
+      "severity": "High",
+      "subcategory": "Operating Systems",
+      "recommendedValue": "No computers running end-of-support operating systems unless covered by Extended Security Updates with a documented migration plan",
+      "remediationSteps": "Query computer accounts by operatingSystem attribute to identify end-of-support OS versions. Determine which systems are covered by Extended Security Updates (ESU). Create migration timelines for all unsupported systems. Implement compensating controls for systems that cannot be immediately upgraded: network segmentation, enhanced monitoring, restricted service access. Track progress against migration timelines",
+      "compliance": {
+        "nistSp80053": ["SI-2"],
+        "mitreAttack": ["T1210"],
+        "anssi": ["R03"],
+        "cisAd": ["9.3.2"]
+      }
+    },
+    {
+      "id": "ADSTALE-007",
+      "name": "Orphaned Foreign Security Principals",
+      "description": "Foreign Security Principals (FSPs) are placeholder objects created in the ForeignSecurityPrincipals container when external domain users or groups are added to local domain groups via trusts. Orphaned FSPs reference SIDs from trusted domains that no longer exist or accounts that have been deleted, resulting in unresolvable SIDs in group memberships that clutter access control and complicate auditing",
+      "severity": "Medium",
+      "subcategory": "Orphaned Objects",
+      "recommendedValue": "No orphaned Foreign Security Principals with unresolvable SIDs in the domain",
+      "remediationSteps": "Enumerate all objects in CN=ForeignSecurityPrincipals and attempt to resolve each SID to a name using the corresponding trust. Identify FSPs where the SID cannot be resolved (trust removed or account deleted). Remove orphaned FSPs from any group memberships. Delete the orphaned FSP objects. Review remaining FSPs to verify the trust relationship and referenced accounts are still valid",
+      "compliance": {
+        "nistSp80053": ["AC-2"],
+        "cisAd": ["9.4.1"]
+      }
+    },
+    {
+      "id": "ADSTALE-008",
+      "name": "Orphaned SID History",
+      "description": "SID History is used during domain migrations to preserve access to resources in the source domain. After migration is complete, SID History entries should be removed as they can be abused for privilege escalation. Orphaned SID History entries referencing non-existent domains or deleted accounts provide no legitimate benefit and increase the risk of SID injection attacks across trust boundaries",
+      "severity": "Medium",
+      "subcategory": "Orphaned Objects",
+      "recommendedValue": "No SID History entries referencing non-existent domains. SID History cleaned after migration completion",
+      "remediationSteps": "Query all user and group accounts with SID History using Get-ADUser -Filter {SIDHistory -like '*'} -Properties SIDHistory. Cross-reference each SID History domain component against existing trusts to identify orphaned entries. Remove SID History entries for completed migrations using Remove-ADUser with the -Remove parameter or Netdom trust /CleanupSIDHistory. Monitor for new SID History additions using Event ID 4765",
+      "compliance": {
+        "nistSp80053": ["AC-2"],
+        "mitreAttack": ["T1134.005"],
+        "cisAd": ["9.4.2"]
+      }
+    },
+    {
+      "id": "ADSTALE-009",
+      "name": "Abandoned OUs",
+      "description": "Empty or near-empty Organizational Units that no longer serve a purpose add complexity to the AD structure, complicate Group Policy analysis, and may have delegated permissions that are no longer monitored. Abandoned OUs from past organizational restructuring or decommissioned projects can confuse administrators and create potential targets for GPO linking attacks",
+      "severity": "Low",
+      "subcategory": "Directory Hygiene",
+      "recommendedValue": "No empty OUs without a documented purpose; OU structure reflects current organizational requirements",
+      "remediationSteps": "Enumerate all OUs and count their child objects. Identify OUs with zero or very few objects. Review OU descriptions and any associated documentation to determine if the OU is planned for future use. Remove delegated permissions from abandoned OUs. Delete empty OUs that have no documented purpose after verifying they are not referenced by GPO links, scripts, or automation. Update OU structure documentation",
+      "compliance": {
+        "nistSp80053": ["CM-2"],
+        "cisAd": ["9.5.1"]
+      }
+    },
+    {
+      "id": "ADSTALE-010",
+      "name": "Printer Objects",
+      "description": "Printer objects published in Active Directory expose printer share paths and server names that can be used for reconnaissance. The PrintNightmare vulnerability family (CVE-2021-34527 and related) demonstrated that printer-related objects and configurations can be exploited for remote code execution. Stale printer objects referencing decommissioned print servers provide misleading information and unnecessary attack surface",
+      "severity": "Low",
+      "subcategory": "Directory Hygiene",
+      "recommendedValue": "Only active, managed printer objects published in AD; stale printer objects removed",
+      "remediationSteps": "Enumerate all printQueue objects in AD using Get-ADObject -Filter {objectClass -eq 'printQueue'}. Verify that each printer object references an active, accessible print server and printer. Remove printer objects for decommissioned printers or print servers. Review whether printer publishing in AD is required for the environment. Ensure print servers are patched against PrintNightmare vulnerabilities",
+      "compliance": {
+        "nistSp80053": ["CM-8"],
+        "mitreAttack": ["T1557"],
+        "cisAd": ["9.5.2"]
+      }
+    },
+    {
+      "id": "ADSTALE-011",
+      "name": "DNS Record Staleness",
+      "description": "Stale DNS records in Active Directory-integrated DNS zones point to IP addresses that are no longer assigned to the original hosts. Attackers can claim these abandoned IP addresses and intercept traffic intended for the original hosts, enabling man-in-the-middle attacks, credential harvesting, and service impersonation. DNS scavenging should be enabled to automatically clean up stale records",
+      "severity": "Medium",
+      "subcategory": "Directory Hygiene",
+      "recommendedValue": "DNS scavenging enabled with appropriate no-refresh and refresh intervals; no stale DNS records older than 30 days",
+      "remediationSteps": "Enable DNS scavenging on the DNS server properties and on each AD-integrated DNS zone. Configure the no-refresh interval to 7 days and the refresh interval to 7 days. Set scavenging period on at least one DNS server. Manually review aged DNS records before the first scavenging run to identify critical static records that need to be excluded. Mark records that should not be scavenged as static",
+      "compliance": {
+        "nistSp80053": ["CM-2"],
+        "cisAd": ["9.5.3"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,290 @@
+{
+  "categoryId": "intune",
+  "categoryName": "Intune / Endpoint Management",
+  "categoryDescription": "Assesses Microsoft Intune device management policies, endpoint security configurations, and compliance enforcement to ensure that enrolled devices meet organizational security standards and are protected against modern threats.",
+  "checks": [
+    {
+      "id": "INTUNE-001",
+      "name": "Device compliance policy inventory",
+      "description": "Device compliance policies define the security baseline requirements that enrolled devices must meet, such as OS version, encryption, and password complexity. Without a comprehensive inventory of these policies, organizations cannot verify that all device platforms and user groups have adequate compliance requirements. Missing or incomplete policies leave devices ungoverned and potentially non-compliant.",
+      "severity": "Info",
+      "subcategory": "Compliance Policies",
+      "recommendedValue": "At least one compliance policy per supported platform (Windows, iOS, Android, macOS)",
+      "remediationSteps": "Review the current inventory of device compliance policies in the Intune admin center and verify that each supported platform has at least one policy assigned. Create compliance policies for any platforms that lack coverage, defining appropriate requirements for OS version, encryption, and device health. Assign policies to the appropriate user or device groups and ensure no devices fall outside of policy scope.",
+      "compliance": {
+        "nistSp80053": ["CM-8"]
+      }
+    },
+    {
+      "id": "INTUNE-002",
+      "name": "Device compliance status overview",
+      "description": "The overall device compliance status indicates whether enrolled devices meet their assigned compliance policy requirements. A high percentage of non-compliant or not-evaluated devices signals enforcement gaps that could allow insecure devices to access corporate resources. Continuous monitoring of compliance status is essential for maintaining the security posture of the device fleet.",
+      "severity": "High",
+      "subcategory": "Compliance Policies",
+      "recommendedValue": "95% or higher device compliance rate across all enrolled devices",
+      "remediationSteps": "Review the device compliance overview dashboard to identify the distribution of compliant, non-compliant, and not-evaluated devices. Investigate devices in a not-evaluated state to determine if they lack assigned policies or have sync issues preventing evaluation. Set up compliance status notifications and integrate with Conditional Access to block non-compliant devices from accessing corporate resources.",
+      "compliance": {
+        "nistSp80053": ["CM-6"]
+      }
+    },
+    {
+      "id": "INTUNE-003",
+      "name": "Non-compliant device enumeration",
+      "description": "Devices that fail compliance policy evaluation pose a direct risk to the organization by potentially lacking encryption, running outdated operating systems, or having disabled security features. Enumerating non-compliant devices and understanding the specific compliance failures enables targeted remediation. Without this visibility, insecure devices may continue accessing corporate data undetected.",
+      "severity": "High",
+      "subcategory": "Compliance Policies",
+      "recommendedValue": "Zero non-compliant devices with access to corporate resources; all non-compliant devices should be blocked or in remediation",
+      "remediationSteps": "Generate a detailed report of non-compliant devices including the specific compliance settings that are failing for each device. Prioritize remediation of devices failing critical compliance checks such as encryption or antivirus requirements, and work with device owners to resolve issues. Configure actions for non-compliance in each compliance policy to mark devices as non-compliant after a grace period and integrate with Conditional Access to restrict resource access.",
+      "compliance": {
+        "nistSp80053": ["CM-6"]
+      }
+    },
+    {
+      "id": "INTUNE-004",
+      "name": "Configuration profile inventory",
+      "description": "Configuration profiles push security settings, restrictions, and feature configurations to enrolled devices. An incomplete inventory of configuration profiles can lead to security gaps where critical settings such as screen lock, Wi-Fi security, or certificate deployment are not applied. Understanding the full scope of configuration profiles is necessary for identifying coverage gaps across the device fleet.",
+      "severity": "Info",
+      "subcategory": "Configuration Profiles",
+      "recommendedValue": "Documented inventory of all configuration profiles with clear naming conventions and assignment documentation",
+      "remediationSteps": "Export the complete list of configuration profiles from Intune and review each profile's purpose, platform target, and current assignment status. Identify any profiles that are unassigned, conflicting, or redundant and consolidate where appropriate. Establish a naming convention and documentation standard for all profiles to facilitate ongoing management and auditing.",
+      "compliance": {
+        "nistSp80053": ["CM-8"]
+      }
+    },
+    {
+      "id": "INTUNE-005",
+      "name": "Configuration profile assignment analysis",
+      "description": "Configuration profiles are only effective when properly assigned to the correct device or user groups. Profiles assigned to overly broad groups may cause conflicts or apply settings to inappropriate devices, while narrowly assigned profiles may leave devices unconfigured. Analyzing assignment coverage ensures that security configurations reach all intended endpoints without conflicts.",
+      "severity": "Medium",
+      "subcategory": "Configuration Profiles",
+      "recommendedValue": "All security-critical profiles assigned to appropriate groups with no unassigned critical profiles and no conflicting assignments",
+      "remediationSteps": "Review the assignment status and target groups for each configuration profile, paying attention to profiles with errors or conflicts. Resolve any profile conflicts by adjusting assignments, merging similar profiles, or using filters to target specific device characteristics. Ensure security-critical profiles such as BitLocker, firewall, and antivirus settings are assigned to all applicable devices through comprehensive group membership.",
+      "compliance": {
+        "nistSp80053": ["CM-6"]
+      }
+    },
+    {
+      "id": "INTUNE-006",
+      "name": "Windows Update for Business ring configuration",
+      "description": "Windows Update for Business rings control the cadence and deferral periods for quality and feature updates on managed Windows devices. Misconfigured update rings can result in devices running outdated builds with known vulnerabilities for extended periods. Properly staged update rings balance operational stability with timely security patching.",
+      "severity": "High",
+      "subcategory": "Patch Management",
+      "recommendedValue": "Quality updates deferred no more than 7 days; feature updates deferred no more than 60 days; all rings assigned and actively delivering updates",
+      "remediationSteps": "Review all Windows Update for Business ring configurations and verify that quality update deferral periods do not exceed 7 days for security-critical rings. Ensure that at least a pilot and broad deployment ring exist with appropriate deferral staging. Monitor update compliance reports to identify devices that have not installed recent updates and investigate any update failures or stalled installations.",
+      "compliance": {
+        "nistSp80053": ["SI-2"]
+      }
+    },
+    {
+      "id": "INTUNE-007",
+      "name": "BitLocker encryption policy audit",
+      "description": "BitLocker drive encryption protects data at rest on Windows devices, preventing unauthorized access to the hard drive contents if a device is lost or stolen. Without a properly configured BitLocker policy, devices may store corporate data unencrypted, exposing sensitive information. The policy must enforce encryption on OS and fixed data drives with secure key recovery options.",
+      "severity": "High",
+      "subcategory": "Endpoint Security",
+      "recommendedValue": "BitLocker enabled on all OS and fixed data drives with XTS-AES 256-bit encryption and Azure AD key escrow",
+      "remediationSteps": "Create or update the Intune endpoint protection profile to require BitLocker encryption on operating system and fixed data drives using XTS-AES 256-bit encryption. Configure recovery key escrow to Azure AD to ensure key recovery is possible and set the policy to silently enable encryption without user interaction. Monitor the encryption status report to identify devices that have not completed encryption and remediate any failures.",
+      "compliance": {
+        "nistSp80053": ["SC-28"],
+        "cisM365": ["1.1.17"]
+      }
+    },
+    {
+      "id": "INTUNE-008",
+      "name": "Windows Defender/Antivirus policy audit",
+      "description": "Windows Defender Antivirus is the primary endpoint protection agent on Windows devices and must be properly configured to provide real-time protection, cloud-delivered protection, and sample submission. Disabled or weakened antivirus settings leave devices vulnerable to malware infections that can lead to data theft, ransomware, and lateral movement. Attackers frequently attempt to tamper with or disable antivirus as a first step in an attack chain.",
+      "severity": "Critical",
+      "subcategory": "Endpoint Security",
+      "recommendedValue": "Real-time protection enabled, cloud-delivered protection enabled, automatic sample submission enabled, tamper protection enabled",
+      "remediationSteps": "Deploy an Intune antivirus policy that enforces real-time protection, cloud-delivered protection, automatic sample submission, and tamper protection on all managed Windows devices. Verify that PUA (Potentially Unwanted Application) protection is enabled and that scheduled scans are configured for at least weekly full scans. Monitor the Defender antivirus agent status across the fleet and investigate any devices reporting disabled protection or outdated definitions.",
+      "compliance": {
+        "nistSp80053": ["SI-3"],
+        "mitreAttack": ["T1562.001"]
+      }
+    },
+    {
+      "id": "INTUNE-009",
+      "name": "Attack Surface Reduction rules configuration",
+      "description": "Attack Surface Reduction (ASR) rules in Microsoft Defender block common attack techniques such as obfuscated scripts, Office macro exploitation, and credential theft from LSASS. Without ASR rules configured and enforced, endpoints remain vulnerable to well-known attack patterns that commodity malware and adversaries routinely exploit. Properly configured ASR rules significantly reduce the attack surface of Windows endpoints.",
+      "severity": "High",
+      "subcategory": "Endpoint Security",
+      "recommendedValue": "All recommended ASR rules enabled in block mode; audit mode for newly deployed rules during testing",
+      "remediationSteps": "Review the current ASR rule configuration in Intune endpoint security and enable all Microsoft-recommended rules in at least audit mode. After a monitoring period to identify false positives, transition rules to block mode starting with high-impact rules such as blocking Office applications from creating child processes and blocking credential theft from LSASS. Configure ASR rule exclusions sparingly and only for documented business-critical applications, monitoring the ASR events report for ongoing effectiveness.",
+      "compliance": {
+        "nistSp80053": ["CM-7"],
+        "mitreAttack": ["T1059"]
+      }
+    },
+    {
+      "id": "INTUNE-010",
+      "name": "Endpoint Detection and Response configuration",
+      "description": "Endpoint Detection and Response (EDR) capabilities provided by Microsoft Defender for Endpoint enable advanced threat detection, investigation, and automated response on managed devices. Without EDR onboarding and proper sensor configuration, security teams lack visibility into sophisticated attacks that bypass traditional antivirus. EDR is critical for detecting fileless malware, living-off-the-land techniques, and advanced persistent threats.",
+      "severity": "Critical",
+      "subcategory": "Endpoint Security",
+      "recommendedValue": "All managed devices onboarded to Defender for Endpoint with EDR in block mode; sample sharing and cloud protection enabled",
+      "remediationSteps": "Verify that all managed Windows devices are onboarded to Microsoft Defender for Endpoint through the Intune EDR policy and that the sensor health status shows as active. Enable EDR in block mode to provide additional blocking capabilities even when a third-party antivirus is the primary engine. Review the device inventory in the Defender portal to identify devices with sensor health issues and remediate connectivity or configuration problems preventing successful onboarding.",
+      "compliance": {
+        "nistSp80053": ["SI-4"],
+        "mitreAttack": ["T1562.001"]
+      }
+    },
+    {
+      "id": "INTUNE-011",
+      "name": "Application protection policies (MAM)",
+      "description": "Application protection policies (Mobile Application Management) control how corporate data is handled within managed applications on both enrolled and unenrolled devices. Without these policies, users can copy corporate data to personal applications, share files through unmanaged channels, or back up corporate data to personal cloud storage. MAM policies are essential for preventing data leakage on mobile devices.",
+      "severity": "High",
+      "subcategory": "Application Management",
+      "recommendedValue": "App protection policies applied to all managed apps on iOS and Android; cut/copy/paste restricted to managed apps; backup to unmanaged services blocked",
+      "remediationSteps": "Create application protection policies for both iOS and Android platforms targeting all Microsoft 365 and line-of-business applications that handle corporate data. Configure data protection settings to prevent cut/copy/paste to unmanaged applications, block backup to personal cloud services, and require app-level PIN or biometric authentication. Assign the policies to all users who access corporate data on mobile devices and monitor the app protection status report for non-compliant applications.",
+      "compliance": {
+        "nistSp80053": ["AC-19"]
+      }
+    },
+    {
+      "id": "INTUNE-012",
+      "name": "Conditional launch settings",
+      "description": "Conditional launch settings within application protection policies define the conditions under which a managed application can be launched, such as minimum OS version, maximum allowed threat level, or jailbreak/root detection. Without these settings, compromised or outdated devices can access corporate data through managed applications even when the device itself is insecure. These controls provide a critical last line of defense for data protection.",
+      "severity": "Medium",
+      "subcategory": "Application Management",
+      "recommendedValue": "Block access on jailbroken/rooted devices; require minimum OS version; block access when device threat level is high",
+      "remediationSteps": "Review and update the conditional launch settings in each application protection policy to block app access on jailbroken or rooted devices. Configure minimum OS version requirements that align with vendor-supported versions and set maximum device threat level thresholds that integrate with your Mobile Threat Defense solution. Test the conditional launch settings with a pilot group before broad deployment to ensure that legitimate users are not inadvertently blocked.",
+      "compliance": {
+        "nistSp80053": ["AC-19"]
+      }
+    },
+    {
+      "id": "INTUNE-013",
+      "name": "Device enrollment restrictions",
+      "description": "Device enrollment restrictions control which device types, platforms, and OS versions are allowed to enroll in Intune management. Without proper restrictions, users could enroll personal devices running unsupported or vulnerable operating system versions, expanding the attack surface. Enrollment restrictions also prevent unauthorized device types from gaining access to corporate resources through device management.",
+      "severity": "Medium",
+      "subcategory": "Enrollment",
+      "recommendedValue": "Block personally owned devices or limit to specific platforms; enforce minimum OS version requirements; limit per-user device enrollment count",
+      "remediationSteps": "Review the device enrollment restrictions in Intune and configure platform-specific restrictions that align with your organization's supported device policy. Set minimum operating system version requirements for each platform and configure the maximum number of devices a single user can enroll to prevent abuse. If corporate-owned device enrollment is preferred, block personally owned device enrollment and direct users to use app protection policies for BYOD scenarios.",
+      "compliance": {
+        "nistSp80053": ["IA-3"]
+      }
+    },
+    {
+      "id": "INTUNE-014",
+      "name": "Autopilot configuration",
+      "description": "Windows Autopilot provides a zero-touch deployment experience that ensures new devices are configured with the correct security baselines from first boot. A poorly configured or missing Autopilot deployment profile means new devices may be provisioned without critical security settings, creating a window of vulnerability. Reviewing Autopilot configurations ensures consistent and secure device provisioning.",
+      "severity": "Info",
+      "subcategory": "Enrollment",
+      "recommendedValue": "Autopilot deployment profile configured for all corporate devices with user-driven or self-deploying mode and Azure AD join",
+      "remediationSteps": "Review existing Autopilot deployment profiles and verify they are configured for Azure AD join with appropriate user-driven or self-deploying mode settings. Ensure that the Enrollment Status Page is enabled to prevent users from accessing the desktop before all critical policies and applications are installed. Verify that all corporate device hardware hashes are registered with the Autopilot service and assigned to the appropriate deployment profile.",
+      "compliance": {
+        "nistSp80053": ["CM-2"]
+      }
+    },
+    {
+      "id": "INTUNE-015",
+      "name": "Disk encryption status",
+      "description": "Full disk encryption ensures that data stored on device drives is protected if the physical device is lost, stolen, or decommissioned. Devices without encryption enabled expose corporate data including cached credentials, documents, and email to physical theft attacks. Monitoring encryption status across the fleet identifies devices that have failed encryption or have not yet been encrypted.",
+      "severity": "High",
+      "subcategory": "Endpoint Security",
+      "recommendedValue": "100% of managed devices reporting encryption enabled on all drives",
+      "remediationSteps": "Review the Intune encryption report to identify all devices that are not reporting full disk encryption as enabled. Investigate encryption failures which may be caused by unsupported hardware, TPM issues, or policy conflicts and resolve the underlying causes. For devices that cannot support encryption, evaluate whether they should be allowed to access corporate resources and consider blocking them through Conditional Access policies.",
+      "compliance": {
+        "nistSp80053": ["SC-28"]
+      }
+    },
+    {
+      "id": "INTUNE-016",
+      "name": "Firewall policy configuration",
+      "description": "The Windows Defender Firewall provides host-based network protection that blocks unauthorized inbound and outbound connections. Without a centrally managed firewall policy through Intune, individual devices may have inconsistent or disabled firewall settings, leaving them vulnerable to network-based attacks. Centralized firewall management ensures consistent protection across all managed endpoints regardless of network location.",
+      "severity": "High",
+      "subcategory": "Endpoint Security",
+      "recommendedValue": "Windows Defender Firewall enabled for all profiles (Domain, Private, Public); block inbound connections by default; log dropped packets",
+      "remediationSteps": "Deploy an Intune endpoint security firewall policy that enables Windows Defender Firewall for Domain, Private, and Public network profiles with inbound connections blocked by default. Configure firewall rules for any required application exceptions and enable logging for dropped and successful connections. Monitor the firewall policy deployment status and investigate any devices reporting policy application errors or firewall disabled states.",
+      "compliance": {
+        "nistSp80053": ["SC-7"]
+      }
+    },
+    {
+      "id": "INTUNE-017",
+      "name": "Security baselines compliance",
+      "description": "Microsoft security baselines in Intune provide pre-configured groups of Windows settings recommended by Microsoft security teams, covering areas such as credential protection, browser security, and attack surface reduction. Devices that deviate from the security baseline have weakened security postures and may be vulnerable to known attack vectors. Monitoring baseline compliance identifies configuration drift and helps maintain a consistent security posture.",
+      "severity": "High",
+      "subcategory": "Configuration Profiles",
+      "recommendedValue": "90% or higher compliance with assigned security baselines; all conflict and error states resolved",
+      "remediationSteps": "Deploy the latest Microsoft security baseline profile for Windows and Defender for Endpoint to all managed devices and monitor the per-setting compliance status. Investigate settings reporting conflict or error states, as these often indicate competing policies that need to be reconciled. Address non-compliant settings by evaluating whether the deviation is due to a legitimate business requirement that warrants a documented exception or a configuration issue that should be corrected.",
+      "compliance": {
+        "nistSp80053": ["CM-6", "SI-2"]
+      }
+    },
+    {
+      "id": "INTUNE-018",
+      "name": "PowerShell script deployment audit",
+      "description": "Intune allows administrators to deploy PowerShell scripts to managed Windows devices, which execute with SYSTEM-level privileges by default. Malicious or poorly written scripts deployed through this channel can compromise device security, exfiltrate data, or install unauthorized software across the entire fleet. Every deployed script must be reviewed for security implications and tracked for authorized deployment.",
+      "severity": "Critical",
+      "subcategory": "Script Management",
+      "recommendedValue": "All deployed scripts reviewed and approved through change management; scripts run in user context where possible; script content documented",
+      "remediationSteps": "Audit all PowerShell scripts currently deployed through Intune and review their content for security risks such as hardcoded credentials, unrestricted remote downloads, or excessive permission changes. Ensure that scripts run in the user context rather than SYSTEM context wherever possible and that script execution is limited to the minimum required device scope. Implement a change management process for script deployment that includes peer review of script content and formal approval before production deployment.",
+      "compliance": {
+        "nistSp80053": ["CM-6"],
+        "mitreAttack": ["T1059.001"]
+      }
+    },
+    {
+      "id": "INTUNE-019",
+      "name": "Win32 app deployment security review",
+      "description": "Win32 application deployments through Intune package and distribute traditional desktop applications to managed devices. Improperly vetted applications may contain vulnerabilities, bundled malware, or excessive system modifications that weaken device security. Reviewing the Win32 app deployment catalog ensures that only approved and secure applications are distributed to the managed device fleet.",
+      "severity": "Medium",
+      "subcategory": "Application Management",
+      "recommendedValue": "All Win32 apps sourced from trusted vendors with documented approval; install commands reviewed for security implications",
+      "remediationSteps": "Review all Win32 applications deployed through Intune and verify that each application is sourced from a trusted vendor and has been approved through your software approval process. Examine the install and uninstall command lines for any suspicious parameters, script execution, or registry modifications that could weaken security. Implement an application review process that evaluates new Win32 app packages for security risks before deployment to production device groups.",
+      "compliance": {
+        "nistSp80053": ["CM-11"]
+      }
+    },
+    {
+      "id": "INTUNE-020",
+      "name": "Device categories and grouping",
+      "description": "Device categories and dynamic groups in Intune organize managed devices for targeted policy and application deployment. Without a structured categorization scheme, policies may be applied inconsistently, and critical security configurations could miss entire segments of the device population. Proper device grouping enables differentiated security postures for different device roles and user populations.",
+      "severity": "Info",
+      "subcategory": "Device Management",
+      "recommendedValue": "Defined device categories aligned with organizational needs; dynamic groups based on device properties for automated policy targeting",
+      "remediationSteps": "Review and establish device categories that align with organizational device roles such as executive, standard user, kiosk, or shared device. Create dynamic device groups based on device properties including category, OS, ownership type, and compliance status for automated policy and application targeting. Verify that all policy assignments reference appropriate groups and that no devices fall outside of the grouping structure.",
+      "compliance": {
+        "nistSp80053": ["CM-8"]
+      }
+    },
+    {
+      "id": "INTUNE-021",
+      "name": "Remote actions audit (wipe, retire, lock)",
+      "description": "Intune remote actions such as wipe, retire, and remote lock are powerful device management capabilities that, if misused, can result in data loss or denial of service to legitimate users. Unauthorized or accidental remote wipes can destroy business-critical data on devices, while unaudited remote lock actions could indicate account compromise. All remote actions must be logged and reviewed for authorized use.",
+      "severity": "High",
+      "subcategory": "Device Management",
+      "recommendedValue": "All remote actions logged with operator identity; wipe actions require documented approval; audit logs reviewed weekly",
+      "remediationSteps": "Review the Intune audit logs for all remote action events including wipe, retire, remote lock, and passcode reset to identify any unauthorized or unusual activity. Implement an approval workflow for destructive remote actions such as full wipe that requires documented justification and secondary approval. Configure alert notifications for remote wipe actions to ensure security teams are immediately aware when devices are being wiped.",
+      "compliance": {
+        "nistSp80053": ["AU-6", "MP-6"]
+      }
+    },
+    {
+      "id": "INTUNE-022",
+      "name": "OneDrive sync restrictions",
+      "description": "OneDrive sync client settings control how corporate files are synchronized between cloud storage and managed devices, and unrestricted sync can lead to corporate data being stored on unmanaged or non-compliant devices. Without domain restrictions on the sync client, users may sync corporate SharePoint and OneDrive content to personal devices outside of IT control. Proper sync restrictions prevent data leakage through unmanaged file synchronization.",
+      "severity": "Medium",
+      "subcategory": "Data Protection",
+      "recommendedValue": "OneDrive sync restricted to domain-joined or Intune-managed devices; Known Folder Move enabled for backup; Files On-Demand enabled",
+      "remediationSteps": "Configure the OneDrive sync client through Intune to restrict synchronization to devices that are Azure AD joined or Intune managed using the tenant allow list. Enable Known Folder Move to automatically redirect Desktop, Documents, and Pictures to OneDrive for data protection and enable Files On-Demand to minimize local data storage. Block sync of personal OneDrive accounts on corporate devices if permitted by organizational policy to prevent data commingling.",
+      "compliance": {
+        "nistSp80053": ["AC-19"]
+      }
+    },
+    {
+      "id": "INTUNE-023",
+      "name": "Multi-admin approval for destructive device actions",
+      "description": "Microsoft Intune supports multi-admin approval policies that require a second administrator to approve high-impact operations such as bulk device wipe, bulk device retire, and script deployments before they execute. Without multi-admin approval, a single compromised admin account can trigger mass device wipes across the entire organization. This check verifies that operation approval policies are configured to protect against destructive actions performed by a compromised or rogue admin account.",
+      "severity": "Critical",
+      "subcategory": "Administrative Controls",
+      "recommendedValue": "Multi-admin approval enabled for destructive operations including bulk device wipe, bulk device retire, and script deployment actions",
+      "remediationSteps": "Navigate to Microsoft Intune admin center > Tenant administration > Multi-admin approval. Create an approval policy that requires a second admin to approve destructive operations. At minimum, enable approval for: Bulk device actions (Wipe, Retire, Delete), Apps deployment to large groups, and Script deployments. Assign an approval group containing trusted senior administrators who will review and approve these requests. Consider implementing an expedited approval process for emergency scenarios.",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-6", "CM-5"],
+        "mitreAttack": ["T1485", "T1561"],
+        "cisBenchmark": ["16.7"]
+      }
+    }
+  ]
+}

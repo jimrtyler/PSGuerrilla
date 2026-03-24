@@ -1,0 +1,197 @@
+{
+  "version": "2.1.0",
+  "description": "Maps PSGuerrilla audit check IDs to compliance framework requirements. Covers FERPA, COPPA, CIPA, NIST SP 800-171, and state education technology privacy laws.",
+  "frameworks": {
+    "FERPA": {
+      "fullName": "Family Educational Rights and Privacy Act",
+      "description": "Federal law protecting the privacy of student education records",
+      "authority": "20 U.S.C. § 1232g; 34 CFR Part 99"
+    },
+    "COPPA": {
+      "fullName": "Children's Online Privacy Protection Act",
+      "description": "Federal law protecting personal information of children under 13",
+      "authority": "15 U.S.C. §§ 6501–6506; 16 CFR Part 312"
+    },
+    "CIPA": {
+      "fullName": "Children's Internet Protection Act",
+      "description": "Federal law requiring E-rate recipients to filter internet access and monitor online activity",
+      "authority": "47 U.S.C. § 254(h)(5)"
+    },
+    "NIST-171": {
+      "fullName": "NIST SP 800-171",
+      "description": "Protecting Controlled Unclassified Information in nonfederal systems",
+      "authority": "NIST Special Publication 800-171 Rev. 2"
+    },
+    "STATE-EDTECH": {
+      "fullName": "State Student Data Privacy Laws",
+      "description": "Aggregate of common state education technology privacy requirements (e.g., SOPIPA, state SPAs)",
+      "authority": "Various state statutes"
+    }
+  },
+  "mappings": {
+    "AUTH-001": {
+      "checkName": "2SV Enforcement",
+      "frameworks": {
+        "FERPA": { "requirement": "Reasonable methods to ensure only authorized access to education records", "citation": "34 CFR § 99.31(a)(1)" },
+        "COPPA": { "requirement": "Reasonable security for children's personal information", "citation": "16 CFR § 312.8" },
+        "NIST-171": { "requirement": "Multi-factor authentication for privileged and network accounts", "citation": "3.5.3" },
+        "STATE-EDTECH": { "requirement": "Multi-factor authentication for systems containing student data", "citation": "Common requirement" }
+      }
+    },
+    "AUTH-002": {
+      "checkName": "2SV Enrollment Rate",
+      "frameworks": {
+        "FERPA": { "requirement": "Technical safeguards for education records", "citation": "34 CFR § 99.31" },
+        "NIST-171": { "requirement": "Employ multi-factor authentication", "citation": "3.5.3" }
+      }
+    },
+    "AUTH-004": {
+      "checkName": "Password Minimum Length",
+      "frameworks": {
+        "NIST-171": { "requirement": "Enforce minimum password complexity and length", "citation": "3.5.7" },
+        "STATE-EDTECH": { "requirement": "Strong password requirements for accounts accessing student data", "citation": "Common requirement" }
+      }
+    },
+    "AUTH-007": {
+      "checkName": "Session Duration Limits",
+      "frameworks": {
+        "NIST-171": { "requirement": "Terminate sessions after defined inactivity period", "citation": "3.1.11" }
+      }
+    },
+    "ADMIN-005": {
+      "checkName": "Admin Account 2SV",
+      "frameworks": {
+        "FERPA": { "requirement": "Administrative safeguards for education records", "citation": "34 CFR § 99.31" },
+        "NIST-171": { "requirement": "Multi-factor authentication for privileged accounts", "citation": "3.5.3" },
+        "STATE-EDTECH": { "requirement": "Enhanced authentication for administrative access to student data systems", "citation": "Common requirement" }
+      }
+    },
+    "ADMIN-007": {
+      "checkName": "Admin Account Inventory",
+      "frameworks": {
+        "NIST-171": { "requirement": "Employ the principle of least privilege", "citation": "3.1.5" }
+      }
+    },
+    "DRIVE-001": {
+      "checkName": "External Sharing Policy",
+      "frameworks": {
+        "FERPA": { "requirement": "Limit disclosure of education records to authorized parties", "citation": "34 CFR § 99.30" },
+        "COPPA": { "requirement": "Limit sharing of children's personal information", "citation": "16 CFR § 312.5(c)" },
+        "STATE-EDTECH": { "requirement": "Restrict external sharing of student data files", "citation": "Common requirement" }
+      }
+    },
+    "DRIVE-002": {
+      "checkName": "Drive DLP Policies",
+      "frameworks": {
+        "FERPA": { "requirement": "Prevent unauthorized disclosure of education records", "citation": "34 CFR § 99.33" },
+        "STATE-EDTECH": { "requirement": "Data loss prevention for student PII", "citation": "Common requirement" }
+      }
+    },
+    "OAUTH-001": {
+      "checkName": "Third-Party App Access Control",
+      "frameworks": {
+        "COPPA": { "requirement": "Verifiable parental consent before collecting children's data via third parties", "citation": "16 CFR § 312.5(b)" },
+        "FERPA": { "requirement": "Limit access to education records to school officials with legitimate interest", "citation": "34 CFR § 99.31(a)(1)" },
+        "STATE-EDTECH": { "requirement": "Vet and approve third-party applications accessing student data", "citation": "Common requirement" }
+      }
+    },
+    "OAUTH-003": {
+      "checkName": "OAuth Scope Review",
+      "frameworks": {
+        "COPPA": { "requirement": "Collect only necessary personal information from children", "citation": "16 CFR § 312.7" },
+        "STATE-EDTECH": { "requirement": "Minimize third-party app access to student data scopes", "citation": "Common requirement" }
+      }
+    },
+    "EMAIL-003": {
+      "checkName": "Email Auto-Forwarding Policy",
+      "frameworks": {
+        "FERPA": { "requirement": "Prevent unauthorized disclosure of education records via email forwarding", "citation": "34 CFR § 99.33" },
+        "STATE-EDTECH": { "requirement": "Block automatic email forwarding to external domains for accounts with student data access", "citation": "Common requirement" }
+      }
+    },
+    "EMAIL-005": {
+      "checkName": "Email Content Compliance",
+      "frameworks": {
+        "FERPA": { "requirement": "Content scanning for PII in outbound email", "citation": "34 CFR § 99.33" },
+        "CIPA": { "requirement": "Technology protection measures for electronic communications", "citation": "47 U.S.C. § 254(h)(5)(B)" }
+      }
+    },
+    "COLLAB-001": {
+      "checkName": "External Collaboration Restrictions",
+      "frameworks": {
+        "FERPA": { "requirement": "Control external access to systems containing education records", "citation": "34 CFR § 99.31" },
+        "COPPA": { "requirement": "Restrict children's ability to share personal information publicly", "citation": "16 CFR § 312.5(c)" }
+      }
+    },
+    "LOG-001": {
+      "checkName": "Audit Logging Enabled",
+      "frameworks": {
+        "FERPA": { "requirement": "Maintain record of access to education records", "citation": "34 CFR § 99.32" },
+        "NIST-171": { "requirement": "Create and retain system audit logs", "citation": "3.3.1" },
+        "STATE-EDTECH": { "requirement": "Audit logging for all access to student data systems", "citation": "Common requirement" }
+      }
+    },
+    "LOG-002": {
+      "checkName": "Audit Log Retention",
+      "frameworks": {
+        "FERPA": { "requirement": "Maintain access records for the life of the education record", "citation": "34 CFR § 99.32(a)(1)" },
+        "NIST-171": { "requirement": "Retain audit logs per organizational policy", "citation": "3.3.1" }
+      }
+    },
+    "DEVICE-001": {
+      "checkName": "Device Management Enrollment",
+      "frameworks": {
+        "COPPA": { "requirement": "Reasonable security for children's data on devices", "citation": "16 CFR § 312.8" },
+        "CIPA": { "requirement": "Technology protection measures on devices used by minors", "citation": "47 U.S.C. § 254(h)(5)(B)" }
+      }
+    },
+    "M365EXO-001": {
+      "checkName": "Exchange External Forwarding",
+      "frameworks": {
+        "FERPA": { "requirement": "Prevent unauthorized disclosure via mail forwarding", "citation": "34 CFR § 99.33" },
+        "STATE-EDTECH": { "requirement": "Block external mail forwarding for accounts with student data", "citation": "Common requirement" }
+      }
+    },
+    "M365SPO-001": {
+      "checkName": "SharePoint External Sharing",
+      "frameworks": {
+        "FERPA": { "requirement": "Restrict external access to document repositories containing education records", "citation": "34 CFR § 99.30" },
+        "COPPA": { "requirement": "Limit sharing of documents containing children's personal information", "citation": "16 CFR § 312.5(c)" }
+      }
+    },
+    "EIDAUTH-001": {
+      "checkName": "Entra MFA Enforcement",
+      "frameworks": {
+        "FERPA": { "requirement": "Access controls for education records", "citation": "34 CFR § 99.31" },
+        "NIST-171": { "requirement": "Multi-factor authentication", "citation": "3.5.3" }
+      }
+    },
+    "EIDCA-001": {
+      "checkName": "Conditional Access Policies",
+      "frameworks": {
+        "NIST-171": { "requirement": "Limit system access to authorized users and devices", "citation": "3.1.1" },
+        "STATE-EDTECH": { "requirement": "Context-aware access controls for student data systems", "citation": "Common requirement" }
+      }
+    },
+    "ADPWD-001": {
+      "checkName": "AD Password Policy",
+      "frameworks": {
+        "NIST-171": { "requirement": "Enforce password complexity and minimum length", "citation": "3.5.7" }
+      }
+    },
+    "ADPRIV-001": {
+      "checkName": "Privileged Account Review",
+      "frameworks": {
+        "NIST-171": { "requirement": "Employ the principle of least privilege", "citation": "3.1.5" },
+        "FERPA": { "requirement": "Limit access to education records to officials with legitimate interest", "citation": "34 CFR § 99.31(a)(1)" }
+      }
+    },
+    "INTUNE-001": {
+      "checkName": "Intune Compliance Policies",
+      "frameworks": {
+        "COPPA": { "requirement": "Reasonable security on devices accessing children's data", "citation": "16 CFR § 312.8" },
+        "CIPA": { "requirement": "Technology protection measures on school-issued devices", "citation": "47 U.S.C. § 254(h)(5)" }
+      }
+    }
+  }
+}

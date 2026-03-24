@@ -1,0 +1,157 @@
+{
+  "categoryId": "collab",
+  "categoryName": "Collaboration & Communication Security",
+  "categoryDescription": "Checks related to Google Meet, Chat, and Calendar security settings including external access, recording, and sharing controls",
+  "checks": [
+    {
+      "id": "COLLAB-001",
+      "name": "Meet Recording Settings",
+      "description": "Meeting recording settings should be controlled to prevent unauthorized capture of sensitive discussions",
+      "severity": "Medium",
+      "subcategory": "Google Meet",
+      "recommendedValue": "Recording restricted to meeting organizers or disabled for sensitive OUs",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/625702498764/meetingsettings",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Google Meet > Meet video settings > Recording > Configure recording permissions",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AU-14"],
+        "mitreAttack": ["T1125"],
+        "cisBenchmark": ["5.1"]
+      }
+    },
+    {
+      "id": "COLLAB-002",
+      "name": "Meet External Participant Settings",
+      "description": "External participant access to meetings should be controlled to prevent unauthorized attendance and information disclosure",
+      "severity": "Medium",
+      "subcategory": "Google Meet",
+      "recommendedValue": "External participants require approval or knocking to join",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/625702498764/meetingsettings",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Google Meet > Meet video settings > Participants > Require approval for external participants",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-17"],
+        "mitreAttack": ["T1040"],
+        "cisBenchmark": ["5.2"]
+      }
+    },
+    {
+      "id": "COLLAB-003",
+      "name": "Meet Anonymous Join Settings",
+      "description": "Anonymous users (without Google accounts) should not be able to join meetings without explicit host approval",
+      "severity": "Medium",
+      "subcategory": "Google Meet",
+      "recommendedValue": "Anonymous join disabled or requires host approval",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/625702498764/meetingsettings",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Google Meet > Meet video settings > Participants > Disable anonymous join or require knocking",
+      "compliance": {
+        "nistSp80053": ["AC-3", "IA-2"],
+        "mitreAttack": ["T1040"],
+        "cisBenchmark": ["5.3"]
+      }
+    },
+    {
+      "id": "COLLAB-004",
+      "name": "Chat External Communication",
+      "description": "External chat communication should be restricted to prevent data leakage through direct messages with external users",
+      "severity": "High",
+      "subcategory": "Google Chat",
+      "recommendedValue": "External chat restricted or disabled for most users",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/553322/chatsettings",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Google Chat > Chat settings > External chat > Restrict external chat to specific OUs",
+      "compliance": {
+        "nistSp80053": ["AC-4", "SC-7"],
+        "mitreAttack": ["T1567", "T1048"],
+        "cisBenchmark": ["5.4"]
+      }
+    },
+    {
+      "id": "COLLAB-005",
+      "name": "Chat History Settings",
+      "description": "Chat history should be enabled and retained for compliance and audit purposes. Disabling history can hide malicious communications",
+      "severity": "Medium",
+      "subcategory": "Google Chat",
+      "recommendedValue": "Chat history enabled and retained according to retention policy",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/553322/chatsettings",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Google Chat > Chat settings > History > Enable history and configure retention",
+      "compliance": {
+        "nistSp80053": ["AU-11", "AU-3"],
+        "mitreAttack": ["T1070.008"],
+        "cisBenchmark": ["5.5"]
+      }
+    },
+    {
+      "id": "COLLAB-006",
+      "name": "Chat Spaces External Access",
+      "description": "Chat spaces (rooms) that allow external members can expose internal communications and shared files to unauthorized parties",
+      "severity": "Medium",
+      "subcategory": "Google Chat",
+      "recommendedValue": "External access to Chat spaces restricted or disabled",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/553322/chatsettings",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Google Chat > Chat settings > Spaces > Restrict external access to spaces",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-4"],
+        "mitreAttack": ["T1530", "T1213"],
+        "cisBenchmark": ["5.6"]
+      }
+    },
+    {
+      "id": "COLLAB-007",
+      "name": "Chat App Installation Settings",
+      "description": "Chat app (bot) installation should be controlled to prevent unauthorized integrations from accessing conversation data",
+      "severity": "Low",
+      "subcategory": "Google Chat",
+      "recommendedValue": "Chat app installation restricted to admin-approved apps",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/553322/chatsettings",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Google Chat > Chat settings > Apps > Restrict app installation to approved apps",
+      "compliance": {
+        "nistSp80053": ["CM-7", "CM-11"],
+        "mitreAttack": ["T1195.002"],
+        "cisBenchmark": ["5.7"]
+      }
+    },
+    {
+      "id": "COLLAB-008",
+      "name": "Calendar External Sharing",
+      "description": "Calendar sharing with external users should be limited to free/busy information to prevent exposure of meeting details and attendees",
+      "severity": "High",
+      "subcategory": "Google Calendar",
+      "recommendedValue": "External calendar sharing limited to free/busy information only",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/435070579839/sharing",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Calendar > Sharing settings > External sharing options > Set to 'Only free/busy information'",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-22"],
+        "mitreAttack": ["T1530", "T1589"],
+        "cisBenchmark": ["5.8"]
+      }
+    },
+    {
+      "id": "COLLAB-009",
+      "name": "Calendar External Invitations",
+      "description": "Users should be warned or restricted when sending calendar invitations to external recipients to prevent accidental information disclosure",
+      "severity": "Medium",
+      "subcategory": "Google Calendar",
+      "recommendedValue": "External invitation warnings enabled",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/435070579839/sharing",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Calendar > Sharing settings > Enable external invitation warnings",
+      "compliance": {
+        "nistSp80053": ["AC-4", "SI-11"],
+        "mitreAttack": ["T1589"],
+        "cisBenchmark": ["5.9"]
+      }
+    },
+    {
+      "id": "COLLAB-010",
+      "name": "Calendar Appointment Slots External Visibility",
+      "description": "Calendar appointment slot visibility should be controlled to limit external exposure of availability and scheduling details",
+      "severity": "Low",
+      "subcategory": "Google Calendar",
+      "recommendedValue": "Appointment slot external visibility restricted",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/435070579839/sharing",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Calendar > Sharing settings > Review appointment slot visibility settings",
+      "compliance": {
+        "nistSp80053": ["AC-22"],
+        "mitreAttack": ["T1589.002"],
+        "cisBenchmark": ["5.10"]
+      }
+    }
+  ]
+}

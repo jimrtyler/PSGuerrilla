@@ -1,0 +1,156 @@
+{
+  "categoryId": "eidfed",
+  "categoryName": "Entra ID Federation & Hybrid Identity",
+  "categoryDescription": "Checks related to federated domain configuration, federation certificate security, Azure AD Connect synchronization, pass-through authentication, AD FS server settings, and hybrid identity posture assessment",
+  "checks": [
+    {
+      "id": "EIDFED-001",
+      "name": "Federated Domain Enumeration",
+      "description": "A complete inventory of all federated domains in the tenant provides visibility into how authentication is configured for each domain. Federated domains redirect authentication to external identity providers, which must be properly secured and monitored. This baseline inventory enables assessment of the federation attack surface and identifies domains that may have been configured by attackers as part of a Golden SAML or backdoor federation attack.",
+      "severity": "Info",
+      "subcategory": "Federation Inventory",
+      "recommendedValue": "All federated domains inventoried with documented identity provider endpoints, signing certificates, and business justification",
+      "remediationSteps": "Enumerate all domains in the tenant using Microsoft Graph and identify those with federation authentication configured. Document the identity provider endpoint, signing certificate details, and federation protocol for each federated domain. Verify that each federation trust is authorized and corresponds to a known, legitimate identity provider under organizational control.",
+      "compliance": {
+        "nistSp80053": ["CM-8"]
+      }
+    },
+    {
+      "id": "EIDFED-002",
+      "name": "Federation Signing Certificate Validity Period",
+      "description": "Federation signing certificates with excessively long validity periods provide an extended window for attackers who obtain the private key to forge SAML tokens and maintain persistent unauthorized access. Certificates with validity periods exceeding 3 years deviate from security best practices and may indicate a compromised or attacker-created certificate. Short-lived certificates limit the duration of potential abuse if the private key is compromised.",
+      "severity": "High",
+      "subcategory": "Certificate Security",
+      "recommendedValue": "Federation signing certificates with validity periods no longer than 1 year with automated rotation procedures in place",
+      "remediationSteps": "Review the signing certificates for all federated domains and check their NotBefore and NotAfter dates to determine the validity period. Replace any certificates with validity periods exceeding 3 years with new certificates using shorter lifetimes aligned with organizational certificate policy. Implement automated certificate rotation procedures and configure monitoring alerts for certificates approaching expiration.",
+      "compliance": {
+        "nistSp80053": ["IA-5(2)"],
+        "mitreAttack": ["T1556.006"]
+      }
+    },
+    {
+      "id": "EIDFED-003",
+      "name": "Federation Signing Certificate Issuer/Subject Mismatch",
+      "description": "A mismatch between the issuer and subject fields of a federation signing certificate is a strong indicator of a potential Golden SAML attack, where an attacker has replaced the legitimate signing certificate with one they control. In a Golden SAML attack, the attacker generates a self-signed certificate with arbitrary issuer/subject values and configures it as the federation trust signing certificate, enabling them to forge SAML tokens for any user. Any issuer/subject mismatch that does not align with the expected certificate authority chain requires immediate investigation.",
+      "severity": "Critical",
+      "subcategory": "Certificate Security",
+      "recommendedValue": "Federation signing certificate issuer and subject fields match expected organizational PKI chain with no unexpected self-signed certificates",
+      "remediationSteps": "Extract the signing certificate from each federated domain trust and compare the issuer and subject fields against your expected organizational PKI hierarchy. Investigate any certificates where the issuer does not match your known certificate authority or where the subject contains unexpected values. If a mismatch is detected, treat this as a potential security incident, rotate the federation signing certificate immediately, and review audit logs for unauthorized federation configuration changes.",
+      "compliance": {
+        "nistSp80053": ["IA-5(2)"],
+        "mitreAttack": ["T1556.006"]
+      }
+    },
+    {
+      "id": "EIDFED-004",
+      "name": "Federation Trust Metadata Analysis",
+      "description": "Federation trust metadata defines the identity provider endpoints, supported protocols, and token signing configuration used for federated authentication. Manipulated metadata can redirect authentication flows to attacker-controlled endpoints or introduce rogue signing certificates, enabling token forgery and impersonation attacks. The metadata endpoint URL, passive and active endpoints, and signing algorithm configurations should be validated against known-good values.",
+      "severity": "High",
+      "subcategory": "Federation Config",
+      "recommendedValue": "All federation trust metadata validated against known-good baseline with metadata refresh URLs pointing to organization-controlled endpoints",
+      "remediationSteps": "Review the federation configuration for each federated domain including the metadata exchange URI, passive sign-on endpoint, issuer URI, and signing certificate details. Compare current values against a documented baseline configuration to identify any unauthorized modifications. Ensure metadata refresh endpoints use HTTPS and point to organization-controlled infrastructure, and validate that signing algorithms use SHA-256 or stronger.",
+      "compliance": {
+        "nistSp80053": ["IA-8(4)"],
+        "mitreAttack": ["T1556.006"]
+      }
+    },
+    {
+      "id": "EIDFED-005",
+      "name": "Azure AD Connect Configuration Review",
+      "description": "Azure AD Connect synchronizes on-premises Active Directory objects to Entra ID and is a critical component of hybrid identity architecture. Misconfigured Azure AD Connect settings can expose sensitive attributes to the cloud, create unintended privilege escalation paths, or allow attackers with on-premises access to manipulate cloud identities. The connector account permissions, synchronization rules, and feature configuration should be reviewed against security best practices.",
+      "severity": "High",
+      "subcategory": "Hybrid Config",
+      "recommendedValue": "Azure AD Connect configured with least-privilege connector accounts, hardened synchronization rules, and all security features enabled",
+      "remediationSteps": "Review the Azure AD Connect configuration including the connector account permissions, synchronization rules, and enabled features. Ensure the AD DS connector account uses the minimum required permissions and that the Entra ID connector account is a dedicated cloud-only service account. Verify that the Azure AD Connect server is treated as a Tier 0 asset with restricted administrative access and comprehensive monitoring.",
+      "compliance": {
+        "nistSp80053": ["CM-6"],
+        "mitreAttack": ["T1078.004"]
+      }
+    },
+    {
+      "id": "EIDFED-006",
+      "name": "Azure AD Connect Sync Scope Audit",
+      "description": "The synchronization scope in Azure AD Connect determines which on-premises organizational units, groups, and attributes are replicated to Entra ID. An overly broad sync scope may replicate sensitive service accounts, administrative accounts, or security groups that should remain exclusively on-premises. Conversely, an improperly restricted scope may fail to sync accounts that require cloud access, causing authentication failures.",
+      "severity": "Medium",
+      "subcategory": "Sync Configuration",
+      "recommendedValue": "Synchronization scope restricted to required organizational units and objects only, with sensitive service accounts and administrative objects excluded",
+      "remediationSteps": "Review the Azure AD Connect synchronization scope including OU filtering, group-based filtering, and attribute-level filtering rules. Verify that only OUs containing user accounts that require cloud access are included in the sync scope. Exclude sensitive on-premises service accounts, administrative accounts, and security groups that do not need cloud representation, and document the rationale for each included OU.",
+      "compliance": {
+        "nistSp80053": ["AC-2"]
+      }
+    },
+    {
+      "id": "EIDFED-007",
+      "name": "Password Hash Sync Enabled Status",
+      "description": "Password Hash Synchronization (PHS) replicates a hash of on-premises password hashes to Entra ID, enabling cloud authentication as a backup when federation or pass-through authentication is unavailable. While PHS provides resilience and enables leaked credential detection through Entra ID Identity Protection, organizations must understand the security implications of storing password derivatives in the cloud. PHS should be evaluated against organizational security requirements and risk tolerance.",
+      "severity": "Medium",
+      "subcategory": "Sync Configuration",
+      "recommendedValue": "PHS enabled as a backup authentication method with leaked credential detection active through Entra ID Identity Protection",
+      "remediationSteps": "Check the Azure AD Connect configuration to determine if Password Hash Synchronization is enabled. If PHS is disabled, evaluate enabling it as a backup authentication method and to support Entra ID Identity Protection leaked credential detection. If PHS is already enabled, verify that Entra ID Identity Protection is configured to leverage the password hashes for risk-based detection of compromised credentials.",
+      "compliance": {
+        "nistSp80053": ["IA-5"]
+      }
+    },
+    {
+      "id": "EIDFED-008",
+      "name": "Pass-Through Authentication Agent Status",
+      "description": "Pass-Through Authentication (PTA) validates user passwords against on-premises Active Directory in real-time without storing password hashes in the cloud. PTA agents running on on-premises servers must be properly secured, monitored, and kept current, as a compromised PTA agent could be manipulated to accept any password or to intercept credentials during authentication. Agent health, version currency, and server security posture are critical to maintaining authentication integrity.",
+      "severity": "Medium",
+      "subcategory": "Authentication",
+      "recommendedValue": "At least 2 PTA agents deployed on hardened servers with current agent versions and health monitoring enabled",
+      "remediationSteps": "Review the PTA agent status in Entra ID > Hybrid management > Azure AD Connect > Pass-through authentication. Verify that at least two agents are deployed for redundancy and that all agents show a healthy status with current software versions. Ensure PTA agent servers are treated as Tier 0 assets with restricted administrative access, up-to-date security patches, and comprehensive event log monitoring.",
+      "compliance": {
+        "nistSp80053": ["IA-2"],
+        "mitreAttack": ["T1556"]
+      }
+    },
+    {
+      "id": "EIDFED-009",
+      "name": "AD FS Server Configuration Assessment",
+      "description": "Active Directory Federation Services (AD FS) servers handle authentication for federated domains and process security-sensitive SAML tokens. Misconfigured AD FS settings such as weak token signing algorithms, disabled audit logging, overly permissive extranet access, or outdated claim rules can be exploited for token forgery, credential harvesting, or unauthorized access. The AD FS configuration should be regularly assessed against Microsoft security baselines and hardening guides.",
+      "severity": "High",
+      "subcategory": "AD FS",
+      "recommendedValue": "AD FS servers configured per Microsoft security baseline with SHA-256 signing, comprehensive audit logging, and current Windows Server patches",
+      "remediationSteps": "Review the AD FS server configuration including token signing algorithm (should be SHA-256), audit log settings (should capture success and failure events), extranet access policies, and claim rule complexity. Ensure AD FS servers are running the latest Windows Server patches and that the AD FS farm is configured with redundant servers. Validate that the AD FS service account follows least-privilege principles and that the token signing certificate private key is properly protected.",
+      "compliance": {
+        "nistSp80053": ["CM-6", "IA-8(4)"]
+      }
+    },
+    {
+      "id": "EIDFED-010",
+      "name": "AD FS Extranet Lockout Settings",
+      "description": "AD FS extranet lockout protects against brute-force and password spray attacks targeting the AD FS endpoint exposed to the internet. Without proper extranet lockout configuration, attackers can attempt unlimited password guesses against any federated account through the AD FS proxy, potentially compromising accounts with weak or commonly used passwords. The smart lockout feature in AD FS provides protection while minimizing lockout impact on legitimate users.",
+      "severity": "Medium",
+      "subcategory": "AD FS",
+      "recommendedValue": "Extranet smart lockout enabled with appropriate threshold and observation window configured to prevent brute-force attacks",
+      "remediationSteps": "Review the AD FS extranet lockout configuration using Get-AdfsProperties in PowerShell on the AD FS server. Enable extranet smart lockout if not already active and configure an appropriate lockout threshold and observation window based on your organization's authentication patterns. Monitor the AD FS security logs for extranet lockout events and adjust thresholds if legitimate users are being locked out or if brute-force attempts are succeeding.",
+      "compliance": {
+        "nistSp80053": ["AC-7"]
+      }
+    },
+    {
+      "id": "EIDFED-011",
+      "name": "Hybrid Join Configuration",
+      "description": "Hybrid Azure AD join registers on-premises domain-joined devices with Entra ID, enabling Conditional Access policies that require device compliance or domain join status. Misconfigured hybrid join settings can result in devices failing to register, which prevents users from satisfying device-based Conditional Access requirements, or can allow unauthorized devices to register if the service connection point is not properly secured. The configuration should be validated end-to-end.",
+      "severity": "Medium",
+      "subcategory": "Device Registration",
+      "recommendedValue": "Hybrid Azure AD join configured and functional with service connection point properly secured and device registration verified for all target OUs",
+      "remediationSteps": "Verify the service connection point (SCP) configuration in Active Directory and ensure it points to the correct Entra ID tenant. Check that the hybrid join configuration in Azure AD Connect includes the correct domains and that required enterprise registration endpoints are accessible from client devices. Validate that devices are successfully registering by reviewing the device list in Entra ID and troubleshooting any devices that show a pending state.",
+      "compliance": {
+        "nistSp80053": ["IA-3"]
+      }
+    },
+    {
+      "id": "EIDFED-012",
+      "name": "Cloud-Only vs Synced Account Analysis",
+      "description": "Understanding the distribution of cloud-only versus on-premises-synced accounts provides visibility into the hybrid identity landscape and helps identify potential security gaps. Cloud-only accounts are managed entirely in Entra ID while synced accounts originate from on-premises Active Directory and inherit its security posture. This analysis helps identify accounts that should be cloud-only but are being synced, or vice versa, and informs decisions about authentication method selection and security control placement.",
+      "severity": "Info",
+      "subcategory": "Identity Analysis",
+      "recommendedValue": "All accounts categorized as cloud-only or synced with documentation of the expected state for each account type and role",
+      "remediationSteps": "Export all user accounts from Entra ID and categorize them by the onPremisesSyncEnabled property to determine which accounts are synced from on-premises versus cloud-only. Verify that privileged administrative accounts are cloud-only to prevent on-premises compromise from affecting cloud administration. Document the expected identity source for each account type and investigate any accounts whose actual source does not match the expected configuration.",
+      "compliance": {
+        "nistSp80053": ["AC-2"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "categoryId": "m365teams",
+  "categoryName": "Microsoft Teams Security",
+  "categoryDescription": "Evaluates Microsoft Teams collaboration security settings including external and guest access controls, meeting policies, messaging restrictions, and application governance to ensure secure communication and data protection within the Teams environment.",
+  "checks": [
+    {
+      "id": "M365TEAMS-001",
+      "name": "External access settings",
+      "description": "External access (federation) in Microsoft Teams controls whether users can communicate with people in other Microsoft 365 organizations or Skype users. Unrestricted external access allows any external organization to initiate chats and calls with your users, creating vectors for social engineering and phishing through the Teams client. Limiting federation to specific trusted domains reduces the attack surface while maintaining necessary business communication.",
+      "severity": "High",
+      "subcategory": "External Communication",
+      "recommendedValue": "External access limited to specific allowed domains rather than open federation; Skype consumer access disabled",
+      "remediationSteps": "Configure Teams external access to use a domain allow list containing only trusted partner organization domains rather than allowing open federation with all external tenants. Disable communication with Skype consumer users unless there is a specific business requirement. Review and update the allowed domain list quarterly to remove organizations that no longer require federation access.",
+      "compliance": {
+        "nistSp80053": ["AC-20"],
+        "cisM365": ["8.1.1"]
+      }
+    },
+    {
+      "id": "M365TEAMS-002",
+      "name": "Guest access settings",
+      "description": "Guest access in Microsoft Teams allows external users to be added to teams and channels, granting them access to conversations, files, and shared resources. Overly permissive guest settings can allow external users to create channels, modify team settings, or access sensitive content that should be restricted to internal users. Guest capabilities must be configured to provide the minimum necessary access for external collaboration.",
+      "severity": "High",
+      "subcategory": "External Communication",
+      "recommendedValue": "Guest access enabled with restricted capabilities; guests cannot create or update channels, participate in private chats, or share files without approval",
+      "remediationSteps": "Review the Teams guest access settings and restrict guest capabilities to prevent guests from creating or deleting channels, adding or removing apps, and sharing screen in meetings. Disable guest access entirely if external collaboration is not required, or configure it with the most restrictive settings that still support business needs. Implement Azure AD access reviews for Teams guest accounts to regularly validate that guest access is still appropriate.",
+      "compliance": {
+        "nistSp80053": ["AC-14"],
+        "cisM365": ["8.1.2"]
+      }
+    },
+    {
+      "id": "M365TEAMS-003",
+      "name": "External meeting participant settings",
+      "description": "External meeting participant settings control what capabilities external users have when joining Teams meetings hosted by your organization. Allowing external participants to have presenter roles, bypass the lobby, or share screens without restriction can lead to meeting hijacking, unauthorized content sharing, and sensitive information exposure. Restricting external participant capabilities reduces the risk of meeting disruption and data leakage.",
+      "severity": "Medium",
+      "subcategory": "Meeting Policies",
+      "recommendedValue": "External participants default to attendee role; lobby bypass disabled for external users; screen sharing restricted to organizer and presenters only",
+      "remediationSteps": "Configure the global meeting policy to require external participants to wait in the lobby and default to the attendee role when admitted to meetings. Restrict screen sharing and content sharing to meeting organizers and designated presenters to prevent unauthorized content sharing by external attendees. Create specific meeting policies for different user groups if some departments require more permissive settings for regular external collaboration.",
+      "compliance": {
+        "nistSp80053": ["AC-20"],
+        "cisM365": ["8.5.1"]
+      }
+    },
+    {
+      "id": "M365TEAMS-004",
+      "name": "Anonymous meeting join settings",
+      "description": "Anonymous meeting join allows anyone with a meeting link to join Teams meetings without authentication, making it impossible to verify the identity of participants. This setting is frequently exploited in meeting bombing attacks where uninvited participants join to disrupt meetings or eavesdrop on confidential discussions. Disabling anonymous join or requiring all participants to authenticate significantly improves meeting security.",
+      "severity": "High",
+      "subcategory": "Meeting Policies",
+      "recommendedValue": "Anonymous meeting join disabled; all meeting participants required to authenticate; lobby enabled for unauthenticated users",
+      "remediationSteps": "Disable anonymous meeting join in the Teams meeting policy to require all participants to sign in before joining meetings. If anonymous join must be allowed for specific use cases such as public webinars, create a separate meeting policy with anonymous join enabled and assign it only to the users who need it. Enable the lobby for all external and guest participants and configure meeting organizers to manually admit attendees from the lobby.",
+      "compliance": {
+        "nistSp80053": ["AC-14"],
+        "cisM365": ["8.5.2"]
+      }
+    },
+    {
+      "id": "M365TEAMS-005",
+      "name": "Recording and transcription policies",
+      "description": "Teams meeting recording and transcription features capture audio, video, and text content of meetings that may contain sensitive business discussions, strategic planning, or confidential information. Unrestricted recording capabilities allow any meeting participant to record conversations without other participants' awareness or consent. Recording and transcription policies must balance business needs with data protection and privacy compliance requirements.",
+      "severity": "Medium",
+      "subcategory": "Meeting Policies",
+      "recommendedValue": "Cloud recording restricted to meeting organizers; automatic transcription requires consent; recordings stored in approved locations with appropriate retention",
+      "remediationSteps": "Configure the meeting policy to restrict cloud recording initiation to meeting organizers and co-organizers rather than all participants. Enable recording consent notifications so that all participants are aware when a recording begins, and configure automatic transcription settings to comply with privacy regulations in your jurisdiction. Review the storage location and retention policies for meeting recordings to ensure they are stored in a governed location with appropriate access controls and lifecycle management.",
+      "compliance": {
+        "nistSp80053": ["AU-2"],
+        "cisM365": ["8.5.5"]
+      }
+    },
+    {
+      "id": "M365TEAMS-006",
+      "name": "Messaging policies (external communication)",
+      "description": "Teams messaging policies control user capabilities within chat and channel conversations, including the ability to communicate with external users through chat. Unrestricted messaging to external users enables data exfiltration through chat, file sharing, and link sharing without the visibility and controls applied to email communication. Messaging policies must be configured to prevent sensitive data leakage through the Teams chat channel.",
+      "severity": "Medium",
+      "subcategory": "Messaging",
+      "recommendedValue": "External chat limited to specific domains; URL preview disabled for external conversations; file sharing restricted in external chats",
+      "remediationSteps": "Review the Teams messaging policies and restrict the ability to chat with external users to only those personnel who have a business need for cross-organization communication. Disable URL previews in conversations with external users to prevent accidental data exposure through link expansion. Consider implementing DLP policies for Teams chat to detect and block sharing of sensitive information types in external conversations.",
+      "compliance": {
+        "nistSp80053": ["AC-20"],
+        "cisM365": ["8.2.1"]
+      }
+    },
+    {
+      "id": "M365TEAMS-007",
+      "name": "App permission policies",
+      "description": "Teams app permission policies control which third-party and custom applications can be installed and used within the Teams environment. Unrestricted app installation allows users to add third-party applications that may request excessive permissions, access corporate data, or introduce security vulnerabilities. App governance policies must balance user productivity with security by curating the available application catalog.",
+      "severity": "Medium",
+      "subcategory": "Application Governance",
+      "recommendedValue": "Third-party apps restricted to an approved list; custom app uploads restricted to authorized developers; app permission requests reviewed by administrators",
+      "remediationSteps": "Configure the Teams app permission policy to block all third-party apps by default and selectively allow only approved applications that have been vetted by the security team. Restrict custom app sideloading to authorized developers and require all custom apps to go through an approval process before publication. Review the list of currently installed third-party apps, remove any that are unapproved or no longer needed, and audit the permissions each app has been granted.",
+      "compliance": {
+        "nistSp80053": ["CM-7"],
+        "cisM365": ["8.6.1"]
+      }
+    },
+    {
+      "id": "M365TEAMS-008",
+      "name": "File sharing settings in Teams",
+      "description": "File sharing within Microsoft Teams is backed by SharePoint Online and OneDrive, and the sharing settings determine how files shared in channels and chats can be accessed by internal and external users. Misconfigured file sharing settings can result in sensitive documents being accessible to guest users or through overly permissive sharing links generated from Teams. Aligning Teams file sharing settings with organizational data protection policies prevents unintended data exposure.",
+      "severity": "Medium",
+      "subcategory": "Data Protection",
+      "recommendedValue": "File sharing with external users restricted to authenticated guests; cloud storage providers limited to OneDrive and SharePoint; external file sharing disabled in private channels",
+      "remediationSteps": "Review the Teams file sharing configuration and ensure that files shared in channels and chats inherit the SharePoint Online sharing restrictions configured at the organizational level. Disable third-party cloud storage integration (Citrix Files, Dropbox, Box, Google Drive, Egnyte) in Teams to prevent data from being uploaded to unmanaged storage services. Configure sensitivity labels for Teams and associated SharePoint sites to enforce file protection policies that persist when documents are shared or downloaded.",
+      "compliance": {
+        "nistSp80053": ["AC-21"]
+      }
+    }
+  ]
+}

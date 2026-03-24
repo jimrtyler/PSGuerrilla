@@ -1,0 +1,202 @@
+{
+  "categoryId": "admin",
+  "categoryName": "Admin & User Management",
+  "categoryDescription": "Checks related to admin role assignments, user account hygiene, directory settings, and group management",
+  "checks": [
+    {
+      "id": "ADMIN-001",
+      "name": "Super Admin Account Inventory",
+      "description": "All super admin accounts should be inventoried and reviewed. Super admins have unrestricted access to all organizational settings and data",
+      "severity": "Critical",
+      "subcategory": "Admin Roles",
+      "recommendedValue": "All super admin accounts documented and justified with clear business need",
+      "remediationUrl": "https://admin.google.com/ac/users",
+      "remediationSteps": "Admin Console > Directory > Users > Filter by admin role > Review all super admin accounts and remove unnecessary assignments",
+      "compliance": {
+        "nistSp80053": ["AC-2(7)", "AC-6(1)"],
+        "mitreAttack": ["T1078.004", "T1087.004"],
+        "cisBenchmark": ["4.1"]
+      }
+    },
+    {
+      "id": "ADMIN-002",
+      "name": "Admin Role Assignments Audit",
+      "description": "Administrative role assignments should follow the principle of least privilege. Custom roles should be used instead of broad built-in roles",
+      "severity": "High",
+      "subcategory": "Admin Roles",
+      "recommendedValue": "All admin role assignments reviewed with least-privilege custom roles used where possible",
+      "remediationUrl": "https://admin.google.com/ac/roles",
+      "remediationSteps": "Admin Console > Account > Admin roles > Review each role assignment > Replace broad roles with scoped custom roles",
+      "compliance": {
+        "nistSp80053": ["AC-6(1)", "AC-2(7)"],
+        "mitreAttack": ["T1078.004", "T1098.003"],
+        "cisBenchmark": ["4.2"]
+      }
+    },
+    {
+      "id": "ADMIN-003",
+      "name": "Delegated Admin Permissions Review",
+      "description": "Custom admin roles should be reviewed to ensure delegated permissions are appropriately scoped and do not grant excessive access",
+      "severity": "Medium",
+      "subcategory": "Admin Roles",
+      "recommendedValue": "Custom admin roles scoped to minimum necessary permissions",
+      "remediationUrl": "https://admin.google.com/ac/roles",
+      "remediationSteps": "Admin Console > Account > Admin roles > Review each custom role > Verify permissions are scoped appropriately",
+      "compliance": {
+        "nistSp80053": ["AC-6(1)", "AC-3"],
+        "mitreAttack": ["T1098.003"],
+        "cisBenchmark": ["4.3"]
+      }
+    },
+    {
+      "id": "ADMIN-004",
+      "name": "Inactive/Suspended Admin Accounts",
+      "description": "Suspended or inactive users should not retain admin role assignments. These accounts may be targeted for reactivation attacks",
+      "severity": "High",
+      "subcategory": "Admin Roles",
+      "recommendedValue": "No suspended or inactive users with admin role assignments",
+      "remediationUrl": "https://admin.google.com/ac/users",
+      "remediationSteps": "Admin Console > Directory > Users > Filter suspended users > Remove admin roles from any suspended accounts",
+      "compliance": {
+        "nistSp80053": ["AC-2(3)", "AC-2(4)"],
+        "mitreAttack": ["T1078.004", "T1098"],
+        "cisBenchmark": ["4.4"]
+      }
+    },
+    {
+      "id": "ADMIN-005",
+      "name": "User Account Inventory",
+      "description": "User account inventory should be maintained with clear counts of active, suspended, and archived accounts for governance",
+      "severity": "Medium",
+      "subcategory": "User Management",
+      "recommendedValue": "Complete user inventory with all accounts in appropriate active/suspended/archived state",
+      "remediationUrl": "https://admin.google.com/ac/users",
+      "remediationSteps": "Admin Console > Directory > Users > Review user list > Suspend or archive accounts that are no longer needed",
+      "compliance": {
+        "nistSp80053": ["AC-2", "CM-8"],
+        "mitreAttack": ["T1087.004"],
+        "cisBenchmark": ["4.5"]
+      }
+    },
+    {
+      "id": "ADMIN-006",
+      "name": "Stale User Accounts",
+      "description": "User accounts with no login in 90 or more days may be orphaned and should be reviewed for suspension or deletion",
+      "severity": "Medium",
+      "subcategory": "User Management",
+      "recommendedValue": "No user accounts inactive for more than 90 days without documented justification",
+      "remediationUrl": "https://admin.google.com/ac/users",
+      "remediationSteps": "Admin Console > Directory > Users > Sort by last sign-in > Review and suspend accounts inactive for 90+ days",
+      "compliance": {
+        "nistSp80053": ["AC-2(3)"],
+        "mitreAttack": ["T1078.004"],
+        "cisBenchmark": ["4.6"]
+      }
+    },
+    {
+      "id": "ADMIN-007",
+      "name": "OU Structure Review",
+      "description": "The organizational unit structure should be reviewed to ensure policies can be effectively applied at the appropriate scope",
+      "severity": "Low",
+      "subcategory": "Directory",
+      "recommendedValue": "OU structure documented with clear policy mapping",
+      "remediationUrl": "https://admin.google.com/ac/orgunits",
+      "remediationSteps": "Admin Console > Directory > Organizational units > Review OU hierarchy and ensure it aligns with policy application needs",
+      "compliance": {
+        "nistSp80053": ["CM-6", "AC-2"],
+        "mitreAttack": ["T1087.004"],
+        "cisBenchmark": ["4.7"]
+      }
+    },
+    {
+      "id": "ADMIN-008",
+      "name": "Directory Sharing Settings",
+      "description": "Directory sharing controls who can view organizational contacts and profiles. External directory sharing should be limited",
+      "severity": "Medium",
+      "subcategory": "Directory",
+      "recommendedValue": "Directory sharing restricted to internal users only",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/986702928867/contactsharing",
+      "remediationSteps": "Admin Console > Directory > Directory settings > Sharing settings > Restrict contact sharing to domain users",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-22"],
+        "mitreAttack": ["T1087.004", "T1589"],
+        "cisBenchmark": ["4.8"]
+      }
+    },
+    {
+      "id": "ADMIN-009",
+      "name": "User Profile Visibility",
+      "description": "User profile information visibility should be controlled to limit reconnaissance potential from external actors",
+      "severity": "Low",
+      "subcategory": "Directory",
+      "recommendedValue": "User profile visibility restricted to internal users",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/986702928867/profilesharing",
+      "remediationSteps": "Admin Console > Directory > Directory settings > Profile sharing > Restrict profile visibility",
+      "compliance": {
+        "nistSp80053": ["AC-22", "AC-3"],
+        "mitreAttack": ["T1589.002"],
+        "cisBenchmark": ["4.9"]
+      }
+    },
+    {
+      "id": "ADMIN-010",
+      "name": "Groups Settings and External Membership",
+      "description": "Google Groups that allow external members can expose internal communications and data to unauthorized parties",
+      "severity": "High",
+      "subcategory": "Groups",
+      "recommendedValue": "External group membership disabled or restricted to specific groups with documented justification",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/651400000067/sharing",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Groups for Business > Sharing settings > Restrict external membership",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-4"],
+        "mitreAttack": ["T1530", "T1213.003"],
+        "cisBenchmark": ["4.10"]
+      }
+    },
+    {
+      "id": "ADMIN-011",
+      "name": "Group Creation Restrictions",
+      "description": "Group creation should be restricted to prevent proliferation of unmanaged groups that may expose organizational data",
+      "severity": "Medium",
+      "subcategory": "Groups",
+      "recommendedValue": "Group creation restricted to admins or specific delegated roles",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/651400000067/sharing",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Groups for Business > Sharing settings > Restrict who can create groups",
+      "compliance": {
+        "nistSp80053": ["CM-7", "AC-6"],
+        "mitreAttack": ["T1136.003"],
+        "cisBenchmark": ["4.11"]
+      }
+    },
+    {
+      "id": "ADMIN-012",
+      "name": "Groups for Business Settings",
+      "description": "Groups for Business settings control group features including external posting, member visibility, and content sharing",
+      "severity": "Medium",
+      "subcategory": "Groups",
+      "recommendedValue": "Groups for Business configured with restricted external access and posting",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/651400000067/sharing",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Groups for Business > Sharing settings > Review all settings",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-4"],
+        "mitreAttack": ["T1530", "T1213.003"],
+        "cisBenchmark": ["4.12"]
+      }
+    },
+    {
+      "id": "ADMIN-013",
+      "name": "Super Admin Count",
+      "description": "The number of super admin accounts should be between 2 and 4. Too few creates a single point of failure; too many increases the attack surface",
+      "severity": "High",
+      "subcategory": "Admin Roles",
+      "recommendedValue": "2-4 super admin accounts",
+      "remediationUrl": "https://admin.google.com/ac/users",
+      "remediationSteps": "Admin Console > Directory > Users > Filter by super admin role > Adjust count to 2-4 by removing unnecessary super admins or adding a backup",
+      "compliance": {
+        "nistSp80053": ["AC-6(1)", "AC-2(7)"],
+        "mitreAttack": ["T1078.004"],
+        "cisBenchmark": ["4.13"]
+      }
+    }
+  ]
+}

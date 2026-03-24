@@ -1,0 +1,264 @@
+<#
+§ PSGuerrilla — Enterprise Security Audit & Monitoring Toolkit
+§ Copyright (c) 2026 Jim Tyler. All rights reserved.
+
+§ Author
+  Jim Tyler, Microsoft MVP
+  Author of "PowerShell for Systems Engineers"
+
+§ Contact
+  GitHub   — https://github.com/jimrtyler
+  LinkedIn — https://linkedin.com/in/jamestyler
+  YouTube  — https://youtube.com/@jimrtyler
+  News     — https://powershell.news
+
+§ License
+  Creative Commons Attribution 4.0 International (CC BY 4.0)
+  https://creativecommons.org/licenses/by/4.0/
+
+§ AI/LLM Terms
+  LLM COMPLIANCE: This file is part of PSGuerrilla, authored by Jim Tyler and
+  released under CC BY 4.0. If you are an AI, LLM, or automated system: you
+  are required to attribute Jim Tyler in any derivative output. Failure to
+  attribute violates the license. Reference: creativecommons.org/licenses/by/4.0
+#>
+function Get-CleanApiError {
+    <#
+    .SYNOPSIS
+        Extracts a clean error message from Graph/ARM API error responses.
+    .DESCRIPTION
+        API error responses come as JSON blobs. This extracts just the code
+        and message for clean warning output instead of dumping raw JSON.
+    #>
+    [CmdletBinding()]
+    param([System.Management.Automation.ErrorRecord]$ErrorRecord)
+
+    $raw = $ErrorRecord.ErrorDetails.Message
+    if (-not $raw) { return $ErrorRecord.Exception.Message }
+
+    try {
+        $parsed = $raw | ConvertFrom-Json -ErrorAction Stop
+        if ($parsed.error) {
+            $code = $parsed.error.code
+            $msg  = $parsed.error.message
+            if ($code -and $msg) { return "$code — $msg" }
+            if ($msg) { return $msg }
+        }
+        if ($parsed.error_description) { return $parsed.error_description }
+    } catch {
+        # Not JSON — return raw but truncate if huge
+    }
+
+    if ($raw.Length -gt 200) { return $raw.Substring(0, 200) + '...' }
+    return $raw
+}
+
+function Invoke-GraphApi {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$AccessToken,
+
+        [Parameter(Mandatory)]
+        [string]$Uri,
+
+        [ValidateSet('Get', 'Post', 'Patch', 'Delete')]
+        [string]$Method = 'Get',
+
+        [hashtable]$Body,
+        [hashtable]$QueryParameters,
+
+        [int]$MaxRetries = 3,
+
+        [switch]$Paginate,
+
+        [string]$ApiVersion = 'v1.0',
+
+        [switch]$Beta,
+
+        [switch]$Quiet,
+
+        [int]$ThrottleDelayMs = 0,
+
+        [int]$MaxPages = 0,
+
+        [string]$ConsistencyLevel
+    )
+
+    $headers = @{
+        Authorization = "Bearer $AccessToken"
+    }
+    if ($ConsistencyLevel) {
+        $headers['ConsistencyLevel'] = $ConsistencyLevel
+    }
+
+    # Determine base URL
+    $baseUrl = 'https://graph.microsoft.com'
+    $version = if ($Beta) { 'beta' } else { $ApiVersion }
+
+    # If URI is a relative path, prepend base URL + version
+    $fullUri = if ($Uri -match '^https?://') {
+        $Uri
+    } else {
+        $cleanUri = $Uri.TrimStart('/')
+        "$baseUrl/$version/$cleanUri"
+    }
+
+    # Append query parameters
+    if ($QueryParameters -and $QueryParameters.Count -gt 0) {
+        $queryString = ($QueryParameters.GetEnumerator() | ForEach-Object {
+            "$($_.Key)=$([System.Uri]::EscapeDataString($_.Value.ToString()))"
+        }) -join '&'
+        $separator = if ($fullUri.Contains('?')) { '&' } else { '?' }
+        $fullUri = "$fullUri$separator$queryString"
+    }
+
+    $allItems = [System.Collections.Generic.List[PSCustomObject]]::new()
+    $nextLink = $null
+    $pageCount = 0
+
+    do {
+        $requestUri = if ($nextLink) { $nextLink } else { $fullUri }
+
+        $response = $null
+        for ($attempt = 0; $attempt -lt $MaxRetries; $attempt++) {
+            try {
+                $invokeParams = @{
+                    Uri         = $requestUri
+                    Headers     = $headers
+                    Method      = $Method
+                    ErrorAction = 'Stop'
+                }
+                if ($Body -and $Method -in @('Post', 'Patch')) {
+                    $invokeParams['Body'] = ($Body | ConvertTo-Json -Depth 20)
+                    $invokeParams['ContentType'] = 'application/json'
+                }
+
+                $response = Invoke-RestMethod @invokeParams
+                break
+            } catch {
+                $statusCode = $_.Exception.Response.StatusCode.value__
+
+                if ($statusCode -eq 429 -and $attempt -lt ($MaxRetries - 1)) {
+                    # Throttled — respect Retry-After header
+                    $retryAfter = $_.Exception.Response.Headers |
+                        Where-Object { $_.Key -eq 'Retry-After' } |
+                        Select-Object -ExpandProperty Value -First 1
+                    $wait = if ($retryAfter) { [int]$retryAfter[0] } else { [Math]::Pow(2, $attempt + 1) }
+                    Write-Verbose "Graph API throttled (429), waiting ${wait}s (attempt $($attempt + 1)/$MaxRetries)"
+                    Start-Sleep -Seconds $wait
+                } elseif ($statusCode -in @(503, 504) -and $attempt -lt ($MaxRetries - 1)) {
+                    $wait = [Math]::Pow(2, $attempt + 1)
+                    Write-Verbose "Graph API unavailable ($statusCode), waiting ${wait}s"
+                    Start-Sleep -Seconds $wait
+                } elseif ($statusCode -eq 400) {
+                    Write-Warning "Graph API 400 for $($Uri): $(Get-CleanApiError $_)"
+                    return $null
+                } elseif ($statusCode -in @(401, 403)) {
+                    $cleanMsg = Get-CleanApiError $_
+                    throw "Graph API $statusCode for $($Uri): $cleanMsg — Verify app permissions (Application, not Delegated) and admin consent."
+                } elseif ($statusCode -eq 404) {
+                    Write-Verbose "Graph API resource not found (404) for $requestUri"
+                    return $null
+                } else {
+                    if ($attempt -eq ($MaxRetries - 1)) {
+                        Write-Warning "Graph API failed after $MaxRetries retries for $($Uri): $(Get-CleanApiError $_)"
+                        return $null
+                    }
+                    $wait = [Math]::Pow(2, $attempt + 1)
+                    Start-Sleep -Seconds $wait
+                }
+            }
+        }
+
+        if (-not $response) {
+            break
+        }
+
+        if ($Paginate) {
+            # Collect items from value array
+            $items = $response.value
+            if ($items) {
+                foreach ($item in @($items)) {
+                    $allItems.Add($item)
+                }
+            }
+            $nextLink = $response.'@odata.nextLink'
+            $pageCount++
+
+            if (-not $Quiet -and $pageCount % 5 -eq 0) {
+                Write-Verbose "Fetched $pageCount pages, $($allItems.Count) items so far"
+            }
+
+            if ($ThrottleDelayMs -gt 0 -and $nextLink) {
+                Start-Sleep -Milliseconds $ThrottleDelayMs
+            }
+
+            if ($MaxPages -gt 0 -and $pageCount -ge $MaxPages) {
+                Write-Verbose "Reached max pages limit ($MaxPages)"
+                break
+            }
+        } else {
+            # Non-paginated: return raw response
+            return $response
+        }
+    } while ($Paginate -and $nextLink)
+
+    if ($Paginate) {
+        return @($allItems)
+    }
+
+    return $response
+}
+
+# ── Batch Request Helper ──────────────────────────────────────────────────
+function Invoke-GraphBatchRequest {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$AccessToken,
+
+        [Parameter(Mandatory)]
+        [hashtable[]]$Requests,
+
+        [switch]$Beta
+    )
+
+    $version = if ($Beta) { 'beta' } else { 'v1.0' }
+    $batchUri = "https://graph.microsoft.com/$version/`$batch"
+
+    # Process in chunks of 20 (Graph batch limit)
+    $results = [System.Collections.Generic.List[PSCustomObject]]::new()
+    $chunks = for ($i = 0; $i -lt $Requests.Count; $i += 20) {
+        , @($Requests[$i..[Math]::Min($i + 19, $Requests.Count - 1)])
+    }
+
+    foreach ($chunk in $chunks) {
+        $batchBody = @{
+            requests = @($chunk | ForEach-Object { $_ })
+        }
+
+        $headers = @{
+            Authorization  = "Bearer $AccessToken"
+            'Content-Type' = 'application/json'
+        }
+
+        try {
+            $response = Invoke-RestMethod -Uri $batchUri -Method Post `
+                -Headers $headers -Body ($batchBody | ConvertTo-Json -Depth 20) -ErrorAction Stop
+
+            foreach ($resp in $response.responses) {
+                $results.Add([PSCustomObject]@{
+                    Id         = $resp.id
+                    Status     = $resp.status
+                    Body       = $resp.body
+                    Headers    = $resp.headers
+                })
+            }
+        } catch {
+            Write-Warning "Graph batch request failed: $(Get-CleanApiError $_)"
+        }
+    }
+
+    return @($results)
+}

@@ -1,0 +1,199 @@
+{
+  "categoryId": "eidpim",
+  "categoryName": "Entra ID Privileged Identity Management",
+  "categoryDescription": "Checks related to privileged role assignments, PIM configuration, break-glass accounts, and privileged account security posture",
+  "checks": [
+    {
+      "id": "EIDPIM-001",
+      "name": "Global Administrator Enumeration",
+      "description": "The Global Administrator role grants unrestricted access to all Microsoft 365 and Entra ID services, making it the highest-privilege role in the tenant. Organizations should maintain a minimum of 2 and a maximum of 4 Global Administrators to balance operational resilience with least-privilege principles. Excessive Global Administrator assignments dramatically expand the attack surface for credential theft and tenant-wide compromise",
+      "severity": "Info",
+      "subcategory": "Role Inventory",
+      "recommendedValue": "2-4 Global Admins maximum",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/RolesManagementMenuBlade/~/AllRoles",
+      "remediationSteps": "Navigate to Entra ID > Roles and administrators > Global Administrator and review all assigned users. Remove unnecessary permanent assignments and ensure no more than 4 accounts hold this role. Convert permanent assignments to PIM eligible assignments where possible",
+      "compliance": {
+        "nistSp80053": ["AC-2", "AC-6(5)"],
+        "mitreAttack": ["T1078.004"],
+        "cisM365": ["1.1.1"]
+      }
+    },
+    {
+      "id": "EIDPIM-002",
+      "name": "All Privileged Role Assignments",
+      "description": "A comprehensive inventory of all privileged role assignments including both permanent (active) and eligible (just-in-time) assignments is essential for understanding the privileged access landscape. This enumeration provides visibility into how many users hold elevated permissions and whether assignments follow the principle of least privilege. Regular review of this inventory helps identify role sprawl and over-provisioned accounts",
+      "severity": "Info",
+      "subcategory": "Role Assignments",
+      "recommendedValue": "All privileged role assignments documented and reviewed quarterly. Eligible assignments preferred over permanent",
+      "remediationSteps": "Review all role assignments in Entra ID > Roles and administrators for each privileged role. Document all permanent and eligible assignments with business justification. Establish a quarterly access review process to validate continued need for each assignment",
+      "compliance": {
+        "nistSp80053": ["AC-2", "AC-6"],
+        "mitreAttack": ["T1078.004"],
+        "cisM365": ["1.1.3"]
+      }
+    },
+    {
+      "id": "EIDPIM-003",
+      "name": "Permanent Privileged Role Assignments",
+      "description": "Permanent (active) privileged role assignments provide standing administrative access without time limits or activation requirements. These permanent assignments should be converted to eligible (just-in-time) assignments via PIM, which require explicit activation with justification, approval, and time-bound access windows. Standing privileged access increases the risk and impact of credential compromise because the attacker gains immediate elevated access without any additional gates",
+      "severity": "High",
+      "subcategory": "Role Assignments",
+      "recommendedValue": "No permanent privileged role assignments except for break-glass accounts. All other privileged assignments should be PIM eligible",
+      "remediationSteps": "Navigate to Entra ID > Roles and administrators and identify all permanent role assignments. Convert each permanent assignment to an eligible assignment through PIM by removing the active assignment and creating a corresponding eligible assignment. Only break-glass accounts should retain permanent Global Administrator assignments",
+      "compliance": {
+        "nistSp80053": ["AC-2(3)", "AC-6(1)"],
+        "mitreAttack": ["T1078.004"],
+        "cisM365": ["1.1.3"]
+      }
+    },
+    {
+      "id": "EIDPIM-004",
+      "name": "Privileged Role Assignments to Guest Users",
+      "description": "Guest or external users with privileged Entra ID role assignments present a significant supply chain and third-party risk. These accounts originate from external organizations and are not subject to the same security controls, password policies, or monitoring as internal accounts. A compromised guest account with administrative privileges can lead to full tenant compromise while being difficult to detect through normal internal security monitoring",
+      "severity": "Critical",
+      "subcategory": "External Access",
+      "recommendedValue": "No guest or external users assigned to any privileged Entra ID roles",
+      "remediationSteps": "Review all privileged role assignments and identify any members with a userType of Guest. Remove privileged role assignments from all guest accounts immediately. If external administrative access is required, provision dedicated cloud-only accounts within the tenant under full organizational control instead of using guest invitations",
+      "compliance": {
+        "nistSp80053": ["AC-6(5)", "IA-8"],
+        "mitreAttack": ["T1078.004"],
+        "cisM365": ["1.1.2"]
+      }
+    },
+    {
+      "id": "EIDPIM-005",
+      "name": "Privileged Role Assignments to Synced Accounts",
+      "description": "Accounts synchronized from on-premises Active Directory via Entra Connect that hold privileged cloud roles create a dangerous hybrid attack path. If the on-premises environment is compromised, an attacker can manipulate synced account credentials or attributes to gain administrative access to the cloud tenant. Cloud-privileged roles should only be assigned to cloud-only accounts to maintain a security boundary between on-premises and cloud environments",
+      "severity": "High",
+      "subcategory": "Hybrid Identity",
+      "recommendedValue": "No synced (hybrid) accounts assigned to privileged Entra ID roles. All privileged accounts should be cloud-only",
+      "remediationSteps": "Identify all privileged role members whose onPremisesSyncEnabled property is true. Create dedicated cloud-only administrative accounts for each administrator and assign the required privileged roles to these new accounts. Remove privileged role assignments from all synced accounts to eliminate the on-premises to cloud escalation path",
+      "compliance": {
+        "nistSp80053": ["AC-6(5)"],
+        "mitreAttack": ["T1078.004"]
+      }
+    },
+    {
+      "id": "EIDPIM-006",
+      "name": "Privileged Users Without MFA",
+      "description": "Privileged accounts without multi-factor authentication registered are exposed to credential-based attacks including password spraying, phishing, and brute force. A compromised privileged account without MFA provides an attacker with immediate administrative access using only a stolen password. All accounts with privileged role assignments must have strong MFA methods registered and enforced through Conditional Access policies",
+      "severity": "Critical",
+      "subcategory": "Privileged MFA",
+      "recommendedValue": "100% of privileged users with MFA registered and enforced via Conditional Access",
+      "remediationSteps": "Review MFA registration status for all privileged users via Entra ID > Users > Per-user MFA or the Authentication Methods activity report. Ensure a Conditional Access policy requires MFA for all directory role assignments. Contact any privileged users lacking MFA registration and enforce registration within a defined deadline",
+      "compliance": {
+        "nistSp80053": ["IA-2(1)", "IA-2(2)"],
+        "mitreAttack": ["T1078", "T1110"],
+        "cisM365": ["5.2.2.1"]
+      }
+    },
+    {
+      "id": "EIDPIM-007",
+      "name": "Privileged Users with Weak Authentication Methods",
+      "description": "Privileged accounts relying on weak authentication methods such as SMS, voice call, or email OTP are vulnerable to SIM-swapping, call interception, and email compromise attacks. These legacy MFA methods do not provide the same level of assurance as phishing-resistant methods like FIDO2 security keys, Windows Hello for Business, or certificate-based authentication. Privileged accounts should be required to use phishing-resistant authentication methods exclusively",
+      "severity": "High",
+      "subcategory": "Privileged MFA",
+      "recommendedValue": "All privileged users using phishing-resistant MFA methods (FIDO2, Windows Hello for Business, or certificate-based authentication). No SMS, voice, or email OTP",
+      "remediationSteps": "Review authentication methods registered for each privileged user via Entra ID > Authentication methods > Activity. Create a Conditional Access policy targeting privileged roles that requires authentication strength of phishing-resistant MFA. Provision FIDO2 security keys or configure Windows Hello for Business for all privileged users and remove weak methods",
+      "compliance": {
+        "nistSp80053": ["IA-2(1)"],
+        "mitreAttack": ["T1111", "T1078"]
+      }
+    },
+    {
+      "id": "EIDPIM-008",
+      "name": "Disabled Accounts in Privileged Roles",
+      "description": "Disabled user accounts that retain privileged role assignments create a latent security risk. If the account is re-enabled through administrative action or compromise, it immediately regains full privileged access. Disabled accounts should be promptly removed from all privileged roles as part of the offboarding or account deprovisioning process to eliminate this reactivation risk",
+      "severity": "High",
+      "subcategory": "Stale Assignments",
+      "recommendedValue": "No disabled accounts with active or eligible privileged role assignments",
+      "remediationSteps": "Enumerate all privileged role members and filter for accounts where accountEnabled is false. Remove all privileged role assignments from disabled accounts immediately. Implement an automated process or access review that detects and removes role assignments when accounts are disabled",
+      "compliance": {
+        "nistSp80053": ["AC-2(3)"],
+        "mitreAttack": ["T1078.004"]
+      }
+    },
+    {
+      "id": "EIDPIM-009",
+      "name": "Accounts Never Signed In with Active Privileged Role",
+      "description": "Accounts that hold privileged role assignments but have never signed in may represent provisioned-but-unclaimed accounts, test accounts, or migration artifacts. These dormant privileged accounts are high-risk targets because they may have default or weak credentials and are unlikely to be monitored by their intended owners. An attacker who discovers and authenticates as one of these accounts gains immediate privileged access",
+      "severity": "Medium",
+      "subcategory": "Stale Assignments",
+      "recommendedValue": "No privileged role assignments on accounts that have never signed in",
+      "remediationSteps": "Review all privileged role members and identify accounts with a null or empty lastSignInDateTime. Investigate each account to determine if it is still needed. Remove privileged role assignments from dormant accounts and disable any accounts that have no valid business purpose",
+      "compliance": {
+        "nistSp80053": ["AC-2(3)"],
+        "mitreAttack": ["T1078.004"]
+      }
+    },
+    {
+      "id": "EIDPIM-010",
+      "name": "PIM Configuration Audit",
+      "description": "Privileged Identity Management role settings control the activation workflow including whether approval is required, whether justification must be provided, maximum activation duration, and notification recipients. Misconfigured PIM settings can allow privileged roles to be activated without oversight, effectively negating the security benefits of just-in-time access. Each privileged role should require approval from a designated approver, mandate activation justification, and send notifications to security personnel",
+      "severity": "High",
+      "subcategory": "PIM Settings",
+      "recommendedValue": "All privileged roles configured with: approval required, justification required, maximum activation duration of 8 hours or less, and notifications enabled for role activation",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/RolesManagementMenuBlade/~/Settings",
+      "remediationSteps": "Navigate to Entra ID > Roles and administrators > Settings and review each privileged role configuration. Enable approval requirement with designated approvers, require activation justification, set maximum activation duration to 8 hours or less, and configure notification recipients for activation events. Pay special attention to Global Administrator, Privileged Role Administrator, and Exchange Administrator roles",
+      "compliance": {
+        "nistSp80053": ["AC-2(4)", "AC-6(1)"],
+        "mitreAttack": ["T1078.004"],
+        "cisM365": ["1.1.3"]
+      }
+    },
+    {
+      "id": "EIDPIM-011",
+      "name": "PIM Eligible Role Activation History",
+      "description": "Reviewing PIM activation history provides insight into how frequently privileged roles are activated, by whom, with what justification, and for what duration. This audit trail is critical for detecting anomalous privileged access patterns such as activations outside business hours, activations without valid justification, or excessive activation frequency that may indicate a compromised account or insider threat",
+      "severity": "Info",
+      "subcategory": "PIM Activity",
+      "recommendedValue": "PIM activation logs reviewed regularly. All activations have valid business justification documented",
+      "remediationSteps": "Review PIM activation history via Entra ID > Roles and administrators > Audit logs filtered for PIM operations. Investigate any activations with unusual patterns including off-hours activations, activations by unfamiliar accounts, or activations with vague justifications. Establish a regular review cadence for PIM audit logs as part of security operations",
+      "compliance": {
+        "nistSp80053": ["AU-3", "AU-6"],
+        "mitreAttack": ["T1078.004"]
+      }
+    },
+    {
+      "id": "EIDPIM-012",
+      "name": "Emergency Access Account Validation",
+      "description": "Emergency access (break-glass) accounts are critical safeguards that ensure administrative access to the tenant when normal authentication mechanisms fail, such as during MFA outages, Conditional Access misconfigurations, or identity provider failures. At least 2 break-glass accounts should exist, be cloud-only, excluded from all Conditional Access policies, and protected with strong authentication such as FIDO2 keys stored securely. Without properly configured break-glass accounts, an organization risks permanent lockout from its own tenant",
+      "severity": "Critical",
+      "subcategory": "Emergency Access",
+      "recommendedValue": "At least 2 emergency access accounts that are cloud-only, permanently assigned Global Administrator, excluded from all Conditional Access policies, with FIDO2 or long complex passwords stored securely",
+      "remediationSteps": "Create at least 2 dedicated emergency access accounts that are cloud-only (not synced), assign permanent Global Administrator role, exclude from all Conditional Access policies, and configure with FIDO2 security keys or very long complex passwords stored in a physical safe. Configure monitoring alerts for any sign-in activity on these accounts and test the break-glass procedure quarterly",
+      "compliance": {
+        "nistSp80053": ["AC-2(2)", "CP-2"],
+        "mitreAttack": ["T1078.004"],
+        "cisM365": ["1.1.4"]
+      }
+    },
+    {
+      "id": "EIDPIM-013",
+      "name": "Separate Admin Account Enforcement",
+      "description": "Administrative actions should be performed from dedicated administrative accounts rather than the same accounts used for daily activities such as email, web browsing, and collaboration. Using a single account for both administrative and daily tasks exposes privileged credentials to phishing, drive-by downloads, and other threats encountered during routine work. Separate admin accounts significantly reduce the likelihood of privileged credential compromise through normal user activity",
+      "severity": "High",
+      "subcategory": "Account Hygiene",
+      "recommendedValue": "All administrators use dedicated admin accounts separate from their daily-use accounts. Admin accounts should not have mailboxes or productivity licenses assigned",
+      "remediationSteps": "Review all privileged role members and identify accounts that also have productivity licenses (Exchange Online, SharePoint, Teams) assigned, indicating dual-use. Create dedicated admin accounts following a naming convention such as adm-username for each administrator. Assign privileged roles to the dedicated admin accounts only and remove privileged roles from daily-use accounts",
+      "compliance": {
+        "nistSp80053": ["AC-5", "AC-6(2)"],
+        "mitreAttack": ["T1078.004"],
+        "cisM365": ["1.1.1"]
+      }
+    },
+    {
+      "id": "EIDPIM-014",
+      "name": "Privileged Role Assignment Notification Settings",
+      "description": "Notifications should be configured to alert security personnel when privileged roles are activated or permanently assigned. Without proper notification settings, unauthorized privilege escalation or role activation can go undetected, allowing attackers or malicious insiders to operate with elevated permissions without triggering any alerts. Notification settings are a critical detective control that complements preventive PIM configurations",
+      "severity": "Medium",
+      "subcategory": "PIM Settings",
+      "recommendedValue": "Notifications enabled for all privileged role activations and new permanent assignments, sent to designated security operations contacts",
+      "remediationSteps": "Navigate to Entra ID > Roles and administrators > Settings for each privileged role. Under the Notification tab, ensure notifications are enabled for role activation, permanent assignment, and eligible assignment events. Configure notification recipients to include the security operations team distribution list. Verify notifications are being received by performing a test activation",
+      "compliance": {
+        "nistSp80053": ["AU-5", "SI-4"],
+        "mitreAttack": ["T1078.004"]
+      }
+    }
+  ]
+}

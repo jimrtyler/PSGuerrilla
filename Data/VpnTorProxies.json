@@ -1,0 +1,41 @@
+{
+    "metadata": {
+        "version": "1.0.0",
+        "lastUpdated": "2026-02-27",
+        "description": "Known VPN providers, Tor exit nodes, and proxy service IP ranges"
+    },
+    "tor_exit_nodes": [],
+    "vpn_provider_cidrs": [
+        "103.86.96.0/22",
+        "103.86.100.0/22",
+        "146.70.0.0/16",
+        "185.159.156.0/22",
+        "185.213.152.0/22",
+        "185.230.124.0/22",
+        "193.27.12.0/22",
+        "193.138.218.0/24",
+        "194.127.172.0/22",
+        "198.54.128.0/24",
+        "209.58.128.0/18"
+    ],
+    "vpn_provider_names": [
+        "NordVPN",
+        "ExpressVPN",
+        "Surfshark",
+        "ProtonVPN",
+        "Private Internet Access",
+        "CyberGhost",
+        "Mullvad",
+        "IPVanish",
+        "Windscribe",
+        "TunnelBear",
+        "HideMyAss",
+        "TorGuard"
+    ],
+    "proxy_service_cidrs": [
+        "185.220.100.0/24",
+        "185.220.101.0/24",
+        "185.220.102.0/24",
+        "185.220.103.0/24"
+    ]
+}

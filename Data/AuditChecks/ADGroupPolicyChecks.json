@@ -1,0 +1,415 @@
+{
+  "categoryId": "adgpo",
+  "categoryName": "AD Group Policy",
+  "categoryDescription": "Checks related to Group Policy Object configuration, security, hygiene, and security settings deployed via GPO",
+  "checks": [
+    {
+      "id": "ADGPO-001",
+      "name": "GPO Inventory with Link Status",
+      "description": "A comprehensive inventory of all Group Policy Objects with their link status, scope, and enforcement state provides the foundation for GPO security analysis. Understanding which GPOs are linked, enforced, or disabled is essential for assessing the effective security posture delivered through Group Policy",
+      "severity": "Info",
+      "subcategory": "GPO Management",
+      "recommendedValue": "Complete GPO inventory documented with link status, scope, and owner for each GPO",
+      "remediationSteps": "Generate a full GPO inventory using Get-GPO -All and Get-GPOReport. Document each GPO's purpose, owner, link locations, and enforcement status. Establish a GPO naming convention and ensure all GPOs conform to it. Implement a GPO change management process.",
+      "compliance": {
+        "nistSp80053": ["CM-8", "CM-8(1)"],
+        "mitreAttack": ["T1484.001"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-002",
+      "name": "Empty GPOs",
+      "description": "GPOs that contain no configured settings (both Computer and User Configuration sections are empty) add unnecessary complexity to Group Policy processing and may indicate abandoned configuration efforts or testing artifacts that were never cleaned up",
+      "severity": "Low",
+      "subcategory": "GPO Hygiene",
+      "recommendedValue": "No empty GPOs in the domain; all GPOs contain at least one configured setting",
+      "remediationSteps": "Identify GPOs with no configured settings using Get-GPOReport in XML format and checking for empty ExtensionData elements. Verify that empty GPOs are not placeholders for future use. Delete truly empty GPOs after confirming they are not referenced by any automation or documentation.",
+      "compliance": {
+        "nistSp80053": ["CM-2", "CM-7"],
+        "mitreAttack": ["T1484.001"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-003",
+      "name": "Unlinked GPOs",
+      "description": "GPOs that are not linked to any site, domain, or OU are not being applied and represent unused configuration. Unlinked GPOs may contain sensitive settings, credentials in GPP, or scripts that could be leveraged if an attacker later links them to a target OU",
+      "severity": "Low",
+      "subcategory": "GPO Hygiene",
+      "recommendedValue": "No unlinked GPOs unless documented as templates or backups with appropriate access controls",
+      "remediationSteps": "Identify unlinked GPOs by comparing all GPO GUIDs against gPLink attributes on all OUs, sites, and the domain root. Review each unlinked GPO to determine if it should be linked, archived, or deleted. Remove sensitive content from unlinked GPOs that are kept as templates.",
+      "compliance": {
+        "nistSp80053": ["CM-2", "CM-7"],
+        "mitreAttack": ["T1484.001"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-004",
+      "name": "Disabled GPOs with Content",
+      "description": "GPOs where either the User Configuration or Computer Configuration section is disabled but still contains configured settings may indicate incomplete decommissioning or unintentional disabling. If re-enabled by an attacker with GPO edit permissions, the dormant settings would take effect",
+      "severity": "Low",
+      "subcategory": "GPO Hygiene",
+      "recommendedValue": "No GPOs with disabled sections that contain configured settings; disabled sections should be empty",
+      "remediationSteps": "Review all GPOs where GpoStatus is UserSettingsDisabled or ComputerSettingsDisabled. Verify that the disabled section does not contain active settings. Either re-enable the section if the settings are needed, or remove the settings from the disabled section. Document the reason for any intentionally disabled sections.",
+      "compliance": {
+        "nistSp80053": ["CM-2", "CM-6"],
+        "mitreAttack": ["T1484.001"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-005",
+      "name": "Duplicated GPOs",
+      "description": "Multiple GPOs with substantially similar or identical settings create management overhead, increase the risk of configuration drift, and complicate troubleshooting. Duplicate GPOs may also result in conflicting settings that produce unpredictable behavior",
+      "severity": "Low",
+      "subcategory": "GPO Hygiene",
+      "recommendedValue": "No duplicate GPOs; each GPO has a unique purpose and non-overlapping settings",
+      "remediationSteps": "Export all GPO reports in XML format and compare settings across GPOs to identify duplicates. Consolidate duplicate GPOs into a single GPO where possible. Update OU links to reference the consolidated GPO. Test the consolidated GPO in a staging OU before removing the duplicates.",
+      "compliance": {
+        "nistSp80053": ["CM-2", "CM-3"],
+        "mitreAttack": ["T1484.001"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-006",
+      "name": "GPOs with Broken Links",
+      "description": "GPO links that reference non-existent GPOs or GPOs whose SYSVOL data is missing indicate replication issues, improper deletion, or corruption. Broken links can cause Group Policy processing errors and may mask the absence of intended security configurations",
+      "severity": "Medium",
+      "subcategory": "GPO Integrity",
+      "recommendedValue": "No broken GPO links; all gPLink references resolve to valid GPOs with intact SYSVOL data",
+      "remediationSteps": "Parse gPLink attributes on all OUs, sites, and the domain root to extract referenced GPO GUIDs. Verify each GUID exists in the GPC (AD) and GPT (SYSVOL) containers. Remove broken links using Set-GPLink or by directly editing the gPLink attribute. Investigate the root cause of any missing GPO data.",
+      "compliance": {
+        "nistSp80053": ["CM-3", "CM-6"],
+        "mitreAttack": ["T1484.001"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-007",
+      "name": "GPO Permission Inconsistencies",
+      "description": "Each GPO has both AD permissions (on the GPC object) and NTFS permissions (on the SYSVOL GPT folder). Inconsistencies between these permission sets can prevent GPO application, allow unauthorized modification, or create security gaps where SYSVOL content is more permissive than the AD object",
+      "severity": "High",
+      "subcategory": "GPO Security",
+      "recommendedValue": "Consistent permissions between AD GPC objects and SYSVOL GPT folders for all GPOs; Authenticated Users have Read access",
+      "remediationSteps": "Compare the security descriptor on each GPC object in AD with the NTFS ACL on the corresponding GPT folder in SYSVOL. Ensure that both grant Read access to Authenticated Users (required for GPO application). Resolve any inconsistencies by aligning SYSVOL permissions with the AD object. Run dcdiag /test:sysvolcheck to identify issues.",
+      "compliance": {
+        "nistSp80053": ["AC-3", "CM-6"],
+        "mitreAttack": ["T1484.001", "T1222.001"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-008",
+      "name": "GPOs Not Applied Due to WMI Filters",
+      "description": "WMI filters can prevent GPOs from applying to target systems based on WQL queries. Overly broad or misconfigured WMI filters may inadvertently block security-critical GPOs from applying to systems that require them, creating gaps in the intended security configuration",
+      "severity": "Medium",
+      "subcategory": "GPO Application",
+      "recommendedValue": "All security-critical GPOs apply to intended targets; WMI filters validated against actual environment conditions",
+      "remediationSteps": "Review WMI filters linked to security-critical GPOs using Get-GPO and examining WMI filter assignments. Test WMI filter queries against representative target systems to verify they evaluate correctly. Use Group Policy Results (gpresult) on sample systems to confirm GPOs are applying. Replace or fix WMI filters that are blocking intended application.",
+      "compliance": {
+        "nistSp80053": ["CM-6", "CM-3"],
+        "mitreAttack": ["T1484.001"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-009",
+      "name": "GPOs with No Apply Permission",
+      "description": "If the Apply Group Policy (Read + Apply) permission is not granted to the appropriate security principals, the GPO will not be processed by those systems even when linked to the correct OU. This commonly occurs when Authenticated Users is removed from the GPO security filtering without adding specific groups",
+      "severity": "Medium",
+      "subcategory": "GPO Application",
+      "recommendedValue": "All GPOs have Apply Group Policy permission granted to appropriate security groups; no GPOs with no apply targets",
+      "remediationSteps": "Check each GPO for Apply Group Policy permissions using Get-GPPermission. Ensure that at least one security group with members has the Apply permission. For GPOs that should apply to specific groups only, verify the target groups contain the intended members. Add Authenticated Users with Read-only permission (without Apply) if security filtering is used.",
+      "compliance": {
+        "nistSp80053": ["CM-6", "AC-3"],
+        "mitreAttack": ["T1484.001"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-010",
+      "name": "SYSVOL/AD GPO Version Mismatch",
+      "description": "Each GPO maintains version numbers in both the AD GPC object (versionNumber attribute) and the SYSVOL GPT folder (gpt.ini). A mismatch between these versions indicates replication failure, SYSVOL corruption, or incomplete GPO updates. Version mismatches can cause clients to apply stale or incomplete policies",
+      "severity": "Medium",
+      "subcategory": "GPO Integrity",
+      "recommendedValue": "All GPO versions match between AD GPC objects and SYSVOL GPT gpt.ini files across all domain controllers",
+      "remediationSteps": "Compare the versionNumber attribute in AD with the Version value in SYSVOL gpt.ini for each GPO across all domain controllers. Investigate and resolve any DFSR or FRS replication issues causing mismatches. Force replication using repadmin /syncall and DFSRDIAG. For persistent mismatches, use the authoritative restore process for SYSVOL.",
+      "compliance": {
+        "nistSp80053": ["CM-3", "CM-6", "SI-7"],
+        "mitreAttack": ["T1484.001"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-011",
+      "name": "GPO Settings Security Analysis",
+      "description": "GPO settings can weaken the security posture if they disable protections, relax authentication requirements, or configure insecure defaults. This check analyzes key security-relevant settings across all GPOs including password policies, account lockout, user rights assignments, security options, and audit policies",
+      "severity": "High",
+      "subcategory": "GPO Security",
+      "recommendedValue": "All GPO settings align with organizational security baseline; no GPOs that weaken default security configurations",
+      "remediationSteps": "Export all GPO reports and analyze security-relevant settings including password policies, account lockout, user rights assignments, restricted groups, security options, and Windows Firewall rules. Compare settings against CIS benchmarks or organizational baselines. Remediate GPOs that configure weaker-than-baseline settings.",
+      "compliance": {
+        "nistSp80053": ["CM-6", "CM-6(1)", "AC-3"],
+        "mitreAttack": ["T1484.001", "T1484"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-012",
+      "name": "cPassword/GPP Password Detection",
+      "description": "Group Policy Preferences stored passwords (cPassword) are encrypted with a publicly known AES key published by Microsoft (MS14-025). Any domain user can read the XML files in SYSVOL containing these passwords and trivially decrypt them. This is one of the most common and easily exploitable Active Directory vulnerabilities",
+      "severity": "Critical",
+      "subcategory": "Credential Exposure",
+      "recommendedValue": "No cPassword values present in any GPP XML files in SYSVOL",
+      "remediationSteps": "Search all SYSVOL GPO folders for XML files containing cpassword attributes in Groups.xml, Services.xml, Scheduledtasks.xml, DataSources.xml, Printers.xml, and Drives.xml. Remove all GPP items that contain stored passwords. Use LAPS, gMSA, or other modern credential management solutions instead. Apply MS14-025 patch to prevent new cPassword creation.",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)", "SC-28"],
+        "mitreAttack": ["T1552.006", "T1552.001"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_gpp_passwords"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-013",
+      "name": "Scripts in GPOs Analysis",
+      "description": "GPO startup, shutdown, logon, and logoff scripts execute with the privileges of the system or user and are stored in the accessible SYSVOL share. Malicious scripts placed in GPOs can achieve widespread code execution across the domain. Scripts should be reviewed for security issues including hardcoded credentials, unsafe commands, and references to non-secure locations",
+      "severity": "High",
+      "subcategory": "GPO Security",
+      "recommendedValue": "All GPO scripts reviewed, signed where possible, and free of hardcoded credentials or unsafe operations",
+      "remediationSteps": "Enumerate all scripts configured in GPOs (Startup, Shutdown, Logon, Logoff) from the Scripts section of GPO reports. Review script content for hardcoded credentials, LOLBins usage, external resource references, and unsafe operations. Implement script signing where supported. Ensure script file permissions restrict modification to authorized administrators only.",
+      "compliance": {
+        "nistSp80053": ["CM-6", "SI-7", "CM-5"],
+        "mitreAttack": ["T1059", "T1484.001"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-014",
+      "name": "MSI Packages in GPOs",
+      "description": "Software Installation GPO settings deploy MSI packages to targeted computers. Compromised or unauthorized MSI packages in GPOs can deploy malware across the domain. The source location of MSI packages and access controls on those locations must be verified",
+      "severity": "Medium",
+      "subcategory": "Software Deployment",
+      "recommendedValue": "All GPO-deployed MSI packages sourced from secure, access-controlled locations with verified integrity",
+      "remediationSteps": "Identify all software installation settings in GPOs. Verify that MSI source paths point to secured shares with appropriate NTFS and share permissions. Confirm that MSI packages are from trusted vendors and have not been tampered with. Consider using WDAC or AppLocker to restrict MSI installation to approved packages.",
+      "compliance": {
+        "nistSp80053": ["CM-5", "CM-7(5)", "SI-7"],
+        "mitreAttack": ["T1484.001", "T1072"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-015",
+      "name": "Scheduled Tasks in GPOs",
+      "description": "Group Policy Preferences can create scheduled tasks that run with specified credentials or as SYSTEM on targeted computers. Malicious scheduled tasks deployed via GPO provide persistent code execution across the environment. This is a common post-exploitation technique for maintaining domain-wide persistence",
+      "severity": "High",
+      "subcategory": "GPO Security",
+      "recommendedValue": "All GPO-deployed scheduled tasks documented, using least-privilege accounts, and performing authorized operations only",
+      "remediationSteps": "Review all Scheduled Task items in GPO Preferences across all GPOs. Verify each task runs a legitimate and authorized command with the minimum required privileges. Remove any tasks that store credentials (use gMSA or SYSTEM context instead). Ensure task executables are stored in protected locations. Document the business purpose for each GPO-deployed scheduled task.",
+      "compliance": {
+        "nistSp80053": ["CM-6", "CM-5", "AC-6"],
+        "mitreAttack": ["T1053.005", "T1484.001"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-016",
+      "name": "Registry Settings Security Review",
+      "description": "GPOs can deploy registry settings that affect security configurations including disabling security features, weakening authentication protocols, or enabling insecure services. Registry-based settings in GPOs should be reviewed to ensure they do not weaken the security posture of targeted systems",
+      "severity": "Medium",
+      "subcategory": "GPO Security",
+      "recommendedValue": "No GPO registry settings that weaken security defaults; all registry modifications documented and justified",
+      "remediationSteps": "Export GPO registry settings from Administrative Templates and Registry Preferences. Review settings that affect security-relevant registry keys including HKLM\\SYSTEM\\CurrentControlSet\\Control\\Lsa, HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies, and authentication-related keys. Remove or correct settings that weaken security posture.",
+      "compliance": {
+        "nistSp80053": ["CM-6", "CM-6(1)"],
+        "mitreAttack": ["T1484.001", "T1112"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-017",
+      "name": "Restricted Groups Analysis",
+      "description": "Restricted Groups GPO settings enforce group membership on target systems, commonly used to manage local Administrators group membership. Misconfigured Restricted Groups can inadvertently grant local admin access to unauthorized users or fail to remove unauthorized members from privileged local groups",
+      "severity": "High",
+      "subcategory": "Group Membership",
+      "recommendedValue": "Restricted Groups configured to enforce least-privilege local admin membership; only authorized groups in local Administrators",
+      "remediationSteps": "Review Restricted Groups settings in all GPOs. Verify that the local Administrators group is managed to include only authorized admin groups. Ensure that Restricted Groups do not add Domain Users or other broad groups to privileged local groups. Consider using Group Policy Preferences for more granular control (Add/Remove members without replacing the entire membership).",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-6(1)", "CM-6"],
+        "mitreAttack": ["T1484.001", "T1098"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-018",
+      "name": "Audit Policy Configuration via GPO",
+      "description": "Windows audit policies configured through Group Policy determine which security events are logged on domain-joined systems. Insufficient audit configuration creates blind spots that allow attackers to operate undetected. Key audit categories include logon events, account management, directory service access, and object access",
+      "severity": "High",
+      "subcategory": "Logging & Monitoring",
+      "recommendedValue": "Advanced Audit Policy configured via GPO with success and failure auditing for all critical categories aligned with organizational detection requirements",
+      "remediationSteps": "Configure Advanced Audit Policy Configuration (not legacy Audit Policy) via GPO. Enable at minimum: Account Logon (Success/Failure), Account Management (Success/Failure), Directory Service Access (Success/Failure), Logon/Logoff (Success/Failure), Object Access (Success/Failure for sensitive resources), Policy Change (Success), Privilege Use (Success/Failure), and System (Success/Failure). Deploy to all domain-joined systems.",
+      "compliance": {
+        "nistSp80053": ["AU-2", "AU-3", "AU-12"],
+        "mitreAttack": ["T1484.001", "T1562.002"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-019",
+      "name": "Windows Firewall Configuration via GPO",
+      "description": "Windows Defender Firewall with Advanced Security settings deployed via GPO control network access on domain-joined systems. GPOs that disable the firewall, allow overly permissive inbound rules, or fail to configure the firewall leave systems vulnerable to lateral movement and network-based attacks",
+      "severity": "Medium",
+      "subcategory": "Network Security",
+      "recommendedValue": "Windows Firewall enabled for all profiles (Domain, Private, Public) with deny-by-default inbound rules configured via GPO",
+      "remediationSteps": "Review Windows Firewall GPO settings across all applicable GPOs. Ensure the firewall is enabled for Domain, Private, and Public profiles. Verify that inbound rules follow a deny-by-default approach with specific allow rules for required services only. Remove any GPO settings that disable the Windows Firewall. Test firewall rules in a staging OU before domain-wide deployment.",
+      "compliance": {
+        "nistSp80053": ["SC-7", "SC-7(5)", "CM-6"],
+        "mitreAttack": ["T1484.001", "T1562.004"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-020",
+      "name": "PowerShell Execution Policy via GPO",
+      "description": "PowerShell execution policy controls which scripts can run on a system. While execution policy is not a security boundary, setting it to Unrestricted or Bypass via GPO removes a layer of defense and makes it easier for attackers to execute malicious scripts without user prompts",
+      "severity": "Medium",
+      "subcategory": "Script Security",
+      "recommendedValue": "PowerShell execution policy set to AllSigned or RemoteSigned via GPO; not set to Unrestricted or Bypass",
+      "remediationSteps": "Review GPO settings under Computer Configuration > Administrative Templates > Windows Components > Windows PowerShell > Turn on Script Execution. Set the execution policy to AllSigned for high-security environments or RemoteSigned for standard environments. Implement code signing for authorized PowerShell scripts. Avoid setting Bypass or Unrestricted via GPO.",
+      "compliance": {
+        "nistSp80053": ["CM-6", "CM-7", "SI-7"],
+        "mitreAttack": ["T1059.001", "T1484.001"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-021",
+      "name": "PowerShell Logging Configuration",
+      "description": "PowerShell Module Logging, Script Block Logging, and Transcription provide critical visibility into PowerShell-based attacks which are used in the majority of modern Active Directory compromises. Without these logging capabilities, defenders cannot detect or investigate PowerShell-based reconnaissance, credential theft, or lateral movement",
+      "severity": "High",
+      "subcategory": "Logging & Monitoring",
+      "recommendedValue": "Module Logging, Script Block Logging, and Transcription enabled via GPO on all systems",
+      "remediationSteps": "Configure GPO settings under Computer Configuration > Administrative Templates > Windows Components > Windows PowerShell. Enable Module Logging with '*' to log all modules. Enable Script Block Logging with 'Log script block invocation start/stop events'. Enable PowerShell Transcription with a secure output directory. Deploy to all domain-joined systems and verify log collection.",
+      "compliance": {
+        "nistSp80053": ["AU-2", "AU-3", "AU-12", "SI-4"],
+        "mitreAttack": ["T1059.001", "T1562.002"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-022",
+      "name": "AppLocker/WDAC Policy Assessment",
+      "description": "Application control policies such as AppLocker and Windows Defender Application Control restrict which executables, scripts, and DLLs can run on managed systems. Without application control, attackers can execute arbitrary tools and malware on compromised systems to facilitate lateral movement and persistence",
+      "severity": "Medium",
+      "subcategory": "Application Control",
+      "recommendedValue": "AppLocker or WDAC policy deployed via GPO in enforce mode on all workstations and servers with a documented baseline",
+      "remediationSteps": "Deploy AppLocker or WDAC policies via GPO starting in audit mode. Analyze audit logs to build a baseline of approved applications. Create allow-list rules based on publisher, path, or hash. Transition from audit to enforce mode after validating the baseline. Monitor for blocked execution events and update rules as needed.",
+      "compliance": {
+        "nistSp80053": ["CM-7(5)", "CM-7(2)", "SI-7"],
+        "mitreAttack": ["T1059", "T1204.002"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-023",
+      "name": "LAPS GPO Configuration",
+      "description": "Local Administrator Password Solution (LAPS) provides automated rotation of local administrator passwords on domain-joined systems, preventing lateral movement via shared local admin credentials. LAPS must be deployed via GPO to be effective, and its configuration settings determine password complexity, rotation frequency, and which account is managed",
+      "severity": "High",
+      "subcategory": "Local Admin",
+      "recommendedValue": "LAPS enabled via GPO on all domain-joined systems with 24-character passwords and 30-day maximum age",
+      "remediationSteps": "Install the LAPS CSE on all managed systems via GPO software installation or SCCM. Configure LAPS GPO settings: Enable local admin password management, set password complexity to large letters + small letters + numbers + specials, set password length to 24 or more characters, and set password age to 30 days or less. Verify LAPS is functioning by checking ms-Mcs-AdmPwdExpirationTime attributes.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "IA-5(1)", "CM-6"],
+        "mitreAttack": ["T1078.003", "T1021"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_no_laps"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADGPO-024",
+      "name": "GPO WMI Filter Review",
+      "description": "WMI filters control GPO application based on WQL queries evaluated on target systems. Malicious or misconfigured WMI filters can selectively prevent security GPOs from applying to specific systems, creating targeted security gaps. WMI filters should be reviewed for correctness, performance impact, and potential abuse",
+      "severity": "Low",
+      "subcategory": "GPO Management",
+      "recommendedValue": "All WMI filters documented, tested, and producing expected results; no WMI filters that block security-critical GPOs",
+      "remediationSteps": "Inventory all WMI filters using Get-ADObject -Filter 'objectClass -eq \"msWMI-Som\"'. Review the WQL query in each filter for correctness and test against representative target systems. Verify that WMI filters are not blocking security-critical GPOs from applying. Remove unused WMI filters. Document the purpose and expected behavior of each active WMI filter.",
+      "compliance": {
+        "nistSp80053": ["CM-6", "CM-3"],
+        "mitreAttack": ["T1484.001"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    }
+  ]
+}

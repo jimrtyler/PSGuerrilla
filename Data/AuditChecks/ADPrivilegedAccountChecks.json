@@ -1,0 +1,466 @@
+{
+  "categoryId": "adpriv",
+  "categoryName": "AD Privileged Account Security",
+  "categoryDescription": "Checks related to privileged group membership, account flag security, AdminSDHolder integrity, Kerberos ticket-granting account security, and privileged access management",
+  "checks": [
+    {
+      "id": "ADPRIV-001",
+      "name": "Domain Admins Enumeration",
+      "description": "The Domain Admins group provides full administrative control over all domain-joined systems. Membership should be strictly limited and every member must have a documented business justification. Excessive membership dramatically increases the attack surface for credential theft and lateral movement",
+      "severity": "Critical",
+      "subcategory": "Privileged Groups",
+      "recommendedValue": "Minimal membership (ideally 2-3 accounts maximum) with documented justification for each member. No day-to-day user accounts",
+      "remediationSteps": "Enumerate Domain Admins membership including nested groups using Get-ADGroupMember -Identity 'Domain Admins' -Recursive. Review each member for business need. Remove unnecessary members and migrate to delegated administration models. Ensure no regular user accounts are members",
+      "compliance": {
+        "nistSp80053": ["AC-6(1)", "AC-6(5)", "AC-2(7)"],
+        "mitreAttack": ["T1078.002", "T1069.002"],
+        "cisBenchmark": ["9.2.1"],
+        "anssi": ["R2"],
+        "cisAd": ["4.1.1"]
+      }
+    },
+    {
+      "id": "ADPRIV-002",
+      "name": "Enterprise Admins Enumeration",
+      "description": "The Enterprise Admins group has forest-wide administrative privileges across all domains. This group should be empty during normal operations and only populated temporarily for forest-level changes. A compromised Enterprise Admin account leads to total forest compromise",
+      "severity": "Critical",
+      "subcategory": "Privileged Groups",
+      "recommendedValue": "Empty during normal operations. Members added temporarily only for forest-level changes with documented approval",
+      "remediationSteps": "Enumerate Enterprise Admins membership using Get-ADGroupMember -Identity 'Enterprise Admins' -Recursive. Remove all permanent members. Implement a just-in-time access process for forest-level operations that temporarily adds and removes members with full audit logging",
+      "compliance": {
+        "nistSp80053": ["AC-6(1)", "AC-6(5)", "AC-2(2)"],
+        "mitreAttack": ["T1078.002", "T1069.002"],
+        "cisBenchmark": ["9.2.2"],
+        "anssi": ["R2"],
+        "cisAd": ["4.1.2"]
+      }
+    },
+    {
+      "id": "ADPRIV-003",
+      "name": "Schema Admins Enumeration",
+      "description": "The Schema Admins group can modify the AD schema, which is irreversible and affects the entire forest. This group should be empty during normal operations as schema changes are rare and high-impact",
+      "severity": "High",
+      "subcategory": "Privileged Groups",
+      "recommendedValue": "Empty during normal operations. Members added temporarily only for schema modifications with change management approval",
+      "remediationSteps": "Enumerate Schema Admins membership using Get-ADGroupMember -Identity 'Schema Admins'. Remove all permanent members. Add members only when schema changes are required through a formal change management process",
+      "compliance": {
+        "nistSp80053": ["AC-6(1)", "AC-6(5)"],
+        "mitreAttack": ["T1078.002", "T1069.002"],
+        "cisBenchmark": ["9.2.3"],
+        "anssi": ["R2"],
+        "cisAd": ["4.1.3"]
+      }
+    },
+    {
+      "id": "ADPRIV-004",
+      "name": "Account Operators Enumeration",
+      "description": "Account Operators can create and modify most user and group accounts in the domain, including creating accounts in privileged OUs. This group is frequently overlooked but provides significant privilege escalation potential",
+      "severity": "High",
+      "subcategory": "Privileged Groups",
+      "recommendedValue": "Empty. Use delegated OU-level permissions instead of Account Operators group membership",
+      "remediationSteps": "Enumerate Account Operators membership using Get-ADGroupMember -Identity 'Account Operators'. Remove all members and replace with OU-scoped delegation using Active Directory Delegation of Control wizard. Document all delegated permissions",
+      "compliance": {
+        "nistSp80053": ["AC-6(1)", "AC-6(5)"],
+        "mitreAttack": ["T1078.002", "T1098"],
+        "cisBenchmark": ["9.2.4"],
+        "anssi": ["R3"],
+        "cisAd": ["4.1.4"]
+      }
+    },
+    {
+      "id": "ADPRIV-005",
+      "name": "Server Operators Enumeration",
+      "description": "Server Operators can log on to domain controllers, manage services, and modify shared resources. This group can be abused to escalate privileges on DCs by manipulating services to run arbitrary code as SYSTEM",
+      "severity": "High",
+      "subcategory": "Privileged Groups",
+      "recommendedValue": "Empty. Use dedicated service management accounts with specific delegation instead",
+      "remediationSteps": "Enumerate Server Operators membership using Get-ADGroupMember -Identity 'Server Operators'. Remove all members and implement targeted delegation for any required server management tasks. Audit DC logon rights separately",
+      "compliance": {
+        "nistSp80053": ["AC-6(1)", "AC-6(5)"],
+        "mitreAttack": ["T1078.002", "T1543.003"],
+        "anssi": ["R3"],
+        "cisAd": ["4.1.5"]
+      }
+    },
+    {
+      "id": "ADPRIV-006",
+      "name": "Backup Operators Enumeration",
+      "description": "Backup Operators can back up and restore files on domain controllers, including the AD database (ntds.dit). This allows extraction of all password hashes in the domain, making Backup Operators membership equivalent to Domain Admin access for a skilled attacker",
+      "severity": "High",
+      "subcategory": "Privileged Groups",
+      "recommendedValue": "Empty or restricted to dedicated backup service accounts only. No user accounts",
+      "remediationSteps": "Enumerate Backup Operators membership using Get-ADGroupMember -Identity 'Backup Operators'. Remove all user accounts. If backup service accounts require membership, ensure they are dedicated, have strong passwords, and are monitored. Consider agent-based backup solutions that do not require Backup Operators membership",
+      "compliance": {
+        "nistSp80053": ["AC-6(1)", "AC-6(5)"],
+        "mitreAttack": ["T1003.003", "T1078.002"],
+        "anssi": ["R3"],
+        "cisAd": ["4.1.6"]
+      }
+    },
+    {
+      "id": "ADPRIV-007",
+      "name": "Print Operators Enumeration",
+      "description": "Print Operators can manage printers and load printer drivers on domain controllers. Malicious printer drivers can execute arbitrary code as SYSTEM on DCs, providing a path to full domain compromise",
+      "severity": "Medium",
+      "subcategory": "Privileged Groups",
+      "recommendedValue": "Empty. Manage printers using dedicated print servers, not domain controllers",
+      "remediationSteps": "Enumerate Print Operators membership using Get-ADGroupMember -Identity 'Print Operators'. Remove all members. Deploy print services on dedicated member servers rather than domain controllers. Restrict printer driver installation through Group Policy",
+      "compliance": {
+        "nistSp80053": ["AC-6(1)", "CM-7"],
+        "mitreAttack": ["T1547.012", "T1078.002"],
+        "anssi": ["R3"],
+        "cisAd": ["4.1.7"]
+      }
+    },
+    {
+      "id": "ADPRIV-008",
+      "name": "DnsAdmins Group Membership",
+      "description": "Members of the DnsAdmins group can configure the DNS service on domain controllers to load an arbitrary DLL, which executes as SYSTEM. This well-known privilege escalation path can lead to full domain compromise from a seemingly low-privilege group membership",
+      "severity": "High",
+      "subcategory": "Privileged Groups",
+      "recommendedValue": "Empty or restricted to dedicated DNS administration accounts only. Membership treated as Tier 0 privileged",
+      "remediationSteps": "Enumerate DnsAdmins membership using Get-ADGroupMember -Identity 'DnsAdmins'. Remove unnecessary members. Treat DnsAdmins as a Tier 0 privileged group in your tiering model. Monitor for changes to DNS server configuration and ServerLevelPluginDll registry value",
+      "compliance": {
+        "nistSp80053": ["AC-6(1)", "AC-6(5)"],
+        "mitreAttack": ["T1543.003", "T1078.002"],
+        "anssi": ["R3"],
+        "cisAd": ["4.1.8"]
+      }
+    },
+    {
+      "id": "ADPRIV-009",
+      "name": "Nested Group Membership Analysis",
+      "description": "Nested group memberships can obscure effective privileges by hiding privileged access behind chains of group nesting. Users may have Domain Admin equivalent access through deeply nested groups that are not visible through simple group enumeration",
+      "severity": "High",
+      "subcategory": "Group Analysis",
+      "recommendedValue": "All nested group paths to privileged groups documented. Maximum nesting depth of 2 levels. No circular nesting",
+      "remediationSteps": "Recursively enumerate all privileged group memberships using Get-ADGroupMember -Recursive. Map all nesting paths and identify users who gain privileges through indirect membership. Flatten unnecessary nesting and document all remaining nested paths with business justification",
+      "compliance": {
+        "nistSp80053": ["AC-6(1)", "AC-2"],
+        "mitreAttack": ["T1069.002", "T1078.002"],
+        "anssi": ["R4"],
+        "cisAd": ["4.2.1"]
+      }
+    },
+    {
+      "id": "ADPRIV-010",
+      "name": "Privileged Users Password Never Expires",
+      "description": "Privileged accounts with the 'Password Never Expires' flag set are exempt from password rotation policies. If such an account is compromised, the attacker retains persistent access indefinitely as the password will never be forced to change",
+      "severity": "Critical",
+      "subcategory": "Account Flags",
+      "recommendedValue": "No privileged accounts with Password Never Expires flag set. All privileged accounts subject to password rotation policy of 60 days or less",
+      "remediationSteps": "Identify privileged accounts with PasswordNeverExpires using Get-ADUser -Filter {PasswordNeverExpires -eq $true -and AdminCount -eq 1}. Clear the flag and ensure these accounts are covered by an appropriate password policy. Implement FGPP for privileged accounts with a 60-day maximum password age",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)", "AC-2"],
+        "mitreAttack": ["T1078.002"],
+        "cisBenchmark": ["1.1.4"],
+        "anssi": ["R36"],
+        "cisAd": ["4.3.1"]
+      }
+    },
+    {
+      "id": "ADPRIV-011",
+      "name": "Privileged Users Password Not Required",
+      "description": "The PASSWD_NOTREQD flag allows an account to have a blank password, completely bypassing password policy. On privileged accounts, this is catastrophic as it allows unauthenticated access to highly privileged resources",
+      "severity": "Critical",
+      "subcategory": "Account Flags",
+      "recommendedValue": "No privileged accounts with PASSWD_NOTREQD flag set",
+      "remediationSteps": "Identify accounts using Get-ADUser -Filter {PasswordNotRequired -eq $true -and AdminCount -eq 1}. Clear the PASSWD_NOTREQD flag immediately and set a strong password on all identified accounts. Investigate how this flag was set as it may indicate compromise",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)", "AC-2"],
+        "mitreAttack": ["T1078.002"],
+        "anssi": ["R36"],
+        "cisAd": ["4.3.2"]
+      }
+    },
+    {
+      "id": "ADPRIV-012",
+      "name": "Privileged Users No Kerberos Pre-Auth",
+      "description": "Accounts with Kerberos pre-authentication disabled are vulnerable to AS-REP Roasting, where an attacker can request encrypted material offline without any authentication and crack it to recover the account password. On privileged accounts, this provides a direct path to domain compromise",
+      "severity": "Critical",
+      "subcategory": "Account Flags",
+      "recommendedValue": "No privileged accounts with 'Do not require Kerberos preauthentication' flag set",
+      "remediationSteps": "Identify accounts using Get-ADUser -Filter {DoesNotRequirePreAuth -eq $true -and AdminCount -eq 1}. Enable Kerberos pre-authentication immediately on all privileged accounts. Rotate passwords on affected accounts as they may have already been compromised via AS-REP Roasting",
+      "compliance": {
+        "nistSp80053": ["IA-5(2)", "AC-2"],
+        "mitreAttack": ["T1558.004"],
+        "anssi": ["R36"],
+        "cisAd": ["4.3.3"]
+      }
+    },
+    {
+      "id": "ADPRIV-013",
+      "name": "Privileged Users Reversible Encryption",
+      "description": "Accounts with 'Store password using reversible encryption' enabled store passwords in a format that can be decrypted to plaintext. This is equivalent to storing passwords in cleartext and allows any attacker with access to the AD database to retrieve the actual password",
+      "severity": "Critical",
+      "subcategory": "Account Flags",
+      "recommendedValue": "No accounts with reversible encryption enabled, especially not privileged accounts",
+      "remediationSteps": "Identify accounts using Get-ADUser -Filter {AllowReversiblePasswordEncryption -eq $true -and AdminCount -eq 1}. Clear the flag and force an immediate password change on all affected accounts. Review password policies to ensure they do not require reversible encryption",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)", "SC-28"],
+        "mitreAttack": ["T1003.006", "T1078.002"],
+        "cisBenchmark": ["1.1.1"],
+        "anssi": ["R36"],
+        "cisAd": ["4.3.4"]
+      }
+    },
+    {
+      "id": "ADPRIV-014",
+      "name": "Privileged Users DES-Only Kerberos",
+      "description": "Accounts configured to use DES-only Kerberos encryption are using a cryptographically broken algorithm. DES keys can be brute-forced rapidly, allowing attackers to forge or decrypt Kerberos tickets for the affected accounts",
+      "severity": "High",
+      "subcategory": "Account Flags",
+      "recommendedValue": "No accounts with 'Use Kerberos DES encryption types for this account' flag set",
+      "remediationSteps": "Identify accounts using Get-ADUser -Filter {UseDESKeyOnly -eq $true -and AdminCount -eq 1}. Clear the DES-only flag and ensure accounts support AES256 encryption. Rotate passwords on affected accounts to generate new AES-based Kerberos keys",
+      "compliance": {
+        "nistSp80053": ["SC-12", "SC-13"],
+        "mitreAttack": ["T1558", "T1078.002"],
+        "anssi": ["R36"],
+        "cisAd": ["4.3.5"]
+      }
+    },
+    {
+      "id": "ADPRIV-015",
+      "name": "Privileged Accounts No MFA Indicator",
+      "description": "Privileged accounts should be protected by multi-factor authentication for all interactive and remote logons. Without MFA, a stolen password alone is sufficient to gain full domain administrative access",
+      "severity": "High",
+      "subcategory": "Authentication",
+      "recommendedValue": "All privileged accounts required to use MFA via smart card, Windows Hello for Business, or FIDO2. 'Smart card is required for interactive logon' flag set where applicable",
+      "remediationSteps": "Review privileged accounts for smart card logon requirement using Get-ADUser -Filter {SmartcardLogonRequired -eq $false -and AdminCount -eq 1}. Deploy smart card or Windows Hello for Business authentication for all privileged accounts. Enable 'Smart card is required for interactive logon' flag on Tier 0 accounts",
+      "compliance": {
+        "nistSp80053": ["IA-2(1)", "IA-2(2)"],
+        "mitreAttack": ["T1078.002"],
+        "cisBenchmark": ["1.1.6"],
+        "anssi": ["R5"],
+        "cisAd": ["4.4.1"]
+      }
+    },
+    {
+      "id": "ADPRIV-016",
+      "name": "Privileged Accounts Weak Passwords",
+      "description": "Privileged accounts with weak or commonly used passwords are trivially compromised through password spraying, dictionary attacks, or credential stuffing. A weak password on a Domain Admin account can lead to complete domain compromise within minutes",
+      "severity": "Critical",
+      "subcategory": "Password Security",
+      "recommendedValue": "All privileged account passwords meet a minimum of 25 characters and are not found in common password dictionaries",
+      "remediationSteps": "Test privileged account password strength by comparing NT hashes against known weak password lists (using tools like DSInternals). Force immediate password changes on any accounts with weak passwords. Implement FGPP requiring 25+ character passwords for privileged accounts",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)"],
+        "mitreAttack": ["T1110.001", "T1110.003", "T1078.002"],
+        "anssi": ["R37"],
+        "cisAd": ["4.5.1"]
+      }
+    },
+    {
+      "id": "ADPRIV-017",
+      "name": "Privileged Accounts Old Passwords",
+      "description": "Privileged accounts with passwords that have not been changed in over 90 days have an extended exposure window. If credentials were compromised, the attacker retains access for the entire period the password remains unchanged",
+      "severity": "High",
+      "subcategory": "Password Security",
+      "recommendedValue": "All privileged account passwords changed within the last 60 days",
+      "remediationSteps": "Identify privileged accounts with old passwords using Get-ADUser -Filter {AdminCount -eq 1} -Properties PasswordLastSet | Where-Object {$_.PasswordLastSet -lt (Get-Date).AddDays(-90)}. Force password rotation on all identified accounts. Implement FGPP with 60-day maximum password age for privileged accounts",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)"],
+        "mitreAttack": ["T1078.002"],
+        "anssi": ["R37"],
+        "cisAd": ["4.5.2"]
+      }
+    },
+    {
+      "id": "ADPRIV-018",
+      "name": "Privileged Accounts Never Logged In",
+      "description": "Privileged accounts that have never logged in may be provisioned accounts that were never claimed, test accounts, or migration artifacts. These unmanaged accounts in privileged groups represent a significant risk as they may have default or weak passwords",
+      "severity": "Medium",
+      "subcategory": "Account Hygiene",
+      "recommendedValue": "No privileged accounts with null LastLogonTimestamp. All privileged accounts actively used by their assigned owners",
+      "remediationSteps": "Identify privileged accounts that have never logged in using Get-ADUser -Filter {AdminCount -eq 1} -Properties LastLogonTimestamp | Where-Object {$_.LastLogonTimestamp -eq $null}. Investigate each account to determine if it is needed. Disable or remove unnecessary accounts from privileged groups",
+      "compliance": {
+        "nistSp80053": ["AC-2(3)", "AC-2"],
+        "mitreAttack": ["T1078.002"],
+        "cisAd": ["4.6.1"]
+      }
+    },
+    {
+      "id": "ADPRIV-019",
+      "name": "Disabled Accounts in Privileged Groups",
+      "description": "Disabled accounts remaining in privileged groups create risk because re-enabling the account (intentionally or through compromise) immediately grants full privileged access. Disabled accounts should be removed from all privileged groups",
+      "severity": "High",
+      "subcategory": "Account Hygiene",
+      "recommendedValue": "No disabled accounts in any privileged groups",
+      "remediationSteps": "Identify disabled accounts in privileged groups using Get-ADGroupMember 'Domain Admins' -Recursive | Get-ADUser | Where-Object {$_.Enabled -eq $false}. Repeat for all privileged groups. Remove disabled accounts from all privileged group memberships immediately",
+      "compliance": {
+        "nistSp80053": ["AC-2(3)", "AC-2"],
+        "mitreAttack": ["T1078.002", "T1098"],
+        "anssi": ["R38"],
+        "cisAd": ["4.6.2"]
+      }
+    },
+    {
+      "id": "ADPRIV-020",
+      "name": "AdminSDHolder Protected Object Audit",
+      "description": "AdminSDHolder is a security mechanism that overwrites ACLs on protected objects (privileged users and groups) every 60 minutes via SDProp. Modifications to the AdminSDHolder ACL propagate to all protected objects, making it a high-value target for persistence. Unauthorized ACEs on AdminSDHolder grant backdoor access to all privileged accounts",
+      "severity": "Critical",
+      "subcategory": "AdminSDHolder",
+      "recommendedValue": "AdminSDHolder ACL contains only default entries with no unauthorized or unexpected ACEs",
+      "remediationSteps": "Review the AdminSDHolder ACL at CN=AdminSDHolder,CN=System,DC=domain using Get-ACL or ADSIEdit. Compare against the documented baseline. Remove any non-default ACEs immediately. Monitor for modifications to AdminSDHolder as part of ongoing security monitoring",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-3", "AU-6"],
+        "mitreAttack": ["T1222.001", "T1078.002"],
+        "anssi": ["R6"],
+        "cisAd": ["4.7.1"]
+      }
+    },
+    {
+      "id": "ADPRIV-021",
+      "name": "AdminCount Orphans",
+      "description": "When objects are removed from protected groups, the AdminCount attribute remains set to 1 and inherited permissions remain blocked. These 'AdminCount orphans' have broken permission inheritance, which may prevent security policies from applying correctly and can mask privilege escalation",
+      "severity": "Medium",
+      "subcategory": "AdminSDHolder",
+      "recommendedValue": "No accounts with AdminCount=1 that are not members of any protected group",
+      "remediationSteps": "Identify orphaned accounts using Get-ADUser -Filter {AdminCount -eq 1} and cross-reference with current protected group membership. For orphans, clear the AdminCount attribute and re-enable inheritance on the object's ACL. Use PowerShell or ADSIEdit to fix inherited permissions",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-3"],
+        "mitreAttack": ["T1078.002"],
+        "cisAd": ["4.7.2"]
+      }
+    },
+    {
+      "id": "ADPRIV-022",
+      "name": "krbtgt Password Age",
+      "description": "The krbtgt account password is used to encrypt and sign all Kerberos tickets in the domain. If compromised, an attacker can create Golden Tickets granting unrestricted access to any resource for any duration. The krbtgt password should be rotated at least every 180 days and immediately after any suspected compromise",
+      "severity": "Critical",
+      "subcategory": "Kerberos Security",
+      "recommendedValue": "krbtgt password changed within the last 180 days. Rotated twice (to invalidate all existing tickets) after any suspected compromise",
+      "remediationSteps": "Check krbtgt password age using Get-ADUser krbtgt -Properties PasswordLastSet. Reset the password twice (with sufficient time between resets for replication to complete) to invalidate all existing tickets. Use the krbtgt reset script from Microsoft to safely perform the rotation. Schedule regular rotation every 180 days",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)", "SC-12"],
+        "mitreAttack": ["T1558.001", "T1550.003"],
+        "cisBenchmark": ["18.3.1"],
+        "anssi": ["R39"],
+        "cisAd": ["4.8.1"]
+      }
+    },
+    {
+      "id": "ADPRIV-023",
+      "name": "krbtgt Account Exposure Assessment",
+      "description": "The krbtgt account configuration should be assessed for exposure indicators including supported encryption types, delegation settings, and SPNs. Any misconfiguration increases the risk of Golden Ticket and other Kerberos-based attacks",
+      "severity": "Critical",
+      "subcategory": "Kerberos Security",
+      "recommendedValue": "krbtgt account configured with AES256 encryption only, no delegation, and no additional SPNs beyond the default kadmin/changepw",
+      "remediationSteps": "Review the krbtgt account properties including msDS-SupportedEncryptionTypes, delegation settings, and SPNs. Ensure AES256 is the primary encryption type. Verify no delegation flags are set. Check for unexpected SPNs that could indicate compromise or misconfiguration",
+      "compliance": {
+        "nistSp80053": ["SC-12", "SC-13"],
+        "mitreAttack": ["T1558.001", "T1550.003"],
+        "anssi": ["R39"],
+        "cisAd": ["4.8.2"]
+      }
+    },
+    {
+      "id": "ADPRIV-024",
+      "name": "Service Accounts in Privileged Groups",
+      "description": "Service accounts in privileged groups present elevated risk because they typically have passwords that do not expire, are shared among administrators, may be stored in scripts or configuration files, and run on multiple servers where credentials can be harvested",
+      "severity": "High",
+      "subcategory": "Service Accounts",
+      "recommendedValue": "No service accounts in privileged groups. Service accounts should use delegated permissions scoped to minimum required access",
+      "remediationSteps": "Identify service accounts in privileged groups by reviewing all members and checking for accounts used as service logon identities. Remove service accounts from privileged groups and grant only the specific permissions needed via delegation. Migrate to Group Managed Service Accounts (gMSA) where possible",
+      "compliance": {
+        "nistSp80053": ["AC-6(1)", "AC-6(5)"],
+        "mitreAttack": ["T1078.002", "T1078"],
+        "anssi": ["R40"],
+        "cisAd": ["4.9.1"]
+      }
+    },
+    {
+      "id": "ADPRIV-025",
+      "name": "Computer Accounts in Privileged Groups",
+      "description": "Computer accounts in privileged groups grant any process running as SYSTEM on those computers the privileges of the group. An attacker who compromises such a machine gains Domain Admin equivalent access, significantly expanding the lateral movement attack surface",
+      "severity": "High",
+      "subcategory": "Account Hygiene",
+      "recommendedValue": "No computer accounts in any privileged groups",
+      "remediationSteps": "Enumerate privileged group members and identify any computer accounts using Get-ADGroupMember 'Domain Admins' | Where-Object {$_.objectClass -eq 'computer'}. Repeat for all privileged groups. Remove computer accounts immediately and investigate why they were added",
+      "compliance": {
+        "nistSp80053": ["AC-6(1)", "AC-2"],
+        "mitreAttack": ["T1078.002"],
+        "cisAd": ["4.6.3"]
+      }
+    },
+    {
+      "id": "ADPRIV-026",
+      "name": "Privileged Users Local Logon on DCs",
+      "description": "Only designated Tier 0 administrative accounts should be permitted to log on locally to domain controllers. Allowing non-Tier 0 accounts to log on to DCs exposes privileged credentials to credential harvesting attacks on less-secured workstations",
+      "severity": "High",
+      "subcategory": "Logon Rights",
+      "recommendedValue": "Only Domain Admins and designated Tier 0 accounts allowed local logon on DCs. 'Allow log on locally' restricted via GPO on Domain Controllers OU",
+      "remediationSteps": "Configure via Group Policy applied to Domain Controllers OU: Computer Configuration > Policies > Windows Settings > Security Settings > Local Policies > User Rights Assignment > 'Allow log on locally' = Administrators, Domain Admins only. Remove all other entries and test thoroughly",
+      "compliance": {
+        "nistSp80053": ["AC-6(1)", "AC-3"],
+        "mitreAttack": ["T1078.002", "T1003"],
+        "cisBenchmark": ["2.2.7"],
+        "anssi": ["R7"],
+        "cisAd": ["4.10.1"]
+      }
+    },
+    {
+      "id": "ADPRIV-027",
+      "name": "Privileged Users RDP on DCs",
+      "description": "Remote Desktop access to domain controllers should be strictly limited to designated Tier 0 administrators. RDP sessions cache credentials that can be harvested, and excessive RDP access increases the attack surface for credential theft and lateral movement to DCs",
+      "severity": "High",
+      "subcategory": "Logon Rights",
+      "recommendedValue": "Only designated Tier 0 administrative accounts allowed RDP access to DCs. 'Allow log on through Remote Desktop Services' restricted via GPO",
+      "remediationSteps": "Configure via Group Policy applied to Domain Controllers OU: Computer Configuration > Policies > Windows Settings > Security Settings > Local Policies > User Rights Assignment > 'Allow log on through Remote Desktop Services' = Administrators only. Consider using Remote Credential Guard or Restricted Admin mode for RDP sessions",
+      "compliance": {
+        "nistSp80053": ["AC-6(1)", "AC-3", "AC-17"],
+        "mitreAttack": ["T1078.002", "T1021.001"],
+        "cisBenchmark": ["2.2.26"],
+        "anssi": ["R7"],
+        "cisAd": ["4.10.2"]
+      }
+    },
+    {
+      "id": "ADPRIV-028",
+      "name": "Users with DCSync Rights",
+      "description": "DCSync allows replication of password data from Active Directory, including all user hashes. Accounts with 'Replicating Directory Changes All' and 'Replicating Directory Changes' rights can extract every password hash in the domain without touching a DC. Only domain controller computer accounts and the default admin account should have these rights",
+      "severity": "Critical",
+      "subcategory": "Replication Rights",
+      "recommendedValue": "Only domain controller computer accounts and default administrator account have replication rights. No additional users or groups granted DCSync permissions",
+      "remediationSteps": "Audit the domain root ACL for 'Replicating Directory Changes' and 'Replicating Directory Changes All' using (Get-ACL 'AD:\\DC=domain,DC=com').Access | Where-Object {$_.ObjectType -match '1131f6a[a-d]'}. Remove any unauthorized entries immediately. Investigate whether unauthorized accounts have already performed DCSync",
+      "compliance": {
+        "nistSp80053": ["AC-6(1)", "AC-3"],
+        "mitreAttack": ["T1003.006"],
+        "cisBenchmark": ["18.3.1"],
+        "anssi": ["R41"],
+        "cisAd": ["4.11.1"]
+      }
+    },
+    {
+      "id": "ADPRIV-029",
+      "name": "Protected Users Group Audit",
+      "description": "The Protected Users security group provides hardened authentication protections including disabling NTLM authentication, enforcing AES Kerberos encryption, preventing credential caching, and setting short TGT lifetimes. All Tier 0 privileged accounts should be members",
+      "severity": "High",
+      "subcategory": "Privileged Protection",
+      "recommendedValue": "All Tier 0 privileged user accounts are members of the Protected Users group",
+      "remediationSteps": "Add all Tier 0 accounts to the Protected Users group using Add-ADGroupMember -Identity 'Protected Users' -Members <account>. Test each account first as Protected Users disables NTLM and credential delegation which may break legacy applications. Note: service accounts and computer accounts should NOT be added",
+      "compliance": {
+        "nistSp80053": ["AC-6", "IA-5(2)"],
+        "mitreAttack": ["T1003", "T1550.003", "T1078.002"],
+        "cisBenchmark": ["18.3.1"],
+        "anssi": ["R5"],
+        "cisAd": ["4.12.1"]
+      }
+    },
+    {
+      "id": "ADPRIV-030",
+      "name": "Privileged Users Not in Protected Users",
+      "description": "Privileged accounts that are not members of the Protected Users group lack hardened authentication protections and remain vulnerable to credential theft techniques including NTLM relay, credential caching, and long-lived Kerberos tickets. Every eligible privileged account should be protected",
+      "severity": "High",
+      "subcategory": "Privileged Protection",
+      "recommendedValue": "All eligible privileged user accounts enrolled in Protected Users group. Exceptions documented with compensating controls",
+      "remediationSteps": "Compare privileged group members against Protected Users membership. For each privileged account not in Protected Users, evaluate compatibility (NTLM dependencies, delegation requirements) and add to the group. Document any exceptions with specific technical reasons and compensating controls",
+      "compliance": {
+        "nistSp80053": ["AC-6", "IA-5(2)"],
+        "mitreAttack": ["T1003", "T1557", "T1078.002"],
+        "anssi": ["R5"],
+        "cisAd": ["4.12.2"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "categoryId": "m365def",
+  "categoryName": "Defender for Office 365",
+  "categoryDescription": "Evaluates Microsoft Defender for Office 365 security configurations including preset security policies, alert policies, and threat intelligence settings to ensure comprehensive protection against advanced email and collaboration threats.",
+  "checks": [
+    {
+      "id": "M365DEF-001",
+      "name": "Preset security policy audit",
+      "description": "Preset security policies in Microsoft Defender for Office 365 provide Microsoft-recommended configurations for anti-spam, anti-phishing, anti-malware, Safe Attachments, and Safe Links as a unified policy bundle. Organizations that do not leverage preset policies or equivalent custom configurations may have inconsistent protection levels across different threat protection features. Verifying that the Standard or Strict preset policy is applied ensures a comprehensive and consistently maintained baseline.",
+      "severity": "High",
+      "subcategory": "Threat Protection",
+      "recommendedValue": "Standard Protection preset policy applied to all users at minimum; Strict Protection applied to priority accounts and executives",
+      "remediationSteps": "Enable the Standard Protection preset security policy and assign it to all users to establish a Microsoft-recommended security baseline for email threat protection. Apply the Strict Protection preset policy to priority accounts, executives, and high-value targets who are most likely to be targeted by sophisticated attacks. If custom policies are preferred over presets, verify that each custom policy meets or exceeds the settings defined in the Standard or Strict preset configuration.",
+      "compliance": {
+        "nistSp80053": ["SI-3", "SI-8"],
+        "cisM365": ["2.1.8"]
+      }
+    },
+    {
+      "id": "M365DEF-002",
+      "name": "Alert policy inventory",
+      "description": "Alert policies in Microsoft 365 Defender generate notifications when specific security events or suspicious activities are detected, enabling timely incident response. Without a comprehensive set of alert policies, critical security events such as mass file deletions, impossible travel, or malware campaigns may go unnoticed for extended periods. Reviewing the alert policy inventory ensures that all important threat categories have corresponding detection and notification mechanisms.",
+      "severity": "Medium",
+      "subcategory": "Detection & Alerting",
+      "recommendedValue": "All default alert policies enabled; custom alert policies for organization-specific threats; alert recipients configured for the security team",
+      "remediationSteps": "Review all default and custom alert policies in the Microsoft 365 Defender portal and ensure that default security alert policies have not been disabled or modified to reduce their effectiveness. Configure alert notification recipients to include the security operations team and verify that email notifications are being delivered and monitored. Create custom alert policies for organization-specific threat scenarios such as unusual mail flow patterns, bulk permission changes, or access from blocked geographies.",
+      "compliance": {
+        "nistSp80053": ["SI-4", "AU-5"]
+      }
+    },
+    {
+      "id": "M365DEF-003",
+      "name": "Threat intelligence configuration",
+      "description": "Threat intelligence capabilities in Microsoft Defender for Office 365 provide visibility into the threat landscape targeting your organization, including campaign views, threat analytics, and threat tracker insights. Without utilizing threat intelligence features, security teams lack the context needed to understand whether their organization is being targeted by specific threat actors or attack campaigns. Proper threat intelligence configuration enables proactive defense and informed security decision-making.",
+      "severity": "Medium",
+      "subcategory": "Threat Intelligence",
+      "recommendedValue": "Threat Explorer and real-time detections actively monitored; threat trackers configured for priority threats; automated investigation and response enabled",
+      "remediationSteps": "Ensure that security analysts have access to Threat Explorer or real-time detections views and are trained to use them for investigating email-based threats and campaigns. Configure threat trackers to monitor for specific threat categories relevant to your industry and organization profile. Enable automated investigation and response (AIR) capabilities to automatically investigate and remediate detected threats, reducing the time between detection and response for common threat patterns.",
+      "compliance": {
+        "nistSp80053": ["SI-5"]
+      }
+    }
+  ]
+}

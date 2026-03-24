@@ -1,0 +1,254 @@
+{
+  "categoryId": "eidapp",
+  "categoryName": "Entra ID Application & Service Principal Security",
+  "categoryDescription": "Checks related to application registrations, service principals, API permissions, credential management, consent grants, managed identities, and application hygiene in Entra ID",
+  "checks": [
+    {
+      "id": "EIDAPP-001",
+      "name": "Application Registration Inventory",
+      "description": "A complete inventory of all application registrations provides foundational visibility into the applications integrated with your Entra ID tenant. Without a comprehensive inventory, organizations cannot assess their application attack surface or identify unauthorized, abandoned, or shadow IT applications. This baseline enables all subsequent application security checks and should be maintained as a living document.",
+      "severity": "Info",
+      "subcategory": "App Inventory",
+      "recommendedValue": "All application registrations inventoried with documented owners, purpose, and business justification",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade",
+      "remediationSteps": "Navigate to Entra ID > Applications > App registrations and export the full list of registered applications. Review each registration to confirm it has an assigned owner, a documented business purpose, and is still actively required. Remove or disable any registrations that are no longer needed or lack identifiable ownership.",
+      "compliance": {
+        "nistSp80053": ["CM-8"]
+      }
+    },
+    {
+      "id": "EIDAPP-002",
+      "name": "App Registrations with High-Risk API Permissions",
+      "description": "Application registrations with high-risk API permissions such as Mail.ReadWrite, Files.ReadWrite.All, RoleManagement.ReadWrite.Directory, or Application.ReadWrite.All can be exploited to read sensitive data, modify directory objects, or escalate privileges tenant-wide. Attackers who compromise an application with these permissions gain broad access equivalent to or exceeding that of a Global Administrator. All high-risk permissions must be reviewed and justified with compensating controls.",
+      "severity": "Critical",
+      "subcategory": "API Permissions",
+      "recommendedValue": "No application registrations with high-risk API permissions unless documented with business justification and compensating controls",
+      "remediationSteps": "Review all application registrations in Entra ID > Applications > App registrations and examine the API permissions tab for each. Identify applications with high-privilege permissions such as Directory.ReadWrite.All, Mail.ReadWrite, or RoleManagement.ReadWrite.Directory. Remove unnecessary permissions and replace broad scopes with the most restrictive permissions that still meet application requirements.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-6(1)"],
+        "mitreAttack": ["T1098.002"],
+        "cisM365": ["5.3.1"]
+      }
+    },
+    {
+      "id": "EIDAPP-003",
+      "name": "App Registrations with Added Credentials",
+      "description": "Application registrations with client secrets or certificates added represent potential persistence mechanisms for attackers. A compromised secret or certificate allows an attacker to authenticate as the application and exercise all of its granted permissions without user interaction. Credentials should be inventoried, rotated on schedule, and removed when no longer needed to limit the window of exposure.",
+      "severity": "High",
+      "subcategory": "Credentials",
+      "recommendedValue": "All application credentials inventoried with defined rotation schedules and no credentials older than 12 months",
+      "remediationSteps": "Review all application registrations and examine the Certificates & secrets blade for each. Document all active credentials including their expiration dates and creation timestamps. Remove expired or unused credentials immediately and establish a rotation policy requiring credentials to be renewed at least annually with automated alerts before expiration.",
+      "compliance": {
+        "nistSp80053": ["IA-5"],
+        "mitreAttack": ["T1098.001"]
+      }
+    },
+    {
+      "id": "EIDAPP-004",
+      "name": "First-Party Microsoft Service Principals with Added Credentials",
+      "description": "Attackers add credentials to Microsoft first-party service principals to establish persistent backdoor access that blends in with legitimate Microsoft services. Because first-party service principals are trusted by default and often hold extensive permissions, added credentials on these objects provide stealthy, high-privilege persistence that is rarely audited. Any credential additions to first-party Microsoft service principals should be treated as a critical indicator of compromise.",
+      "severity": "Critical",
+      "subcategory": "Credentials",
+      "recommendedValue": "No credentials (secrets or certificates) added to any first-party Microsoft service principals",
+      "remediationSteps": "Enumerate all service principals where the appOwnerOrganizationId matches the Microsoft tenant ID (f8cdef31-a31e-4b4a-93e4-5f571e91255a) and check for added key credentials or password credentials. Remove any credentials found on first-party Microsoft service principals immediately as these are almost certainly unauthorized. Investigate the audit logs to determine who added the credentials and when, treating this as a potential security incident.",
+      "compliance": {
+        "nistSp80053": ["IA-5"],
+        "mitreAttack": ["T1098.001"]
+      }
+    },
+    {
+      "id": "EIDAPP-005",
+      "name": "Service Principals with High Privileges and Added Credentials",
+      "description": "Service principals that combine high-privilege API permissions or directory role assignments with added client credentials represent the highest-risk application objects in the tenant. An attacker who obtains these credentials can authenticate non-interactively with elevated permissions, bypassing MFA and Conditional Access controls entirely. This combination of privilege and credential access is a primary persistence and lateral movement technique in cloud-based attacks.",
+      "severity": "Critical",
+      "subcategory": "Credentials",
+      "recommendedValue": "No service principals with both high-privilege permissions and added credentials unless documented with mandatory compensating controls",
+      "remediationSteps": "Cross-reference service principals that hold high-privilege API permissions or directory role assignments against those with added key or password credentials. For each match, validate the business necessity and either remove excessive permissions or migrate to managed identity authentication that eliminates the need for stored credentials. Implement certificate-based authentication with short-lived certificates where managed identities are not feasible.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "IA-5"],
+        "mitreAttack": ["T1098.001"]
+      }
+    },
+    {
+      "id": "EIDAPP-006",
+      "name": "Excessive Microsoft Graph Permissions",
+      "description": "Applications granted broad Microsoft Graph application permissions such as Directory.ReadWrite.All, Sites.ReadWrite.All, or Mail.ReadWrite gain tenant-wide access to data and configuration without user context. Excessive Graph permissions violate the principle of least privilege and provide attackers who compromise the application with sweeping access to mailboxes, files, directory objects, and tenant settings. Permissions should be scoped to the minimum required for application functionality.",
+      "severity": "High",
+      "subcategory": "API Permissions",
+      "recommendedValue": "All Microsoft Graph permissions scoped to the minimum required with application permissions replaced by delegated permissions where possible",
+      "remediationSteps": "Review Microsoft Graph permissions for all application registrations and identify any using broad .All scopes or application-level permissions where delegated permissions would suffice. Replace broad permissions with granular alternatives such as Mail.Read instead of Mail.ReadWrite.All or User.Read.All instead of Directory.Read.All. Use the Microsoft Graph permissions reference to identify the least-privilege permission for each API call the application makes.",
+      "compliance": {
+        "nistSp80053": ["AC-6(1)"],
+        "mitreAttack": ["T1098.002"]
+      }
+    },
+    {
+      "id": "EIDAPP-007",
+      "name": "App Registrations with Azure IAM Role Assignments",
+      "description": "Application registrations or their corresponding service principals with Azure resource-level IAM role assignments such as Contributor, Owner, or User Access Administrator can modify Azure infrastructure, deploy resources, or escalate privileges across subscriptions. These role assignments extend the application's blast radius beyond Entra ID into the Azure resource plane, enabling infrastructure compromise if application credentials are stolen.",
+      "severity": "High",
+      "subcategory": "IAM Roles",
+      "recommendedValue": "No application registrations with Azure IAM role assignments above Reader unless documented with business justification and least-privilege scope",
+      "remediationSteps": "Review Azure IAM role assignments at the management group, subscription, and resource group levels to identify any assigned to application service principals. Remove Owner and User Access Administrator assignments and replace broad Contributor roles with custom roles scoped to specific resource types and actions. Limit IAM assignments to the narrowest scope possible, preferring resource-group level over subscription-level assignments.",
+      "compliance": {
+        "nistSp80053": ["AC-6"],
+        "cisAzure": ["1.23"]
+      }
+    },
+    {
+      "id": "EIDAPP-008",
+      "name": "Credential Expiration Monitoring",
+      "description": "Application credentials (client secrets and certificates) that are approaching expiration or have already expired can cause service outages if not rotated in time, or create security risks if expiration policies are set too far in the future. Credentials with long validity periods extend the window during which a compromised credential can be exploited. Proactive monitoring and alerting on credential expiration ensures timely rotation and reduces security exposure.",
+      "severity": "Medium",
+      "subcategory": "Credential Lifecycle",
+      "recommendedValue": "All application credentials have a maximum validity of 12 months with automated alerts at 30 and 60 days before expiration",
+      "remediationSteps": "Enumerate all application credentials and their expiration dates using the Microsoft Graph API. Identify credentials expiring within 30 days and those with validity periods exceeding 12 months. Establish an automated monitoring process that alerts application owners and security teams when credentials approach expiration, and enforce a maximum credential lifetime policy through governance procedures.",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)"]
+      }
+    },
+    {
+      "id": "EIDAPP-009",
+      "name": "Stale Application Registrations",
+      "description": "Application registrations with no recent sign-in activity may be abandoned, orphaned, or no longer needed, yet they retain all granted permissions and credentials. Stale applications expand the attack surface because they are unlikely to be monitored or maintained by their original owners, making them attractive targets for attackers seeking to leverage forgotten credentials or permissions. Regular cleanup of unused applications reduces the tenant's overall risk exposure.",
+      "severity": "Medium",
+      "subcategory": "App Hygiene",
+      "recommendedValue": "No application registrations without sign-in activity in the last 90 days unless documented with a valid exception",
+      "remediationSteps": "Review application sign-in logs in Entra ID to identify applications with no authentication activity in the past 90 days. Contact the listed application owners to confirm whether the application is still required. Disable or delete stale application registrations after confirming they are no longer needed, and remove any associated credentials and permissions.",
+      "compliance": {
+        "nistSp80053": ["AC-2(3)"]
+      }
+    },
+    {
+      "id": "EIDAPP-010",
+      "name": "Multi-Tenant Application Analysis",
+      "description": "Multi-tenant application registrations are configured to accept sign-ins from any Entra ID tenant, allowing users from external organizations to authenticate. While necessary for SaaS and partner scenarios, multi-tenant configuration on internal applications creates an unnecessary risk by allowing external identities to obtain tokens. Each multi-tenant application should be validated to confirm the configuration is intentional and that appropriate authorization controls are in place.",
+      "severity": "Medium",
+      "subcategory": "App Configuration",
+      "recommendedValue": "No multi-tenant application registrations unless required by business need with documented justification and appropriate authorization controls",
+      "remediationSteps": "Review all application registrations and identify those with signInAudience set to AzureADMultipleOrgs or AzureADandPersonalMicrosoftAccount. For each multi-tenant application, validate that multi-tenant access is required and document the business justification. Convert applications that do not require multi-tenant access to single-tenant configuration and implement token validation to restrict which external tenants can access multi-tenant applications.",
+      "compliance": {
+        "nistSp80053": ["AC-20"],
+        "cisM365": ["5.3.2"]
+      }
+    },
+    {
+      "id": "EIDAPP-011",
+      "name": "Consent Grants Analysis",
+      "description": "OAuth consent grants authorize applications to access organizational data on behalf of users (delegated) or as the application itself (application-level). Admin consent grants provide tenant-wide access for all users, while user consent grants are scoped to individual users. Malicious or excessive consent grants are a primary technique used in OAuth phishing attacks to gain persistent access to mailboxes, files, and directory data without requiring credentials.",
+      "severity": "High",
+      "subcategory": "Consent",
+      "recommendedValue": "All admin consent grants reviewed and justified. No user consent grants for high-risk permissions. Regular consent grant reviews established",
+      "remediationSteps": "Enumerate all OAuth2 permission grants in the tenant using Microsoft Graph and categorize them as admin consent or user consent. Review admin consent grants for overly broad permissions and revoke any that are no longer justified. Investigate user consent grants for suspicious applications, particularly those requesting Mail.Read, Files.ReadWrite, or other sensitive scopes, and revoke unauthorized grants.",
+      "compliance": {
+        "nistSp80053": ["AC-6"],
+        "mitreAttack": ["T1098.003"],
+        "cisM365": ["5.3.1"]
+      }
+    },
+    {
+      "id": "EIDAPP-012",
+      "name": "User Consent Settings Policy",
+      "description": "The user consent settings policy controls whether users can grant applications access to organizational data without administrator approval. Permissive consent settings allow users to authorize applications independently, which attackers exploit through illicit consent grant phishing campaigns to gain persistent access. Restricting user consent to verified publishers or disabling it entirely forces all consent through an admin approval workflow.",
+      "severity": "High",
+      "subcategory": "Consent",
+      "recommendedValue": "User consent disabled or restricted to apps from verified publishers with low-risk permissions only",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/ConsentPoliciesMenuBlade/~/UserSettings",
+      "remediationSteps": "Navigate to Entra ID > Enterprise applications > Consent and permissions > User consent settings. Set user consent to 'Do not allow user consent' or 'Allow user consent for apps from verified publishers, for selected permissions only' with only low-risk permissions selected. Enable the admin consent workflow to provide a structured process for users to request access to applications that require admin approval.",
+      "compliance": {
+        "nistSp80053": ["AC-6"],
+        "cisM365": ["5.3.1"]
+      }
+    },
+    {
+      "id": "EIDAPP-013",
+      "name": "Admin Consent Workflow Configuration",
+      "description": "The admin consent workflow provides a structured process for users to request administrator approval before applications can access organizational data. Without an admin consent workflow, users whose consent is restricted have no formal mechanism to request application access, leading to shadow IT workarounds or helpdesk bottlenecks. A properly configured workflow ensures legitimate application requests are reviewed and approved by designated administrators.",
+      "severity": "Medium",
+      "subcategory": "Consent",
+      "recommendedValue": "Admin consent workflow enabled with designated reviewers and defined SLA for review completion",
+      "remediationSteps": "Navigate to Entra ID > Enterprise applications > Consent and permissions > Admin consent settings. Enable the admin consent workflow and designate appropriate reviewers from your security or IT administration teams. Configure notification settings to alert reviewers of pending requests and establish a service level agreement for review turnaround to prevent workflow bottlenecks.",
+      "compliance": {
+        "nistSp80053": ["AC-6"],
+        "cisM365": ["5.3.1"]
+      }
+    },
+    {
+      "id": "EIDAPP-014",
+      "name": "Application Impersonation Role Holders",
+      "description": "The ApplicationImpersonation role in Exchange Online grants the ability to impersonate any mailbox in the organization, allowing full read and write access to all email without the mailbox owner's knowledge. This role is frequently abused in business email compromise and data exfiltration attacks because a single compromised account with this role can access the entire organization's email. Assignments should be extremely limited, time-bound, and continuously monitored.",
+      "severity": "Critical",
+      "subcategory": "Impersonation",
+      "recommendedValue": "No permanent ApplicationImpersonation role assignments. Any required assignments must be scoped to specific mailboxes and time-limited",
+      "remediationSteps": "Review Exchange Online role assignments to identify all principals holding the ApplicationImpersonation role using Get-ManagementRoleAssignment in Exchange Online PowerShell. Remove all unnecessary assignments immediately and replace broad impersonation grants with scoped assignments restricted to specific mailboxes where required. Implement monitoring alerts for any new ApplicationImpersonation role assignments and conduct monthly reviews of existing assignments.",
+      "compliance": {
+        "nistSp80053": ["AC-6(5)"],
+        "mitreAttack": ["T1098.002"]
+      }
+    },
+    {
+      "id": "EIDAPP-015",
+      "name": "OAuth2 Permission Grants Review",
+      "description": "OAuth2 permission grants define the specific permissions that applications have been authorized to exercise, either as delegated permissions acting on behalf of a user or as application permissions acting independently. Accumulated permission grants across many applications can create a complex web of access that is difficult to audit and may include overly broad or unnecessary authorizations. Regular review ensures grants remain aligned with current business requirements.",
+      "severity": "High",
+      "subcategory": "Permissions",
+      "recommendedValue": "All OAuth2 permission grants reviewed quarterly with stale or excessive grants revoked",
+      "remediationSteps": "Export all OAuth2 permission grants using Microsoft Graph and categorize them by permission type (delegated vs application), resource, and scope. Identify grants for applications that are no longer active or permissions that exceed what is required for current application functionality. Revoke unnecessary grants through the Entra admin center or Microsoft Graph API and establish a quarterly review cycle for all active grants.",
+      "compliance": {
+        "nistSp80053": ["AC-6"],
+        "mitreAttack": ["T1098.003"]
+      }
+    },
+    {
+      "id": "EIDAPP-016",
+      "name": "Managed Identity Inventory and Permissions",
+      "description": "Managed identities provide Azure resources with automatically managed credentials for authenticating to services that support Entra ID authentication. While managed identities eliminate the need for stored credentials, they can still be over-permissioned or assigned to resources that no longer require them. A comprehensive inventory of managed identities and their permission assignments ensures least-privilege access and identifies orphaned identities associated with deleted resources.",
+      "severity": "Info",
+      "subcategory": "Managed Identities",
+      "recommendedValue": "All managed identities inventoried with documented resource associations and least-privilege permission assignments",
+      "remediationSteps": "Enumerate all system-assigned and user-assigned managed identities across Azure subscriptions using Azure Resource Graph or the Azure portal. Review the role assignments and API permissions granted to each managed identity and verify they follow least-privilege principles. Remove role assignments from managed identities associated with deleted or decommissioned resources and document the purpose and permission requirements for each active managed identity.",
+      "compliance": {
+        "nistSp80053": ["CM-8"],
+        "cisAzure": ["8.5"]
+      }
+    },
+    {
+      "id": "EIDAPP-017",
+      "name": "Service Principal Sign-In Activity",
+      "description": "Monitoring service principal sign-in activity provides visibility into which applications are actively authenticating and from which IP addresses. Unusual sign-in patterns such as authentication from unexpected geographic locations, abnormal request volumes, or sign-ins from applications that should be dormant can indicate credential compromise or unauthorized use. This baseline activity data is essential for detecting anomalies and investigating incidents.",
+      "severity": "Info",
+      "subcategory": "Activity Analysis",
+      "recommendedValue": "Service principal sign-in logs reviewed regularly with baseline activity profiles established for critical applications",
+      "remediationSteps": "Review service principal sign-in logs in Entra ID > Monitoring > Sign-in logs > Service principal sign-ins. Establish baseline activity profiles for critical applications including normal authentication frequency, source IP ranges, and target resources. Configure alerts for anomalous service principal sign-in patterns such as authentication from new IP addresses, unusual time-of-day activity, or sign-ins from applications that have been dormant.",
+      "compliance": {
+        "nistSp80053": ["AU-6"]
+      }
+    },
+    {
+      "id": "EIDAPP-018",
+      "name": "Change Tracking on App Registrations and Service Principals",
+      "description": "Changes to application registrations and service principals such as new credential additions, permission modifications, or configuration changes should be tracked and reviewed. Attackers frequently modify existing applications to add backdoor credentials, escalate permissions, or change redirect URIs as part of persistence and privilege escalation techniques. Without change tracking, these modifications can go undetected indefinitely.",
+      "severity": "Medium",
+      "subcategory": "Change Detection",
+      "recommendedValue": "All changes to application registrations and service principals logged, monitored, and reviewed with alerts for high-risk modifications",
+      "remediationSteps": "Configure audit log monitoring to capture all changes to application registrations and service principals including credential additions, permission changes, and configuration modifications. Create alert rules in Microsoft Sentinel or Azure Monitor for high-risk changes such as new credentials added to existing applications, application permission grant changes, and reply URL modifications. Establish a review process for all application changes with designated security reviewers.",
+      "compliance": {
+        "nistSp80053": ["CM-3", "SI-4"],
+        "mitreAttack": ["T1098"]
+      }
+    },
+    {
+      "id": "EIDAPP-019",
+      "name": "Dangling Reply URLs",
+      "description": "Reply URLs pointing to expired, unowned, or unclaimed domains enable token theft by allowing attackers to register the abandoned domain and intercept OAuth authorization codes and tokens redirected by Entra ID. This vulnerability, known as a subdomain takeover or dangling DNS attack, gives attackers the ability to obtain valid access tokens for the application's permissions without any credential compromise. All reply URLs must be validated to ensure they resolve to organization-controlled infrastructure.",
+      "severity": "High",
+      "subcategory": "Configuration",
+      "recommendedValue": "All reply URLs resolve to active, organization-owned domains with no dangling or expired domain references",
+      "remediationSteps": "Extract all reply URLs from application registrations and resolve each domain to verify ownership and active DNS registration. Identify any reply URLs pointing to domains that are expired, available for registration, or not controlled by the organization. Remove or update dangling reply URLs immediately and implement a periodic review process to detect new dangling references as domains expire or infrastructure changes occur.",
+      "compliance": {
+        "nistSp80053": ["CM-6"],
+        "mitreAttack": ["T1566.002"]
+      }
+    }
+  ]
+}

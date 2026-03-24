@@ -1,0 +1,126 @@
+{
+  "profileId": "k12",
+  "profileName": "K-12 Education Baseline",
+  "description": "Security baseline tailored for K-12 school districts. Adjusts thresholds for education environments with student accounts, shared devices, and limited IT staff. Prioritizes FERPA/COPPA compliance and student data protection.",
+  "version": "2.1.0",
+
+  "threatScoring": {
+    "weights": {
+      "knownAttackerIp": 100,
+      "reauthFromCloud": 60,
+      "impossibleTravel": 50,
+      "riskyAction": 50,
+      "riskyActionFromCloud": 30,
+      "concurrentSessions": 25,
+      "suspiciousCountry": 40,
+      "bruteForceAttempt": 25,
+      "bruteForceSuccess": 60,
+      "userAgentAnomaly": 20,
+      "oauthFromCloud": 30,
+      "afterHoursLogin": 5,
+      "cloudLoginsOnly": 10,
+      "newDevice": 5,
+      "newDeviceFromCloud": 25,
+      "adminPrivilegeEscalation": 70,
+      "emailForwardingRule": 55,
+      "driveExternalSharing": 40,
+      "bulkFileDownload": 50,
+      "highRiskOAuthApp": 65,
+      "userSuspension": 20,
+      "twoSvDisablement": 60,
+      "domainWideDelegation": 90,
+      "workspaceSettingChange": 40
+    },
+    "thresholds": {
+      "critical": 100,
+      "high": 60,
+      "medium": 30,
+      "low": 1
+    },
+    "notes": {
+      "impossibleTravel": "Reduced — students travel between campus buildings and home frequently",
+      "concurrentSessions": "Reduced — shared devices and Chromebook carts cause concurrent sessions",
+      "afterHoursLogin": "Reduced — students and teachers access systems at irregular hours",
+      "newDevice": "Reduced — device rotation is common in shared device environments",
+      "driveExternalSharing": "Increased — student data shared externally is a FERPA risk",
+      "bulkFileDownload": "Increased — mass download of student records is high-risk",
+      "highRiskOAuthApp": "Increased — unvetted apps accessing student data violates COPPA",
+      "emailForwardingRule": "Increased — auto-forwarding can exfiltrate student PII",
+      "adminPrivilegeEscalation": "Increased — admin accounts in K-12 have access to student records",
+      "domainWideDelegation": "Increased — delegation grants full student data access"
+    }
+  },
+
+  "auditScoring": {
+    "severityWeights": {
+      "Critical": 10,
+      "High": 6,
+      "Medium": 3,
+      "Low": 1,
+      "Info": 0
+    },
+    "warnMultiplier": 0.5,
+    "failMultiplier": 1.0,
+    "severityOverrides": {
+      "AUTH-001": "Critical",
+      "AUTH-002": "Critical",
+      "DRIVE-001": "High",
+      "DRIVE-002": "High",
+      "OAUTH-001": "Critical",
+      "OAUTH-003": "Critical",
+      "COLLAB-001": "High",
+      "ADMIN-005": "High",
+      "EMAIL-003": "High"
+    },
+    "notes": {
+      "AUTH-001": "MFA enforcement is critical for protecting student data access",
+      "OAUTH-001": "Third-party app access to student data must be tightly controlled (COPPA)",
+      "DRIVE-001": "External sharing of Drive files can expose student records (FERPA)"
+    }
+  },
+
+  "guerrillaScore": {
+    "componentWeights": {
+      "posture": 0.35,
+      "threats": 0.35,
+      "coverage": 0.15,
+      "trend": 0.15
+    },
+    "labels": {
+      "fortress": { "min": 90, "label": "FORTRESS", "color": "Sage" },
+      "defendedPosition": { "min": 75, "label": "DEFENDED POSITION", "color": "Sage" },
+      "contestedGround": { "min": 60, "label": "CONTESTED GROUND", "color": "Gold" },
+      "exposedFlank": { "min": 40, "label": "EXPOSED FLANK", "color": "Amber" },
+      "underSiege": { "min": 20, "label": "UNDER SIEGE", "color": "DeepOrange" },
+      "overrun": { "min": 0, "label": "OVERRUN", "color": "DarkRed" }
+    }
+  },
+
+  "surveillance": {
+    "bruteForceThreshold": 5,
+    "bruteForceWindowMinutes": 15,
+    "cloudLoginMinCount": 3,
+    "afterHoursStart": 22,
+    "afterHoursEnd": 4,
+    "businessDays": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    "lookbackDays": 30,
+    "notes": {
+      "afterHours": "Extended hours — teachers and students commonly access systems until late evening"
+    }
+  },
+
+  "compliance": {
+    "frameworks": ["FERPA", "COPPA", "CIPA"],
+    "priorityChecks": [
+      "AUTH-001", "AUTH-002", "AUTH-004",
+      "OAUTH-001", "OAUTH-003",
+      "DRIVE-001", "DRIVE-002",
+      "COLLAB-001",
+      "EMAIL-003", "EMAIL-005",
+      "ADMIN-005", "ADMIN-007",
+      "LOG-001", "LOG-002"
+    ]
+  },
+
+  "theaters": ["Fortification", "Reconnaissance", "Surveillance", "Watchtower"]
+}

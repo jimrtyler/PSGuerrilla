@@ -1,0 +1,194 @@
+{
+  "categoryId": "adscript",
+  "categoryName": "AD Logon Scripts & Network Shares",
+  "categoryDescription": "Checks related to NETLOGON and SYSVOL share security, logon script content analysis, and script-based credential exposure",
+  "checks": [
+    {
+      "id": "ADSCRIPT-001",
+      "name": "NETLOGON Share Permissions",
+      "description": "The NETLOGON share hosts logon scripts that execute on every domain-joined system during user logon. Overly permissive NTFS or share permissions on NETLOGON allow any authenticated user to modify scripts, enabling widespread code execution. Only Domain Admins and authorized administrators should have write access",
+      "severity": "High",
+      "subcategory": "Share Security",
+      "recommendedValue": "NETLOGON share: Authenticated Users Read only; write access limited to Domain Admins and authorized GPO administrators",
+      "remediationSteps": "Review NTFS permissions on the NETLOGON folder (typically %SystemRoot%\\SYSVOL\\sysvol\\<domain>\\Scripts) on each domain controller. Remove write, modify, or full control permissions for non-administrative groups. Verify share permissions match NTFS permissions. Ensure permissions are consistent across all domain controllers via DFSR replication.",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-6", "CM-5"],
+        "mitreAttack": ["T1059", "T1222.001"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_netlogon_permissions"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADSCRIPT-002",
+      "name": "SYSVOL Share Permissions",
+      "description": "The SYSVOL share contains Group Policy templates, scripts, and configuration files that are applied to all domain-joined systems. Incorrect SYSVOL permissions can allow unauthorized users to modify Group Policy settings, deploy malicious scripts, or tamper with security configurations affecting the entire domain",
+      "severity": "High",
+      "subcategory": "Share Security",
+      "recommendedValue": "SYSVOL share: Authenticated Users Read only; write access limited to Domain Admins and SYSTEM",
+      "remediationSteps": "Audit NTFS permissions on the SYSVOL folder tree on each domain controller. The root SYSVOL folder should grant Authenticated Users Read and Execute. GPO subfolders should match the permissions defined on the corresponding GPC object in AD. Run dcdiag /test:sysvolcheck to identify permission issues. Reset permissions using icacls if necessary.",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-6", "CM-5"],
+        "mitreAttack": ["T1484.001", "T1222.001"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_sysvol_permissions"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADSCRIPT-003",
+      "name": "Logon Script Inventory",
+      "description": "An inventory of all logon scripts referenced by user accounts (scriptPath attribute), Group Policy logon/logoff scripts, and startup/shutdown scripts provides visibility into all code that executes automatically in the environment. Scripts that exist in NETLOGON but are not referenced may be orphaned or indicators of past compromise",
+      "severity": "Info",
+      "subcategory": "Script Management",
+      "recommendedValue": "Complete inventory of all logon scripts with documented purpose, owner, and last modification date",
+      "remediationSteps": "Enumerate all user scriptPath attributes using Get-ADUser -Filter {scriptPath -like '*'} -Properties scriptPath. List all GPO-configured scripts from GPO reports. Inventory all files in the NETLOGON share. Cross-reference to identify orphaned scripts, unused scripts, and scripts referenced by user accounts but missing from NETLOGON. Document each script's purpose and owner.",
+      "compliance": {
+        "nistSp80053": ["CM-8", "CM-8(1)", "CM-3"],
+        "mitreAttack": ["T1059"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADSCRIPT-004",
+      "name": "Hardcoded Credentials in Scripts",
+      "description": "Logon scripts frequently contain hardcoded credentials including passwords for network drive mappings, service accounts, database connections, and API keys. These credentials are readable by all authenticated users through the NETLOGON share and represent a trivial credential harvesting opportunity for attackers",
+      "severity": "Critical",
+      "subcategory": "Credential Exposure",
+      "recommendedValue": "No hardcoded credentials, passwords, or API keys in any NETLOGON or SYSVOL scripts",
+      "remediationSteps": "Scan all scripts in NETLOGON and SYSVOL for patterns indicating credentials: password, passwd, pwd, credential, secret, apikey, token, connectionstring, and similar keywords. Replace hardcoded credentials with secure alternatives such as Windows Credential Manager, gMSA accounts, or encrypted configuration files with restricted access. Rotate any credentials found in scripts immediately.",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)", "SC-28", "IA-5(7)"],
+        "mitreAttack": ["T1552.001", "T1059"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_cleartext_password"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADSCRIPT-005",
+      "name": "LOLBins Usage in Scripts",
+      "description": "Living Off The Land Binaries (LOLBins) are legitimate Windows executables that can be abused for malicious purposes. Their presence in logon scripts may indicate an attacker has injected malicious commands that blend in with normal operations. Common LOLBins include certutil, bitsadmin, mshta, regsvr32, rundll32, and wscript used for downloading or executing payloads",
+      "severity": "High",
+      "subcategory": "Script Security",
+      "recommendedValue": "No LOLBins usage in logon scripts unless documented and operationally justified",
+      "remediationSteps": "Scan all scripts for references to known LOLBins including certutil, bitsadmin, mshta, regsvr32, rundll32, wscript, cscript, msiexec, installutil, regasm, regsvcs, msconfig, and control. Review each occurrence to determine if the usage is legitimate. Replace LOLBins with safer alternatives where possible. Document any operationally required LOLBins usage.",
+      "compliance": {
+        "nistSp80053": ["CM-6", "SI-3", "SI-7"],
+        "mitreAttack": ["T1059", "T1218"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADSCRIPT-006",
+      "name": "Plaintext Passwords in Scripts",
+      "description": "Scripts that contain plaintext passwords in net use commands, database connection strings, or variable assignments expose credentials to every authenticated domain user who can read the NETLOGON share. This includes passwords for service accounts, database accounts, and network resources that may provide lateral movement paths",
+      "severity": "Critical",
+      "subcategory": "Credential Exposure",
+      "recommendedValue": "No plaintext passwords in any script files; all authentication uses integrated security or secure credential storage",
+      "remediationSteps": "Search all script files for patterns such as 'net use * /user:', password assignments in PowerShell or batch, connection strings with Password= or Pwd=, and WScript.Network.MapNetworkDrive calls with credentials. Replace all plaintext credential usage with Windows integrated authentication, Credential Manager, or gMSA accounts. Rotate all exposed passwords immediately.",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)", "SC-28", "IA-5(7)"],
+        "mitreAttack": ["T1552.001", "T1059"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_cleartext_password"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADSCRIPT-007",
+      "name": "World-Writable Script Permissions",
+      "description": "Individual script files in NETLOGON or SYSVOL that grant write or modify permissions to non-administrative users can be modified by any attacker with domain credentials. Even if the share-level permissions are correct, overly permissive file-level NTFS permissions on individual scripts create a code execution opportunity",
+      "severity": "Critical",
+      "subcategory": "Script Security",
+      "recommendedValue": "All script files in NETLOGON and SYSVOL writable only by Domain Admins and SYSTEM; no write access for Domain Users or Authenticated Users",
+      "remediationSteps": "Enumerate NTFS permissions on every file in the NETLOGON share and SYSVOL scripts folders. Identify files where Domain Users, Authenticated Users, Everyone, or other broad groups have Write, Modify, or Full Control permissions. Reset permissions using icacls to grant Read and Execute to Authenticated Users and Full Control to Domain Admins and SYSTEM only.",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-6", "CM-5"],
+        "mitreAttack": ["T1222.001", "T1059"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_writable_scripts"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADSCRIPT-008",
+      "name": "External Resource References",
+      "description": "Logon scripts that reference external resources such as internet URLs, non-domain UNC paths, or cloud storage locations introduce supply chain risk. If the external resource is compromised, all systems executing the script will download and execute malicious content. External references also create data exfiltration opportunities",
+      "severity": "High",
+      "subcategory": "Script Security",
+      "recommendedValue": "No references to external URLs, internet resources, or non-domain UNC paths in logon scripts",
+      "remediationSteps": "Scan all scripts for HTTP/HTTPS URLs, FTP references, non-domain UNC paths, and cloud storage URLs (OneDrive, SharePoint Online, Azure Blob, AWS S3). Replace external references with locally hosted copies on internal file shares. If external resources are required, implement integrity verification (hash checks) before execution. Document all approved external resource dependencies.",
+      "compliance": {
+        "nistSp80053": ["SC-7", "SI-7", "CM-5"],
+        "mitreAttack": ["T1059", "T1105"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADSCRIPT-009",
+      "name": "Malformed Scripts",
+      "description": "Scripts with syntax errors, encoding issues, or corrupt content may fail silently during execution, resulting in incomplete security configuration or missing drive mappings. Malformed scripts can also indicate tampering where an attacker modified a script but introduced errors, or where encoding issues mask injected malicious content",
+      "severity": "Medium",
+      "subcategory": "Script Quality",
+      "recommendedValue": "All scripts pass syntax validation with no encoding anomalies or structural errors",
+      "remediationSteps": "Validate script syntax using appropriate tools: PowerShell scripts with Test-ScriptFileInfo or PSScriptAnalyzer, batch files with manual review for unclosed blocks and invalid commands, VBScript with WSH syntax checking. Check file encoding for unexpected byte sequences or mixed encoding. Review scripts with unusual encoding (UTF-16 with BOM in batch files, null bytes) for potential injection.",
+      "compliance": {
+        "nistSp80053": ["CM-3", "SI-7"],
+        "mitreAttack": ["T1059"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADSCRIPT-010",
+      "name": "UNC Paths to Non-DC Locations",
+      "description": "Logon scripts that reference UNC paths pointing to non-domain-controller file shares create dependency on additional systems and expand the attack surface. If the referenced file server is compromised, an attacker can modify the shared resources to deliver malicious payloads through the trusted logon script mechanism. UNC paths can also be exploited for NTLM relay attacks",
+      "severity": "High",
+      "subcategory": "Script Security",
+      "recommendedValue": "All script UNC paths reference SYSVOL or NETLOGON on domain controllers; no references to non-DC file shares for script content",
+      "remediationSteps": "Scan all scripts for UNC paths (\\\\server\\share patterns). Identify paths that do not point to the domain SYSVOL or NETLOGON shares. Migrate referenced resources to the NETLOGON share where appropriate. For legitimate file share references, ensure the target servers are Tier 0 or Tier 1 assets with appropriate hardening. Document all approved non-DC UNC path dependencies.",
+      "compliance": {
+        "nistSp80053": ["SC-7", "AC-3", "CM-5"],
+        "mitreAttack": ["T1187", "T1557", "T1059"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADSCRIPT-011",
+      "name": "Script Content Analysis",
+      "description": "Comprehensive content analysis of all logon scripts can reveal suspicious patterns beyond specific checks such as obfuscated code, base64-encoded commands, PowerShell download cradles, encoded executables, and anti-analysis techniques. These patterns are strong indicators of malicious script injection or backdoors planted by attackers",
+      "severity": "Medium",
+      "subcategory": "Script Security",
+      "recommendedValue": "No obfuscated code, encoded payloads, download cradles, or anti-analysis techniques present in any logon scripts",
+      "remediationSteps": "Analyze all scripts for suspicious patterns including base64 encoding (Convert-FromBase64, certutil -decode), download cradles (Invoke-WebRequest, Net.WebClient, BitsTransfer), obfuscation techniques (string concatenation, char codes, variable substitution to hide commands), and anti-analysis techniques (sleep timers, environment checks). Investigate and replace any scripts containing suspicious patterns.",
+      "compliance": {
+        "nistSp80053": ["SI-3", "SI-7", "CM-3"],
+        "mitreAttack": ["T1059", "T1027", "T1105"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    }
+  ]
+}

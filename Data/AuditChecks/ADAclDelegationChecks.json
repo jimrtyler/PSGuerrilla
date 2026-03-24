@@ -1,0 +1,279 @@
+{
+  "categoryId": "adacl",
+  "categoryName": "AD ACL & Delegation",
+  "categoryDescription": "Checks related to Active Directory access control lists, permission delegation, and attack path analysis",
+  "checks": [
+    {
+      "id": "ADACL-001",
+      "name": "Critical Object ACL Audit",
+      "description": "Access control lists on critical AD objects (Domain Root, AdminSDHolder, Schema, Configuration, Domain Controllers OU) must be audited for unauthorized or excessive permissions. Misconfigured ACLs on these objects can allow attackers to escalate privileges, modify directory services, or take full control of the domain",
+      "severity": "Critical",
+      "subcategory": "Access Control",
+      "recommendedValue": "Only default and explicitly authorized ACEs on critical AD objects; no unexpected principals with modify or full-control access",
+      "remediationSteps": "Review ACLs on critical objects using Get-Acl or dsacls.exe. Remove non-default ACEs that grant write, modify, or full-control permissions to unauthorized principals. Use AdminSDHolder to enforce consistent ACLs on protected groups. Document all intentional delegations.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-6(5)", "AU-6"],
+        "mitreAttack": ["T1222.001", "T1003.006"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_permissions_adminsdholder"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADACL-002",
+      "name": "GenericAll Permissions on Critical Objects",
+      "description": "GenericAll grants full control over an AD object including the ability to modify attributes, reset passwords, change group membership, and modify the DACL. Non-default principals with GenericAll on critical objects such as domain admins, domain controllers, or the domain root represent a direct path to domain compromise",
+      "severity": "Critical",
+      "subcategory": "Dangerous Permissions",
+      "recommendedValue": "No non-default principals with GenericAll on critical AD objects",
+      "remediationSteps": "Enumerate ACLs on critical objects using PowerShell or BloodHound. Remove GenericAll ACEs for any principal that does not require full control. Replace with least-privilege delegated permissions where operational needs exist. Monitor for ACL changes using Directory Service Changes auditing (Event ID 5136).",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-6(1)", "AC-3"],
+        "mitreAttack": ["T1222.001", "T1098"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_permissions_genericall"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADACL-003",
+      "name": "GenericWrite Permissions on Critical Objects",
+      "description": "GenericWrite allows modification of most attributes on an object, enabling attacks such as targeted Kerberoasting (writing an SPN), Resource-Based Constrained Delegation (writing msDS-AllowedToActOnBehalfOfOtherIdentity), or Shadow Credentials (writing msDS-KeyCredentialLink). Non-default principals with GenericWrite on critical objects should be investigated",
+      "severity": "High",
+      "subcategory": "Dangerous Permissions",
+      "recommendedValue": "No non-default principals with GenericWrite on critical AD objects",
+      "remediationSteps": "Audit ACLs on user, computer, and group objects for GenericWrite permissions. Remove unnecessary GenericWrite ACEs and replace with specific attribute-level write permissions. Pay special attention to write access on msDS-AllowedToActOnBehalfOfOtherIdentity, servicePrincipalName, and msDS-KeyCredentialLink attributes.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-6(1)", "AC-3"],
+        "mitreAttack": ["T1222.001", "T1098"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_permissions_genericwrite"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADACL-004",
+      "name": "WriteDACL Permissions on Critical Objects",
+      "description": "WriteDACL permission allows a principal to modify the discretionary access control list of an object, effectively granting the ability to assign any permission including GenericAll to themselves or others. This is a critical privilege escalation vector as it enables an attacker to grant themselves full control without directly having it",
+      "severity": "Critical",
+      "subcategory": "Dangerous Permissions",
+      "recommendedValue": "No non-default principals with WriteDACL on critical AD objects",
+      "remediationSteps": "Enumerate WriteDACL permissions on all critical objects including the domain root, AdminSDHolder, GPO objects, and privileged group objects. Remove WriteDACL for non-default principals. Enable auditing of ACL changes (Event ID 5136) to detect unauthorized DACL modifications. Review changes regularly.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-6(1)", "AC-3", "AU-12"],
+        "mitreAttack": ["T1222.001", "T1098"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_permissions_writedacl"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADACL-005",
+      "name": "WriteOwner Permissions on Critical Objects",
+      "description": "WriteOwner permission allows changing the owner of an AD object. The owner of an object implicitly has the ability to modify the DACL, making WriteOwner functionally equivalent to WriteDACL from an attack perspective. An attacker can take ownership and then grant themselves any desired permissions",
+      "severity": "Critical",
+      "subcategory": "Dangerous Permissions",
+      "recommendedValue": "No non-default principals with WriteOwner on critical AD objects",
+      "remediationSteps": "Audit WriteOwner permissions on critical objects. Remove WriteOwner ACEs for non-default principals. Verify that object owners are appropriate privileged accounts. Enable ownership change auditing and monitor Event ID 4662 for WriteOwner operations.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-6(1)", "AC-3"],
+        "mitreAttack": ["T1222.001", "T1098"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_permissions_writeowner"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADACL-006",
+      "name": "ForceChangePassword Rights",
+      "description": "The Extended Right User-Force-Change-Password (also known as Reset Password) allows a principal to reset another user's password without knowing the current password. When granted to non-privileged accounts or broad groups, this creates a direct account takeover path that bypasses normal authentication requirements",
+      "severity": "High",
+      "subcategory": "Dangerous Permissions",
+      "recommendedValue": "ForceChangePassword limited to authorized helpdesk and admin groups only; not granted to non-privileged accounts",
+      "remediationSteps": "Enumerate all principals with User-Force-Change-Password extended right on user objects. Verify each delegation is intentional and scoped appropriately. Remove rights from any principal that does not have a documented operational need. Use OU-scoped delegation rather than domain-wide grants.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "IA-5(1)"],
+        "mitreAttack": ["T1098", "T1078.002"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_permissions_resetpassword"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADACL-007",
+      "name": "Excessive Delegation to Broad Groups",
+      "description": "Delegation of sensitive permissions to broad groups such as Authenticated Users, Domain Users, or Everyone creates a wide attack surface where any compromised account can abuse the delegated rights. This is a common misconfiguration that dramatically reduces the effort required for privilege escalation",
+      "severity": "Critical",
+      "subcategory": "Delegation",
+      "recommendedValue": "No sensitive permissions delegated to Authenticated Users, Domain Users, Everyone, or other broad groups",
+      "remediationSteps": "Audit all ACLs for ACEs granted to well-known broad groups (S-1-5-11 Authenticated Users, Domain Users, Everyone, Domain Computers). Replace broad-group delegations with specific security groups containing only the required principals. Apply delegations at the narrowest OU scope possible.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-6(1)", "AC-3(7)"],
+        "mitreAttack": ["T1222.001", "T1069.002"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_delegation_broad_groups"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADACL-008",
+      "name": "OU Delegation Analysis",
+      "description": "Organizational Unit delegation is the recommended method for granting administrative permissions in Active Directory, but misconfigured OU delegations can create unintended access paths. This check analyzes all OU-level permission delegations to identify overly permissive grants, inherited permissions that bypass intended scoping, and delegations that may have become stale",
+      "severity": "Medium",
+      "subcategory": "Delegation",
+      "recommendedValue": "All OU delegations documented, scoped to specific object types, and using least-privilege permissions",
+      "remediationSteps": "Review all non-default ACEs on each OU using dsacls.exe or PowerShell. Verify that delegations use the InheritedObjectType to scope permissions to specific object classes. Remove delegations that are no longer required. Document all intentional delegations in an authorization matrix.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-6(3)", "CM-5"],
+        "mitreAttack": ["T1222.001"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADACL-009",
+      "name": "Machine Account Quota",
+      "description": "The ms-DS-MachineAccountQuota attribute on the domain root determines how many computer accounts any authenticated user can create. The default value of 10 allows any domain user to join computers to the domain, creating machine accounts that can be abused for resource-based constrained delegation attacks, relay attacks, and other privilege escalation techniques",
+      "severity": "High",
+      "subcategory": "Object Creation",
+      "recommendedValue": "ms-DS-MachineAccountQuota set to 0",
+      "remediationSteps": "Set ms-DS-MachineAccountQuota to 0 on the domain root using Set-ADDomain -Identity (Get-ADDomain) -Replace @{'ms-DS-MachineAccountQuota'=0}. Delegate computer account creation to specific admin groups or use a prestaging workflow. Review existing computer accounts created by non-admin users.",
+      "compliance": {
+        "nistSp80053": ["CM-6", "AC-6"],
+        "mitreAttack": ["T1098", "T1136.002"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_machineaccountquota"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADACL-010",
+      "name": "Extended Rights Audit",
+      "description": "Extended rights in Active Directory include powerful operations such as DS-Replication-Get-Changes (DCSync), User-Force-Change-Password, and DS-Replication-Get-Changes-All. Unauthorized grants of these rights can lead to full domain compromise through credential theft or direct account takeover",
+      "severity": "Critical",
+      "subcategory": "Extended Rights",
+      "recommendedValue": "Extended rights limited to default and explicitly authorized principals; DCSync rights only on domain controllers",
+      "remediationSteps": "Enumerate all extended rights ACEs on the domain root and critical objects. Verify that DS-Replication-Get-Changes and DS-Replication-Get-Changes-All are only granted to domain controllers and authorized replication accounts. Remove any non-default extended rights grants. Monitor Event ID 4662 for extended rights usage.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-6(5)", "AU-12"],
+        "mitreAttack": ["T1003.006", "T1098"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_dcsync_rights"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADACL-011",
+      "name": "Ownership of Critical Objects",
+      "description": "The owner of an AD object has implicit permission to modify the object's DACL regardless of the explicit ACL entries. If critical objects such as the domain root, AdminSDHolder, privileged groups, or GPOs are owned by non-privileged or unexpected accounts, those accounts have a hidden path to full control",
+      "severity": "High",
+      "subcategory": "Ownership",
+      "recommendedValue": "Critical objects owned by Domain Admins, Enterprise Admins, or SYSTEM only",
+      "remediationSteps": "Enumerate ownership of all critical objects including the domain root, AdminSDHolder, Schema container, Configuration container, privileged group objects, and GPO objects. Transfer ownership of any incorrectly owned objects to Domain Admins using Set-Acl or the Security tab in ADUC. Enable auditing for ownership changes.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-3"],
+        "mitreAttack": ["T1222.001"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_object_ownership"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADACL-012",
+      "name": "Non-Default Domain Root Permissions",
+      "description": "The domain root object is the top of the AD hierarchy and permissions set here can inherit throughout the entire directory. Non-default ACEs on the domain root that grant write, modify, or extended rights to unexpected principals represent a significant risk as they can affect every object in the domain",
+      "severity": "High",
+      "subcategory": "Access Control",
+      "recommendedValue": "Only default Microsoft ACEs on the domain root; all custom ACEs documented and justified",
+      "remediationSteps": "Compare current domain root ACL against the default ACL for your domain functional level. Document any non-default ACEs and validate their operational necessity. Remove ACEs that are no longer required or that grant excessive permissions. Pay special attention to ACEs that apply to 'This object and all descendant objects'.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-3", "CM-6"],
+        "mitreAttack": ["T1222.001", "T1003.006"],
+        "cisBenchmark": [],
+        "anssi": [],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADACL-013",
+      "name": "GPO Link Permissions",
+      "description": "The ability to link Group Policy Objects to sites, domains, or OUs controls which policies apply to which objects. Unauthorized GPO link permissions allow an attacker to apply malicious GPOs to targeted OUs, potentially deploying malware, modifying security settings, or creating scheduled tasks on affected computers",
+      "severity": "High",
+      "subcategory": "Group Policy",
+      "recommendedValue": "GPO link permissions restricted to authorized Group Policy administrators only",
+      "remediationSteps": "Audit gPLink and gPOptions write permissions on all OUs, the domain root, and site objects. Remove GPO link permissions from non-administrative principals. Use Group Policy Modeling to verify the impact of current GPO links. Implement change control for GPO linking operations.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "CM-5"],
+        "mitreAttack": ["T1484.001"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_gpo_link_permissions"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADACL-014",
+      "name": "GPO Edit Permissions",
+      "description": "Permissions to edit Group Policy Objects allow modification of domain-wide security settings, software deployment, logon scripts, and scheduled tasks. Unauthorized GPO edit access is a high-value target for attackers as it enables widespread code execution and configuration changes across the environment",
+      "severity": "High",
+      "subcategory": "Group Policy",
+      "recommendedValue": "GPO edit permissions restricted to Group Policy Creator Owners and authorized administrators only",
+      "remediationSteps": "Review the security filtering and delegation tabs on each GPO. Verify that only authorized principals have Edit settings, Delete, or Modify security permissions. Remove GPO edit permissions from non-administrative groups. Use the Group Policy Management Console to audit GPO permissions systematically.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "CM-5", "CM-6"],
+        "mitreAttack": ["T1484.001"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_gpo_edit_permissions"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADACL-015",
+      "name": "Shadow Admins Detection",
+      "description": "Shadow Admins are accounts that have indirect paths to Domain Admin-equivalent access through ACL chains but are not members of any privileged groups. These accounts bypass AdminSDHolder protection and traditional privileged access monitoring. For example, an account with WriteDACL on the Domain Admins group can grant itself membership without being flagged by group membership monitoring",
+      "severity": "Critical",
+      "subcategory": "Attack Paths",
+      "recommendedValue": "No shadow admin paths identified; all admin-equivalent access is through explicit privileged group membership",
+      "remediationSteps": "Use BloodHound or similar tools to identify ACL-based attack paths to Domain Admin-equivalent access. Remove unnecessary ACEs that create indirect privilege escalation paths. Ensure all administrative access is granted through protected group membership. Implement regular attack path analysis as part of security operations.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-6(5)", "AC-2(7)"],
+        "mitreAttack": ["T1222.001", "T1098", "T1069.002"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_shadow_admins"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    },
+    {
+      "id": "ADACL-016",
+      "name": "Attack Path Enumeration",
+      "description": "Active Directory attack paths are chains of permissions, group memberships, and trust relationships that can be traversed to escalate from a low-privileged account to domain administrator. Comprehensive attack path enumeration identifies risks that individual ACL checks may miss, such as multi-hop escalation chains through intermediate objects",
+      "severity": "Critical",
+      "subcategory": "Attack Paths",
+      "recommendedValue": "No viable attack paths from unprivileged users to Tier 0 assets; all identified paths remediated or documented as accepted risk",
+      "remediationSteps": "Perform attack path analysis using tools such as BloodHound. Focus on shortest paths from Domain Users or Authenticated Users to Domain Admins, Enterprise Admins, and Domain Controllers. Break identified attack chains by removing the weakest link in each path. Prioritize paths that can be exploited without any special tools or elevated access.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "RA-5", "CA-8"],
+        "mitreAttack": ["T1222.001", "T1069.002", "T1098"],
+        "cisBenchmark": [],
+        "anssi": ["vuln_attack_paths"],
+        "nsaAsd": [],
+        "cisAd": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+# IDE
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Claude Code
+.claude/
+
+# PowerShell
+*.ps1xml.bak
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Test output
+TestResults/
+coverage/
+*.TestResults.xml
+
+# Secrets
+*.pfx
+*.pem
+sa-key.json
+*-credentials.json

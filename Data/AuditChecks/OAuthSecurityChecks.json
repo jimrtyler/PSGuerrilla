@@ -1,0 +1,157 @@
+{
+  "categoryId": "oauth",
+  "categoryName": "OAuth & API Security",
+  "categoryDescription": "Checks related to OAuth application access, API controls, domain-wide delegation, and third-party app governance",
+  "checks": [
+    {
+      "id": "OAUTH-001",
+      "name": "OAuth App Whitelist/Blocklist",
+      "description": "OAuth app access should be governed by an allowlist or blocklist to prevent unauthorized applications from accessing organizational data",
+      "severity": "High",
+      "subcategory": "App Governance",
+      "recommendedValue": "OAuth app allowlist configured with only approved applications",
+      "remediationUrl": "https://admin.google.com/ac/owl/list?tab=apps",
+      "remediationSteps": "Admin Console > Security > API controls > App access control > Manage third-party app access > Configure trusted/blocked apps",
+      "compliance": {
+        "nistSp80053": ["CM-7", "AC-3"],
+        "mitreAttack": ["T1550.001", "T1528"],
+        "cisBenchmark": ["3.1"]
+      }
+    },
+    {
+      "id": "OAUTH-002",
+      "name": "Installed OAuth Apps Inventory",
+      "description": "All OAuth applications installed by users should be inventoried and reviewed to identify unauthorized or risky applications accessing organizational data",
+      "severity": "High",
+      "subcategory": "App Governance",
+      "recommendedValue": "All installed OAuth apps reviewed and approved by security team",
+      "remediationUrl": "https://admin.google.com/ac/owl/list?tab=apps",
+      "remediationSteps": "Admin Console > Security > API controls > App access control > Review installed apps and revoke access for unauthorized applications",
+      "compliance": {
+        "nistSp80053": ["CM-8", "CM-11"],
+        "mitreAttack": ["T1528", "T1550.001"],
+        "cisBenchmark": ["3.2"]
+      }
+    },
+    {
+      "id": "OAUTH-003",
+      "name": "OAuth Scope Analysis",
+      "description": "OAuth applications with high-risk scopes (Gmail, Drive, Admin) pose significant data exfiltration risk and must be reviewed and restricted",
+      "severity": "Critical",
+      "subcategory": "App Governance",
+      "recommendedValue": "No unauthorized apps with high-risk scopes (gmail, drive, admin)",
+      "remediationUrl": "https://admin.google.com/ac/owl/list?tab=apps",
+      "remediationSteps": "Admin Console > Security > API controls > App access control > Review apps with sensitive scopes > Revoke or restrict as needed",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-3"],
+        "mitreAttack": ["T1528", "T1114.002", "T1530"],
+        "cisBenchmark": ["3.3"]
+      }
+    },
+    {
+      "id": "OAUTH-004",
+      "name": "OAuth App Risk Scoring",
+      "description": "OAuth applications should be risk-scored based on their granted scopes and publisher trust to prioritize security review",
+      "severity": "High",
+      "subcategory": "App Governance",
+      "recommendedValue": "All high-risk apps reviewed and approved; no unreviewed apps with broad scopes",
+      "remediationUrl": "https://admin.google.com/ac/owl/list?tab=apps",
+      "remediationSteps": "Admin Console > Security > API controls > App access control > Review apps sorted by scope breadth > Address high-risk applications",
+      "compliance": {
+        "nistSp80053": ["RA-3", "CM-11"],
+        "mitreAttack": ["T1528"],
+        "cisBenchmark": ["3.4"]
+      }
+    },
+    {
+      "id": "OAUTH-005",
+      "name": "Unverified App Access Policy",
+      "description": "Access to unverified third-party apps should be restricted to prevent users from granting permissions to potentially malicious applications",
+      "severity": "High",
+      "subcategory": "App Governance",
+      "recommendedValue": "Unverified app access blocked for all users",
+      "remediationUrl": "https://admin.google.com/ac/owl/list?tab=apps",
+      "remediationSteps": "Admin Console > Security > API controls > App access control > Settings > Block unverified apps",
+      "compliance": {
+        "nistSp80053": ["CM-7", "SI-7"],
+        "mitreAttack": ["T1528", "T1204.003"],
+        "cisBenchmark": ["3.5"]
+      }
+    },
+    {
+      "id": "OAUTH-006",
+      "name": "API Access Control",
+      "description": "API access should be controlled with appropriate scoping and restrictions to prevent unauthorized programmatic access to organizational data",
+      "severity": "Medium",
+      "subcategory": "API Controls",
+      "recommendedValue": "API access restricted to approved applications and scopes",
+      "remediationUrl": "https://admin.google.com/ac/owl/list?tab=services",
+      "remediationSteps": "Admin Console > Security > API controls > Manage Google Services > Restrict API access to trusted apps only",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-17"],
+        "mitreAttack": ["T1106"],
+        "cisBenchmark": ["3.6"]
+      }
+    },
+    {
+      "id": "OAUTH-007",
+      "name": "Marketplace App Installation Restrictions",
+      "description": "Google Workspace Marketplace app installation should be restricted to prevent users from installing unauthorized applications",
+      "severity": "Medium",
+      "subcategory": "App Governance",
+      "recommendedValue": "Marketplace app installation restricted to admin-approved apps or allowlisted apps only",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/986702928867",
+      "remediationSteps": "Admin Console > Apps > Google Workspace Marketplace apps > Settings > Restrict marketplace app installation",
+      "compliance": {
+        "nistSp80053": ["CM-11", "CM-7"],
+        "mitreAttack": ["T1195.002", "T1204.003"],
+        "cisBenchmark": ["3.7"]
+      }
+    },
+    {
+      "id": "OAUTH-008",
+      "name": "Domain-Wide Delegation Grants Audit",
+      "description": "Domain-wide delegation allows service accounts to impersonate any user and access their data. Unauthorized or overly permissive grants represent a critical security risk",
+      "severity": "Critical",
+      "subcategory": "API Controls",
+      "recommendedValue": "Minimal domain-wide delegation grants with scoped permissions; all grants reviewed and approved",
+      "remediationUrl": "https://admin.google.com/ac/owl/domainwidedelegation",
+      "remediationSteps": "Admin Console > Security > API controls > Domain-wide delegation > Review all grants, remove unnecessary ones, and restrict scopes to minimum required",
+      "compliance": {
+        "nistSp80053": ["AC-6(1)", "AC-2(7)"],
+        "mitreAttack": ["T1098.003", "T1134.001"],
+        "cisBenchmark": ["3.8"]
+      }
+    },
+    {
+      "id": "OAUTH-009",
+      "name": "Service Account Key Enumeration",
+      "description": "Service account keys should be inventoried and rotated regularly. Leaked or stale keys provide persistent unauthorized access",
+      "severity": "High",
+      "subcategory": "API Controls",
+      "recommendedValue": "All service account keys inventoried, rotated within 90 days, and unused keys removed",
+      "remediationUrl": "https://console.cloud.google.com/iam-admin/serviceaccounts",
+      "remediationSteps": "Google Cloud Console > IAM & Admin > Service accounts > Review and rotate keys > Remove unused service account keys",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)", "AC-2(3)"],
+        "mitreAttack": ["T1078.004", "T1552.004"],
+        "cisBenchmark": ["3.9"]
+      }
+    },
+    {
+      "id": "OAUTH-010",
+      "name": "Connected Apps With Sensitive Scopes",
+      "description": "Applications with access to Drive, Gmail, or Calendar data should be inventoried and validated to prevent data exfiltration through connected apps",
+      "severity": "High",
+      "subcategory": "App Governance",
+      "recommendedValue": "All apps with sensitive scopes (Drive, Gmail, Calendar) reviewed and approved",
+      "remediationUrl": "https://admin.google.com/ac/owl/list?tab=apps",
+      "remediationSteps": "Admin Console > Security > API controls > App access control > Filter by scope (Drive, Gmail, Calendar) > Review and restrict unauthorized apps",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-6"],
+        "mitreAttack": ["T1530", "T1114.002", "T1528"],
+        "cisBenchmark": ["3.10"]
+      }
+    }
+  ]
+}

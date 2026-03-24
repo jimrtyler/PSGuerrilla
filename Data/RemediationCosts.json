@@ -1,0 +1,81 @@
+{
+  "version": "2.1.0",
+  "description": "Cost tier and effort estimates for PSGuerrilla audit checks. Used by Get-QuickWins and Export-BudgetJustification to prioritize remediation actions.",
+
+  "costTiers": {
+    "Free": { "label": "Free", "description": "No additional cost — configuration change in existing tools", "annualCostRange": "$0" },
+    "Low": { "label": "Low Cost", "description": "Minimal cost — included in existing licenses or free tooling", "annualCostRange": "$0 - $500" },
+    "Medium": { "label": "Medium Cost", "description": "Moderate cost — may require license upgrades or add-on purchases", "annualCostRange": "$500 - $5,000" },
+    "High": { "label": "High Cost", "description": "Significant cost — requires new product purchase, infrastructure, or staffing", "annualCostRange": "$5,000 - $25,000" },
+    "Enterprise": { "label": "Enterprise", "description": "Major investment — enterprise licensing, dedicated staff, or infrastructure overhaul", "annualCostRange": "$25,000+" }
+  },
+
+  "effortLevels": {
+    "Minimal": { "label": "Minimal", "description": "Single setting change, under 15 minutes", "estimatedHours": 0.25 },
+    "Low": { "label": "Low", "description": "A few configuration changes, under 1 hour", "estimatedHours": 1 },
+    "Medium": { "label": "Medium", "description": "Planning, testing, and staged rollout needed, 2-8 hours", "estimatedHours": 4 },
+    "High": { "label": "High", "description": "Significant planning, multi-phase rollout, 1-5 days", "estimatedHours": 16 },
+    "Major": { "label": "Major Project", "description": "Cross-functional project, weeks of effort", "estimatedHours": 80 }
+  },
+
+  "categoryDefaults": {
+    "AUTH":      { "costTier": "Free",   "effort": "Low",     "category": "Authentication & Access" },
+    "ADMIN":     { "costTier": "Free",   "effort": "Low",     "category": "Admin Management" },
+    "ADPWD":     { "costTier": "Free",   "effort": "Medium",  "category": "AD Password Policy" },
+    "ADPRIV":    { "costTier": "Free",   "effort": "Medium",  "category": "AD Privileged Accounts" },
+    "ADACL":     { "costTier": "Free",   "effort": "High",    "category": "AD ACL Delegation" },
+    "ADCS":      { "costTier": "Low",    "effort": "High",    "category": "AD Certificate Services" },
+    "ADDOM":     { "costTier": "Free",   "effort": "Medium",  "category": "AD Domain & Forest" },
+    "ADGPO":     { "costTier": "Free",   "effort": "Medium",  "category": "AD Group Policy" },
+    "ADKERB":    { "costTier": "Free",   "effort": "Medium",  "category": "AD Kerberos" },
+    "ADSCRIPT":  { "costTier": "Free",   "effort": "Medium",  "category": "AD Logon Scripts" },
+    "ADSTALE":   { "costTier": "Free",   "effort": "Low",     "category": "AD Stale Objects" },
+    "ADTRUST":   { "costTier": "Free",   "effort": "High",    "category": "AD Trusts" },
+    "EIDAUTH":   { "costTier": "Low",    "effort": "Medium",  "category": "Entra Authentication" },
+    "EIDAPP":    { "costTier": "Low",    "effort": "Medium",  "category": "Entra Applications" },
+    "EIDCA":     { "costTier": "Medium", "effort": "High",    "category": "Entra Conditional Access" },
+    "EIDFED":    { "costTier": "Low",    "effort": "High",    "category": "Entra Federation" },
+    "EIDPIM":    { "costTier": "Medium", "effort": "High",    "category": "Entra PIM" },
+    "EIDTNT":    { "costTier": "Free",   "effort": "Low",     "category": "Entra Tenant" },
+    "M365AUDIT": { "costTier": "Free",   "effort": "Minimal", "category": "M365 Audit" },
+    "M365DEF":   { "costTier": "Medium", "effort": "Medium",  "category": "M365 Defender" },
+    "M365EXO":   { "costTier": "Free",   "effort": "Low",     "category": "M365 Exchange" },
+    "M365PP":    { "costTier": "Free",   "effort": "Low",     "category": "M365 Power Platform" },
+    "M365SPO":   { "costTier": "Free",   "effort": "Low",     "category": "M365 SharePoint" },
+    "M365TEAMS": { "costTier": "Free",   "effort": "Low",     "category": "M365 Teams" },
+    "AZIAM":     { "costTier": "Low",    "effort": "Medium",  "category": "Azure IAM" },
+    "INTUNE":    { "costTier": "Medium", "effort": "Medium",  "category": "Intune" },
+    "COLLAB":    { "costTier": "Free",   "effort": "Low",     "category": "Collaboration" },
+    "DEVICE":    { "costTier": "Low",    "effort": "Medium",  "category": "Device Management" },
+    "DRIVE":     { "costTier": "Free",   "effort": "Low",     "category": "Drive Security" },
+    "EMAIL":     { "costTier": "Free",   "effort": "Low",     "category": "Email Security" },
+    "LOG":       { "costTier": "Free",   "effort": "Minimal", "category": "Logging & Alerting" },
+    "OAUTH":     { "costTier": "Free",   "effort": "Low",     "category": "OAuth Security" }
+  },
+
+  "overrides": {
+    "AUTH-001": { "costTier": "Free",     "effort": "Medium",  "notes": "MFA rollout requires user communication and grace period" },
+    "AUTH-002": { "costTier": "Free",     "effort": "Medium",  "notes": "Enrollment drive — requires helpdesk support for stragglers" },
+    "AUTH-003": { "costTier": "Medium",   "effort": "High",    "notes": "Security keys cost $25-50 each; bulk procurement and distribution needed" },
+    "ADACL-001": { "costTier": "Free",   "effort": "High",    "notes": "ACL audit and remediation is labor-intensive but uses built-in tools" },
+    "ADCS-002": { "costTier": "Free",    "effort": "High",    "notes": "ESC1 template fix is free but requires careful testing" },
+    "ADCS-004": { "costTier": "Free",    "effort": "High",    "notes": "ESC4 template permission fix" },
+    "ADKERB-001": { "costTier": "Free",  "effort": "High",    "notes": "Kerberoasting mitigation requires identifying and rotating service account passwords" },
+    "ADPWD-001": { "costTier": "Free",   "effort": "Medium",  "notes": "GPO change — needs user communication about new requirements" },
+    "ADPRIV-001": { "costTier": "Free",  "effort": "High",    "notes": "Privileged account review requires coordination with account owners" },
+    "EIDCA-001": { "costTier": "Medium", "effort": "High",    "notes": "Conditional Access requires Entra ID P1/P2 license" },
+    "EIDPIM-001": { "costTier": "Medium","effort": "High",    "notes": "PIM requires Entra ID P2 license" },
+    "M365DEF-001": { "costTier": "Medium","effort": "Medium", "notes": "Defender for Office 365 P1/P2 license required" },
+    "INTUNE-001": { "costTier": "Medium","effort": "High",    "notes": "Intune license plus device enrollment project" },
+    "DRIVE-001": { "costTier": "Free",   "effort": "Medium",  "notes": "Policy change — may impact teacher workflows, needs communication" },
+    "OAUTH-001": { "costTier": "Free",   "effort": "Medium",  "notes": "App whitelist setup requires inventory of legitimate apps first" },
+    "EMAIL-001": { "costTier": "Free",   "effort": "Low",     "notes": "SPF record update in DNS" },
+    "EMAIL-002": { "costTier": "Free",   "effort": "Low",     "notes": "DKIM configuration in admin console" },
+    "EMAIL-003": { "costTier": "Free",   "effort": "Minimal", "notes": "Single admin console setting to disable auto-forwarding" },
+    "EMAIL-004": { "costTier": "Free",   "effort": "Low",     "notes": "DMARC DNS record addition" },
+    "COLLAB-001": { "costTier": "Free",  "effort": "Medium",  "notes": "External sharing restrictions may affect legitimate collaboration" },
+    "LOG-001":  { "costTier": "Free",    "effort": "Minimal", "notes": "Single toggle in admin console" },
+    "LOG-002":  { "costTier": "Low",     "effort": "Low",     "notes": "May require BigQuery export for long-term retention beyond 6 months" },
+    "DEVICE-001": { "costTier": "Low",   "effort": "High",    "notes": "Device enrollment project for existing fleet" }
+  }
+}

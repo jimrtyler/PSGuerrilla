@@ -1,0 +1,202 @@
+{
+  "categoryId": "auth",
+  "categoryName": "Authentication & Access Controls",
+  "categoryDescription": "Checks related to user authentication, MFA, passwords, and session controls",
+  "checks": [
+    {
+      "id": "AUTH-001",
+      "name": "2SV Enforcement",
+      "description": "Two-step verification (2SV/MFA) should be enforced for all users to prevent account takeover via stolen credentials",
+      "severity": "Critical",
+      "subcategory": "Multi-Factor Authentication",
+      "recommendedValue": "Enforced for all organizational units",
+      "remediationUrl": "https://admin.google.com/ac/security/2sv",
+      "remediationSteps": "Admin Console > Security > Authentication > 2-step verification > Set Enforcement to 'On'",
+      "compliance": {
+        "nistSp80053": ["IA-2(1)", "IA-2(2)"],
+        "mitreAttack": ["T1078.004"],
+        "cisBenchmark": ["1.1"]
+      }
+    },
+    {
+      "id": "AUTH-002",
+      "name": "2SV Enrollment Rate",
+      "description": "All active users should have 2SV enrolled. Low enrollment rates leave accounts vulnerable to credential-based attacks",
+      "severity": "High",
+      "subcategory": "Multi-Factor Authentication",
+      "recommendedValue": "95% or higher enrollment among active users",
+      "remediationUrl": "https://admin.google.com/ac/reporting/report/user/security",
+      "remediationSteps": "Admin Console > Reporting > User Reports > Security > Review users without 2SV. Set enrollment deadline via Security > 2-Step Verification",
+      "compliance": {
+        "nistSp80053": ["IA-2(1)"],
+        "mitreAttack": ["T1078.004"],
+        "cisBenchmark": ["1.2"]
+      }
+    },
+    {
+      "id": "AUTH-003",
+      "name": "2SV Method Strength",
+      "description": "Security keys should be the primary 2SV method. SMS and voice-based 2SV are vulnerable to SIM-swapping and interception attacks",
+      "severity": "Medium",
+      "subcategory": "Multi-Factor Authentication",
+      "recommendedValue": "Security keys enforced as primary method",
+      "remediationUrl": "https://admin.google.com/ac/security/2sv",
+      "remediationSteps": "Admin Console > Security > Authentication > 2-step verification > Set allowed methods to 'Security key only'",
+      "compliance": {
+        "nistSp80053": ["IA-2(1)", "IA-2(12)"],
+        "mitreAttack": ["T1111", "T1078.004"],
+        "cisBenchmark": ["1.3"]
+      }
+    },
+    {
+      "id": "AUTH-004",
+      "name": "Password Minimum Length",
+      "description": "Password minimum length should be at least 12 characters to resist brute-force and dictionary attacks",
+      "severity": "High",
+      "subcategory": "Password Policy",
+      "recommendedValue": "Minimum 12 characters",
+      "remediationUrl": "https://admin.google.com/ac/security/passwordmanagement",
+      "remediationSteps": "Admin Console > Security > Authentication > Password management > Set minimum length to 12 or higher",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)"],
+        "mitreAttack": ["T1110.001", "T1110.003"],
+        "cisBenchmark": ["1.4"]
+      }
+    },
+    {
+      "id": "AUTH-005",
+      "name": "Password Reuse Restriction",
+      "description": "Users should not be able to reuse recent passwords, preventing credential cycling attacks",
+      "severity": "Medium",
+      "subcategory": "Password Policy",
+      "recommendedValue": "Password reuse not allowed",
+      "remediationUrl": "https://admin.google.com/ac/security/passwordmanagement",
+      "remediationSteps": "Admin Console > Security > Authentication > Password management > Enable 'Enforce password policy at next sign-in' and restrict reuse",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)"],
+        "mitreAttack": ["T1110.004"],
+        "cisBenchmark": ["1.5"]
+      }
+    },
+    {
+      "id": "AUTH-006",
+      "name": "Session Duration",
+      "description": "Web session duration should be limited to reduce the window for session hijacking and unauthorized access from shared devices",
+      "severity": "Medium",
+      "subcategory": "Session Management",
+      "recommendedValue": "Session duration of 12 hours or less",
+      "remediationUrl": "https://admin.google.com/ac/security/session",
+      "remediationSteps": "Admin Console > Security > Google Session Control > Set web session duration",
+      "compliance": {
+        "nistSp80053": ["AC-12", "SC-23"],
+        "mitreAttack": ["T1550.004"],
+        "cisBenchmark": ["1.6"]
+      }
+    },
+    {
+      "id": "AUTH-007",
+      "name": "SSO Configuration",
+      "description": "If SSO is configured, it should use secure protocols and trusted identity providers",
+      "severity": "Medium",
+      "subcategory": "Single Sign-On",
+      "recommendedValue": "SAML SSO properly configured with trusted IdP",
+      "remediationUrl": "https://admin.google.com/ac/security/ssoprofile",
+      "remediationSteps": "Admin Console > Security > Authentication > SSO with third-party IdP > Verify configuration",
+      "compliance": {
+        "nistSp80053": ["IA-2(6)", "IA-8"],
+        "mitreAttack": ["T1078.004"],
+        "cisBenchmark": ["1.7"]
+      }
+    },
+    {
+      "id": "AUTH-008",
+      "name": "Less Secure Apps Access",
+      "description": "Less secure apps (apps that don't support modern authentication) should be blocked to prevent credential exposure",
+      "severity": "High",
+      "subcategory": "App Access",
+      "recommendedValue": "Disabled for all users",
+      "remediationUrl": "https://admin.google.com/ac/security/lsa",
+      "remediationSteps": "Admin Console > Security > Authentication > Less secure apps > Set to 'Disable access to less secure apps'",
+      "compliance": {
+        "nistSp80053": ["IA-5(2)"],
+        "mitreAttack": ["T1078.004", "T1110"],
+        "cisBenchmark": ["1.8"]
+      }
+    },
+    {
+      "id": "AUTH-009",
+      "name": "App Passwords Policy",
+      "description": "App-specific passwords bypass 2SV and should be controlled. If allowed, they should require 2SV enrollment first",
+      "severity": "Medium",
+      "subcategory": "App Access",
+      "recommendedValue": "App passwords restricted or disabled",
+      "remediationUrl": "https://admin.google.com/ac/security/2sv",
+      "remediationSteps": "Admin Console > Security > Authentication > 2-step verification > Review app password settings",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)"],
+        "mitreAttack": ["T1078.004"],
+        "cisBenchmark": ["1.9"]
+      }
+    },
+    {
+      "id": "AUTH-010",
+      "name": "Recovery Options Configuration",
+      "description": "User self-service recovery should be configured appropriately. Super admins should not have personal recovery options to prevent social engineering",
+      "severity": "High",
+      "subcategory": "Account Recovery",
+      "recommendedValue": "Super admins: no personal recovery. Regular users: recovery options allowed with admin override",
+      "remediationUrl": "https://admin.google.com/ac/security/accountrecovery",
+      "remediationSteps": "Admin Console > Security > Authentication > Account recovery > Disable personal recovery for super admin OU",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)", "AC-2(4)"],
+        "mitreAttack": ["T1078.004", "T1098"],
+        "cisBenchmark": ["1.10"]
+      }
+    },
+    {
+      "id": "AUTH-011",
+      "name": "Login Challenge Settings",
+      "description": "Login challenges should be enabled to provide additional verification when suspicious login attempts are detected",
+      "severity": "Medium",
+      "subcategory": "Login Security",
+      "recommendedValue": "Login challenges enabled with employee ID or other verification",
+      "remediationUrl": "https://admin.google.com/ac/security/loginchallenges",
+      "remediationSteps": "Admin Console > Security > Authentication > Login challenges > Enable",
+      "compliance": {
+        "nistSp80053": ["IA-2(13)"],
+        "mitreAttack": ["T1078.004"],
+        "cisBenchmark": ["1.11"]
+      }
+    },
+    {
+      "id": "AUTH-012",
+      "name": "Super Admin 2SV Enrollment",
+      "description": "All super admin accounts must have 2SV enrolled. Super admins have unrestricted access to all settings and data",
+      "severity": "Critical",
+      "subcategory": "Multi-Factor Authentication",
+      "recommendedValue": "100% of super admins enrolled in 2SV",
+      "remediationUrl": "https://admin.google.com/ac/reporting/report/user/security",
+      "remediationSteps": "Admin Console > Reporting > User Reports > Security > Filter by admin status > Ensure all super admins have 2SV enrolled",
+      "compliance": {
+        "nistSp80053": ["IA-2(1)", "IA-2(11)"],
+        "mitreAttack": ["T1078.004"],
+        "cisBenchmark": ["1.12"]
+      }
+    },
+    {
+      "id": "AUTH-013",
+      "name": "Stale Super Admin Accounts",
+      "description": "Super admin accounts that have not logged in recently may be orphaned and at risk of compromise. All super admin accounts should be actively managed",
+      "severity": "High",
+      "subcategory": "Account Hygiene",
+      "recommendedValue": "No super admin accounts inactive for more than 90 days",
+      "remediationUrl": "https://admin.google.com/ac/users",
+      "remediationSteps": "Admin Console > Directory > Users > Filter by admin role > Review and remove or suspend inactive super admin accounts",
+      "compliance": {
+        "nistSp80053": ["AC-2(3)", "AC-2(4)"],
+        "mitreAttack": ["T1078.004"],
+        "cisBenchmark": ["1.13"]
+      }
+    }
+  ]
+}

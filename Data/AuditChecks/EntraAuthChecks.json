@@ -1,0 +1,234 @@
+{
+  "categoryId": "eidauth",
+  "categoryName": "Entra ID Authentication Methods & MFA",
+  "categoryDescription": "Checks related to authentication method policies, MFA registration and enforcement, passwordless readiness, password protection, and legacy authentication protocol usage",
+  "checks": [
+    {
+      "id": "EIDAUTH-001",
+      "name": "Authentication Methods Policy Audit",
+      "description": "The authentication methods policy defines which methods are available to users for sign-in and MFA. A misconfigured policy may allow weak or deprecated methods, increasing the attack surface. This check audits the current policy state against security baselines from Maester and ScubaGear frameworks.",
+      "severity": "Info",
+      "subcategory": "Policy Configuration",
+      "recommendedValue": "Authentication methods policy reviewed and aligned with organizational security baseline",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/AdminAuthMethods",
+      "remediationSteps": "Navigate to Entra ID > Protection > Authentication methods > Policies. Review each enabled method and disable any that are not required by your organization. Ensure phishing-resistant methods such as FIDO2 and Microsoft Authenticator are prioritized over SMS and voice.",
+      "compliance": {
+        "nistSp80053": ["IA-2"],
+        "cisM365": ["5.2.1"]
+      }
+    },
+    {
+      "id": "EIDAUTH-002",
+      "name": "MFA Registration Status for All Users",
+      "description": "All users should be registered for multi-factor authentication to prevent account compromise through stolen or guessed credentials. Accounts without MFA registration are the primary target for credential-based attacks including password spraying and phishing. Unregistered users represent critical gaps in your identity security posture.",
+      "severity": "Critical",
+      "subcategory": "MFA Registration",
+      "recommendedValue": "100% of active users registered for MFA",
+      "remediationSteps": "Review MFA registration status via Entra ID > Protection > Authentication methods > User registration details. Enforce MFA registration through Conditional Access policies requiring MFA for all users. Set a registration deadline and communicate requirements to unregistered users.",
+      "compliance": {
+        "nistSp80053": ["IA-2(1)", "IA-2(2)"],
+        "mitreAttack": ["T1078", "T1110"],
+        "cisM365": ["5.2.2.1"]
+      }
+    },
+    {
+      "id": "EIDAUTH-003",
+      "name": "MFA Method Distribution Analysis",
+      "description": "Understanding the distribution of MFA methods across users helps assess the overall strength of authentication controls. Organizations should track adoption of phishing-resistant methods like FIDO2 and Authenticator push versus weaker methods like SMS. This visibility enables targeted campaigns to migrate users to stronger methods.",
+      "severity": "Info",
+      "subcategory": "MFA Distribution",
+      "recommendedValue": "Majority of users registered with phishing-resistant MFA methods (FIDO2, Microsoft Authenticator, Windows Hello)",
+      "remediationSteps": "Review method distribution via Entra ID > Protection > Authentication methods > User registration details. Identify users relying solely on weaker methods and create migration plans. Use authentication method activity reports to track adoption progress.",
+      "compliance": {
+        "nistSp80053": ["IA-2(1)"]
+      }
+    },
+    {
+      "id": "EIDAUTH-004",
+      "name": "Users with Only SMS/Voice MFA Methods",
+      "description": "Users relying solely on SMS or voice-based MFA are vulnerable to SIM swap attacks, where attackers social-engineer mobile carriers to transfer a victim's phone number, and SS7 signaling protocol attacks that intercept SMS messages in transit. These methods provide significantly weaker protection than app-based or hardware token authentication. Organizations should identify and migrate these users to phishing-resistant methods.",
+      "severity": "High",
+      "subcategory": "Weak MFA",
+      "recommendedValue": "No users relying exclusively on SMS or voice as their only MFA method",
+      "remediationSteps": "Identify users with only SMS/voice MFA via Entra ID > Protection > Authentication methods > User registration details. Create a migration plan to move these users to Microsoft Authenticator or FIDO2 security keys. Consider disabling SMS/voice as allowed methods in the authentication methods policy after migration is complete.",
+      "compliance": {
+        "nistSp80053": ["IA-2(1)"],
+        "mitreAttack": ["T1111", "T1078"],
+        "cisM365": ["5.2.2.4"]
+      }
+    },
+    {
+      "id": "EIDAUTH-005",
+      "name": "Users with No MFA Methods Registered",
+      "description": "Users without any registered MFA methods cannot satisfy MFA challenges and represent critical security gaps. These accounts are fully exposed to credential-based attacks including password spraying, phishing, and brute-force attacks. Immediate remediation is required to ensure all active accounts have at least one MFA method enrolled.",
+      "severity": "Critical",
+      "subcategory": "MFA Registration",
+      "recommendedValue": "Zero active users without at least one MFA method registered",
+      "remediationSteps": "Query user registration details via Entra ID > Protection > Authentication methods > User registration details to identify users with no methods. Enforce MFA registration through a Conditional Access policy targeting unregistered users. Use Temporary Access Pass to assist users who need to bootstrap their MFA registration.",
+      "compliance": {
+        "nistSp80053": ["IA-2(1)", "IA-2(2)"],
+        "mitreAttack": ["T1078", "T1110"],
+        "cisM365": ["5.2.2.1"]
+      }
+    },
+    {
+      "id": "EIDAUTH-006",
+      "name": "FIDO2 Security Key Inventory and Audit",
+      "description": "FIDO2 security keys provide phishing-resistant authentication but must be inventoried and managed throughout their lifecycle. Untracked keys may remain associated with departed employees or become lost without detection. Regular audits ensure only authorized keys are active and properly assigned to current users.",
+      "severity": "Info",
+      "subcategory": "FIDO2",
+      "recommendedValue": "All registered FIDO2 keys inventoried with documented owner assignments and regular attestation reviews",
+      "remediationSteps": "Review FIDO2 key registrations via Entra ID > Protection > Authentication methods > FIDO2 security key. Cross-reference registered keys with your hardware asset inventory and remove keys for departed users. Implement key registration policies that restrict allowed AAGUID values to approved vendor models.",
+      "compliance": {
+        "nistSp80053": ["IA-2(6)"]
+      }
+    },
+    {
+      "id": "EIDAUTH-007",
+      "name": "FIDO2 Key ROCA Vulnerability Check",
+      "description": "The ROCA (Return of Coppersmith's Attack) vulnerability (CVE-2017-15361) affects RSA key generation in Infineon TPM firmware used in certain FIDO2 security keys, allowing private key recovery from public keys. Affected keys produce weak RSA key pairs that can be factored, completely undermining the security of the authentication credential. Keys with vulnerable firmware must be identified and replaced immediately.",
+      "severity": "Critical",
+      "subcategory": "FIDO2",
+      "recommendedValue": "No FIDO2 keys with ROCA-vulnerable Infineon TPM firmware in use",
+      "remediationSteps": "Identify FIDO2 keys using Infineon TPMs by checking the AAGUID values against known vulnerable models. Test registered keys using ROCA detection tools to confirm vulnerability status. Replace all affected keys with patched firmware versions or alternative hardware and revoke the old key registrations in Entra ID.",
+      "compliance": {
+        "nistSp80053": ["IA-2(6)", "RA-5"],
+        "mitreAttack": ["T1556"]
+      }
+    },
+    {
+      "id": "EIDAUTH-008",
+      "name": "Passwordless Authentication Readiness",
+      "description": "Passwordless authentication eliminates passwords as an attack vector, removing the risk of credential theft, phishing, and password spraying. Organizations should assess their readiness to deploy passwordless methods such as FIDO2, Windows Hello for Business, and Microsoft Authenticator phone sign-in. This check evaluates current method adoption and identifies gaps preventing passwordless deployment.",
+      "severity": "Medium",
+      "subcategory": "Passwordless",
+      "recommendedValue": "Organization has a passwordless deployment plan with at least 50% of users capable of passwordless sign-in",
+      "remediationSteps": "Review authentication method registrations to determine how many users have passwordless-capable methods enrolled. Enable FIDO2 and Microsoft Authenticator passwordless sign-in in the authentication methods policy. Create a phased rollout plan starting with privileged users and IT staff before expanding to the broader organization.",
+      "compliance": {
+        "nistSp80053": ["IA-2(6)"]
+      }
+    },
+    {
+      "id": "EIDAUTH-009",
+      "name": "Windows Hello for Business Configuration",
+      "description": "Windows Hello for Business provides phishing-resistant, hardware-backed authentication using biometrics or PIN tied to the device TPM. Misconfigured WHfB deployments may fall back to weaker convenience PIN without proper TPM attestation, reducing security guarantees. The configuration should enforce TPM-backed keys and appropriate biometric policies.",
+      "severity": "Medium",
+      "subcategory": "WHfB",
+      "recommendedValue": "Windows Hello for Business enabled with TPM requirement enforced and multi-factor unlock configured for sensitive roles",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/AdminAuthMethods",
+      "remediationSteps": "Navigate to Entra ID > Protection > Authentication methods > Windows Hello for Business. Enable the method and configure key restrictions to require TPM-backed keys. Deploy WHfB configuration profiles via Intune to enforce TPM attestation and PIN complexity requirements across managed devices.",
+      "compliance": {
+        "nistSp80053": ["IA-2(6)"],
+        "cisM365": ["5.2.3"]
+      }
+    },
+    {
+      "id": "EIDAUTH-010",
+      "name": "Temporary Access Pass (TAP) Policy Audit",
+      "description": "Temporary Access Pass allows time-limited passcodes for onboarding users to passwordless credentials, but can serve as a backdoor if not properly restricted. TAPs that are configured with long lifetimes or reusable settings can be exploited by attackers who compromise the issuance process. The TAP policy should enforce short lifetimes, single-use restrictions, and limit issuance to authorized administrators.",
+      "severity": "Medium",
+      "subcategory": "TAP",
+      "recommendedValue": "TAP enabled with maximum lifetime of 1 hour, single-use only, restricted to authorized onboarding administrators",
+      "remediationSteps": "Review the TAP policy in Entra ID > Protection > Authentication methods > Temporary Access Pass. Set the minimum and maximum lifetime to the shortest practical duration and enable one-time use. Restrict TAP issuance permissions to a limited set of administrators through role-based access controls.",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)"],
+        "mitreAttack": ["T1078"]
+      }
+    },
+    {
+      "id": "EIDAUTH-011",
+      "name": "Self-Service Password Reset (SSPR) Configuration",
+      "description": "SSPR allows users to reset their own passwords without helpdesk intervention, but must be properly configured to prevent account takeover. Misconfigured SSPR with weak verification methods or insufficient required methods enables attackers to reset passwords using compromised personal information. SSPR should require multiple strong verification methods and be enabled for all users.",
+      "severity": "High",
+      "subcategory": "SSPR",
+      "recommendedValue": "SSPR enabled for all users with a minimum of two authentication methods required for reset",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/PasswordResetMenuBlade/~/Properties",
+      "remediationSteps": "Navigate to Entra ID > Protection > Password reset > Properties and enable SSPR for all users. Set the number of methods required to reset to 2. Under Authentication methods, ensure only strong methods such as mobile app notification, mobile app code, and email are allowed while disabling security questions.",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)"],
+        "cisM365": ["5.2.4"]
+      }
+    },
+    {
+      "id": "EIDAUTH-012",
+      "name": "SSPR Methods and Requirements",
+      "description": "The specific methods allowed for SSPR and the number required directly impact the security of the password reset process. Allowing weak methods such as security questions or requiring only a single method creates opportunities for attackers to reset passwords through social engineering or OSINT. Organizations should require at least two strong methods for all password resets.",
+      "severity": "Medium",
+      "subcategory": "SSPR",
+      "recommendedValue": "Two or more strong authentication methods required for password reset, security questions disabled",
+      "remediationSteps": "Navigate to Entra ID > Protection > Password reset > Authentication methods. Set the number of methods required to 2 and remove security questions from the allowed methods list. Prioritize mobile app notification and mobile app code as the primary SSPR methods to ensure strong verification.",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)"],
+        "cisM365": ["5.2.4"]
+      }
+    },
+    {
+      "id": "EIDAUTH-013",
+      "name": "Password Protection (Banned Passwords) Configuration",
+      "description": "Entra ID Password Protection prevents users from choosing commonly compromised passwords by checking against a global banned password list maintained by Microsoft. Without password protection enabled, users can select passwords that appear in known breach databases, making accounts vulnerable to password spraying and dictionary attacks. The feature should be enabled in enforced mode for both cloud and on-premises environments.",
+      "severity": "High",
+      "subcategory": "Password Protection",
+      "recommendedValue": "Password protection enabled in Enforced mode with the global banned password list active",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/PasswordProtection",
+      "remediationSteps": "Navigate to Entra ID > Protection > Authentication methods > Password protection. Set the mode to Enforced and ensure the global banned password list is enabled. If using hybrid identity with on-premises Active Directory, deploy the Entra ID Password Protection proxy and DC agents to extend protection to on-premises password changes.",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)"],
+        "mitreAttack": ["T1110.001", "T1110.003"],
+        "cisM365": ["5.2.5"]
+      }
+    },
+    {
+      "id": "EIDAUTH-014",
+      "name": "Custom Banned Password List Status",
+      "description": "In addition to the global banned password list, organizations should maintain a custom banned password list containing company-specific terms, product names, locations, and other easily guessable variations. Without a custom list, users may choose passwords based on organizational context that attackers can easily guess through targeted attacks. The custom list supports up to 1000 entries and should be regularly updated.",
+      "severity": "Medium",
+      "subcategory": "Password Protection",
+      "recommendedValue": "Custom banned password list enabled with organization-specific terms including company name, products, locations, and common variations",
+      "remediationSteps": "Navigate to Entra ID > Protection > Authentication methods > Password protection. Enable the custom banned password list and add entries for your organization name, product names, office locations, and commonly used internal terms. Review and update the list quarterly to include new terms and patterns identified in password audits.",
+      "compliance": {
+        "nistSp80053": ["IA-5(1)"],
+        "cisM365": ["5.2.5"]
+      }
+    },
+    {
+      "id": "EIDAUTH-015",
+      "name": "Legacy Authentication Protocol Usage",
+      "description": "Legacy authentication protocols including POP3, IMAP4, SMTP AUTH, and Exchange ActiveSync Basic do not support modern authentication or MFA, allowing attackers to bypass MFA entirely using stolen credentials. These protocols transmit credentials in ways that are susceptible to interception and are the primary vector for password spray attacks against Microsoft 365 tenants. All legacy authentication should be blocked via Conditional Access policies.",
+      "severity": "High",
+      "subcategory": "Legacy Auth",
+      "recommendedValue": "All legacy authentication protocols blocked via Conditional Access with no active usage detected in sign-in logs",
+      "remediationSteps": "Review legacy authentication usage in Entra ID > Monitoring > Sign-in logs > Filter by client app (legacy protocols). Create a Conditional Access policy to block legacy authentication for all users and all cloud apps. Monitor for blocked sign-in attempts and work with affected users to migrate to modern authentication clients.",
+      "compliance": {
+        "nistSp80053": ["IA-2", "AC-17(2)"],
+        "mitreAttack": ["T1078", "T1110.001"],
+        "cisM365": ["5.2.2.3"]
+      }
+    },
+    {
+      "id": "EIDAUTH-016",
+      "name": "ROPC (Resource Owner Password Credentials) Flow Enabled",
+      "description": "The Resource Owner Password Credentials (ROPC) authentication flow sends username and password directly to the token endpoint, completely bypassing multi-factor authentication and Conditional Access policies. Applications using ROPC grant type expose credentials in a way that cannot be protected by modern security controls and represent a significant security gap. ROPC should be disabled for all applications unless there is an absolute technical requirement with compensating controls.",
+      "severity": "High",
+      "subcategory": "Auth Flows",
+      "recommendedValue": "ROPC flow disabled for all application registrations, no applications using password grant type",
+      "remediationSteps": "Review application registrations in Entra ID > Applications > App registrations for any apps configured to allow public client flows. Disable the 'Allow public client flows' setting for applications that do not require ROPC. Migrate applications using ROPC to supported interactive flows such as authorization code with PKCE or device code flow.",
+      "compliance": {
+        "nistSp80053": ["IA-2", "IA-5"],
+        "mitreAttack": ["T1078"]
+      }
+    },
+    {
+      "id": "EIDAUTH-017",
+      "name": "Per-User MFA vs Conditional Access MFA Conflict Detection",
+      "description": "Legacy per-user MFA settings (enabled/enforced at the individual user level) can conflict with Conditional Access-based MFA policies, creating unpredictable authentication behavior. When both are active, users may experience duplicate MFA prompts, authentication failures, or inconsistent policy enforcement depending on which mechanism evaluates first. Organizations should migrate entirely to Conditional Access-based MFA and disable per-user MFA settings to ensure consistent policy application.",
+      "severity": "Medium",
+      "subcategory": "MFA Configuration",
+      "recommendedValue": "Per-user MFA disabled for all users with MFA enforced exclusively through Conditional Access policies",
+      "remediationSteps": "Check per-user MFA status via Entra ID > Users > Per-user MFA and identify users with per-user MFA enabled or enforced. Create equivalent Conditional Access policies that enforce MFA for all users before disabling per-user MFA. Disable per-user MFA by setting each user's status to Disabled after confirming Conditional Access MFA coverage is complete.",
+      "compliance": {
+        "nistSp80053": ["IA-2(1)"],
+        "cisM365": ["5.2.2.1"]
+      }
+    }
+  ]
+}

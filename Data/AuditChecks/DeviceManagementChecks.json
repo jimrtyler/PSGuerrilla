@@ -1,0 +1,172 @@
+{
+  "categoryId": "device",
+  "categoryName": "Device & Endpoint Management",
+  "categoryDescription": "Checks related to mobile device management, Chrome browser policies, Chrome OS devices, and endpoint security controls",
+  "checks": [
+    {
+      "id": "DEVICE-001",
+      "name": "MDM Policy Audit",
+      "description": "Mobile devices accessing organizational data should be managed through MDM policies to enforce security controls",
+      "severity": "High",
+      "subcategory": "Mobile Devices",
+      "recommendedValue": "All mobile devices under MDM management with enforced security policies",
+      "remediationUrl": "https://admin.google.com/ac/devices/mobile",
+      "remediationSteps": "Admin Console > Devices > Mobile devices > Review device management status > Enable advanced MDM for unmanaged devices",
+      "compliance": {
+        "nistSp80053": ["AC-19", "CM-6"],
+        "mitreAttack": ["T1458", "T1078.004"],
+        "cisBenchmark": ["6.1"]
+      }
+    },
+    {
+      "id": "DEVICE-002",
+      "name": "Device Approval Requirements",
+      "description": "Mobile devices should require admin approval before accessing organizational data to prevent unauthorized device access",
+      "severity": "High",
+      "subcategory": "Mobile Devices",
+      "recommendedValue": "Device approval required before accessing organizational data",
+      "remediationUrl": "https://admin.google.com/ac/devices/mobile/settings",
+      "remediationSteps": "Admin Console > Devices > Mobile & endpoints > Settings > General > Require admin approval for device access",
+      "compliance": {
+        "nistSp80053": ["AC-19(4)", "IA-3"],
+        "mitreAttack": ["T1078.004"],
+        "cisBenchmark": ["6.2"]
+      }
+    },
+    {
+      "id": "DEVICE-003",
+      "name": "Screen Lock Enforcement",
+      "description": "Screen lock should be enforced on all mobile devices to prevent unauthorized physical access to organizational data",
+      "severity": "High",
+      "subcategory": "Mobile Devices",
+      "recommendedValue": "Screen lock enforced with minimum PIN/password requirements",
+      "remediationUrl": "https://admin.google.com/ac/devices/mobile/settings",
+      "remediationSteps": "Admin Console > Devices > Mobile & endpoints > Settings > Universal settings > Screen lock > Enforce screen lock with minimum complexity",
+      "compliance": {
+        "nistSp80053": ["AC-11", "AC-7"],
+        "mitreAttack": ["T1458"],
+        "cisBenchmark": ["6.3"]
+      }
+    },
+    {
+      "id": "DEVICE-004",
+      "name": "Device Encryption Requirements",
+      "description": "Device encryption should be required on all mobile devices to protect data at rest from physical theft or loss",
+      "severity": "High",
+      "subcategory": "Mobile Devices",
+      "recommendedValue": "Encryption required on all managed devices",
+      "remediationUrl": "https://admin.google.com/ac/devices/mobile/settings",
+      "remediationSteps": "Admin Console > Devices > Mobile & endpoints > Settings > Universal settings > Encryption > Require device encryption",
+      "compliance": {
+        "nistSp80053": ["SC-28", "MP-5"],
+        "mitreAttack": ["T1005"],
+        "cisBenchmark": ["6.4"]
+      }
+    },
+    {
+      "id": "DEVICE-005",
+      "name": "Compromised Device Blocking",
+      "description": "Compromised devices should be automatically blocked from accessing organizational data to prevent data exposure",
+      "severity": "High",
+      "subcategory": "Mobile Devices",
+      "recommendedValue": "Compromised device detection and blocking enabled",
+      "remediationUrl": "https://admin.google.com/ac/devices/mobile/settings",
+      "remediationSteps": "Admin Console > Devices > Mobile & endpoints > Settings > Universal settings > Compromised devices > Block compromised devices from accessing data",
+      "compliance": {
+        "nistSp80053": ["SI-4", "AC-19"],
+        "mitreAttack": ["T1458"],
+        "cisBenchmark": ["6.5"]
+      }
+    },
+    {
+      "id": "DEVICE-006",
+      "name": "Jailbroken/Rooted Device Policy",
+      "description": "Jailbroken (iOS) or rooted (Android) devices bypass OS-level security controls and should be blocked from accessing organizational data",
+      "severity": "High",
+      "subcategory": "Mobile Devices",
+      "recommendedValue": "Jailbroken/rooted devices blocked from organizational data access",
+      "remediationUrl": "https://admin.google.com/ac/devices/mobile/settings",
+      "remediationSteps": "Admin Console > Devices > Mobile & endpoints > Settings > Universal settings > Compromised devices > Block jailbroken/rooted devices",
+      "compliance": {
+        "nistSp80053": ["SI-7", "AC-19"],
+        "mitreAttack": ["T1398"],
+        "cisBenchmark": ["6.6"]
+      }
+    },
+    {
+      "id": "DEVICE-007",
+      "name": "Chrome Browser Management",
+      "description": "Chrome browsers used to access organizational data should be enrolled in Chrome Browser Cloud Management for policy enforcement",
+      "severity": "Medium",
+      "subcategory": "Chrome Browser",
+      "recommendedValue": "Chrome browsers enrolled in Cloud Management with policies enforced",
+      "remediationUrl": "https://admin.google.com/ac/chrome/settings",
+      "remediationSteps": "Admin Console > Devices > Chrome > Settings > Review and configure Chrome browser policies for managed browsers",
+      "compliance": {
+        "nistSp80053": ["CM-6", "CM-7"],
+        "mitreAttack": ["T1189", "T1185"],
+        "cisBenchmark": ["6.7"]
+      }
+    },
+    {
+      "id": "DEVICE-008",
+      "name": "Chrome Extension Whitelist/Blocklist",
+      "description": "Chrome extensions should be managed through an allowlist or blocklist to prevent malicious extensions from accessing organizational data",
+      "severity": "High",
+      "subcategory": "Chrome Browser",
+      "recommendedValue": "Extension installation restricted to admin-approved extensions via allowlist",
+      "remediationUrl": "https://admin.google.com/ac/chrome/apps/user",
+      "remediationSteps": "Admin Console > Devices > Chrome > Apps & extensions > Configure extension allowlist and blocklist",
+      "compliance": {
+        "nistSp80053": ["CM-7", "CM-11"],
+        "mitreAttack": ["T1176"],
+        "cisBenchmark": ["6.8"]
+      }
+    },
+    {
+      "id": "DEVICE-009",
+      "name": "Chrome OS Device Policies",
+      "description": "Chrome OS devices should have appropriate policies enforced including auto-update, login restrictions, and security settings",
+      "severity": "Medium",
+      "subcategory": "Chrome OS",
+      "recommendedValue": "Chrome OS devices managed with enforced policies for updates, login, and security",
+      "remediationUrl": "https://admin.google.com/ac/chrome/settings/device",
+      "remediationSteps": "Admin Console > Devices > Chrome > Settings > Device settings > Configure auto-update, login restrictions, and security policies",
+      "compliance": {
+        "nistSp80053": ["CM-6", "SI-2"],
+        "mitreAttack": ["T1189"],
+        "cisBenchmark": ["6.9"]
+      }
+    },
+    {
+      "id": "DEVICE-010",
+      "name": "Endpoint Verification Settings",
+      "description": "Endpoint verification provides device trust signals for context-aware access policies and should be enabled",
+      "severity": "Medium",
+      "subcategory": "Endpoint Security",
+      "recommendedValue": "Endpoint verification enabled for context-aware access",
+      "remediationUrl": "https://admin.google.com/ac/devices/settings/general",
+      "remediationSteps": "Admin Console > Devices > Mobile & endpoints > Settings > General > Enable endpoint verification for context-aware access policies",
+      "compliance": {
+        "nistSp80053": ["AC-19", "IA-3"],
+        "mitreAttack": ["T1078.004"],
+        "cisBenchmark": ["6.10"]
+      }
+    },
+    {
+      "id": "DEVICE-011",
+      "name": "Company-Owned Device Inventory",
+      "description": "Company-owned devices should be inventoried to maintain visibility over organizational assets accessing corporate data",
+      "severity": "Low",
+      "subcategory": "Endpoint Security",
+      "recommendedValue": "Complete inventory of all company-owned devices maintained",
+      "remediationUrl": "https://admin.google.com/ac/devices/mobile",
+      "remediationSteps": "Admin Console > Devices > Mobile devices > Review device inventory > Ensure all company-owned devices are registered and accounted for",
+      "compliance": {
+        "nistSp80053": ["CM-8", "PM-5"],
+        "mitreAttack": ["T1087"],
+        "cisBenchmark": ["6.11"]
+      }
+    }
+  ]
+}

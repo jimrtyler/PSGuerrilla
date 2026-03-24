@@ -1,0 +1,97 @@
+{
+  "categoryId": "logging",
+  "categoryName": "Logging, Alerting & Monitoring",
+  "categoryDescription": "Checks related to audit log retention, alert configuration, activity rules, data export controls, and reporting access",
+  "checks": [
+    {
+      "id": "LOG-001",
+      "name": "Audit Log Retention Settings",
+      "description": "Audit logs should be retained for an adequate period to support incident investigation and compliance requirements. Default retention varies by Workspace edition",
+      "severity": "High",
+      "subcategory": "Audit Logs",
+      "recommendedValue": "Audit log retention of 12 months or longer; extended via BigQuery export for long-term retention",
+      "remediationUrl": "https://admin.google.com/ac/reporting/audit",
+      "remediationSteps": "Admin Console > Reporting > Audit and investigation > Review log availability. Configure BigQuery export via Admin Console > Reporting > BigQuery export for long-term retention",
+      "compliance": {
+        "nistSp80053": ["AU-11", "AU-4"],
+        "mitreAttack": ["T1070", "T1562.008"],
+        "cisBenchmark": ["7.1"]
+      }
+    },
+    {
+      "id": "LOG-002",
+      "name": "Alert Center Rules Inventory",
+      "description": "Alert Center rules should be configured to detect and notify on security-relevant events including suspicious logins, data exfiltration, and policy violations",
+      "severity": "High",
+      "subcategory": "Alerting",
+      "recommendedValue": "Alert rules configured for key security events (suspicious login, data exfiltration, privilege changes)",
+      "remediationUrl": "https://admin.google.com/ac/ac",
+      "remediationSteps": "Admin Console > Security > Alert center > Review existing rules > Create rules for missing security event categories",
+      "compliance": {
+        "nistSp80053": ["SI-4", "IR-5"],
+        "mitreAttack": ["T1562.008"],
+        "cisBenchmark": ["7.2"]
+      }
+    },
+    {
+      "id": "LOG-003",
+      "name": "Activity Rules Coverage Analysis",
+      "description": "Activity rules should provide adequate coverage across security domains including login, Drive, Admin, and email events",
+      "severity": "Medium",
+      "subcategory": "Alerting",
+      "recommendedValue": "Activity rules covering login, Drive sharing, admin changes, email forwarding, and OAuth events",
+      "remediationUrl": "https://admin.google.com/ac/ac/rules",
+      "remediationSteps": "Admin Console > Security > Alert center > Rules > Review coverage across event categories > Add rules for uncovered security domains",
+      "compliance": {
+        "nistSp80053": ["SI-4(5)", "AU-6"],
+        "mitreAttack": ["T1562.008"],
+        "cisBenchmark": ["7.3"]
+      }
+    },
+    {
+      "id": "LOG-004",
+      "name": "Data Export Settings",
+      "description": "Google Takeout (data export) should be controlled to prevent users from bulk-exporting organizational data outside the domain",
+      "severity": "Medium",
+      "subcategory": "Data Controls",
+      "recommendedValue": "Google Takeout disabled or restricted for most users",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/986128702541/additional_services",
+      "remediationSteps": "Admin Console > Apps > Additional Google services > Google Takeout > Disable or restrict for applicable OUs",
+      "compliance": {
+        "nistSp80053": ["AC-4", "MP-5"],
+        "mitreAttack": ["T1567", "T1537"],
+        "cisBenchmark": ["7.4"]
+      }
+    },
+    {
+      "id": "LOG-005",
+      "name": "Admin Email Alerts Configuration",
+      "description": "Email alerts should be configured for critical admin actions including super admin changes, security setting modifications, and bulk operations",
+      "severity": "Medium",
+      "subcategory": "Alerting",
+      "recommendedValue": "Email alerts enabled for critical admin actions and security events",
+      "remediationUrl": "https://admin.google.com/ac/ac",
+      "remediationSteps": "Admin Console > Security > Alert center > Configure email notification recipients for critical alert types",
+      "compliance": {
+        "nistSp80053": ["SI-4", "AU-5"],
+        "mitreAttack": ["T1562.008"],
+        "cisBenchmark": ["7.5"]
+      }
+    },
+    {
+      "id": "LOG-006",
+      "name": "Reporting API Access",
+      "description": "Access to the Reports API should be reviewed to ensure only authorized service accounts and applications can retrieve audit and usage data",
+      "severity": "Low",
+      "subcategory": "Audit Logs",
+      "recommendedValue": "Reports API access restricted to authorized service accounts only",
+      "remediationUrl": "https://admin.google.com/ac/owl/domainwidedelegation",
+      "remediationSteps": "Admin Console > Security > API controls > Domain-wide delegation > Review grants with Reports API scopes > Remove unauthorized access",
+      "compliance": {
+        "nistSp80053": ["AU-9", "AC-3"],
+        "mitreAttack": ["T1530"],
+        "cisBenchmark": ["7.6"]
+      }
+    }
+  ]
+}

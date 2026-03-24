@@ -1,0 +1,202 @@
+{
+  "categoryId": "drive",
+  "categoryName": "Drive Security & Data Protection",
+  "categoryDescription": "Checks related to Google Drive sharing, access controls, DLP, and data protection settings",
+  "checks": [
+    {
+      "id": "DRIVE-001",
+      "name": "External Sharing Defaults",
+      "description": "Sharing outside the organization should be restricted or disabled by default to prevent accidental data exposure to external parties",
+      "severity": "High",
+      "subcategory": "Sharing",
+      "recommendedValue": "External sharing restricted to allowlisted domains or disabled",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/55656082996/sharing",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Drive and Docs > Sharing settings > Set sharing outside the organization to 'Off' or 'Allowlisted domains'",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-4"],
+        "mitreAttack": ["T1567", "T1537"],
+        "cisBenchmark": ["2.1"]
+      }
+    },
+    {
+      "id": "DRIVE-002",
+      "name": "Link Sharing Default Settings",
+      "description": "Default link sharing should be set to 'Restricted' (specific people) rather than broad access to prevent unintended data exposure",
+      "severity": "High",
+      "subcategory": "Sharing",
+      "recommendedValue": "Default link sharing set to 'Restricted' (specific people only)",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/55656082996/sharing",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Drive and Docs > Sharing settings > Set default link sharing to 'Restricted'",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-6"],
+        "mitreAttack": ["T1530"],
+        "cisBenchmark": ["2.2"]
+      }
+    },
+    {
+      "id": "DRIVE-003",
+      "name": "Anyone With the Link Sharing Audit",
+      "description": "Files shared with 'Anyone with the link' are accessible to anyone on the internet and represent a significant data exposure risk",
+      "severity": "High",
+      "subcategory": "Sharing",
+      "recommendedValue": "'Anyone with the link' sharing disabled or tightly controlled",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/55656082996/sharing",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Drive and Docs > Sharing settings > Disable 'Anyone with the link' option or restrict to 'Domain users with the link'",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-22"],
+        "mitreAttack": ["T1530", "T1213"],
+        "cisBenchmark": ["2.3"]
+      }
+    },
+    {
+      "id": "DRIVE-004",
+      "name": "Shared Drive Creation Restrictions",
+      "description": "Shared Drive creation should be restricted to prevent uncontrolled proliferation and ensure proper governance of shared data repositories",
+      "severity": "Medium",
+      "subcategory": "Shared Drives",
+      "recommendedValue": "Shared Drive creation restricted to specific groups or admins",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/55656082996/sharing",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Drive and Docs > Sharing settings > Shared drive creation > Restrict who can create shared drives",
+      "compliance": {
+        "nistSp80053": ["CM-7", "AC-6"],
+        "mitreAttack": ["T1530"],
+        "cisBenchmark": ["2.4"]
+      }
+    },
+    {
+      "id": "DRIVE-005",
+      "name": "Shared Drive Member Management",
+      "description": "Shared Drive member management should be controlled to prevent unauthorized users from being added or permissions being escalated",
+      "severity": "Medium",
+      "subcategory": "Shared Drives",
+      "recommendedValue": "Only managers can add members and change access levels",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/55656082996/sharing",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Drive and Docs > Sharing settings > Shared drive settings > Configure member management permissions",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-6(1)"],
+        "mitreAttack": ["T1098"],
+        "cisBenchmark": ["2.5"]
+      }
+    },
+    {
+      "id": "DRIVE-006",
+      "name": "Shared Drive External Sharing",
+      "description": "External sharing on Shared Drives should be restricted to prevent sensitive organizational data from being shared outside the domain",
+      "severity": "High",
+      "subcategory": "Shared Drives",
+      "recommendedValue": "External sharing on Shared Drives disabled or restricted to allowlisted domains",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/55656082996/sharing",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Drive and Docs > Sharing settings > Shared drive sharing > Restrict external sharing",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-4"],
+        "mitreAttack": ["T1537", "T1567"],
+        "cisBenchmark": ["2.6"]
+      }
+    },
+    {
+      "id": "DRIVE-007",
+      "name": "File Ownership Transfer Settings",
+      "description": "File ownership transfer should be controlled to prevent unauthorized data migration and maintain proper data governance chains",
+      "severity": "Medium",
+      "subcategory": "Access Control",
+      "recommendedValue": "File ownership transfer restricted to admins or controlled process",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/55656082996/sharing",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Drive and Docs > Transfer ownership settings > Configure restrictions",
+      "compliance": {
+        "nistSp80053": ["AC-3", "MP-5"],
+        "mitreAttack": ["T1537"],
+        "cisBenchmark": ["2.7"]
+      }
+    },
+    {
+      "id": "DRIVE-008",
+      "name": "Drive for Desktop Allowed/Blocked",
+      "description": "Drive for Desktop syncs files locally and should be controlled to prevent data from being stored on unmanaged endpoints",
+      "severity": "Medium",
+      "subcategory": "Access Control",
+      "recommendedValue": "Drive for Desktop restricted to managed devices or disabled",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/55656082996/drivefordesktop",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Drive and Docs > Features and Applications > Drive for Desktop > Configure access",
+      "compliance": {
+        "nistSp80053": ["SC-28", "MP-7"],
+        "mitreAttack": ["T1530", "T1005"],
+        "cisBenchmark": ["2.8"]
+      }
+    },
+    {
+      "id": "DRIVE-009",
+      "name": "Third-Party App Drive Access",
+      "description": "Third-party applications with access to Drive data should be reviewed and restricted to prevent unauthorized data exfiltration",
+      "severity": "High",
+      "subcategory": "Data Protection",
+      "recommendedValue": "Third-party app access to Drive data restricted and reviewed",
+      "remediationUrl": "https://admin.google.com/ac/owl/list?tab=apps",
+      "remediationSteps": "Admin Console > Security > API controls > Third-party app access > Review and restrict apps with Drive access",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-20"],
+        "mitreAttack": ["T1530", "T1567.002"],
+        "cisBenchmark": ["2.9"]
+      }
+    },
+    {
+      "id": "DRIVE-010",
+      "name": "Drive DLP Rules Audit",
+      "description": "Data Loss Prevention rules should be configured to detect and prevent sharing of sensitive data through Google Drive",
+      "severity": "Medium",
+      "subcategory": "Data Protection",
+      "recommendedValue": "DLP rules configured for sensitive data types (PII, financial, health data)",
+      "remediationUrl": "https://admin.google.com/ac/dp/rules",
+      "remediationSteps": "Admin Console > Security > Data protection > Manage rules > Create rules for sensitive data types in Drive",
+      "compliance": {
+        "nistSp80053": ["SC-7", "SI-4"],
+        "mitreAttack": ["T1567", "T1048"],
+        "cisBenchmark": ["2.10"]
+      }
+    },
+    {
+      "id": "DRIVE-011",
+      "name": "Target Audience Settings",
+      "description": "Target audience settings control who can be suggested when sharing files and should be configured to limit accidental sharing",
+      "severity": "Medium",
+      "subcategory": "Sharing",
+      "recommendedValue": "Target audiences configured to limit sharing suggestions appropriately",
+      "remediationUrl": "https://admin.google.com/ac/targetaudiences",
+      "remediationSteps": "Admin Console > Directory > Target audiences > Review and configure target audience groups",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-6"],
+        "mitreAttack": ["T1530"],
+        "cisBenchmark": ["2.11"]
+      }
+    },
+    {
+      "id": "DRIVE-012",
+      "name": "Drive Add-ons Settings",
+      "description": "Drive add-ons can access file content and should be controlled to prevent data exposure through untrusted extensions",
+      "severity": "Low",
+      "subcategory": "Access Control",
+      "recommendedValue": "Drive add-on installation restricted to admin-approved add-ons",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/55656082996/addons",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Drive and Docs > Features and Applications > Add-ons > Configure installation restrictions",
+      "compliance": {
+        "nistSp80053": ["CM-7", "CM-11"],
+        "mitreAttack": ["T1195.002"],
+        "cisBenchmark": ["2.12"]
+      }
+    },
+    {
+      "id": "DRIVE-013",
+      "name": "Offline Access Settings",
+      "description": "Offline access allows Drive files to be cached locally on devices and should be controlled to prevent data exposure on shared or unmanaged devices",
+      "severity": "Medium",
+      "subcategory": "Access Control",
+      "recommendedValue": "Offline access disabled or restricted to managed devices",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/55656082996/offlineaccess",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Drive and Docs > Features and Applications > Offline > Disable or restrict offline access",
+      "compliance": {
+        "nistSp80053": ["SC-28", "AC-19"],
+        "mitreAttack": ["T1005", "T1530"],
+        "cisBenchmark": ["2.13"]
+      }
+    }
+  ]
+}
