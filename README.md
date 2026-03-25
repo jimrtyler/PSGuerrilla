@@ -44,10 +44,10 @@ Security assessment, threat detection, and continuous monitoring for Google Work
 
 ```powershell
 # Clone the repo
-git clone https://github.com/jimrtyler/PSGuerrillaLegacy.git
+git clone https://github.com/jimrtyler/PSGuerrilla.git
 
 # Import the module
-Import-Module ./PSGuerrillaLegacy/PSGuerrilla.psd1
+Import-Module ./PSGuerrilla/PSGuerrilla.psd1
 ```
 
 ### Step 2: Generate Your Configuration (Recommended)
