@@ -1,0 +1,105 @@
+{
+  "categoryId": "tierzero",
+  "categoryName": "Tier-0 Hygiene & Hybrid Identity Surface",
+  "categoryDescription": "Microsoft's 'Securing Privileged Access' tiered administration model treats anything that can directly impact a domain controller, an Azure AD Connect server, or the keys to either as Tier-0. Most ransomware crews escalate not by cracking Domain Admin passwords but by compromising a service account that nobody realized was Tier-0 — Veeam, vCenter, SCCM, the MSOL_ AAD Connect account. These checks surface tier-bleed by name pattern and verify the AAD Connect identity surface.",
+  "checks": [
+    {
+      "id": "ADTIER-001",
+      "name": "Azure AD Connect Sync Account (MSOL_) Audit",
+      "description": "When Azure AD Connect installs in Express mode it creates a domain account named MSOL_<random-hex> and grants it Replicating Directory Changes + Replicating Directory Changes All on the domain naming context — i.e. DCSync rights. The account is effectively Tier-0 but it lives in the default Users container by default, has a 10-year password expiry, and rarely shows up in privileged-group enumeration tools because it gets its power via direct ACL rather than group membership. Compromise of this account is functionally a domain takeover.",
+      "severity": "Critical",
+      "subcategory": "Hybrid Identity",
+      "recommendedValue": "All MSOL_ accounts are inventoried, password rotated within the last 180 days, placed in a Tier-0 OU with restricted logon rights, and the AAD Connect server itself is hardened as a Tier-0 system.",
+      "remediationSteps": "Locate the MSOL_ account: Get-ADUser -Filter {sAMAccountName -like 'MSOL_*'}. Confirm it has DCSync rights: dsacls 'DC=domain,DC=com' | findstr MSOL_. Move it to a Tier-0 admin OU. Rotate the password using the AAD Connect tooling (do NOT reset via standard tooling — use Add-ADSyncADDSConnectorAccount in the ADSync PowerShell module on the AAD Connect server). Apply a logon-restriction GPO so the account can only log on locally to the AAD Connect server itself. Treat the AAD Connect host as Tier-0 — restrict who can RDP/admin it.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "IA-5"],
+        "mitreAttack": ["T1003.006", "T1078.004"],
+        "cisAd": ["8.1.1"]
+      }
+    },
+    {
+      "id": "ADTIER-002",
+      "name": "Backup Software Service Accounts in Privileged Groups",
+      "description": "Backup software (Veeam, Commvault, Rubrik, Cohesity, NAKIVO, Backup Exec, Vembu, Acronis) typically asks for a service account with very high permissions. Documentation often suggests Domain Admin for ease of setup, and many admins comply. Once an attacker compromises the backup server (a frequent ransomware initial-access vector), they inherit Domain Admin via the service account. This is the #1 ransomware escalation path in 2023-2025 incident response data.",
+      "severity": "Critical",
+      "subcategory": "Tier Bleed",
+      "recommendedValue": "No backup-software service accounts are members of Domain Admins, Enterprise Admins, Schema Admins, or Backup Operators. Use vendor-documented least-privilege accounts and isolated backup credentials.",
+      "remediationSteps": "Identify the backup product in use and follow its least-privilege guide (Veeam: backup-server local admin only + AD account with object read; Rubrik: dedicated service principal in cloud-only role; etc.). Remove the backup account from Domain Admins. Migrate to a gMSA where supported. Place the backup server in a Tier-1 OU with restricted logon rights. If full DA is genuinely required for a specific workload, document it and isolate that part of backup to its own account separate from the main one.",
+      "compliance": {
+        "nistSp80053": ["AC-6"],
+        "mitreAttack": ["T1078.002"],
+        "cisAd": ["8.2.1"]
+      }
+    },
+    {
+      "id": "ADTIER-003",
+      "name": "Hypervisor / Virtualization Service Accounts in Privileged Groups",
+      "description": "vCenter / Hyper-V / SCVMM / Citrix / Nutanix integrations with AD often use a service account configured during setup. If that account is a Domain Admin, then compromise of the hypervisor management plane (or the host's SSO database) cascades to AD. The hypervisor is conceptually Tier-0 already; its AD identity should match.",
+      "severity": "High",
+      "subcategory": "Tier Bleed",
+      "recommendedValue": "Hypervisor service accounts have only the rights documented by the vendor (typically read for inventory + specific OU writes if VM-AD integration is in use). Not in Domain Admins.",
+      "remediationSteps": "Review the AD service account for each hypervisor product. Apply vendor least-privilege guidance. For vCenter: use the documented SSO identity source pattern rather than mapping a Domain Admin. For Hyper-V/SCVMM: scope service-account rights to the OUs hosting VM computer accounts. Treat the hypervisor management host as Tier-0 in your administrative model.",
+      "compliance": {
+        "nistSp80053": ["AC-6"],
+        "mitreAttack": ["T1078.002"],
+        "cisAd": ["8.2.2"]
+      }
+    },
+    {
+      "id": "ADTIER-004",
+      "name": "Configuration Management Service Accounts in Privileged Groups",
+      "description": "Configuration-management platforms (SCCM/MECM, Intune Connector, Jamf, KACE, Lansweeper, ManageEngine, Ivanti, BigFix) push software to every endpoint by definition — they are already a privileged lateral-movement platform. SCCM in particular has well-known abuse primitives (Network Access Account exposure, NTLM coercion to site server, client push). A config-mgmt service account in Domain Admins gives an attacker who lands on any managed endpoint the keys to the domain.",
+      "severity": "Critical",
+      "subcategory": "Tier Bleed",
+      "recommendedValue": "Config-management service accounts are scoped to their documented minimum rights and never in Domain Admins / Enterprise Admins. SCCM Network Access Account is a non-privileged dedicated identity.",
+      "remediationSteps": "Identify the config-mgmt product and review service account rights. For SCCM: ensure the Network Access Account is non-privileged (NOT a Domain Admin); ensure the site server's machine account is not a Domain Admin; review hierarchy service accounts for least privilege. Move site servers and management points to a Tier-0 OU with restricted logons.",
+      "compliance": {
+        "nistSp80053": ["AC-6"],
+        "mitreAttack": ["T1072", "T1078.002"],
+        "cisAd": ["8.2.3"]
+      }
+    },
+    {
+      "id": "ADTIER-005",
+      "name": "SQL / Database Service Accounts in Privileged Groups",
+      "description": "SQL Server / MySQL / PostgreSQL service accounts in Domain Admins are common in environments where the DBA team installed SQL with default 'Use existing AD account' guidance and picked an admin account out of convenience. Once the database server is reachable on the network, a SQL credential compromise or a SQL Server vulnerability gives the attacker Domain Admin directly.",
+      "severity": "High",
+      "subcategory": "Tier Bleed",
+      "recommendedValue": "Database service accounts run as gMSAs or dedicated service identities with no privileged-group membership.",
+      "remediationSteps": "Migrate SQL service accounts to gMSA where supported. For accounts that must remain user-based, remove privileged group membership and grant only the local rights the database engine requires (Log on as a service, Bypass traverse checking, Adjust memory quotas for a process — see Microsoft docs for the specific rights).",
+      "compliance": {
+        "nistSp80053": ["AC-6"],
+        "mitreAttack": ["T1078.002"],
+        "cisAd": ["8.2.4"]
+      }
+    },
+    {
+      "id": "ADTIER-006",
+      "name": "Tier-0 Admin Accounts Outside a Dedicated Tier-0 OU",
+      "description": "If your Domain Admins live in the same OU as regular users, every GPO that targets users (logon scripts, browser policy, mapped drives, etc.) also applies to your Domain Admins — which means anyone who can edit those GPOs can run code as a Domain Admin at next logon. The Microsoft tiered model recommends a dedicated Tier-0 admin OU with restricted GPO authorship and restricted logon rights.",
+      "severity": "High",
+      "subcategory": "Tier Hygiene",
+      "recommendedValue": "All Domain Admins, Enterprise Admins, and Schema Admins members are in a dedicated Tier-0 OU (typically OU=Tier-0,OU=Admin) with restricted GPO authorship.",
+      "remediationSteps": "Create OU=Tier-0,OU=Admin if it doesn't exist. Move all members of Domain/Enterprise/Schema Admins into it. Restrict the GPO authorship on that OU (only Tier-0 admins themselves). Apply a dedicated logon-restriction GPO so Tier-0 accounts can only log on to Tier-0 hosts. Block inheritance on the OU.",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-6"],
+        "mitreAttack": ["T1078"],
+        "cisAd": ["8.3.1"]
+      }
+    },
+    {
+      "id": "ADTIER-007",
+      "name": "Service Accounts with Interactive Logon Rights via Privileged Group",
+      "description": "Service accounts that are members of Domain Admins (or any group granted 'Allow log on locally' via default privileged-group membership) can be used interactively. Attackers love this — capture a service account password (Kerberoasting, registry, scripts in SYSVOL), use it interactively on a workstation, dump LSASS, and pivot. Service accounts should not be able to log on interactively to anything but the host they serve.",
+      "severity": "High",
+      "subcategory": "Tier Hygiene",
+      "recommendedValue": "Service accounts (heuristic: sAMAccountName starts with svc/sa/service or has SPN + no interactive logon recently) are explicitly denied 'Allow log on locally' and 'Allow log on through Remote Desktop Services' via the Default Domain Controllers Policy and a dedicated Tier-1/Tier-2 logon-restriction GPO.",
+      "remediationSteps": "Identify service accounts (SPN-bearing, naming convention, or business inventory). Apply a Default Domain Policy GPO: Computer Configuration > Windows Settings > Security Settings > Local Policies > User Rights Assignment > 'Deny log on locally' = <service-accounts-group>. Add the same accounts to 'Deny log on through Remote Desktop Services'. Add them to Protected Users where supported (Server 2012 R2+).",
+      "compliance": {
+        "nistSp80053": ["AC-6"],
+        "mitreAttack": ["T1078.002", "T1003.001"],
+        "cisAd": ["8.3.2"]
+      }
+    }
+  ]
+}
