@@ -35,6 +35,7 @@ function Get-ComplianceCrosswalk {
         [string]$Framework,
 
         [switch]$FailOnly,
+        [Alias('RuntimeConfig')]
         [string]$ConfigPath
     )
 

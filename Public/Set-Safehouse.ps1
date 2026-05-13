@@ -75,10 +75,11 @@ function Set-Safehouse {
         Set-Safehouse -OutputDirectory C:\Reports -Profile K12
         # Update non-credential settings
     #>
-    [CmdletBinding(DefaultParameterSetName = 'Setup')]
+    [CmdletBinding(DefaultParameterSetName = 'Setup', SupportsShouldProcess, ConfirmImpact = 'Low')]
     param(
         # --- Setup parameter set ---
         [Parameter(ParameterSetName = 'Setup', Position = 0)]
+        [Alias('MissionConfig')]
         [string]$ConfigFile,
 
         [Parameter(ParameterSetName = 'Setup')]
@@ -210,18 +211,34 @@ function Set-Safehouse {
         [string]$ADServer,
 
         [Parameter(ParameterSetName = 'ConfigSettings')]
+        [Alias('RuntimeConfig')]
         [string]$ConfigPath,
 
         [Parameter(ParameterSetName = 'ConfigSettings')]
         [hashtable]$Raw
     )
 
-    $amber = $PSStyle.Foreground.FromRgb(0xC6, 0x7A, 0x1F)
-    $green = $PSStyle.Foreground.FromRgb(0x6B, 0x8E, 0x6B)
-    $white = $PSStyle.Foreground.FromRgb(0xF5, 0xF0, 0xE6)
-    $khaki = $PSStyle.Foreground.FromRgb(0xB8, 0xA9, 0x7E)
-    $gray  = $PSStyle.Foreground.FromRgb(0x8B, 0x8B, 0x7A)
+    $amber = $script:Palette.Amber
+    $green = $script:Palette.Sage
+    $white = $script:Palette.Parchment
+    $khaki = $script:Palette.Khaki
+    $gray  = $script:Palette.Gray
     $reset = $PSStyle.Reset
+
+    # Gate every mutating branch on -WhatIf / -Confirm so the user can dry-run.
+    # Read-only branches (StatusSet, TestSet) skip the check.
+    $mutatingSets = @('Setup', 'RotateSet', 'RemoveSet', 'ConfigSettings', 'ExportMetadataSet')
+    if ($PSCmdlet.ParameterSetName -in $mutatingSets) {
+        $target = if ($ConfigFile) { $ConfigFile } else { $VaultName }
+        $action = switch ($PSCmdlet.ParameterSetName) {
+            'Setup'             { 'Initialize vault and store credentials' }
+            'RotateSet'         { "Rotate credentials: $($Rotate -join ', ')" }
+            'RemoveSet'         { "Remove credentials: $($Remove -join ', ')" }
+            'ConfigSettings'    { 'Update runtime configuration' }
+            'ExportMetadataSet' { 'Export vault metadata to disk' }
+        }
+        if (-not $PSCmdlet.ShouldProcess($target, $action)) { return }
+    }
 
     switch ($PSCmdlet.ParameterSetName) {
         'StatusSet' {
@@ -700,8 +717,8 @@ function Read-CredentialValue {
         [string]$VaultKey
     )
 
-    $gray  = $PSStyle.Foreground.FromRgb(0x8B, 0x8B, 0x7A)
-    $amber = $PSStyle.Foreground.FromRgb(0xC6, 0x7A, 0x1F)
+    $gray  = $script:Palette.Gray
+    $amber = $script:Palette.Amber
     $reset = $PSStyle.Reset
 
     switch ($PromptType) {
@@ -894,11 +911,12 @@ function Invoke-CredentialMigration {
     param(
         [hashtable]$Config,
         [string]$VaultName,
+        [Alias('RuntimeConfig')]
         [string]$ConfigPath
     )
 
-    $green = $PSStyle.Foreground.FromRgb(0x6B, 0x8E, 0x6B)
-    $gray  = $PSStyle.Foreground.FromRgb(0x8B, 0x8B, 0x7A)
+    $green = $script:Palette.Sage
+    $gray  = $script:Palette.Gray
     $reset = $PSStyle.Reset
     $metadata = Get-VaultMetadata -VaultName $VaultName
     if (-not $metadata.credentials) { $metadata.credentials = @{} }

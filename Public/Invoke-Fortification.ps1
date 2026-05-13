@@ -18,7 +18,9 @@ function Invoke-Fortification {
         [switch]$NoReports,
         [switch]$NoDelta,
         [switch]$Quiet,
+        [Alias('RuntimeConfig')]
         [string]$ConfigPath,
+        [Alias('MissionConfig')]
         [string]$ConfigFile
     )
 

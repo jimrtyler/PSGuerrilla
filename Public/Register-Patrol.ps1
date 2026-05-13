@@ -8,7 +8,9 @@ function Register-Patrol {
         [int]$IntervalMinutes = 60,
         [datetime]$AtTime,
         [string]$RunAs = 'SYSTEM',
+        [Alias('RuntimeConfig')]
         [string]$ConfigPath,
+        [Alias('MissionConfig')]
         [string]$ConfigFile,
         [ValidateSet('Fast', 'Full')]
         [string]$ScanMode = 'Fast',

@@ -40,6 +40,7 @@ function Get-QuickWins {
         [ValidateSet('Free', 'Low', 'Medium')]
         [string]$MaxCostTier = 'Low',
 
+        [Alias('RuntimeConfig')]
         [string]$ConfigPath
     )
 

@@ -15,8 +15,10 @@ function Invoke-Recon {
         [switch]$NoReports,
         [switch]$NoGeoIp,
         [switch]$Quiet,
+        [Alias('RuntimeConfig')]
         [string]$ConfigPath,
 
+        [Alias('MissionConfig')]
         [string]$ConfigFile
     )
 

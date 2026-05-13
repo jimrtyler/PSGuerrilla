@@ -27,20 +27,20 @@ function Initialize-GuerrillaVault {
     if ($missing.Count -gt 0) {
         $border = '=' * 60
         Write-Host ''
-        Write-Host "  $($PSStyle.Foreground.FromRgb(0xC6, 0x7A, 0x1F))$border$($PSStyle.Reset)"
-        Write-Host "  $($PSStyle.Foreground.FromRgb(0xF5, 0xF0, 0xE6))  SAFEHOUSE PREREQUISITES$($PSStyle.Reset)"
-        Write-Host "  $($PSStyle.Foreground.FromRgb(0xC6, 0x7A, 0x1F))$border$($PSStyle.Reset)"
+        Write-Host "  $($script:Palette.Amber)$border$($PSStyle.Reset)"
+        Write-Host "  $($script:Palette.Parchment)  SAFEHOUSE PREREQUISITES$($PSStyle.Reset)"
+        Write-Host "  $($script:Palette.Amber)$border$($PSStyle.Reset)"
         Write-Host ''
-        Write-Host "  $($PSStyle.Foreground.FromRgb(0xB8, 0xA9, 0x7E))  The following modules are required for secure credential$($PSStyle.Reset)"
-        Write-Host "  $($PSStyle.Foreground.FromRgb(0xB8, 0xA9, 0x7E))  storage and are not currently installed:$($PSStyle.Reset)"
+        Write-Host "  $($script:Palette.Khaki)  The following modules are required for secure credential$($PSStyle.Reset)"
+        Write-Host "  $($script:Palette.Khaki)  storage and are not currently installed:$($PSStyle.Reset)"
         Write-Host ''
         foreach ($mod in $missing) {
-            Write-Host "    $($PSStyle.Foreground.FromRgb(0xC6, 0x7A, 0x1F))* $mod$($PSStyle.Reset)"
+            Write-Host "    $($script:Palette.Amber)* $mod$($PSStyle.Reset)"
         }
         Write-Host ''
-        Write-Host "  $($PSStyle.Foreground.FromRgb(0x8B, 0x8B, 0x7A))  These are Microsoft's official credential management$($PSStyle.Reset)"
-        Write-Host "  $($PSStyle.Foreground.FromRgb(0x8B, 0x8B, 0x7A))  modules from the PowerShell Gallery.$($PSStyle.Reset)"
-        Write-Host "  $($PSStyle.Foreground.FromRgb(0xC6, 0x7A, 0x1F))$border$($PSStyle.Reset)"
+        Write-Host "  $($script:Palette.Gray)  These are Microsoft's official credential management$($PSStyle.Reset)"
+        Write-Host "  $($script:Palette.Gray)  modules from the PowerShell Gallery.$($PSStyle.Reset)"
+        Write-Host "  $($script:Palette.Amber)$border$($PSStyle.Reset)"
         Write-Host ''
 
         if (-not $Force) {
@@ -54,9 +54,9 @@ function Initialize-GuerrillaVault {
             Write-Host "  Installing $mod..." -NoNewline
             try {
                 Install-Module -Name $mod -Scope CurrentUser -Force -AllowClobber -ErrorAction Stop
-                Write-Host " $($PSStyle.Foreground.FromRgb(0x6B, 0x8E, 0x6B))DONE$($PSStyle.Reset)"
+                Write-Host " $($script:Palette.Sage)DONE$($PSStyle.Reset)"
             } catch {
-                Write-Host " $($PSStyle.Foreground.FromRgb(0xC6, 0x7A, 0x1F))FAILED$($PSStyle.Reset)"
+                Write-Host " $($script:Palette.Amber)FAILED$($PSStyle.Reset)"
                 throw "Failed to install $mod`: $_"
             }
         }

@@ -89,8 +89,10 @@ function Invoke-Wiretap {
 
         [switch]$Quiet,
 
+        [Alias('RuntimeConfig')]
         [string]$ConfigPath,
 
+        [Alias('MissionConfig')]
         [string]$ConfigFile
     )
 

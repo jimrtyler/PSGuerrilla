@@ -31,6 +31,7 @@ function Get-Safehouse {
     #>
     [CmdletBinding()]
     param(
+        [Alias('RuntimeConfig')]
         [string]$ConfigPath,
         [switch]$ShowSecrets,
         [string]$VaultName = 'PSGuerrilla'

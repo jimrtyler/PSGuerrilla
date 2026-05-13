@@ -31,6 +31,27 @@ function Get-PSGuerrillaDataRoot {
     return Join-Path $base 'PSGuerrilla'
 }
 
+# Helper used during module bootstrap to turn "10.0.0.0/16" into the
+# { Network = uint32; Mask = uint32 } pair that all the IP classification
+# code expects. Replaces three near-identical inline blocks that used to
+# live below.
+function ConvertTo-ParsedCidr {
+    [CmdletBinding()]
+    param([Parameter(Mandatory)][string]$Cidr)
+
+    $parts = $Cidr -split '/'
+    if ($parts.Count -ne 2) { return $null }
+    try {
+        $ipBytes = [System.Net.IPAddress]::Parse($parts[0]).GetAddressBytes()
+        $prefix = [int]$parts[1]
+        $ipUint = ([uint32]$ipBytes[0] -shl 24) -bor ([uint32]$ipBytes[1] -shl 16) -bor ([uint32]$ipBytes[2] -shl 8) -bor [uint32]$ipBytes[3]
+        $mask = if ($prefix -eq 0) { [uint32]0 } else { [uint32]::MaxValue -shl (32 - $prefix) }
+        return @{ Network = $ipUint -band $mask; Mask = $mask }
+    } catch {
+        return $null
+    }
+}
+
 # Load data files into script-scoped variables
 $script:CloudIpRanges = Get-Content -Path (Join-Path $ModuleRoot 'Data/CloudIpRanges.json') -Raw | ConvertFrom-Json
 $script:KnownAttackerIps = Get-Content -Path (Join-Path $ModuleRoot 'Data/KnownAttackerIps.json') -Raw | ConvertFrom-Json
@@ -38,7 +59,6 @@ $script:SuspiciousCountries = Get-Content -Path (Join-Path $ModuleRoot 'Data/Sus
 $script:VpnTorProxies = Get-Content -Path (Join-Path $ModuleRoot 'Data/VpnTorProxies.json') -Raw | ConvertFrom-Json
 
 # Pre-parse CIDR ranges into uint32 network/mask pairs for fast bitwise matching
-# Each entry: @{ Network = [uint32]; Mask = [uint32]; Provider = [string] }
 $script:ParsedProviderNetworks = [System.Collections.Generic.List[hashtable]]::new()
 $script:CloudProviderClasses = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
 $script:AttackerIpSet = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
@@ -49,15 +69,11 @@ $providerData = if ($script:CloudIpRanges.providers) { $script:CloudIpRanges.pro
 foreach ($providerName in ($providerData | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name)) {
     [void]$script:CloudProviderClasses.Add($providerName)
     foreach ($cidr in $providerData.$providerName) {
-        $parts = $cidr -split '/'
-        try {
-            $ipBytes = [System.Net.IPAddress]::Parse($parts[0]).GetAddressBytes()
-            $prefix = [int]$parts[1]
-            $ipUint = ([uint32]$ipBytes[0] -shl 24) -bor ([uint32]$ipBytes[1] -shl 16) -bor ([uint32]$ipBytes[2] -shl 8) -bor [uint32]$ipBytes[3]
-            $mask = if ($prefix -eq 0) { [uint32]0 } else { [uint32]::MaxValue -shl (32 - $prefix) }
-            $network = $ipUint -band $mask
-            $script:ParsedProviderNetworks.Add(@{ Network = $network; Mask = $mask; Provider = $providerName })
-        } catch {
+        $parsed = ConvertTo-ParsedCidr -Cidr $cidr
+        if ($parsed) {
+            $parsed.Provider = $providerName
+            $script:ParsedProviderNetworks.Add($parsed)
+        } else {
             Write-Verbose "Skipping invalid CIDR: $cidr ($providerName)"
         }
     }
@@ -82,26 +98,12 @@ $script:VpnProviderNames = [System.Collections.Generic.HashSet[string]]::new([St
 
 if ($script:VpnTorProxies) {
     foreach ($cidr in $script:VpnTorProxies.vpn_provider_cidrs) {
-        $parts = $cidr -split '/'
-        try {
-            $ipBytes = [System.Net.IPAddress]::Parse($parts[0]).GetAddressBytes()
-            $prefix = [int]$parts[1]
-            $ipUint = ([uint32]$ipBytes[0] -shl 24) -bor ([uint32]$ipBytes[1] -shl 16) -bor ([uint32]$ipBytes[2] -shl 8) -bor [uint32]$ipBytes[3]
-            $mask = if ($prefix -eq 0) { [uint32]0 } else { [uint32]::MaxValue -shl (32 - $prefix) }
-            $network = $ipUint -band $mask
-            $script:ParsedVpnNetworks.Add(@{ Network = $network; Mask = $mask })
-        } catch { }
+        $parsed = ConvertTo-ParsedCidr -Cidr $cidr
+        if ($parsed) { $script:ParsedVpnNetworks.Add($parsed) }
     }
     foreach ($cidr in $script:VpnTorProxies.proxy_service_cidrs) {
-        $parts = $cidr -split '/'
-        try {
-            $ipBytes = [System.Net.IPAddress]::Parse($parts[0]).GetAddressBytes()
-            $prefix = [int]$parts[1]
-            $ipUint = ([uint32]$ipBytes[0] -shl 24) -bor ([uint32]$ipBytes[1] -shl 16) -bor ([uint32]$ipBytes[2] -shl 8) -bor [uint32]$ipBytes[3]
-            $mask = if ($prefix -eq 0) { [uint32]0 } else { [uint32]::MaxValue -shl (32 - $prefix) }
-            $network = $ipUint -band $mask
-            $script:ParsedProxyNetworks.Add(@{ Network = $network; Mask = $mask })
-        } catch { }
+        $parsed = ConvertTo-ParsedCidr -Cidr $cidr
+        if ($parsed) { $script:ParsedProxyNetworks.Add($parsed) }
     }
     foreach ($ip in $script:VpnTorProxies.tor_exit_nodes) {
         [void]$script:TorExitNodes.Add($ip)
@@ -131,6 +133,20 @@ foreach ($file in Get-ChildItem -Path (Join-Path $ModuleRoot 'Public') -Filter '
 # IP classification cache (reset per module load)
 $script:IpClassCache = @{}
 $script:GeoCache = @{}
+
+# --- Color palette ---
+# Defined once in module scope so per-file color blocks all point at the same
+# palette. Change a shade here and every cmdlet picks it up automatically.
+$script:Palette = @{
+    Amber     = $PSStyle.Foreground.FromRgb(0xC6, 0x7A, 0x1F)
+    Khaki     = $PSStyle.Foreground.FromRgb(0xB8, 0xA9, 0x7E)
+    Gray      = $PSStyle.Foreground.FromRgb(0x8B, 0x8B, 0x7A)
+    Sage      = $PSStyle.Foreground.FromRgb(0x6B, 0x8E, 0x6B)
+    Parchment = $PSStyle.Foreground.FromRgb(0xF5, 0xF0, 0xE6)
+    Gold      = $PSStyle.Foreground.FromRgb(0xD4, 0xA8, 0x43)
+    Red       = $PSStyle.Foreground.FromRgb(0xCC, 0x55, 0x55)
+    Reset     = $PSStyle.Reset
+}
 
 # --- Spectre.Console capability detection ---
 Initialize-SpectreCapability
@@ -170,7 +186,11 @@ foreach ($old in $aliasMap.Keys) {
     Export-ModuleMember -Alias $old
 }
 
-# Test mode: export all functions (including private) for unit testing
+# Pester test hatch: Tests\Helpers\TestHelpers.psm1 sets PSGUERRILLA_TEST=1 before
+# Import-Module so existing tests can call private functions directly without
+# having to wrap every assertion in `InModuleScope PSGuerrilla { ... }`. New tests
+# should prefer InModuleScope and avoid relying on this. End-user code must NOT
+# set this variable — it intentionally widens the public API surface.
 if ($env:PSGUERRILLA_TEST -eq '1') {
     Export-ModuleMember -Function *
 }
