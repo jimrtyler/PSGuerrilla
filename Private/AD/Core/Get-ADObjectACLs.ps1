@@ -213,10 +213,10 @@ function Get-ADObjectACLs {
     Write-Verbose 'Reading ms-DS-MachineAccountQuota from domain root...'
     try {
         $domainRoot = New-LdapSearchRoot -Connection $Connection -SearchBase $Connection.DomainDN
-        $maqResults = Invoke-LdapQuery -SearchRoot $domainRoot `
+        $maqResults = @(Invoke-LdapQuery -SearchRoot $domainRoot `
             -Filter '(objectClass=domainDNS)' `
             -Properties @('ms-DS-MachineAccountQuota') `
-            -Scope Base
+            -Scope Base)
 
         if ($maqResults.Count -gt 0) {
             $result.MachineAccountQuota = [int]($maqResults[0]['ms-ds-machineaccountquota'] ?? 10)

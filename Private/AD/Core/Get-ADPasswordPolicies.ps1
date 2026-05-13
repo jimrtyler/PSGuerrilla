@@ -44,14 +44,16 @@ function Get-ADPasswordPolicies {
     Write-Verbose 'Reading default domain password policy from domain root object...'
     try {
         $domainRoot = New-LdapSearchRoot -Connection $Connection -SearchBase $Connection.DomainDN
-        $domainProps = Invoke-LdapQuery -SearchRoot $domainRoot `
+        # @(...) forces array context — Base-scope queries return a single hashtable
+        # that PowerShell would otherwise unwrap, breaking the .Count / [0] access below.
+        $domainProps = @(Invoke-LdapQuery -SearchRoot $domainRoot `
             -Filter '(objectClass=domainDNS)' `
             -Properties @(
                 'minPwdLength', 'pwdProperties', 'pwdHistoryLength',
                 'maxPwdAge', 'minPwdAge', 'lockoutThreshold',
                 'lockoutDuration', 'lockOutObservationWindow'
             ) `
-            -Scope Base
+            -Scope Base)
 
         if ($domainProps.Count -gt 0) {
             $dp = $domainProps[0]
@@ -166,20 +168,20 @@ function Get-ADPasswordPolicies {
         $hasWindowsLAPS = $false
 
         # Check for legacy LAPS (ms-Mcs-AdmPwd)
-        $legacyCheck = Invoke-LdapQuery -SearchRoot $schemaRoot `
+        $legacyCheck = @(Invoke-LdapQuery -SearchRoot $schemaRoot `
             -Filter '(&(objectClass=attributeSchema)(lDAPDisplayName=ms-Mcs-AdmPwd))' `
             -Properties @('lDAPDisplayName') `
-            -SizeLimit 1
+            -SizeLimit 1)
         if ($legacyCheck.Count -gt 0) {
             $hasLegacyLAPS = $true
             Write-Verbose 'Legacy LAPS schema attribute (ms-Mcs-AdmPwd) found.'
         }
 
         # Check for Windows LAPS (msLAPS-Password)
-        $windowsCheck = Invoke-LdapQuery -SearchRoot $schemaRoot `
+        $windowsCheck = @(Invoke-LdapQuery -SearchRoot $schemaRoot `
             -Filter '(&(objectClass=attributeSchema)(lDAPDisplayName=msLAPS-Password))' `
             -Properties @('lDAPDisplayName') `
-            -SizeLimit 1
+            -SizeLimit 1)
         if ($windowsCheck.Count -gt 0) {
             $hasWindowsLAPS = $true
             Write-Verbose 'Windows LAPS schema attribute (msLAPS-Password) found.'

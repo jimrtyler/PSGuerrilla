@@ -72,10 +72,10 @@ function Get-ADPrivilegedMembers {
             $sidObj = New-Object System.Security.Principal.SecurityIdentifier($SidString)
             $sidBytes = $sidObj.GetSidBytes()
             $escapedSid = ($sidBytes | ForEach-Object { '\' + $_.ToString('x2') }) -join ''
-            $results = Invoke-LdapQuery -SearchRoot $SearchRoot `
+            $results = @(Invoke-LdapQuery -SearchRoot $SearchRoot `
                 -Filter "(objectSid=$escapedSid)" `
                 -Properties @('distinguishedName', 'cn', 'sAMAccountName') `
-                -SizeLimit 1
+                -SizeLimit 1)
             if ($results.Count -gt 0) {
                 return $results[0]
             }
@@ -89,10 +89,10 @@ function Get-ADPrivilegedMembers {
     $findGroupByName = {
         param([string]$GroupName, [System.DirectoryServices.DirectoryEntry]$SearchRoot)
         try {
-            $results = Invoke-LdapQuery -SearchRoot $SearchRoot `
+            $results = @(Invoke-LdapQuery -SearchRoot $SearchRoot `
                 -Filter "(&(objectClass=group)(sAMAccountName=$GroupName))" `
                 -Properties @('distinguishedName', 'cn', 'sAMAccountName') `
-                -SizeLimit 1
+                -SizeLimit 1)
             if ($results.Count -gt 0) {
                 return $results[0]
             }
@@ -308,10 +308,10 @@ function Get-ADPrivilegedMembers {
     try {
         $adminSDHolderDN = "CN=AdminSDHolder,CN=System,$domainDN"
         $adminSDRoot = New-LdapSearchRoot -Connection $Connection -SearchBase $adminSDHolderDN
-        $adminSDResults = Invoke-LdapQuery -SearchRoot $adminSDRoot `
+        $adminSDResults = @(Invoke-LdapQuery -SearchRoot $adminSDRoot `
             -Filter '(objectClass=container)' `
             -Properties @('ntSecurityDescriptor') `
-            -Scope Base
+            -Scope Base)
 
         if ($adminSDResults.Count -gt 0 -and $adminSDResults[0].ContainsKey('ntsecuritydescriptor')) {
             $sdBytes = $adminSDResults[0]['ntsecuritydescriptor']
@@ -405,14 +405,14 @@ function Get-ADPrivilegedMembers {
 
     try {
         $krbtgtRoot = New-LdapSearchRoot -Connection $Connection -SearchBase $domainDN
-        $krbtgtResults = Invoke-LdapQuery -SearchRoot $krbtgtRoot `
+        $krbtgtResults = @(Invoke-LdapQuery -SearchRoot $krbtgtRoot `
             -Filter '(&(objectClass=user)(sAMAccountName=krbtgt))' `
             -Properties @(
                 'sAMAccountName', 'distinguishedName', 'objectSid',
                 'pwdLastSet', 'whenCreated', 'whenChanged',
                 'userAccountControl', 'msDS-KeyVersionNumber'
             ) `
-            -SizeLimit 1
+            -SizeLimit 1)
 
         if ($krbtgtResults.Count -gt 0) {
             $k = $krbtgtResults[0]

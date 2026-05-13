@@ -109,10 +109,10 @@ function Get-ADDomainInfo {
 
     try {
         $schemaRoot = New-LdapSearchRoot -Connection $Connection -SearchBase $schemaDN
-        $schemaResults = Invoke-LdapQuery -SearchRoot $schemaRoot `
+        $schemaResults = @(Invoke-LdapQuery -SearchRoot $schemaRoot `
             -Filter '(objectClass=dMD)' `
             -Properties @('objectVersion') `
-            -Scope Base
+            -Scope Base)
 
         if ($schemaResults.Count -gt 0 -and $schemaResults[0].ContainsKey('objectversion')) {
             $result.SchemaVersion = [int]$schemaResults[0]['objectversion']
@@ -140,10 +140,10 @@ function Get-ADDomainInfo {
 
     try {
         $domainRoot = New-LdapSearchRoot -Connection $Connection -SearchBase $domainDN
-        $domainObj = Invoke-LdapQuery -SearchRoot $domainRoot `
+        $domainObj = @(Invoke-LdapQuery -SearchRoot $domainRoot `
             -Filter '(objectClass=domainDNS)' `
             -Properties @('objectSid') `
-            -Scope Base
+            -Scope Base)
 
         if ($domainObj.Count -gt 0 -and $domainObj[0].ContainsKey('objectsid')) {
             $result.DomainSID = $domainObj[0]['objectsid']
@@ -333,10 +333,10 @@ function Get-ADDomainInfo {
     # Schema Master — fSMORoleOwner on the Schema container
     try {
         $schemaRoot2 = New-LdapSearchRoot -Connection $Connection -SearchBase $schemaDN
-        $schemaFsmo = Invoke-LdapQuery -SearchRoot $schemaRoot2 `
+        $schemaFsmo = @(Invoke-LdapQuery -SearchRoot $schemaRoot2 `
             -Filter '(objectClass=dMD)' `
             -Properties @('fSMORoleOwner') `
-            -Scope Base
+            -Scope Base)
 
         if ($schemaFsmo.Count -gt 0 -and $schemaFsmo[0].ContainsKey('fsmoroleowner')) {
             $result.FSMORoles.SchemaMaster = & $extractServerFromNtds $schemaFsmo[0]['fsmoroleowner']
@@ -350,10 +350,10 @@ function Get-ADDomainInfo {
     try {
         $partitionsDN = "CN=Partitions,$configDN"
         $partitionsRoot = New-LdapSearchRoot -Connection $Connection -SearchBase $partitionsDN
-        $partitionsFsmo = Invoke-LdapQuery -SearchRoot $partitionsRoot `
+        $partitionsFsmo = @(Invoke-LdapQuery -SearchRoot $partitionsRoot `
             -Filter '(objectClass=crossRefContainer)' `
             -Properties @('fSMORoleOwner') `
-            -Scope Base
+            -Scope Base)
 
         if ($partitionsFsmo.Count -gt 0 -and $partitionsFsmo[0].ContainsKey('fsmoroleowner')) {
             $result.FSMORoles.DomainNamingMaster = & $extractServerFromNtds $partitionsFsmo[0]['fsmoroleowner']
@@ -366,10 +366,10 @@ function Get-ADDomainInfo {
     # PDC Emulator, RID Master, Infrastructure Master — fSMORoleOwner on the domain head
     try {
         $domainHeadRoot = New-LdapSearchRoot -Connection $Connection -SearchBase $domainDN
-        $domainHeadFsmo = Invoke-LdapQuery -SearchRoot $domainHeadRoot `
+        $domainHeadFsmo = @(Invoke-LdapQuery -SearchRoot $domainHeadRoot `
             -Filter '(objectClass=domainDNS)' `
             -Properties @('fSMORoleOwner') `
-            -Scope Base
+            -Scope Base)
 
         if ($domainHeadFsmo.Count -gt 0 -and $domainHeadFsmo[0].ContainsKey('fsmoroleowner')) {
             $result.FSMORoles.PDCEmulator = & $extractServerFromNtds $domainHeadFsmo[0]['fsmoroleowner']
@@ -383,10 +383,10 @@ function Get-ADDomainInfo {
     try {
         $ridManagerDN = "CN=RID Manager`$,CN=System,$domainDN"
         $ridRoot = New-LdapSearchRoot -Connection $Connection -SearchBase $ridManagerDN
-        $ridFsmo = Invoke-LdapQuery -SearchRoot $ridRoot `
+        $ridFsmo = @(Invoke-LdapQuery -SearchRoot $ridRoot `
             -Filter '(objectClass=rIDManager)' `
             -Properties @('fSMORoleOwner') `
-            -Scope Base
+            -Scope Base)
 
         if ($ridFsmo.Count -gt 0 -and $ridFsmo[0].ContainsKey('fsmoroleowner')) {
             $result.FSMORoles.RIDMaster = & $extractServerFromNtds $ridFsmo[0]['fsmoroleowner']
@@ -400,10 +400,10 @@ function Get-ADDomainInfo {
     try {
         $infraDN = "CN=Infrastructure,$domainDN"
         $infraRoot = New-LdapSearchRoot -Connection $Connection -SearchBase $infraDN
-        $infraFsmo = Invoke-LdapQuery -SearchRoot $infraRoot `
+        $infraFsmo = @(Invoke-LdapQuery -SearchRoot $infraRoot `
             -Filter '(objectClass=infrastructureUpdate)' `
             -Properties @('fSMORoleOwner') `
-            -Scope Base
+            -Scope Base)
 
         if ($infraFsmo.Count -gt 0 -and $infraFsmo[0].ContainsKey('fsmoroleowner')) {
             $result.FSMORoles.InfrastructureMaster = & $extractServerFromNtds $infraFsmo[0]['fsmoroleowner']

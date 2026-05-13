@@ -291,7 +291,15 @@ function Export-ReconnaissanceReportHtml {
         $arrow = if ($Delta.ScoreChange -gt 0) { "<span class='delta-arrow-up'>&#9650; +$($Delta.ScoreChange)</span>" }
                  elseif ($Delta.ScoreChange -lt 0) { "<span class='delta-arrow-down'>&#9660; $($Delta.ScoreChange)</span>" }
                  else { "<span style='color:var(--dim)'>&#9654; No change</span>" }
-        $prevDate = if ($Delta.PreviousScanTimestamp) { $Delta.PreviousScanTimestamp.Substring(0, 19) } else { 'Unknown' }
+        $prevDate = if ($Delta.PreviousScanTimestamp) {
+            $ts = $Delta.PreviousScanTimestamp
+            if ($ts -is [datetime]) {
+                $ts.ToString('yyyy-MM-ddTHH:mm:ss')
+            } else {
+                $s = "$ts"
+                if ($s.Length -ge 19) { $s.Substring(0, 19) } else { $s }
+            }
+        } else { 'Unknown' }
         [void]$html.Append(@"
 <div class="delta-section">
   <h3>Change Since Previous Scan</h3>
