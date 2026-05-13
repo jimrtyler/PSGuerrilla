@@ -35,6 +35,7 @@ function Get-ReconnaissanceData {
         Network             = @('NetworkConfig')
         TierZero            = @('PrivilegedMembers', 'TierZeroSignals')
         Logging             = @('NetworkConfig')
+        Tradecraft          = @('DomainControllers', 'TradecraftSignals')
     }
 
     # Resolve which data sources are required
@@ -74,6 +75,7 @@ function Get-ReconnaissanceData {
         StaleObjects        = $null
         Network             = $null
         TierZero            = $null
+        Tradecraft          = $null
         ModuleAvailability  = $null
         Connection          = $Connection
         Errors              = @{}
@@ -256,7 +258,20 @@ function Get-ReconnaissanceData {
         }
     }
 
-    # ── 14. Stale Objects ────────────────────────────────────────────────
+    # ── 14. Tradecraft signals (cpassword, DCShadow, BitLocker, RODC) ────
+    if (& $needsSource 'TradecraftSignals') {
+        if (-not $Quiet) {
+            Write-ProgressLine -Phase RECON -Message 'Scanning for adversary-tradecraft signals'
+        }
+        try {
+            $data.Tradecraft = Get-ADTradecraftSignals -Connection $Connection -Quiet:$Quiet
+        } catch {
+            Write-Warning "Tradecraft signal collection failed: $_"
+            $data.Errors['TradecraftSignals'] = $_.Exception.Message
+        }
+    }
+
+    # ── 15. Stale Objects ────────────────────────────────────────────────
     if (& $needsSource 'StaleObjects') {
         if (-not $Quiet) {
             Write-ProgressLine -Phase RECON -Message 'Identifying stale and abandoned objects'
@@ -280,7 +295,7 @@ function Get-ReconnaissanceData {
 
         foreach ($key in @('Domain', 'DomainControllers', 'Trusts', 'PrivilegedAccounts',
                            'PasswordPolicies', 'Kerberos', 'ACLs', 'GroupPolicies',
-                           'LogonScripts', 'CertificateServices', 'StaleObjects', 'Network', 'TierZero')) {
+                           'LogonScripts', 'CertificateServices', 'StaleObjects', 'Network', 'TierZero', 'Tradecraft')) {
             if ($null -ne $data[$key]) {
                 $collectedCount++
             } elseif ($requiredSources.Count -gt 0) {
@@ -299,6 +314,7 @@ function Get-ReconnaissanceData {
                     StaleObjects       = 'StaleObjects'
                     Network            = 'NetworkConfig'
                     TierZero           = 'TierZeroSignals'
+                    Tradecraft         = 'TradecraftSignals'
                 }
                 if ($sourceMapping.ContainsKey($key) -and $requiredSources.Contains($sourceMapping[$key])) {
                     $nullKeys.Add($key)

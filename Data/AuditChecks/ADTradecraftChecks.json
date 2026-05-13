@@ -1,0 +1,63 @@
+{
+  "categoryId": "adtrade",
+  "categoryName": "AD Adversary Tradecraft Indicators",
+  "categoryDescription": "Combines high-signal state-actor and red-team TTPs that are detectable from LDAP + SYSVOL without endpoint visibility. The GPP cpassword scan is the single highest-ROI check in this module — it routinely finds cleartext-recoverable admin credentials in environments that were upgraded from pre-2014 GPP. DCShadow indicator surfaces rogue server objects in the configuration partition. BitLocker recovery key staleness flags keys for retired computers that are still queryable.",
+  "checks": [
+    {
+      "id": "ADTRADE-001",
+      "name": "Group Policy Preferences cpassword Leftovers in SYSVOL",
+      "description": "From 2008 to May 2014, Group Policy Preferences let admins push scheduled tasks, local user passwords, mapped drives, and services using a 'cpassword' field — encrypted with an AES-256 key Microsoft publicly documented. The fix in MS14-025 disabled the cpassword field in NEW preferences but left existing ones in SYSVOL untouched. Every red-team engagement still finds these. Any authenticated domain user can read SYSVOL, grab the cpassword, and decrypt it offline. If you find anything here, treat every credential exposed as compromised and rotate it.",
+      "severity": "Critical",
+      "subcategory": "Legacy Credential Exposure",
+      "recommendedValue": "Zero cpassword attributes anywhere under \\\\domain\\SYSVOL\\domain\\Policies\\**\\*.xml.",
+      "remediationSteps": "Scan SYSVOL: Get-ChildItem -Path \\\\<domain>\\SYSVOL\\<domain>\\Policies -Recurse -Include *.xml | Select-String 'cpassword'. For each match: (1) rotate the password of the account whose credential is exposed (the username is in the same XML), (2) audit logs for use of that credential since the preference was created, (3) delete the GPP preference once the new credential is in place. Microsoft's KB2962486 has the cleanup guidance.",
+      "compliance": {
+        "nistSp80053": ["IA-5", "AC-6"],
+        "mitreAttack": ["T1552.006"],
+        "cisAd": ["10.1.1"]
+      }
+    },
+    {
+      "id": "ADTRADE-002",
+      "name": "DCShadow Indicator (Rogue Configuration-Partition Servers)",
+      "description": "DCShadow (Vincent LE TOUX / Benjamin Delpy, BlueHat IL 2018) registers an attacker-controlled host as a domain controller by writing nTDSDSA + server objects under CN=Sites,CN=Configuration. The fake DC is then used to inject malicious replication data (SID history, password hashes) without ever being a real DC. Defenders almost never check the configuration partition for new server objects — it's one of the highest-confidence persistence signals available from LDAP.",
+      "severity": "Critical",
+      "subcategory": "Persistence",
+      "recommendedValue": "All server objects under CN=Sites,CN=Configuration correspond to real, inventoried domain controllers. No recently created server objects that don't match a known DC.",
+      "remediationSteps": "Enumerate: Get-ADObject -Filter {objectClass -eq 'server'} -SearchBase \"CN=Sites,$((Get-ADRootDSE).configurationNamingContext)\" -Properties whenCreated, dNSHostName | Sort whenCreated. Cross-reference with your DC inventory (Get-ADDomainController -Filter *). Any server object not matching a real DC, especially recently created, demands immediate IR — DCShadow is a domain-takeover-grade primitive. Monitor for 5137 / 5141 events on schema container as a detection-time signal.",
+      "compliance": {
+        "nistSp80053": ["SI-4", "AU-12"],
+        "mitreAttack": ["T1207"],
+        "cisAd": ["10.2.1"]
+      }
+    },
+    {
+      "id": "ADTRADE-003",
+      "name": "Stale BitLocker Recovery Keys",
+      "description": "BitLocker recovery keys are stored in AD as msFVE-RecoveryInformation child objects of the computer that backed them up. When a computer is decommissioned but the AD object is left dangling, the recovery keys remain queryable by anyone with BitLocker recovery rights — typically a wider group than 'Tier-0'. Stale keys mean disposed drives are decryptable if recovered from a refurbisher or trash bin.",
+      "severity": "Medium",
+      "subcategory": "Data Recovery Exposure",
+      "recommendedValue": "All msFVE-RecoveryInformation objects belong to computers active in the last 90 days. No keys orphaned to disabled or recently-modified-then-stale computer accounts.",
+      "remediationSteps": "Enumerate recovery information: Get-ADObject -Filter {objectClass -eq 'msFVE-RecoveryInformation'} -Properties whenCreated. For each, walk up to the parent computer object and check its lastLogonTimestamp / Enabled. For computers inactive >90 days: confirm the drive has been wiped or destroyed, then delete the AD computer object (which cascades the recovery info). For computers actively in use but with very old recovery keys: rotate via Backup-BitLockerKeyProtector. Verify that the BitLocker recovery group has tight membership.",
+      "compliance": {
+        "nistSp80053": ["AC-6", "MP-6"],
+        "mitreAttack": ["T1552"],
+        "cisAd": ["10.3.1"]
+      }
+    },
+    {
+      "id": "ADTRADE-004",
+      "name": "RODC Password Replication Policy Hygiene",
+      "description": "Read-Only Domain Controllers cache passwords for the principals listed in their Password Replication Policy (PRP). If a Tier-0 account (Domain Admin, Enterprise Admin, krbtgt) is reachable by an RODC's PRP — directly or via group nesting — compromising the RODC compromises those accounts. The default 'Denied RODC Password Replication Group' should explicitly contain DA / EA / SA / Schema Admins / krbtgt; some environments customize the policy and accidentally remove those denials.",
+      "severity": "High",
+      "subcategory": "RODC Hygiene",
+      "recommendedValue": "All RODCs in the domain have a Password Replication Policy where Domain Admins, Enterprise Admins, Schema Admins, krbtgt, and Account Operators are members of the Deny side. No high-privileged accounts are members of the Allow side.",
+      "remediationSteps": "For each RODC: Get-ADDomainController -Filter {IsReadOnly -eq $true} | ForEach-Object { Get-ADDomainControllerPasswordReplicationPolicy -Identity $_ -Allowed; Get-ADDomainControllerPasswordReplicationPolicy -Identity $_ -Denied }. Verify the Denied list contains the 'Denied RODC Password Replication Group' built-in. If your environment has no RODCs this check is N/A — PASS. Microsoft's RODC planning guide has the canonical PRP template.",
+      "compliance": {
+        "nistSp80053": ["AC-6"],
+        "mitreAttack": ["T1003.001"],
+        "cisAd": ["10.4.1"]
+      }
+    }
+  ]
+}
