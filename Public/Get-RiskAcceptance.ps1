@@ -53,7 +53,7 @@ function Get-RiskAcceptance {
     $riskPath = if ($ConfigPath) {
         $ConfigPath
     } else {
-        Join-Path $env:APPDATA 'PSGuerrilla/risk-acceptance.json'
+        Join-Path (Get-PSGuerrillaDataRoot) 'risk-acceptance.json'
     }
 
     if (-not (Test-Path $riskPath)) {

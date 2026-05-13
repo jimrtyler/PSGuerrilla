@@ -24,8 +24,12 @@ function Initialize-ConfigMigration {
     [CmdletBinding()]
     param()
 
+    # PSRecon was Windows-only — no migration source can possibly exist on other OSes.
+    $onWindows = if (Test-Path variable:IsWindows) { $IsWindows } else { $true }
+    if (-not $onWindows) { return }
+
     $oldDir = Join-Path $env:APPDATA 'PSRecon'
-    $newDir = Join-Path $env:APPDATA 'PSGuerrilla'
+    $newDir = Get-PSGuerrillaDataRoot
 
     # Skip if old dir doesn't exist or new dir already has config
     if (-not (Test-Path $oldDir)) { return }

@@ -30,7 +30,8 @@ function Get-Safehouse {
         Use Set-Safehouse -Status for a formatted vault status display.
 
     .PARAMETER ConfigPath
-        Path to the PSGuerrilla runtime config file. Default: $env:APPDATA\PSGuerrilla\config.json
+        Path to the PSGuerrilla runtime config file. Default: per-user data dir + \PSGuerrilla\config.json
+        (Windows: $env:APPDATA; macOS: ~/Library/Application Support; Linux: $XDG_CONFIG_HOME or ~/.config)
 
     .PARAMETER ShowSecrets
         Include secret values from the vault in the output (use with caution).

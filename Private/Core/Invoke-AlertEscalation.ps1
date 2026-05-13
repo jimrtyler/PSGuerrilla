@@ -77,7 +77,7 @@ function Invoke-AlertEscalation {
     $minOrdinal = $levelOrder[$threshold] ?? 3
 
     # Load alert history
-    $dataDir = Join-Path $env:APPDATA 'PSGuerrilla'
+    $dataDir = Get-PSGuerrillaDataRoot
     $historyPath = Join-Path $dataDir 'alert-history.json'
     $history = @{}
     if (Test-Path $historyPath) {

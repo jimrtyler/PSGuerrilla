@@ -96,7 +96,7 @@ function Invoke-Watchtower {
     # Resolve output directory
     $outDir = if ($OutputDirectory) { $OutputDirectory }
               elseif ($config -and $config.ContainsKey('output') -and $config.output.directory) { $config.output.directory }
-              else { Join-Path $env:APPDATA 'PSGuerrilla/Reports' }
+              else { Join-Path (Get-PSGuerrillaDataRoot) 'Reports' }
 
     if (-not (Test-Path $outDir)) {
         New-Item -Path $outDir -ItemType Directory -Force | Out-Null

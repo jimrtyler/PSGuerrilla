@@ -81,7 +81,7 @@ function Invoke-Reconnaissance {
 
     $outDir = if ($OutputDirectory) { $OutputDirectory }
               elseif ($config -and $config.output.directory) { $config.output.directory }
-              else { Join-Path $env:APPDATA 'PSGuerrilla/Reports' }
+              else { Join-Path (Get-PSGuerrillaDataRoot) 'Reports' }
 
     # --- Operation header ---
     if (-not $Quiet) {

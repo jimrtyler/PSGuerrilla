@@ -88,7 +88,7 @@ function Get-GuerrillaScore {
     }
 
     # Load state data if not provided
-    $dataDir = Join-Path $env:APPDATA 'PSGuerrilla'
+    $dataDir = Get-PSGuerrillaDataRoot
 
     if (-not $AuditFindings) {
         # Try to load from latest state files

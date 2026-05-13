@@ -345,7 +345,7 @@ function Set-Safehouse {
             } else {
                 $config = @{
                     output = @{
-                        directory    = Join-Path $env:APPDATA 'PSGuerrilla/Reports'
+                        directory    = Join-Path (Get-PSGuerrillaDataRoot) 'Reports'
                         generateCsv  = $true
                         generateHtml = $true
                         generateJson = $true

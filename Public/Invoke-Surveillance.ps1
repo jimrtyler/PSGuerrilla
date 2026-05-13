@@ -59,7 +59,8 @@ function Invoke-Surveillance {
         Full: All three endpoints including directory audits. Default: Fast.
 
     .PARAMETER OutputDirectory
-        Directory for report output. Default: $env:APPDATA/PSGuerrilla/Reports
+        Directory for report output. Default: per-user data dir + /PSGuerrilla/Reports
+        (Windows: $env:APPDATA; macOS: ~/Library/Application Support; Linux: $XDG_CONFIG_HOME or ~/.config)
 
     .PARAMETER Force
         Force a full rescan ignoring the watermark from previous runs.
@@ -193,7 +194,7 @@ function Invoke-Surveillance {
             else { 'Fast' }
     $outDir = if ($OutputDirectory) { $OutputDirectory }
               elseif ($config -and $config.output.directory) { $config.output.directory }
-              else { Join-Path $env:APPDATA 'PSGuerrilla/Reports' }
+              else { Join-Path (Get-PSGuerrillaDataRoot) 'Reports' }
 
     # Validate required parameters
     if (-not $tenantId) { throw 'TenantId is required. Provide it as a parameter or set entra.tenantId in config.' }

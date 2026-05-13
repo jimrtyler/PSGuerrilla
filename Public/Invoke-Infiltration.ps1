@@ -53,7 +53,8 @@ function Invoke-Infiltration {
         Use device code flow for interactive authentication.
 
     .PARAMETER OutputDirectory
-        Directory for report output. Default: $env:APPDATA/PSGuerrilla/Reports
+        Directory for report output. Default: per-user data dir + /PSGuerrilla/Reports
+        (Windows: $env:APPDATA; macOS: ~/Library/Application Support; Linux: $XDG_CONFIG_HOME or ~/.config)
 
     .PARAMETER NoReports
         Skip report generation.
@@ -165,7 +166,7 @@ function Invoke-Infiltration {
 
     $outDir = if ($OutputDirectory) { $OutputDirectory }
               elseif ($config -and $config.output.directory) { $config.output.directory }
-              else { Join-Path $env:APPDATA 'PSGuerrilla/Reports' }
+              else { Join-Path (Get-PSGuerrillaDataRoot) 'Reports' }
 
     # Merge TenantId / ClientId from config.json if not already set
     if (-not $TenantId -and $config -and $config.entra.tenantId) {

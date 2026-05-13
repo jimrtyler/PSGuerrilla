@@ -47,7 +47,7 @@ function Export-Dashboard {
 
     if (-not $OutputPath) { $OutputPath = Join-Path (Get-Location) 'PSGuerrilla-Dashboard.html' }
 
-    $dataDir = Join-Path $env:APPDATA 'PSGuerrilla'
+    $dataDir = Get-PSGuerrillaDataRoot
 
     # Load findings if not provided
     if (-not $Findings -or $Findings.Count -eq 0) {

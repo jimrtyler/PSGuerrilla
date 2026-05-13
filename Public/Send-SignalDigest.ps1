@@ -67,7 +67,7 @@ function Send-SignalDigest {
         }
     }
 
-    $dataDir = Join-Path $env:APPDATA 'PSGuerrilla'
+    $dataDir = Get-PSGuerrillaDataRoot
     $digestHistoryPath = Join-Path $dataDir 'digest-history.json'
 
     # Check if digest interval has elapsed

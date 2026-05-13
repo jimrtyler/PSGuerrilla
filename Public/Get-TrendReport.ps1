@@ -59,11 +59,11 @@ function Get-TrendReport {
     $historyPath = if ($ConfigPath) {
         $ConfigPath
     } else {
-        Join-Path $env:APPDATA 'PSGuerrilla/score-trend-history.json'
+        Join-Path (Get-PSGuerrillaDataRoot) 'score-trend-history.json'
     }
 
     # Also check the single-entry score history file
-    $singleHistoryPath = Join-Path $env:APPDATA 'PSGuerrilla/guerrilla-score-history.json'
+    $singleHistoryPath = Join-Path (Get-PSGuerrillaDataRoot) 'guerrilla-score-history.json'
 
     $history = @()
 

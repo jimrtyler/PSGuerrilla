@@ -27,7 +27,7 @@ function Invoke-ReconDemo {
     )
 
     if (-not $OutputPath) {
-        $outDir = Join-Path $env:APPDATA 'PSGuerrilla/Reports'
+        $outDir = Join-Path (Get-PSGuerrillaDataRoot) 'Reports'
         if (-not (Test-Path $outDir)) { New-Item -Path $outDir -ItemType Directory -Force | Out-Null }
         $OutputPath = Join-Path $outDir "demo_field_report_$(Get-Date -Format 'yyyyMMdd_HHmmss').html"
     }

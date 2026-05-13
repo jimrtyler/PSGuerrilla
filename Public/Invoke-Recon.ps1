@@ -99,7 +99,7 @@ function Invoke-Recon {
                 else { 'Fast' }
     $outDir   = if ($OutputDirectory) { $OutputDirectory }
                 elseif ($config -and $config.output.directory) { $config.output.directory }
-                else { Join-Path $env:APPDATA 'PSGuerrilla/Reports' }
+                else { Join-Path (Get-PSGuerrillaDataRoot) 'Reports' }
 
     # Validate required parameters
     if (-not $keyPath) { throw 'ServiceAccountKeyPath is required. Provide it as a parameter or set it in config.' }

@@ -61,7 +61,8 @@ function Invoke-Campaign {
         Use device code flow for Entra interactive auth.
 
     .PARAMETER OutputDirectory
-        Directory for report output. Default: $env:APPDATA/PSGuerrilla/Reports
+        Directory for report output. Default: per-user data dir + /PSGuerrilla/Reports
+        (Windows: $env:APPDATA; macOS: ~/Library/Application Support; Linux: $XDG_CONFIG_HOME or ~/.config)
 
     .PARAMETER NoDelta
         Skip delta comparison with previous scan.
@@ -189,7 +190,7 @@ function Invoke-Campaign {
 
     $outDir = if ($OutputDirectory) { $OutputDirectory }
               elseif ($config -and $config.output.directory) { $config.output.directory }
-              else { Join-Path $env:APPDATA 'PSGuerrilla/Reports' }
+              else { Join-Path (Get-PSGuerrillaDataRoot) 'Reports' }
 
     # --- Auto-detect theaters from provided credentials ---
     if (-not $Theaters) {

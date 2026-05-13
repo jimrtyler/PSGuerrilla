@@ -49,7 +49,7 @@ function Export-TechnicalReport {
 
     if (-not $OutputPath) { $OutputPath = Join-Path (Get-Location) 'PSGuerrilla-Technical-Report.html' }
 
-    $dataDir = Join-Path $env:APPDATA 'PSGuerrilla'
+    $dataDir = Get-PSGuerrillaDataRoot
     if (-not $Findings -or $Findings.Count -eq 0) {
         if (Test-Path $dataDir) {
             foreach ($f in (Get-ChildItem -Path $dataDir -Filter '*.findings.json' -ErrorAction SilentlyContinue)) {

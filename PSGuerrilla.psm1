@@ -1,5 +1,36 @@
 $ModuleRoot = $PSScriptRoot
 
+function Get-PSGuerrillaDataRoot {
+    <#
+    .SYNOPSIS
+        Returns the per-user data root directory for PSGuerrilla on the current OS.
+    .DESCRIPTION
+        Windows : $env:APPDATA\PSGuerrilla
+        macOS   : ~/Library/Application Support/PSGuerrilla
+        Linux   : $XDG_CONFIG_HOME/PSGuerrilla, falling back to ~/.config/PSGuerrilla
+
+        Previously the module hardcoded $env:APPDATA everywhere, which is $null on
+        non-Windows — Join-Path silently returned a relative path and config/state
+        ended up in the current working directory instead of a user-data location.
+    #>
+    [CmdletBinding()]
+    param()
+
+    # $IsWindows is automatic in PowerShell 6+. Be defensive in case anyone ever
+    # imports this from Windows PowerShell 5.1 (where the var is undefined and
+    # everything is Windows anyway).
+    $onWindows = if (Test-Path variable:IsWindows) { $IsWindows } else { $true }
+
+    if ($onWindows) {
+        return Join-Path $env:APPDATA 'PSGuerrilla'
+    }
+    if ($IsMacOS) {
+        return Join-Path $HOME 'Library/Application Support/PSGuerrilla'
+    }
+    $base = if ($env:XDG_CONFIG_HOME) { $env:XDG_CONFIG_HOME } else { Join-Path $HOME '.config' }
+    return Join-Path $base 'PSGuerrilla'
+}
+
 # Load data files into script-scoped variables
 $script:CloudIpRanges = Get-Content -Path (Join-Path $ModuleRoot 'Data/CloudIpRanges.json') -Raw | ConvertFrom-Json
 $script:KnownAttackerIps = Get-Content -Path (Join-Path $ModuleRoot 'Data/KnownAttackerIps.json') -Raw | ConvertFrom-Json
@@ -85,7 +116,7 @@ foreach ($entry in $script:KnownAttackerIps.ips) {
 }
 
 # Config path
-$script:ConfigPath = Join-Path $env:APPDATA 'PSGuerrilla/config.json'
+$script:ConfigPath = Join-Path (Get-PSGuerrillaDataRoot) 'config.json'
 
 # Dot-source private functions (recursive to pick up subdirectories)
 foreach ($file in Get-ChildItem -Path (Join-Path $ModuleRoot 'Private') -Filter '*.ps1' -Recurse -ErrorAction SilentlyContinue) {
@@ -111,8 +142,6 @@ Initialize-ConfigMigration
 Write-GuerrillaBanner
 
 # --- Backward-compatibility aliases ---
-$script:DeprecationWarned = @{}
-
 $aliasMap = @{
     # PSRecon -> PSGuerrilla rename aliases
     'Invoke-GoogleRecon'           = 'Invoke-Recon'

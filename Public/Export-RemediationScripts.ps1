@@ -50,7 +50,7 @@ function Export-RemediationScripts {
 
     if (-not $OutputDirectory) { $OutputDirectory = Join-Path (Get-Location) 'PSGuerrilla-Remediation-Scripts' }
 
-    $dataDir = Join-Path $env:APPDATA 'PSGuerrilla'
+    $dataDir = Get-PSGuerrillaDataRoot
     if (-not $Findings -or $Findings.Count -eq 0) {
         if (Test-Path $dataDir) {
             foreach ($f in (Get-ChildItem -Path $dataDir -Filter '*.findings.json' -ErrorAction SilentlyContinue)) {

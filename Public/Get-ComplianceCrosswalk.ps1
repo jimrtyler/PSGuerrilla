@@ -63,7 +63,7 @@ function Get-ComplianceCrosswalk {
 
     # Load findings from state if not provided
     if (-not $Findings -or $Findings.Count -eq 0) {
-        $dataDir = Join-Path $env:APPDATA 'PSGuerrilla'
+        $dataDir = Get-PSGuerrillaDataRoot
         $findingsFiles = @()
         if (Test-Path $dataDir) {
             $findingsFiles = @(Get-ChildItem -Path $dataDir -Filter '*.findings.json' -ErrorAction SilentlyContinue)

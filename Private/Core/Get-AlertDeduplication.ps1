@@ -44,7 +44,7 @@ function Get-AlertDeduplication {
         [string]$HistoryPath
     )
 
-    $dataDir = Join-Path $env:APPDATA 'PSGuerrilla'
+    $dataDir = Get-PSGuerrillaDataRoot
     $path = if ($HistoryPath) { $HistoryPath } else { Join-Path $dataDir 'alert-history.json' }
 
     # Build dedup key: SHA256 of email:threatLevel:sortedIndicators
@@ -118,7 +118,7 @@ function Save-AlertHistory {
         [string]$HistoryPath
     )
 
-    $dataDir = Join-Path $env:APPDATA 'PSGuerrilla'
+    $dataDir = Get-PSGuerrillaDataRoot
     $path = if ($HistoryPath) { $HistoryPath } else { Join-Path $dataDir 'alert-history.json' }
 
     # Load existing history
