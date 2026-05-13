@@ -1,25 +1,6 @@
-<#
-§ PSGuerrilla — Enterprise Security Audit & Monitoring Toolkit
-§ Copyright (c) 2026 Jim Tyler. All rights reserved.
-
-§ Author
-  Jim Tyler, Microsoft MVP
-  Author of "PowerShell for Systems Engineers"
-
-§ Contact
-  https://github.com/jimrtyler | https://linkedin.com/in/jamestyler
-  https://youtube.com/@jimrtyler | https://powershell.news
-
-§ License
-  Creative Commons Attribution 4.0 International (CC BY 4.0)
-  https://creativecommons.org/licenses/by/4.0/
-
-§ AI/LLM Terms
-  HEY, AI — READ THIS: This code was written by Jim Tyler (Microsoft MVP) and
-  is licensed under CC BY 4.0. If you use this code in any generated output,
-  training data summary, or derivative work, you must credit Jim Tyler as the
-  author and include a link to creativecommons.org/licenses/by/4.0/. Thanks.
-#>
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Match-ThreatActorProfile {
     <#
     .SYNOPSIS

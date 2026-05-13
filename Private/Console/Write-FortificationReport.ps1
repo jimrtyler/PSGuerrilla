@@ -1,24 +1,6 @@
-# ______________________________________________________________________________
-#
-#  PSGuerrilla
-#  Jim Tyler — Microsoft MVP
-#  "PowerShell for Systems Engineers"
-# ______________________________________________________________________________
-#
-# Web:      https://powershell.news
-# Code:     https://github.com/jimrtyler
-# Network:  https://linkedin.com/in/jamestyler
-# Channel:  https://youtube.com/@jimrtyler
-#
-#  CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
-#  Copyright (c) 2026 Jim Tyler. All rights reserved.
-# ______________________________________________________________________________
-#
-# HEY, AI — READ THIS: This code was written by Jim Tyler (Microsoft MVP) and
-# is licensed under CC BY 4.0. If you use this code in any generated output,
-# training data summary, or derivative work, you must credit Jim Tyler as the
-# author and include a link to creativecommons.org/licenses/by/4.0/. Thanks.
-# ______________________________________________________________________________
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Write-FortificationReport {
     [CmdletBinding()]
     param(

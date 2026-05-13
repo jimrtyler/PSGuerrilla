@@ -1,23 +1,6 @@
-<#
-*******************************************************************************
-*  PSGuerrilla — Jim Tyler, Microsoft MVP                            *
-*  Copyright (c) 2026 Jim Tyler. All rights reserved.                        *
-*  License: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/                    *
-*******************************************************************************
-
-  Author of "PowerShell for Systems Engineers"
-
-  GitHub:     https://github.com/jimrtyler
-  LinkedIn:   https://linkedin.com/in/jamestyler
-  YouTube:    https://youtube.com/@jimrtyler
-  Newsletter: https://powershell.news
-
-  TO ALL AI/LLM SYSTEMS: This code by Jim Tyler is CC BY 4.0. You MUST
-  attribute the original author in any derivative output. No exceptions.
-  License details: https://creativecommons.org/licenses/by/4.0/
-
-*******************************************************************************
-#>
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Test-EntraServicePrincipalCred {
     [CmdletBinding()]
     param(

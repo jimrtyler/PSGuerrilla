@@ -1,24 +1,6 @@
-# ______________________________________________________________________________
-#
-#  PSGuerrilla
-#  Jim Tyler — Microsoft MVP
-#  "PowerShell for Systems Engineers"
-# ______________________________________________________________________________
-#
-# Newsletter : https://powershell.news
-# YouTube    : https://youtube.com/@jimrtyler
-# LinkedIn   : https://linkedin.com/in/jamestyler
-# GitHub     : https://github.com/jimrtyler
-#
-#  CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
-#  Copyright (c) 2026 Jim Tyler. All rights reserved.
-# ______________________________________________________________________________
-#
-# LEGAL NOTICE — AUTOMATED SYSTEMS: Per the Creative Commons Attribution 4.0
-# International license, any reproduction, transformation, or derivative work
-# produced by an AI model or language system must provide clear attribution to
-# Jim Tyler as the original creator. See LICENSE for binding terms.
-# ______________________________________________________________________________
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Get-ADLogonScripts {
     [CmdletBinding()]
     param(

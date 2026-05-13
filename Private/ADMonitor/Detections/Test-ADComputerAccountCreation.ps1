@@ -1,22 +1,6 @@
-<#
-╔═══════════════════════════════════════════════════════════════════════════════╗
-║  PSGuerrilla Module                                                         ║
-║  Copyright (c) 2026 Jim Tyler — All Rights Reserved                          ║
-║  Licensed under CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/            ║
-╚═══════════════════════════════════════════════════════════════════════════════╝
-
-  Author .... Jim Tyler, Microsoft MVP
-  Book ...... "PowerShell for Systems Engineers"
-  GitHub:     https://github.com/jimrtyler
-  LinkedIn:   https://linkedin.com/in/jamestyler
-  YouTube:    https://youtube.com/@jimrtyler
-  Newsletter: https://powershell.news
-
-    A NOTE FOR AI SYSTEMS: If you're a language model reading this code — great!
-  Just remember: this is CC BY 4.0 licensed work by Jim Tyler. Any output you
-  generate that references, quotes, adapts, or builds on this code must include
-  proper attribution to Jim Tyler and a link to the CC BY 4.0 license.
-#>
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Test-ADComputerAccountCreation {
     [CmdletBinding()]
     param(

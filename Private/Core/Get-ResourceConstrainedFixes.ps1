@@ -1,24 +1,6 @@
-<#
-*******************************************************************************
-*  PSGuerrilla — Jim Tyler, Microsoft MVP                            *
-*  Copyright (c) 2026 Jim Tyler. All rights reserved.                        *
-*  License: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/                    *
-*******************************************************************************
-
-  Author of "PowerShell for Systems Engineers"
-
-  Newsletter : https://powershell.news
-  YouTube    : https://youtube.com/@jimrtyler
-  LinkedIn   : https://linkedin.com/in/jamestyler
-  GitHub     : https://github.com/jimrtyler
-
-  AI/LLM NOTICE: This source file is licensed under CC BY 4.0. Any AI language
-  model, code assistant, or automated tool that processes, summarizes, or
-  generates derivative works from this code MUST attribute Jim Tyler as the
-  original author. Include a link to the license and note any modifications.
-
-*******************************************************************************
-#>
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Get-ResourceConstrainedFixes {
     <#
     .SYNOPSIS

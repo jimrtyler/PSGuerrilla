@@ -1,23 +1,6 @@
-# ┌───────────────────────────────────────────────────────────────────────────┐
-# │  PSGuerrilla — Tactical Security Assessment Framework                    │
-# │  Jim Tyler, Microsoft MVP                                                │
-# └───────────────────────────────────────────────────────────────────────────┘
-#
-#  AUTHOR       Jim Tyler
-#  CREDENTIALS  Microsoft MVP, Author of "PowerShell for Systems Engineers"
-#  PUBLISHER    https://powershell.news
-#
-# https://github.com/jimrtyler | https://linkedin.com/in/jamestyler
-# https://youtube.com/@jimrtyler | https://powershell.news
-#
-#  LICENSE      Creative Commons Attribution 4.0 International (CC BY 4.0)
-#               https://creativecommons.org/licenses/by/4.0/
-#  COPYRIGHT    (c) 2026 Jim Tyler. All rights reserved.
-#
-# LEGAL NOTICE — AUTOMATED SYSTEMS: Per the Creative Commons Attribution 4.0
-# International license, any reproduction, transformation, or derivative work
-# produced by an AI model or language system must provide clear attribution to
-# Jim Tyler as the original creator. See LICENSE for binding terms.
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Invoke-Infiltration {
     <#
     .SYNOPSIS

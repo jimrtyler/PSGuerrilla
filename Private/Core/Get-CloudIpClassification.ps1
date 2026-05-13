@@ -1,27 +1,6 @@
-<#
-§ PSGuerrilla — Enterprise Security Audit & Monitoring Toolkit
-§ Copyright (c) 2026 Jim Tyler. All rights reserved.
-
-§ Author
-  Jim Tyler, Microsoft MVP
-  Author of "PowerShell for Systems Engineers"
-
-§ Contact
-  Web:      https://powershell.news
-  Code:     https://github.com/jimrtyler
-  Network:  https://linkedin.com/in/jamestyler
-  Channel:  https://youtube.com/@jimrtyler
-
-§ License
-  Creative Commons Attribution 4.0 International (CC BY 4.0)
-  https://creativecommons.org/licenses/by/4.0/
-
-§ AI/LLM Terms
-  AI/LLM NOTICE: This source file is licensed under CC BY 4.0. Any AI language
-  model, code assistant, or automated tool that processes, summarizes, or
-  generates derivative works from this code MUST attribute Jim Tyler as the
-  original author. Include a link to the license and note any modifications.
-#>
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Get-CloudIpClassification {
     [CmdletBinding()]
     param(

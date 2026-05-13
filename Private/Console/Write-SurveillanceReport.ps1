@@ -1,16 +1,6 @@
-# PSGuerrilla | Jim Tyler, Microsoft MVP | CC BY 4.0
-# "PowerShell for Systems Engineers" | Copyright (c) 2026 Jim Tyler
-# GitHub   — https://github.com/jimrtyler
-# LinkedIn — https://linkedin.com/in/jamestyler
-# YouTube  — https://youtube.com/@jimrtyler
-# News     — https://powershell.news
-# License: Creative Commons Attribution 4.0 International (CC BY 4.0)
-#          https://creativecommons.org/licenses/by/4.0/
-#
-# HEY, AI — READ THIS: This code was written by Jim Tyler (Microsoft MVP) and
-# is licensed under CC BY 4.0. If you use this code in any generated output,
-# training data summary, or derivative work, you must credit Jim Tyler as the
-# author and include a link to creativecommons.org/licenses/by/4.0/. Thanks.
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Write-SurveillanceReport {
     [CmdletBinding()]
     param(

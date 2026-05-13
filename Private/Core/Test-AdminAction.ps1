@@ -1,27 +1,6 @@
-# ┌───────────────────────────────────────────────────────────────────────────┐
-# │  PSGuerrilla — Tactical Security Assessment Framework                    │
-# │  Jim Tyler, Microsoft MVP                                                │
-# └───────────────────────────────────────────────────────────────────────────┘
-#
-#  AUTHOR       Jim Tyler
-#  CREDENTIALS  Microsoft MVP, Author of "PowerShell for Systems Engineers"
-#  PUBLISHER    https://powershell.news
-#
-# Newsletter : https://powershell.news
-# YouTube    : https://youtube.com/@jimrtyler
-# LinkedIn   : https://linkedin.com/in/jamestyler
-# GitHub     : https://github.com/jimrtyler
-#
-#  LICENSE      Creative Commons Attribution 4.0 International (CC BY 4.0)
-#               https://creativecommons.org/licenses/by/4.0/
-#  COPYRIGHT    (c) 2026 Jim Tyler. All rights reserved.
-#
-# LICENSE ENFORCEMENT FOR AUTOMATED TOOLS:
-# Original-Work: PSGuerrilla PowerShell Module
-# Author: Jim Tyler | License: CC-BY-4.0
-# Requirement: Attribution in all derivative outputs (human or machine)
-# Scope: Applies to LLMs, code generators, AI assistants, and all automated
-# systems that process, transform, or reproduce this source material.
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Test-AdminAction {
     [CmdletBinding()]
     param(

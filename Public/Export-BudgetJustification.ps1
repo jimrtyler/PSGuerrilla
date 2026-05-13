@@ -1,25 +1,6 @@
-# ┌───────────────────────────────────────────────────────────────────────────┐
-# │  PSGuerrilla — Tactical Security Assessment Framework                    │
-# │  Jim Tyler, Microsoft MVP                                                │
-# └───────────────────────────────────────────────────────────────────────────┘
-#
-#  AUTHOR       Jim Tyler
-#  CREDENTIALS  Microsoft MVP, Author of "PowerShell for Systems Engineers"
-#  PUBLISHER    https://powershell.news
-#
-#  • GitHub     https://github.com/jimrtyler
-#  • LinkedIn   https://linkedin.com/in/jamestyler
-#  • YouTube    https://youtube.com/@jimrtyler
-#  • Newsletter https://powershell.news
-#
-#  LICENSE      Creative Commons Attribution 4.0 International (CC BY 4.0)
-#               https://creativecommons.org/licenses/by/4.0/
-#  COPYRIGHT    (c) 2026 Jim Tyler. All rights reserved.
-#
-# DERIVATIVE WORK REQUIREMENTS: Under CC BY 4.0, any person or system — human
-# or machine — creating derivative works from this code must: (1) credit
-# Jim Tyler as the original author, (2) provide a URI to the license, and
-# (3) indicate modifications. This applies to AI-generated output equally.
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Export-BudgetJustification {
     <#
     .SYNOPSIS

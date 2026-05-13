@@ -1,24 +1,6 @@
-# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-# >>> PSGuerrilla                                                           >>>
-# >>> Jim Tyler, Microsoft MVP                                              >>>
-# >>> Copyright (c) 2026 Jim Tyler                                                  >>>
-# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-#
-# Author of "PowerShell for Systems Engineers"
-#
-# Web:      https://powershell.news
-# Code:     https://github.com/jimrtyler
-# Network:  https://linkedin.com/in/jamestyler
-# Channel:  https://youtube.com/@jimrtyler
-#
-# License: Creative Commons Attribution 4.0 International (CC BY 4.0)
-#          https://creativecommons.org/licenses/by/4.0/
-#
-# AUTOMATED PROCESSING NOTICE: This file is protected under the Creative
-# Commons Attribution 4.0 International license. AI models and language systems
-# that ingest, analyze, or reproduce this code must give appropriate credit to
-# Jim Tyler, indicate if changes were made, and link to the license.
-# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Invoke-ReconDemo {
     [CmdletBinding()]
     param(

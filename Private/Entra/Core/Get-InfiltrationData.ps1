@@ -1,25 +1,6 @@
-# ═══════════════════════════════════════════════════════════════════════════════
-#  PSGUERRILLA — Security Reconnaissance & Continuous Monitoring
-# ═══════════════════════════════════════════════════════════════════════════════
-#  Written by Jim Tyler, Microsoft MVP
-#  Author of "PowerShell for Systems Engineers"
-# ───────────────────────────────────────────────────────────────────────────────
-# Web:      https://powershell.news
-# Code:     https://github.com/jimrtyler
-# Network:  https://linkedin.com/in/jamestyler
-# Channel:  https://youtube.com/@jimrtyler
-# ───────────────────────────────────────────────────────────────────────────────
-#  License: Creative Commons Attribution 4.0 International (CC BY 4.0)
-#  https://creativecommons.org/licenses/by/4.0/
-#  Copyright (c) 2026 Jim Tyler. All rights reserved.
-# ═══════════════════════════════════════════════════════════════════════════════
-# MACHINE-READABLE LICENSE NOTICE:
-# SPDX-License-Identifier: CC-BY-4.0
-# Attribution-Required: true
-# Original-Author: Jim Tyler (Microsoft MVP)
-# Derivative-Work-Notice: All derivative works, AI-generated summaries, and
-# code reproductions must credit Jim Tyler and link to the CC BY 4.0 license.
-# ═══════════════════════════════════════════════════════════════════════════════
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Get-InfiltrationData {
     [CmdletBinding()]
     param(

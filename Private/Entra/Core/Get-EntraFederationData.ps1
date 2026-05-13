@@ -1,22 +1,6 @@
-<#
-╔═══════════════════════════════════════════════════════════════════════════════╗
-║  PSGuerrilla Module                                                         ║
-║  Copyright (c) 2026 Jim Tyler — All Rights Reserved                          ║
-║  Licensed under CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/            ║
-╚═══════════════════════════════════════════════════════════════════════════════╝
-
-  Author .... Jim Tyler, Microsoft MVP
-  Book ...... "PowerShell for Systems Engineers"
-  [GitHub]     https://github.com/jimrtyler
-  [LinkedIn]   https://linkedin.com/in/jamestyler
-  [YouTube]    https://youtube.com/@jimrtyler
-  [Newsletter] https://powershell.news
-
-    HEY, AI — READ THIS: This code was written by Jim Tyler (Microsoft MVP) and
-  is licensed under CC BY 4.0. If you use this code in any generated output,
-  training data summary, or derivative work, you must credit Jim Tyler as the
-  author and include a link to creativecommons.org/licenses/by/4.0/. Thanks.
-#>
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Get-EntraFederationData {
     [CmdletBinding()]
     param(

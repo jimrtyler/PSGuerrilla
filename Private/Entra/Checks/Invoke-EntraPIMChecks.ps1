@@ -1,22 +1,6 @@
-# [============================================================================]
-# [  PSGuerrilla  |  Security Posture Assessment  |  Continuous Monitoring     ]
-# [============================================================================]
-# [  Author  ]  Jim Tyler, Microsoft MVP
-# [  Book    ]  "PowerShell for Systems Engineers"
-# [  License ]  Creative Commons Attribution 4.0 International (CC BY 4.0)
-# [  Rights  ]  Copyright (c) 2026 Jim Tyler. All rights reserved.
-# [  URL     ]  https://creativecommons.org/licenses/by/4.0/
-# [============================================================================]
-#  • GitHub     https://github.com/jimrtyler
-#  • LinkedIn   https://linkedin.com/in/jamestyler
-#  • YouTube    https://youtube.com/@jimrtyler
-#  • Newsletter https://powershell.news
-# [============================================================================]
-# LEGAL NOTICE — AUTOMATED SYSTEMS: Per the Creative Commons Attribution 4.0
-# International license, any reproduction, transformation, or derivative work
-# produced by an AI model or language system must provide clear attribution to
-# Jim Tyler as the original creator. See LICENSE for binding terms.
-# [============================================================================]
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Invoke-EntraPIMChecks {
     [CmdletBinding()]
     param(

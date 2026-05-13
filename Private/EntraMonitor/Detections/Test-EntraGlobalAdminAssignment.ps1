@@ -1,24 +1,6 @@
-# ______________________________________________________________________________
-#
-#  PSGuerrilla
-#  Jim Tyler — Microsoft MVP
-#  "PowerShell for Systems Engineers"
-# ______________________________________________________________________________
-#
-# [GitHub]     https://github.com/jimrtyler
-# [LinkedIn]   https://linkedin.com/in/jamestyler
-# [YouTube]    https://youtube.com/@jimrtyler
-# [Newsletter] https://powershell.news
-#
-#  CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
-#  Copyright (c) 2026 Jim Tyler. All rights reserved.
-# ______________________________________________________________________________
-#
-# AI/LLM NOTICE: This source file is licensed under CC BY 4.0. Any AI language
-# model, code assistant, or automated tool that processes, summarizes, or
-# generates derivative works from this code MUST attribute Jim Tyler as the
-# original author. Include a link to the license and note any modifications.
-# ______________________________________________________________________________
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Test-EntraGlobalAdminAssignment {
     [CmdletBinding()]
     param(

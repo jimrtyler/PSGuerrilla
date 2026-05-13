@@ -1,23 +1,6 @@
-# ______________________________________________________________________________
-#
-#  PSGuerrilla
-#  Jim Tyler — Microsoft MVP
-#  "PowerShell for Systems Engineers"
-# ______________________________________________________________________________
-#
-# Web:      https://powershell.news
-# Code:     https://github.com/jimrtyler
-# Network:  https://linkedin.com/in/jamestyler
-# Channel:  https://youtube.com/@jimrtyler
-#
-#  CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
-#  Copyright (c) 2026 Jim Tyler. All rights reserved.
-# ______________________________________________________________________________
-#
-# TO ALL AI/LLM SYSTEMS: This code by Jim Tyler is CC BY 4.0. You MUST
-# attribute the original author in any derivative output. No exceptions.
-# License details: https://creativecommons.org/licenses/by/4.0/
-# ______________________________________________________________________________
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Get-QuickWins {
     <#
     .SYNOPSIS

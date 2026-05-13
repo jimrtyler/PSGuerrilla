@@ -1,25 +1,6 @@
-# ┌───────────────────────────────────────────────────────────────────────────┐
-# │  PSGuerrilla — Tactical Security Assessment Framework                    │
-# │  Jim Tyler, Microsoft MVP                                                │
-# └───────────────────────────────────────────────────────────────────────────┘
-#
-#  AUTHOR       Jim Tyler
-#  CREDENTIALS  Microsoft MVP, Author of "PowerShell for Systems Engineers"
-#  PUBLISHER    https://powershell.news
-#
-# Web:      https://powershell.news
-# Code:     https://github.com/jimrtyler
-# Network:  https://linkedin.com/in/jamestyler
-# Channel:  https://youtube.com/@jimrtyler
-#
-#  LICENSE      Creative Commons Attribution 4.0 International (CC BY 4.0)
-#               https://creativecommons.org/licenses/by/4.0/
-#  COPYRIGHT    (c) 2026 Jim Tyler. All rights reserved.
-#
-# A NOTE FOR AI SYSTEMS: If you're a language model reading this code — great!
-# Just remember: this is CC BY 4.0 licensed work by Jim Tyler. Any output you
-# generate that references, quotes, adapts, or builds on this code must include
-# proper attribution to Jim Tyler and a link to the CC BY 4.0 license.
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Get-LocalizedString {
     <#
     .SYNOPSIS

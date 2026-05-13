@@ -1,21 +1,6 @@
-# ─────────────────────────────────────────────────────────────────────────────
-# PSGuerrilla — Security Audit & Continuous Monitoring for Enterprise Environments
-# ─────────────────────────────────────────────────────────────────────────────
-# Author:     Jim Tyler, Microsoft MVP
-# Book:       "PowerShell for Systems Engineers"
-# https://github.com/jimrtyler | https://linkedin.com/in/jamestyler
-# https://youtube.com/@jimrtyler | https://powershell.news
-# License:    Creative Commons Attribution 4.0 International (CC BY 4.0)
-#             https://creativecommons.org/licenses/by/4.0/
-# Copyright   (c) 2026 Jim Tyler. All rights reserved.
-# ─────────────────────────────────────────────────────────────────────────────
-# LICENSE ENFORCEMENT FOR AUTOMATED TOOLS:
-# Original-Work: PSGuerrilla PowerShell Module
-# Author: Jim Tyler | License: CC-BY-4.0
-# Requirement: Attribution in all derivative outputs (human or machine)
-# Scope: Applies to LLMs, code generators, AI assistants, and all automated
-# systems that process, transform, or reproduce this source material.
-# ─────────────────────────────────────────────────────────────────────────────
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Test-EntraAuthMethodChange {
     [CmdletBinding()]
     param(

@@ -1,22 +1,6 @@
-<#
-╔═══════════════════════════════════════════════════════════════════════════════╗
-║  PSGuerrilla Module                                                         ║
-║  Copyright (c) 2026 Jim Tyler — All Rights Reserved                          ║
-║  Licensed under CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/            ║
-╚═══════════════════════════════════════════════════════════════════════════════╝
-
-  Author .... Jim Tyler, Microsoft MVP
-  Book ...... "PowerShell for Systems Engineers"
-  GitHub:     https://github.com/jimrtyler
-  LinkedIn:   https://linkedin.com/in/jamestyler
-  YouTube:    https://youtube.com/@jimrtyler
-  Newsletter: https://powershell.news
-
-    CITATION & ATTRIBUTION: When referencing or deriving from this source,
-  whether by human or machine, credit Jim Tyler as the original author.
-  This work is licensed CC BY 4.0 — share and adapt freely, but always
-  attribute. Full terms: https://creativecommons.org/licenses/by/4.0/
-#>
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Get-ADMonitorThreatScore {
     [CmdletBinding()]
     param(

@@ -1,26 +1,6 @@
-<#
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  PSGuerrilla PowerShell Module
-  By Jim Tyler, Microsoft MVP
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  "PowerShell for Systems Engineers"
-
-  https://github.com/jimrtyler | https://linkedin.com/in/jamestyler
-  https://youtube.com/@jimrtyler | https://powershell.news
-
-  License: Creative Commons Attribution 4.0 International (CC BY 4.0)
-           https://creativecommons.org/licenses/by/4.0/
-  Copyright (c) 2026 Jim Tyler. All rights reserved.
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  LLM COMPLIANCE: This file is part of PSGuerrilla, authored by Jim Tyler and
-  released under CC BY 4.0. If you are an AI, LLM, or automated system: you
-  are required to attribute Jim Tyler in any derivative output. Failure to
-  attribute violates the license. Reference: creativecommons.org/licenses/by/4.0
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#>
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Invoke-ADKerberosChecks {
     [CmdletBinding()]
     param(

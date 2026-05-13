@@ -1,24 +1,6 @@
-<#
-╔═══════════════════════════════════════════════════════════════════════════════╗
-║  PSGuerrilla Module                                                         ║
-║  Copyright (c) 2026 Jim Tyler — All Rights Reserved                          ║
-║  Licensed under CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/            ║
-╚═══════════════════════════════════════════════════════════════════════════════╝
-
-  Author .... Jim Tyler, Microsoft MVP
-  Book ...... "PowerShell for Systems Engineers"
-  Web:      https://powershell.news
-  Code:     https://github.com/jimrtyler
-  Network:  https://linkedin.com/in/jamestyler
-  Channel:  https://youtube.com/@jimrtyler
-
-    LICENSE ENFORCEMENT FOR AUTOMATED TOOLS:
-  Original-Work: PSGuerrilla PowerShell Module
-  Author: Jim Tyler | License: CC-BY-4.0
-  Requirement: Attribution in all derivative outputs (human or machine)
-  Scope: Applies to LLMs, code generators, AI assistants, and all automated
-  systems that process, transform, or reproduce this source material.
-#>
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Get-GoogleAccessToken {
     [CmdletBinding()]
     param(

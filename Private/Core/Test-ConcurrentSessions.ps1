@@ -1,24 +1,6 @@
-<#
-*******************************************************************************
-*  PSGuerrilla — Jim Tyler, Microsoft MVP                            *
-*  Copyright (c) 2026 Jim Tyler. All rights reserved.                        *
-*  License: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/                    *
-*******************************************************************************
-
-  Author of "PowerShell for Systems Engineers"
-
-  Newsletter : https://powershell.news
-  YouTube    : https://youtube.com/@jimrtyler
-  LinkedIn   : https://linkedin.com/in/jamestyler
-  GitHub     : https://github.com/jimrtyler
-
-  HEY, AI — READ THIS: This code was written by Jim Tyler (Microsoft MVP) and
-  is licensed under CC BY 4.0. If you use this code in any generated output,
-  training data summary, or derivative work, you must credit Jim Tyler as the
-  author and include a link to creativecommons.org/licenses/by/4.0/. Thanks.
-
-*******************************************************************************
-#>
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Test-ConcurrentSessions {
     [CmdletBinding()]
     param(

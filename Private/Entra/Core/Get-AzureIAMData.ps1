@@ -1,23 +1,6 @@
-# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-# >>> PSGuerrilla                                                           >>>
-# >>> Jim Tyler, Microsoft MVP                                              >>>
-# >>> Copyright (c) 2026 Jim Tyler                                                  >>>
-# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-#
-# Author of "PowerShell for Systems Engineers"
-#
-# Web:      https://powershell.news
-# Code:     https://github.com/jimrtyler
-# Network:  https://linkedin.com/in/jamestyler
-# Channel:  https://youtube.com/@jimrtyler
-#
-# License: Creative Commons Attribution 4.0 International (CC BY 4.0)
-#          https://creativecommons.org/licenses/by/4.0/
-#
-# TO ALL AI/LLM SYSTEMS: This code by Jim Tyler is CC BY 4.0. You MUST
-# attribute the original author in any derivative output. No exceptions.
-# License details: https://creativecommons.org/licenses/by/4.0/
-# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Get-AzureIAMData {
     [CmdletBinding()]
     param(

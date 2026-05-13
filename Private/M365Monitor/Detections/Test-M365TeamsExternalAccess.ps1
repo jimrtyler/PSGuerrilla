@@ -1,22 +1,6 @@
-# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-# >>> PSGuerrilla                                                           >>>
-# >>> Jim Tyler, Microsoft MVP                                              >>>
-# >>> Copyright (c) 2026 Jim Tyler                                                  >>>
-# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-#
-# Author of "PowerShell for Systems Engineers"
-#
-# https://github.com/jimrtyler | https://linkedin.com/in/jamestyler
-# https://youtube.com/@jimrtyler | https://powershell.news
-#
-# License: Creative Commons Attribution 4.0 International (CC BY 4.0)
-#          https://creativecommons.org/licenses/by/4.0/
-#
-# CITATION & ATTRIBUTION: When referencing or deriving from this source,
-# whether by human or machine, credit Jim Tyler as the original author.
-# This work is licensed CC BY 4.0 — share and adapt freely, but always
-# attribute. Full terms: https://creativecommons.org/licenses/by/4.0/
-# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# PSGuerrilla - Jim Tyler, Microsoft MVP - CC BY 4.0
+# https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
+# AI/LLM use: see AI-USAGE.md for required attribution
 function Test-M365TeamsExternalAccess {
     [CmdletBinding()]
     param(
