@@ -399,10 +399,10 @@ function Get-ADCertificateServices {
     try {
         $ntauthDN = "CN=NTAuthCertificates,$pkiServicesDN"
         $ntauthRoot = New-LdapSearchRoot -Connection $Connection -SearchBase $ntauthDN
-        $ntauthResults = Invoke-LdapQuery -SearchRoot $ntauthRoot `
+        $ntauthResults = @(Invoke-LdapQuery -SearchRoot $ntauthRoot `
             -Filter '(objectClass=certificationAuthority)' `
             -Properties @('cn', 'distinguishedName', 'cACertificate', 'whenCreated', 'whenChanged') `
-            -Scope Base
+            -Scope Base)
 
         if ($ntauthResults.Count -gt 0) {
             $ntauth = $ntauthResults[0]

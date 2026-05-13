@@ -380,10 +380,10 @@ function Get-ADMonitorData {
 
         try {
             $schemaRoot = New-LdapSearchRoot -Connection $LdapConnection -SearchBase $schemaDN
-            $schemaResults = Invoke-LdapQuery -SearchRoot $schemaRoot `
+            $schemaResults = @(Invoke-LdapQuery -SearchRoot $schemaRoot `
                 -Filter '(objectClass=dMD)' `
                 -Properties @('objectVersion') `
-                -Scope Base
+                -Scope Base)
 
             if ($schemaResults.Count -gt 0 -and $schemaResults[0].ContainsKey('objectversion')) {
                 $result.schemaVersion = [int]$schemaResults[0]['objectversion']

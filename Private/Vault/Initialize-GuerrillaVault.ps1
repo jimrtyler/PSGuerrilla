@@ -97,12 +97,29 @@ function Initialize-GuerrillaVault {
     # --- Register vault if not exists ---
     $existingVault = Get-SecretVault -Name $VaultName -ErrorAction SilentlyContinue
     if (-not $existingVault) {
+        # Configure SecretStore BEFORE registering the vault so the store is created
+        # with Authentication=None from the start, rather than defaulting to Password
+        # and then needing the user to enter a password twice just to remove it.
+        $needsConfig = $true
+        try {
+            $ssConfig = Get-SecretStoreConfiguration -ErrorAction Stop
+            if ($ssConfig.Authentication -eq 'None') { $needsConfig = $false }
+        } catch {
+            # No store configured yet — Set-SecretStoreConfiguration below will create one.
+        }
+        if ($needsConfig) {
+            try {
+                Set-SecretStoreConfiguration -Authentication None -Interaction None `
+                    -Password $null -Confirm:$false -Force -ErrorAction Stop
+            } catch {
+                Write-Warning "Could not auto-configure SecretStore for non-interactive use: $_"
+                Write-Warning 'If prompted for a password next, it is from the Microsoft SecretStore module.'
+            }
+        }
+
         Write-Verbose "Registering vault '$VaultName' with SecretStore backend"
         Register-SecretVault -Name $VaultName -ModuleName Microsoft.PowerShell.SecretStore -DefaultVault -ErrorAction Stop
-
-        # Configure for non-interactive use (DPAPI on Windows protects at user level)
-        Set-SecretStoreConfiguration -Authentication None -Interaction None -Confirm:$false -ErrorAction Stop
-        Write-Verbose "Vault '$VaultName' registered and configured for non-interactive access"
+        Write-Verbose "Vault '$VaultName' registered for non-interactive access"
     } else {
         Write-Verbose "Vault '$VaultName' already exists"
     }

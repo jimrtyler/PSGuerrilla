@@ -98,7 +98,7 @@ function Get-ADDomainControllers {
     # Schema Master
     try {
         $schemaRoot = New-LdapSearchRoot -Connection $Connection -SearchBase $Connection.SchemaDN
-        $r = Invoke-LdapQuery -SearchRoot $schemaRoot -Filter '(objectClass=dMD)' -Properties @('fSMORoleOwner') -Scope Base
+        $r = @(Invoke-LdapQuery -SearchRoot $schemaRoot -Filter '(objectClass=dMD)' -Properties @('fSMORoleOwner') -Scope Base)
         if ($r.Count -gt 0 -and $r[0].ContainsKey('fsmoroleowner')) {
             $fsmoHolders.SchemaMaster = & $extractServerFromNtds $r[0]['fsmoroleowner']
         }
@@ -107,7 +107,7 @@ function Get-ADDomainControllers {
     # Domain Naming Master
     try {
         $partRoot = New-LdapSearchRoot -Connection $Connection -SearchBase "CN=Partitions,$configDN"
-        $r = Invoke-LdapQuery -SearchRoot $partRoot -Filter '(objectClass=crossRefContainer)' -Properties @('fSMORoleOwner') -Scope Base
+        $r = @(Invoke-LdapQuery -SearchRoot $partRoot -Filter '(objectClass=crossRefContainer)' -Properties @('fSMORoleOwner') -Scope Base)
         if ($r.Count -gt 0 -and $r[0].ContainsKey('fsmoroleowner')) {
             $fsmoHolders.DomainNamingMaster = & $extractServerFromNtds $r[0]['fsmoroleowner']
         }
@@ -116,7 +116,7 @@ function Get-ADDomainControllers {
     # PDC Emulator
     try {
         $domHead = New-LdapSearchRoot -Connection $Connection -SearchBase $domainDN
-        $r = Invoke-LdapQuery -SearchRoot $domHead -Filter '(objectClass=domainDNS)' -Properties @('fSMORoleOwner') -Scope Base
+        $r = @(Invoke-LdapQuery -SearchRoot $domHead -Filter '(objectClass=domainDNS)' -Properties @('fSMORoleOwner') -Scope Base)
         if ($r.Count -gt 0 -and $r[0].ContainsKey('fsmoroleowner')) {
             $fsmoHolders.PDCEmulator = & $extractServerFromNtds $r[0]['fsmoroleowner']
         }
@@ -125,7 +125,7 @@ function Get-ADDomainControllers {
     # RID Master
     try {
         $ridRoot = New-LdapSearchRoot -Connection $Connection -SearchBase "CN=RID Manager`$,CN=System,$domainDN"
-        $r = Invoke-LdapQuery -SearchRoot $ridRoot -Filter '(objectClass=rIDManager)' -Properties @('fSMORoleOwner') -Scope Base
+        $r = @(Invoke-LdapQuery -SearchRoot $ridRoot -Filter '(objectClass=rIDManager)' -Properties @('fSMORoleOwner') -Scope Base)
         if ($r.Count -gt 0 -and $r[0].ContainsKey('fsmoroleowner')) {
             $fsmoHolders.RIDMaster = & $extractServerFromNtds $r[0]['fsmoroleowner']
         }
@@ -134,7 +134,7 @@ function Get-ADDomainControllers {
     # Infrastructure Master
     try {
         $infraRoot = New-LdapSearchRoot -Connection $Connection -SearchBase "CN=Infrastructure,$domainDN"
-        $r = Invoke-LdapQuery -SearchRoot $infraRoot -Filter '(objectClass=infrastructureUpdate)' -Properties @('fSMORoleOwner') -Scope Base
+        $r = @(Invoke-LdapQuery -SearchRoot $infraRoot -Filter '(objectClass=infrastructureUpdate)' -Properties @('fSMORoleOwner') -Scope Base)
         if ($r.Count -gt 0 -and $r[0].ContainsKey('fsmoroleowner')) {
             $fsmoHolders.InfrastructureMaster = & $extractServerFromNtds $r[0]['fsmoroleowner']
         }

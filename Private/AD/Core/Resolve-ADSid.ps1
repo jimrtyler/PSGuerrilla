@@ -150,10 +150,10 @@ function Resolve-ADSid {
             $sidBytes = (New-Object System.Security.Principal.SecurityIdentifier($SidString)).GetSidBytes()
             $escapedSid = ($sidBytes | ForEach-Object { '\' + $_.ToString('x2') }) -join ''
 
-            $results = Invoke-LdapQuery -SearchRoot $SearchRoot `
+            $results = @(Invoke-LdapQuery -SearchRoot $SearchRoot `
                 -Filter "(objectSid=$escapedSid)" `
                 -Properties @('samaccountname', 'distinguishedname', 'objectclass') `
-                -SizeLimit 1
+                -SizeLimit 1)
 
             if ($results.Count -gt 0) {
                 $name = $results[0].samaccountname ?? $results[0].distinguishedname ?? $SidString
