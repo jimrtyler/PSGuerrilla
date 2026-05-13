@@ -58,7 +58,10 @@ function Invoke-Watchtower {
             try {
                 $Credential = Get-GuerrillaCredential -VaultKey ($adRef.vaultKey ?? 'GUERRILLA_AD_CREDENTIAL') -VaultName $vaultName
             } catch {
-                Write-Verbose "AD credential not found in vault — will use current user context."
+                # Mission config asked for a service account but the vault lookup failed.
+                # Warn loudly — silent fallback to the current user changes the security
+                # context of every subsequent query and is almost never what the user wanted.
+                Write-Warning "Mission config requested AD service account credentials but vault lookup failed: $_`nFalling back to current user context."
             }
         }
 

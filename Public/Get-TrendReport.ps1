@@ -99,7 +99,9 @@ function Get-TrendReport {
                     ProfileUsed = $single.profileUsed ?? 'Default'
                 })
             }
-        } catch { }
+        } catch {
+            Write-Verbose "Bootstrap from single-score history failed: $_"
+        }
     }
 
     if ($history.Count -eq 0) {

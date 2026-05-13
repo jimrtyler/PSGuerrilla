@@ -59,7 +59,11 @@ function Register-Patrol {
             foreach ($envKey in $missionCfg.EnabledEnvironments.Keys) {
                 $envCfg = $missionCfg.EnabledEnvironments[$envKey]
                 if ($envCfg.monitoring -and $envCfg.monitoring.intervalMinutes) {
-                    $IntervalMinutes = $envCfg.monitoring.intervalMinutes
+                    $candidate = [int]$envCfg.monitoring.intervalMinutes
+                    if ($candidate -lt 1 -or $candidate -gt 1440) {
+                        throw "intervalMinutes from mission config must be between 1 and 1440 (got $candidate for environment '$envKey')"
+                    }
+                    $IntervalMinutes = $candidate
                     break
                 }
             }

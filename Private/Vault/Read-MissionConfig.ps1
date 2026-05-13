@@ -60,6 +60,9 @@ function Read-MissionConfig {
         # Google Workspace
         if ($refs.googleWorkspace) {
             $gwsRef = $refs.googleWorkspace
+            if (-not $gwsRef.vaultKey) {
+                throw "Configuration file '$Path': credentials.references.googleWorkspace is missing required 'vaultKey'."
+            }
             $credentialRequirements.Add(@{
                 vaultKey    = $gwsRef.vaultKey
                 type        = $gwsRef.type
