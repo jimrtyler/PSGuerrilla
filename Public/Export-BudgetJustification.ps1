@@ -33,6 +33,7 @@ function Export-BudgetJustification {
         [string]$OutputPath,
         [string]$OrganizationName = 'Organization',
         [string]$ProfileName,
+        [Alias('RuntimeConfig')]
         [string]$ConfigPath
     )
 

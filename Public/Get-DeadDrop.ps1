@@ -20,6 +20,7 @@ function Get-DeadDrop {
 
         [switch]$FromStateFile,
 
+        [Alias('RuntimeConfig')]
         [string]$ConfigPath
     )
 

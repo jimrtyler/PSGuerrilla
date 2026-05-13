@@ -24,6 +24,7 @@ function Send-SignalDigest {
         [string]$Period = 'Daily',
 
         [string[]]$Providers,
+        [Alias('RuntimeConfig')]
         [string]$ConfigPath,
         [switch]$Force
     )

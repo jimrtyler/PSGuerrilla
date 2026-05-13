@@ -24,7 +24,7 @@ function Set-RiskAcceptance {
     .EXAMPLE
         Set-RiskAcceptance -CheckId ADPWD-005 -Justification 'Legacy system compatibility' -ExpirationDays 90 -AcceptedBy 'IT Director'
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
     param(
         [Parameter(Mandatory)]
         [string]$CheckId,
@@ -38,8 +38,13 @@ function Set-RiskAcceptance {
         [ValidateRange(0, 3650)]
         [int]$ExpirationDays = 365,
 
+        [Alias('RuntimeConfig')]
         [string]$ConfigPath
     )
+
+    if (-not $PSCmdlet.ShouldProcess($CheckId, "Accept risk (by $AcceptedBy, expires in $ExpirationDays days)")) {
+        return
+    }
 
     $riskPath = if ($ConfigPath) {
         $ConfigPath

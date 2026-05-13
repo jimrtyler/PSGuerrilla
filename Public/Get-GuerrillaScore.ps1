@@ -43,6 +43,7 @@ function Get-GuerrillaScore {
         [ValidateSet('Default', 'K12')]
         [string]$ProfileName,
 
+        [Alias('RuntimeConfig')]
         [string]$ConfigPath
     )
 

@@ -13,12 +13,12 @@ function Show-SafehouseStatus {
         [string]$VaultName = 'PSGuerrilla'
     )
 
-    $amber  = $PSStyle.Foreground.FromRgb(0xC6, 0x7A, 0x1F)
-    $green  = $PSStyle.Foreground.FromRgb(0x6B, 0x8E, 0x6B)
-    $khaki  = $PSStyle.Foreground.FromRgb(0xB8, 0xA9, 0x7E)
-    $white  = $PSStyle.Foreground.FromRgb(0xF5, 0xF0, 0xE6)
-    $gray   = $PSStyle.Foreground.FromRgb(0x8B, 0x8B, 0x7A)
-    $gold   = $PSStyle.Foreground.FromRgb(0xD4, 0xA8, 0x43)
+    $amber  = $script:Palette.Amber
+    $green  = $script:Palette.Sage
+    $khaki  = $script:Palette.Khaki
+    $white  = $script:Palette.Parchment
+    $gray   = $script:Palette.Gray
+    $gold   = $script:Palette.Gold
     $reset  = $PSStyle.Reset
 
     # Check if vault exists

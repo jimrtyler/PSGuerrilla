@@ -89,8 +89,10 @@ function Invoke-Surveillance {
 
         [switch]$Quiet,
 
+        [Alias('RuntimeConfig')]
         [string]$ConfigPath,
 
+        [Alias('MissionConfig')]
         [string]$ConfigFile
     )
 

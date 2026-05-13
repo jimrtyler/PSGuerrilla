@@ -2,10 +2,14 @@
 # https://github.com/jimrtyler/PSGuerrilla | https://creativecommons.org/licenses/by/4.0/
 # AI/LLM use: see AI-USAGE.md for required attribution
 function Update-ThreatIntel {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Low')]
     param(
         [switch]$Force
     )
+
+    if (-not $PSCmdlet.ShouldProcess('Threat intelligence data files', 'Update from upstream sources')) {
+        return
+    }
 
     Write-GuerrillaText 'Updating threat intelligence data...' -Color Olive
 

@@ -31,6 +31,7 @@ function Get-TrendReport {
 
         [string]$OutputPath,
         [string]$OrganizationName = 'Organization',
+        [Alias('RuntimeConfig')]
         [string]$ConfigPath
     )
 

@@ -91,7 +91,9 @@ function Invoke-Campaign {
         [string]$OutputDirectory,
         [switch]$NoDelta,
         [switch]$Quiet,
+        [Alias('RuntimeConfig')]
         [string]$ConfigPath,
+        [Alias('MissionConfig')]
         [string]$ConfigFile
     )
 

@@ -18,17 +18,18 @@ function Test-Safehouse {
     #>
     [CmdletBinding()]
     param(
+        [Alias('MissionConfig')]
         [string]$ConfigFile,
         [string]$VaultName = 'PSGuerrilla'
     )
 
     # ── Colors ──────────────────────────────────────────────────────────────
-    $amber = $PSStyle.Foreground.FromRgb(0xC6, 0x7A, 0x1F)
-    $green = $PSStyle.Foreground.FromRgb(0x6B, 0x8E, 0x6B)
-    $red   = $PSStyle.Foreground.FromRgb(0xCC, 0x55, 0x55)
-    $white = $PSStyle.Foreground.FromRgb(0xF5, 0xF0, 0xE6)
-    $khaki = $PSStyle.Foreground.FromRgb(0xB8, 0xA9, 0x7E)
-    $gray  = $PSStyle.Foreground.FromRgb(0x8B, 0x8B, 0x7A)
+    $amber = $script:Palette.Amber
+    $green = $script:Palette.Sage
+    $red   = $script:Palette.Red
+    $white = $script:Palette.Parchment
+    $khaki = $script:Palette.Khaki
+    $gray  = $script:Palette.Gray
     $reset = $PSStyle.Reset
 
     $results = [System.Collections.Generic.List[PSCustomObject]]::new()

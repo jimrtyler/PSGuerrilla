@@ -17,7 +17,9 @@ function Send-Signal {
         [switch]$IncludeHtmlReport,
         [switch]$DryRun,
         [switch]$Force,
+        [Alias('RuntimeConfig')]
         [string]$ConfigPath,
+        [Alias('MissionConfig')]
         [string]$ConfigFile
     )
 

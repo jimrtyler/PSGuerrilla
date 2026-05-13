@@ -31,6 +31,7 @@ function Get-RiskAcceptance {
         [ValidateSet('Active', 'Expired', 'All')]
         [string]$Status = 'All',
 
+        [Alias('RuntimeConfig')]
         [string]$ConfigPath
     )
 
@@ -101,6 +102,7 @@ function Test-RiskAccepted {
     param(
         [Parameter(Mandatory)]
         [string]$CheckId,
+        [Alias('RuntimeConfig')]
         [string]$ConfigPath
     )
 

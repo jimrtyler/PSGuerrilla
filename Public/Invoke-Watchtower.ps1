@@ -22,8 +22,10 @@ function Invoke-Watchtower {
 
         [switch]$Quiet,
 
+        [Alias('RuntimeConfig')]
         [string]$ConfigPath,
 
+        [Alias('MissionConfig')]
         [string]$ConfigFile
     )
 
