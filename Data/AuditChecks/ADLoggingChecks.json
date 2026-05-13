@@ -1,0 +1,105 @@
+{
+  "categoryId": "adlog",
+  "categoryName": "AD Logging & EDR Posture",
+  "categoryDescription": "Detection is only as good as the events being written. These checks verify that the Windows logging primitives investigators rely on (advanced audit policy, PowerShell script-block logging, Sysmon presence indicators, Defender exclusion governance, Windows Event Forwarding) are configured by the policies that ship the domain-wide baseline. Settings delivered exclusively via administrative templates (Registry.pol) are flagged with explicit manual-verification steps rather than silently failing.",
+  "checks": [
+    {
+      "id": "ADLOG-001",
+      "name": "Advanced Audit Policy Configured",
+      "description": "Legacy nine-category audit policy is too coarse for modern investigations — it can tell you SOMETHING failed under 'Audit account logon events' but not whether it was a Kerberos preauth failure, a service ticket request, or an explicit credential pass-through. Windows has supported Advanced Audit Policy (60+ subcategories) since Vista, but it has to be opted into. Presence of audit.csv in the Default Domain Controllers Policy SYSVOL folder is the on-the-wire indicator that the domain has migrated.",
+      "severity": "High",
+      "subcategory": "Audit Policy",
+      "recommendedValue": "Default Domain Controllers Policy ships an audit.csv (Computer Configuration > Policies > Windows Settings > Security Settings > Advanced Audit Policy Configuration > Audit Policies > <subcategories>).",
+      "remediationSteps": "Open the Default Domain Controllers Policy in GPMC. Navigate to Computer Configuration > Policies > Windows Settings > Security Settings > Advanced Audit Policy Configuration > Audit Policies. Enable at minimum: Account Logon > Kerberos Service Ticket Operations (Success+Failure), Logon/Logoff > Logon (Success+Failure) + Special Logon (Success), Account Management > all (Success), Object Access > File Share + Detailed File Share (Success+Failure if monitoring lateral movement), Detailed Tracking > Process Creation (Success). Also enable 'Audit: Force audit policy subcategory settings' in Security Options so it takes precedence over the legacy nine-category settings.",
+      "compliance": {
+        "nistSp80053": ["AU-2", "AU-3", "AU-12"],
+        "mitreAttack": ["T1562.002"],
+        "cisAd": ["9.1.1"]
+      }
+    },
+    {
+      "id": "ADLOG-002",
+      "name": "PowerShell Script Block Logging Enabled",
+      "description": "Event 4104 (PowerShell Script Block Logging) is the single most useful Windows event for investigating modern intrusions — it captures the actual PowerShell code being executed after deobfuscation, including code passed via -EncodedCommand. Without it, an investigator looking at PS-based ransomware deployment is blind. The setting is delivered by administrative template into HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\\ScriptBlockLogging\\EnableScriptBlockLogging.",
+      "severity": "High",
+      "subcategory": "PowerShell Logging",
+      "recommendedValue": "Group Policy 'Turn on PowerShell Script Block Logging' is Enabled at the domain or DC OU level. Registry: EnableScriptBlockLogging = 1.",
+      "remediationSteps": "Computer Configuration > Policies > Administrative Templates > Windows Components > Windows PowerShell > 'Turn on PowerShell Script Block Logging' = Enabled. Verify after gpupdate: Get-ItemProperty 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\\ScriptBlockLogging'. Make sure event log capacity for 'Microsoft-Windows-PowerShell/Operational' is sized for the volume (default 15 MB will rotate in hours under load).",
+      "compliance": {
+        "nistSp80053": ["AU-2", "SI-4"],
+        "mitreAttack": ["T1059.001", "T1562.002"],
+        "cisAd": ["9.2.1"]
+      }
+    },
+    {
+      "id": "ADLOG-003",
+      "name": "PowerShell Module Logging Enabled",
+      "description": "Event 4103 (PowerShell Module Logging) records the cmdlet/parameter invocations of any module configured for logging. Pair this with Script Block Logging and you have a high-confidence telemetry stack for any PS-based attack. The setting is delivered by administrative template into HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\\ModuleLogging.",
+      "severity": "Medium",
+      "subcategory": "PowerShell Logging",
+      "recommendedValue": "Group Policy 'Turn on Module Logging' is Enabled with at least the '*' module name list. Registry: EnableModuleLogging = 1.",
+      "remediationSteps": "Computer Configuration > Policies > Administrative Templates > Windows Components > Windows PowerShell > 'Turn on Module Logging' = Enabled. Add '*' to the Module Names list (logs all modules) or specifically Microsoft.PowerShell.* + the modules your environment uses for administration.",
+      "compliance": {
+        "nistSp80053": ["AU-2", "SI-4"],
+        "mitreAttack": ["T1059.001"],
+        "cisAd": ["9.2.2"]
+      }
+    },
+    {
+      "id": "ADLOG-004",
+      "name": "Process Creation Auditing with Command Line",
+      "description": "Event 4688 (process creation) is the foundational lateral-movement signal — it tells you what process was launched and by whom. The default 4688 event does NOT include the command line, which makes it nearly useless for investigations involving PowerShell, wmic, mshta, or other living-off-the-land binaries. The 'Include command line in process creation events' policy fills in that gap.",
+      "severity": "High",
+      "subcategory": "Process Auditing",
+      "recommendedValue": "Group Policy 'Include command line in process creation events' is Enabled, AND Advanced Audit Policy subcategory 'Audit Process Creation' is set to Success.",
+      "remediationSteps": "Two settings, both required: (1) Computer Configuration > Policies > Administrative Templates > System > Audit Process Creation > 'Include command line in process creation events' = Enabled. (2) Computer Configuration > Policies > Windows Settings > Security Settings > Advanced Audit Policy Configuration > Detailed Tracking > Audit Process Creation = Success. Without (1), 4688 events arrive without a NewProcessName argument string. Without (2), they don't arrive at all.",
+      "compliance": {
+        "nistSp80053": ["AU-2", "AU-3"],
+        "mitreAttack": ["T1059", "T1218"],
+        "cisAd": ["9.1.2"]
+      }
+    },
+    {
+      "id": "ADLOG-005",
+      "name": "Microsoft Defender Tamper Protection Policy",
+      "description": "If your EDR can be turned off from the endpoint without an admin action, every attacker turns it off as step one of their playbook. Defender Tamper Protection (and the equivalent in any modern EDR) blocks local disablement. This check looks for the GPO settings that govern Defender real-time protection — full Tamper Protection state is set in the cloud (Intune/MDE portal), but the GPO-side hardening is verifiable from SYSVOL.",
+      "severity": "High",
+      "subcategory": "EDR Hardening",
+      "recommendedValue": "Defender real-time protection cannot be disabled by the local user; exclusions are tightly governed (or empty); SmartScreen Enhanced is on. Tamper Protection itself is set via Microsoft Defender for Endpoint cloud portal — verify out-of-band.",
+      "remediationSteps": "In the MDE portal: Settings > Endpoints > Advanced features > Tamper Protection = On (apply to all devices). In GPO: Computer Configuration > Policies > Administrative Templates > Windows Components > Microsoft Defender Antivirus > 'Turn off Microsoft Defender Antivirus' = Disabled (yes, double-negative — this means 'do NOT allow turning Defender off'). Also: > Real-Time Protection > 'Turn off real-time protection' = Disabled. Review the Exclusions subkey carefully — every entry there is a hole an attacker will find.",
+      "compliance": {
+        "nistSp80053": ["SI-3", "SI-4"],
+        "mitreAttack": ["T1562.001"],
+        "cisAd": ["9.3.1"]
+      }
+    },
+    {
+      "id": "ADLOG-006",
+      "name": "Windows Event Forwarding (WEF) Subscription Manager",
+      "description": "Logs that only exist on the host that generated them are exactly as useful as that host's local disk after the attacker wipes it. Windows Event Forwarding ships logs off-box to a collector at the time of write. Without a SubscriptionManager GPO pointing every endpoint at the collector, WEF doesn't happen.",
+      "severity": "High",
+      "subcategory": "Telemetry Pipeline",
+      "recommendedValue": "Group Policy 'Configure target Subscription Manager' is set on workstations and servers to point at the WEF collector.",
+      "remediationSteps": "Computer Configuration > Policies > Administrative Templates > Windows Components > Event Forwarding > 'Configure target Subscription Manager' = Enabled. Value: Server=http://wec-server.domain.tld:5985/wsman/SubscriptionManager/WEC,Refresh=60. Configure subscriptions on the collector with xpath queries for the events you care about (4624, 4625, 4688, 4768, 4769, 4104, 1102, etc.). If you don't have a WEF collector, this is the project to start; it's almost always cheaper than a full SIEM agent rollout for the same telemetry.",
+      "compliance": {
+        "nistSp80053": ["AU-4", "AU-6"],
+        "mitreAttack": ["T1070.001"],
+        "cisAd": ["9.4.1"]
+      }
+    },
+    {
+      "id": "ADLOG-007",
+      "name": "Sysmon Deployment Indicator",
+      "description": "Sysmon (System Monitor, from Sysinternals) is the gold-standard endpoint telemetry source for the events Windows native logging doesn't cover well: file hash on process creation, network connections per process, DLL loads, registry monitoring, named pipes. It runs as a kernel-mode driver. There's no GPO-side detection of 'Sysmon is installed' from SYSVOL alone — the indicator is the presence of a Sysmon config GPO or a startup script that deploys it. This check WARNs and asks the auditor to verify out-of-band.",
+      "severity": "Medium",
+      "subcategory": "Telemetry Pipeline",
+      "recommendedValue": "Sysmon is installed on workstations and servers via a deployment GPO or configuration-management push, with a configuration tuned to the environment (SwiftOnSecurity, Olaf Hartong, or vendor-provided baselines).",
+      "remediationSteps": "Deploy Sysmon (https://download.sysinternals.com/files/Sysmon.zip) via GPO startup script or your config-management platform. Use a community baseline as starting point (SwiftOnSecurity/sysmon-config or Olaf Hartong/sysmon-modular). Verify deployment via Get-CimInstance Win32_Service -Filter \"Name='Sysmon64'\" against a representative host set, or query the WEF collector for 'Microsoft-Windows-Sysmon/Operational' events.",
+      "compliance": {
+        "nistSp80053": ["AU-2", "SI-4"],
+        "mitreAttack": ["T1562.001"],
+        "cisAd": ["9.4.2"]
+      }
+    }
+  ]
+}

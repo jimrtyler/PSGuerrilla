@@ -34,6 +34,7 @@ function Get-ReconnaissanceData {
         StaleObjects        = @('StaleObjects')
         Network             = @('NetworkConfig')
         TierZero            = @('PrivilegedMembers', 'TierZeroSignals')
+        Logging             = @('NetworkConfig')
     }
 
     # Resolve which data sources are required
