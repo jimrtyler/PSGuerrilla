@@ -68,8 +68,13 @@ function Invoke-GuerrillaGuiAsync {
     [void]$ps.AddArgument($Arguments)
 
     # Capture all output streams in one buffer so the polling timer can drain them.
-    $output  = New-Object System.Management.Automation.PSDataCollection[PSObject]
-    $handle  = $ps.BeginInvoke($null, $output)
+    # BeginInvoke's two-arg overload needs typed PSDataCollection<T>s — passing $null
+    # for the input throws "Cannot find an overload" because the generic type can't
+    # be inferred. Hand it an empty (completed) input collection instead.
+    $inputColl  = New-Object System.Management.Automation.PSDataCollection[PSObject]
+    $inputColl.Complete()
+    $output     = New-Object System.Management.Automation.PSDataCollection[PSObject]
+    $handle     = $ps.BeginInvoke($inputColl, $output)
 
     $state = [PSCustomObject]@{
         PowerShell      = $ps

@@ -18,7 +18,12 @@ function Write-GuerrillaBanner {
         # Some hosts (ISE, custom hosts) don't expose [Console]; assume interactive.
     }
 
-    $version = '2.1.0'
+    # Read the version from the manifest so the banner can't drift from the
+    # actual module version (it had: previous bug, banner said 2.1.0 while
+    # ModuleVersion was 2.3.0).
+    $version = try {
+        (Import-PowerShellDataFile (Join-Path $script:ModuleRoot 'PSGuerrilla.psd1') -ErrorAction Stop).ModuleVersion
+    } catch { 'unknown' }
     $awsCount = $script:ParsedAwsNetworks.Count
     $cloudCount = $script:ParsedCloudNetworks.Count
     $attackerCount = $script:AttackerIpSet.Count
