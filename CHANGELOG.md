@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.4.1] - 2026-06-15
+
+### Fixed
+- **GUI: "Run Scan" crashed when a scan finished.** The `OnLog`/`OnComplete`/`OnError` callbacks in `Show-GuerrillaWindow` were built via `GetNewClosure()` *inside* the Run-button click handler. `GetNewClosure()` snapshots only that handler's own locals — not the function-scope helpers it references (`$appendLog`, `$resetOperationsUI`, `$session`, `$brushes`), which are merely visible through the scope chain — so they resolved to `$null` when the DispatcherTimer fired the callbacks (`The expression after '&' in a pipeline element produced an object that was not valid`). The helpers are now localized into the handler scope before the closures are built. This bug was latent since the GUI shipped in 2.3.0 and only surfaced once 2.4.0 fixed the async path to actually fire completion callbacks.
+- **GUI: a throwing callback could wedge the window.** `Invoke-GuerrillaGuiAsync` now guards every `OnComplete`/`OnError` invocation and downgrades a failure to a `Write-Warning` instead of letting it escape the timer tick as a raw console error.
+
 ## [2.4.0] - 2026-06-10
 
 ### Fixed

@@ -132,14 +132,18 @@ function Invoke-GuerrillaGuiAsync {
                     }
                 }
 
+                # A buggy callback must never escape the DispatcherTimer tick — an
+                # unhandled exception here surfaces as a raw console error and can wedge
+                # the window. Guard every callback invocation and downgrade failures to
+                # warnings instead.
                 if ($state.PowerShell.HadErrors -and $result.Count -eq 0) {
                     $firstErr = if ($errStream.Count -gt 0) { $errStream[0] } else { 'Scan failed without error detail' }
-                    if ($OnError) { & $OnError $firstErr }
+                    if ($OnError) { try { & $OnError $firstErr } catch { Write-Warning "OnError callback failed: $_" } }
                 } elseif ($OnComplete) {
-                    & $OnComplete $result
+                    try { & $OnComplete $result } catch { Write-Warning "OnComplete callback failed: $_" }
                 }
             } catch {
-                if ($OnError) { & $OnError $_ }
+                if ($OnError) { try { & $OnError $_ } catch { Write-Warning "OnError callback failed: $_" } }
             } finally {
                 $state.PowerShell.Dispose()
             }

@@ -585,6 +585,18 @@ function Show-GuerrillaWindow {
         }
         $actionArgs = @($cmdletName, $outDir, $mode, [bool]$noReports, [bool]$noDelta, @($selectedCats))
 
+        # Invoke-GuerrillaGuiAsync fires these callbacks from its own DispatcherTimer
+        # scope, so they must carry everything they need by closure. GetNewClosure()
+        # snapshots only THIS click-handler's locals — NOT the function-scope helpers
+        # ($appendLog/$resetOperationsUI/$session/$brushes), which are merely *visible*
+        # here through the scope chain. Copy them into handler-locals first so the
+        # closures actually capture them (a direct `& $appendLog` works above without
+        # this, but a GetNewClosure() snapshot does not).
+        $appendLog         = $appendLog
+        $resetOperationsUI = $resetOperationsUI
+        $session           = $session
+        $brushes           = $brushes
+
         $onLog = { param($msg) & $appendLog $msg }.GetNewClosure()
 
         $onComplete = {
