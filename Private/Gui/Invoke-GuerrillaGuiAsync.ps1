@@ -51,20 +51,34 @@ function Invoke-GuerrillaGuiAsync {
         [scriptblock]$OnError
     )
 
+    # NOTE: do NOT rely on InitialSessionState.ImportPSModule() with a full manifest
+    # path — it expects module *names* and silently fails to load a module given a
+    # .psd1 path, leaving the runspace with none of PSGuerrilla's commands (the scan
+    # cmdlet then fails with "term not recognized"). Import explicitly inside the
+    # worker script instead, with -ErrorAction Stop so a genuine load failure is
+    # surfaced through OnError rather than swallowed.
     $iss = [System.Management.Automation.Runspaces.InitialSessionState]::CreateDefault()
-    $iss.ImportPSModule([string[]]@($ModulePath))
 
     $ps = [PowerShell]::Create($iss)
     [void]$ps.AddScript({
-        param($Action, $ArgArray)
+        param($ModulePath, $ActionText, $ArgArray)
+        # Import the module FIRST with verbose explicitly off — otherwise the import's
+        # own "Loading module/assembly..." verbose stream floods the scan log. Enable
+        # verbose only afterwards so the scan's own progress detail comes through.
+        $env:PSGUERRILLA_QUIET = '1'
+        Import-Module $ModulePath -Force -ErrorAction Stop -Verbose:$false
         $VerbosePreference = 'Continue'
-        try {
-            & $Action @ArgArray
-        } catch {
-            throw
-        }
+        # Rehydrate the action from text. A scriptblock object passed across the
+        # runspace boundary keeps affinity to the runspace that CREATED it, so
+        # invoking it here would run against the GUI runspace (wrong thread, and it
+        # can't see the module we just imported) — that is what made the scan cmdlet
+        # come back "not recognized" and could corrupt the engine. Recreating it from
+        # source binds it to THIS worker runspace and its freshly-imported module.
+        $action = [scriptblock]::Create($ActionText)
+        & $action @ArgArray
     })
-    [void]$ps.AddArgument($Action)
+    [void]$ps.AddArgument($ModulePath)
+    [void]$ps.AddArgument($Action.ToString())
     [void]$ps.AddArgument($Arguments)
 
     # Capture all output streams in one buffer so the polling timer can drain them.

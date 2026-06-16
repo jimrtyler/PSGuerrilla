@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.4.3] - 2026-06-16
+
+### Fixed
+- **Show-Guerrilla scans failed instantly with `The term 'Invoke-Reconnaissance' is not recognized`.** Two bugs in the worker runspace that drives a scan:
+  1. The module was never imported into the runspace — the code used `InitialSessionState.ImportPSModule()` with a full `.psd1` **path**, but that API expects a module **name** and silently does nothing with a path, so the runspace started with none of PSGuerrilla's commands. The worker now calls `Import-Module <manifest> -ErrorAction Stop` explicitly (with `-Verbose:$false` so the import's own load messages don't flood the scan log).
+  2. The scan action was passed across the runspace boundary as a live scriptblock object, which retains affinity to the GUI runspace that created it — so it ran against the wrong runspace/thread and couldn't see the module even once imported (and could corrupt the engine). The action is now marshalled as source text and rehydrated inside the worker via `[scriptblock]::Create()`.
+
+  No scan could be launched from the GUI before this fix. The CLI cmdlets were unaffected.
+- `Tests/Manual/Test-GuiAsyncDrain.ps1` now resolves a real exported cmdlet (`Invoke-Reconnaissance`) inside the worker runspace, so this class of "module not loaded in the worker" regression is caught by the harness rather than only in the live GUI.
+
 ## [2.4.2] - 2026-06-16
 
 ### Fixed

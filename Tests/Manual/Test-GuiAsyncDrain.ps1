@@ -17,7 +17,13 @@ $script:done = '<unset>'
 
 # An action that mimics Write-ProgressLine output: several Write-Host -NoNewline
 # fragments with ANSI codes that should reassemble into one clean log line.
+# CRITICALLY it also resolves a real PSGuerrilla public cmdlet — this is what
+# proves the module is actually imported in the worker runspace (the gap that let
+# the "term 'Invoke-Reconnaissance' is not recognized" bug ship).
 $action = {
+    if (-not (Get-Command Invoke-Reconnaissance -ErrorAction SilentlyContinue)) {
+        throw "PSGuerrilla module not imported in worker runspace — Invoke-Reconnaissance not found"
+    }
     $e = [char]27
     Write-Host "  $e[38;5;240m[1750 UTC] $e[0m" -NoNewline
     Write-Host "$e[38;5;143mRECON     $e[0m" -NoNewline
