@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.4.4] - 2026-06-16
+
+### Fixed
+- **Show-Guerrilla scans failed for Google Workspace / Entra / Campaign with `A parameter cannot be found that matches parameter name 'ScanMode'`.** The GUI built its scan arguments from hardcoded per-cmdlet name lists that didn't match the cmdlets' real parameters: none of `Invoke-Fortification` / `Invoke-Infiltration` / `Invoke-Reconnaissance` declare `-ScanMode`, and `Invoke-Campaign` has neither `-Categories` nor `-NoReports`. The action now inspects the target cmdlet's actual parameter set via `(Get-Command $Cmdlet).Parameters` and only passes options the cmdlet declares, so every theater binds cleanly. (AD scans already worked because `Invoke-Reconnaissance` happened not to be on the `-ScanMode` list.)
+
 ## [2.4.3] - 2026-06-16
 
 ### Fixed

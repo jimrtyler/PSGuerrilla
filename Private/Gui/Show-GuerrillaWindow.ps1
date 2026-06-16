@@ -571,16 +571,19 @@ function Show-GuerrillaWindow {
         $action = {
             param([string]$CmdletName, [string]$OutputDir, [string]$Mode,
                   [bool]$NoReports, [bool]$NoDelta, [string[]]$Categories)
-            $invokeArgs = @{ Quiet = $false }
-            if ($OutputDir)  { $invokeArgs.OutputDirectory = $OutputDir }
-            if ($NoReports)  { $invokeArgs.NoReports = $true }
-            if ($NoDelta)    { $invokeArgs.NoDelta   = $true }
-            if ($Categories.Count -gt 0 -and $CmdletName -ne 'Invoke-Campaign') {
-                $invokeArgs.Categories = $Categories
-            }
-            if ($Mode -and $CmdletName -in @('Invoke-Recon','Invoke-Fortification','Invoke-Infiltration','Invoke-Surveillance','Invoke-Wiretap','Invoke-Watchtower')) {
-                $invokeArgs.ScanMode = $Mode
-            }
+            # Only pass parameters the target cmdlet actually declares. The four
+            # theater cmdlets have different surfaces (e.g. Invoke-Campaign has no
+            # -Categories/-NoReports; none take -ScanMode), so gating on the real
+            # parameter set avoids "A parameter cannot be found that matches ..."
+            # instead of maintaining brittle per-cmdlet name lists.
+            $params = (Get-Command $CmdletName).Parameters
+            $invokeArgs = @{}
+            if ($params.ContainsKey('Quiet'))                                    { $invokeArgs.Quiet = $false }
+            if ($OutputDir          -and $params.ContainsKey('OutputDirectory')) { $invokeArgs.OutputDirectory = $OutputDir }
+            if ($NoReports          -and $params.ContainsKey('NoReports'))       { $invokeArgs.NoReports = $true }
+            if ($NoDelta            -and $params.ContainsKey('NoDelta'))         { $invokeArgs.NoDelta = $true }
+            if ($Categories.Count -gt 0 -and $params.ContainsKey('Categories')) { $invokeArgs.Categories = $Categories }
+            if ($Mode               -and $params.ContainsKey('ScanMode'))       { $invokeArgs.ScanMode = $Mode }
             & $CmdletName @invokeArgs
         }
         $actionArgs = @($cmdletName, $outDir, $mode, [bool]$noReports, [bool]$noDelta, @($selectedCats))
