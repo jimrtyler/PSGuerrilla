@@ -10,7 +10,12 @@ function Export-InfiltrationReportHtml {
         [Parameter(Mandatory)]
         [string]$OutputPath,
 
-        [PSCustomObject[]]$PreviousFindings
+        [PSCustomObject[]]$PreviousFindings,
+
+        [ValidateSet('Guerrilla', 'Professional', 'Slate')]
+        [string]$Style = 'Guerrilla',
+
+        [hashtable]$Branding
     )
 
     $esc = { param([string]$s) [System.Web.HttpUtility]::HtmlEncode($s) }
@@ -49,7 +54,9 @@ function Export-InfiltrationReportHtml {
     }
 
     $scoreLabel = Get-FortificationScoreLabel -Score $overallScore
+    $scoreLabel = Resolve-GuerrillaReportScoreLabel -Score $overallScore -Style $Style -Fallback $scoreLabel
     $scoreDash = [Math]::Round(251.2 * (1 - $overallScore / 100), 1)
+    $brand = Get-GuerrillaReportBrandingHtml -Branding $Branding
 
     $html = [System.Text.StringBuilder]::new(65536)
 
@@ -58,7 +65,7 @@ function Export-InfiltrationReportHtml {
     [void]$html.AppendLine('<meta name="viewport" content="width=device-width, initial-scale=1">')
     [void]$html.AppendLine("<title>Infiltration Report - $(& $esc $Result.TenantId)</title>")
     [void]$html.AppendLine('<style>')
-    [void]$html.AppendLine(':root{--bg:#1a1a17;--surface:#242420;--border:#3a3a32;--text:#c8c0a8;--olive:#8b8b3e;--sage:#6b8f6b;--amber:#d4a520;--gold:#c4a93c;--parchment:#d4c8a0;--deep-orange:#cc5500;--dark-red:#8b1a1a;--dim:#6b6b5a}')
+    [void]$html.AppendLine((Get-GuerrillaReportThemeStyleBlock -Style $Style))
     [void]$html.AppendLine('*{margin:0;padding:0;box-sizing:border-box}')
     [void]$html.AppendLine('body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,-apple-system,sans-serif;font-size:14px;line-height:1.6;padding:2rem}')
     [void]$html.AppendLine('.container{max-width:1200px;margin:0 auto}')
@@ -100,6 +107,8 @@ function Export-InfiltrationReportHtml {
     [void]$html.AppendLine('.delta{padding:1rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;margin:1rem 0}')
     [void]$html.AppendLine('.delta .improved{color:var(--sage)}.delta .regressed{color:var(--deep-orange)}.delta .new{color:var(--amber)}')
     [void]$html.AppendLine('</style></head><body><div class="container">')
+    [void]$html.AppendLine($brand.Banner)
+    [void]$html.AppendLine($brand.Header)
 
     # Header
     [void]$html.AppendLine('<div class="header">')

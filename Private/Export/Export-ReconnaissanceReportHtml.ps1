@@ -20,7 +20,12 @@ function Export-ReconnaissanceReportHtml {
         [hashtable]$Delta,
 
         [Parameter(Mandatory)]
-        [string]$FilePath
+        [string]$FilePath,
+
+        [ValidateSet('Guerrilla', 'Professional', 'Slate')]
+        [string]$Style = 'Guerrilla',
+
+        [hashtable]$Branding
     )
 
     $esc = { param([string]$s) [System.Web.HttpUtility]::HtmlEncode($s) }
@@ -57,6 +62,10 @@ function Export-ReconnaissanceReportHtml {
         default                { 'var(--dark-red)' }
     }
 
+    $themeStyle   = Get-GuerrillaReportThemeStyleBlock -Style $Style
+    $displayLabel = Resolve-GuerrillaReportScoreLabel -Score $OverallScore -Style $Style -Fallback $ScoreLabel
+    $brand        = Get-GuerrillaReportBrandingHtml -Branding $Branding
+
     $html = [System.Text.StringBuilder]::new(65536)
 
     $domainTitle = if ($DomainName) { " - $(& $esc $DomainName)" } else { '' }
@@ -69,19 +78,10 @@ function Export-ReconnaissanceReportHtml {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PSGuerrilla AD Reconnaissance Report$domainTitle - $timestampStr</title>
 <style>
-  :root {
-    --bg: #1a1f16; --surface: #242b1e; --surface-alt: #2d3526; --border: #3d4a35;
-    --text: #d4c9a8; --text-muted: #8a8468;
-    --olive: #a8b58b; --amber: #d4883a; --sage: #6b9b6b;
-    --parchment: #d4c4a0; --gold: #c9a84c; --dim: #6b6b5a;
-    --deep-orange: #c75c2e; --dark-red: #8b2500;
-    --critical: #c75c2e; --high: #d4883a; --medium: #c9a84c;
-    --low: #6b9b6b; --clean: #4a7a4a;
-    --pass: #4a7a4a; --fail: #c75c2e; --warn: #c9a84c; --skip: #6b6b5a; --info: #a8b58b;
-  }
+$themeStyle
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: 'Fira Code', 'JetBrains Mono', Consolas, 'Courier New', monospace;
+    font-family: var(--font-body);
     background: var(--bg); color: var(--text);
     line-height: 1.6; padding: 24px; max-width: 1400px; margin: 0 auto;
   }
@@ -203,6 +203,8 @@ function Export-ReconnaissanceReportHtml {
 
     # ═══ HEADER ═══
     [void]$html.Append(@"
+$($brand.Banner)
+$($brand.Header)
 <h1>AD Reconnaissance Report</h1>
 <div class="subtitle">Domain: $(& $esc $DomainName) &mdash; Generated: $timestampStr</div>
 "@)
@@ -223,7 +225,7 @@ function Export-ReconnaissanceReportHtml {
     <div class="value" style="color:$scoreColor">$OverallScore</div>
   </div>
   <div class="score-detail">
-    <div class="label" style="color:$scoreColor">$ScoreLabel</div>
+    <div class="label" style="color:$scoreColor">$displayLabel</div>
     <div class="desc">Active Directory security posture score (0-100)</div>
     <div class="desc">$totalChecks checks evaluated &mdash; $passCount passed, $failCount failed, $warnCount warnings, $skipCount skipped</div>
   </div>

@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.8.0] - 2026-06-17
+
+### Added
+- **Report themes / styles.** Reports can be generated in three visual styles, selectable **per scan** from the Operations tab's new **"Report style"** dropdown (and via a new `-ReportStyle` parameter on `Invoke-Reconnaissance`, `Invoke-Fortification`, and `Invoke-Infiltration`):
+  - **Guerrilla** (default, unchanged) — the original dark, tactical theme with FORTRESS / EXPOSED FLANK / OVERRUN posture labels.
+  - **Professional** — a light, white-background corporate theme with a sans-serif body and plain **risk-based** labels (Secure / Hardened / Moderate Risk / Elevated Risk / High Risk / Critical Risk).
+  - **Slate** — a modern dark dashboard theme, also with plain risk-based labels.
+
+  A new theming engine (`Get-GuerrillaReportTheme`) drives a shared palette of CSS custom properties, so all three audit reports (AD / Google Workspace / Entra-M365) share one consistent look per style.
+- **White-label branding.** A new **"Branding"** tab in `Show-Guerrilla` captures firm name, logo (file path or URL), consultant name + email, client / assessed-org name, and a confidentiality banner. These render in the report header (firm + logo, "Prepared by", "Prepared for") with the confidentiality banner across the top. Branding is saved to your config and applied to every subsequent scan. **The "Generated with PSGuerrilla by Jim Tyler, Microsoft MVP" footer attribution is always preserved** regardless of theme or branding.
+- Showcase sample reports in the Professional theme with demo branding: `Samples/*-AllFail-Professional.html`.
+
+### Notes
+- The default look is unchanged — existing scans render identically (Guerrilla) unless a style is chosen. Backward compatible: all 64 HTML report validation checks still pass.
+- Themes + branding currently apply to the three audit reports (Reconnaissance / Fortification / Infiltration). The Campaign roll-up and continuous-monitoring reports keep the Guerrilla styling for now.
+
 ## [2.7.0] - 2026-06-17
 
 ### Added

@@ -14,7 +14,7 @@ function Show-GuerrillaWindow {
     param(
         [string]$VaultName  = 'PSGuerrilla',
         [string]$ConfigPath,
-        [ValidateSet('Operations', 'Safehouse', 'Patrol', 'Reports', 'Settings', 'Source')]
+        [ValidateSet('Operations', 'Safehouse', 'Patrol', 'Reports', 'Settings', 'Source', 'Branding')]
         [string]$StartOn    = 'Operations',
         [Parameter(Mandatory)]
         [string]$ModulePath
@@ -164,6 +164,7 @@ function Show-GuerrillaWindow {
           <Button x:Name="nav_Reports"    Content="Reports"     Style="{StaticResource NavButton}"/>
           <Button x:Name="nav_Settings"   Content="Settings"    Style="{StaticResource NavButton}"/>
           <Button x:Name="nav_Source"     Content="Inspector"   Style="{StaticResource NavButton}"/>
+          <Button x:Name="nav_Branding"   Content="Branding"    Style="{StaticResource NavButton}"/>
         </StackPanel>
       </DockPanel>
     </Border>
@@ -213,6 +214,14 @@ function Show-GuerrillaWindow {
             <RadioButton x:Name="ops_ModeFull" Content="Full" GroupName="Mode"/>
             <CheckBox x:Name="ops_NoReports" Content="No reports" Margin="24,0,12,0"/>
             <CheckBox x:Name="ops_NoDelta"   Content="No delta"/>
+          </StackPanel>
+          <StackPanel Grid.Column="1" Orientation="Horizontal">
+            <TextBlock Text="Report style:" Foreground="#B8A97E" VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <ComboBox x:Name="ops_ReportStyle" Width="140">
+              <ComboBoxItem Content="Guerrilla" IsSelected="True"/>
+              <ComboBoxItem Content="Professional"/>
+              <ComboBoxItem Content="Slate"/>
+            </ComboBox>
           </StackPanel>
         </Grid>
 
@@ -445,6 +454,59 @@ function Show-GuerrillaWindow {
         </Grid>
       </Grid>
 
+      <!-- ─── BRANDING PANEL ─── -->
+      <Grid x:Name="panel_Branding" Visibility="Collapsed">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="*"/>
+          <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="Report Branding (White-Label)" FontSize="22" FontWeight="Bold" Foreground="#F5F0E6" Margin="0,0,0,4"/>
+        <TextBlock Grid.Row="1" Text="Add your firm's details to the header of generated reports. The &quot;Generated with PSGuerrilla by Jim Tyler, Microsoft MVP&quot; attribution always remains in the footer. Saved to your config and applied on the next scan." Foreground="#8B8B7A" Margin="0,0,0,16" TextWrapping="Wrap"/>
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+          <Grid Margin="0,0,16,0">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="200"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Firm / company name" Foreground="#B8A97E" VerticalAlignment="Center" Margin="0,8"/>
+            <TextBox   Grid.Row="0" Grid.Column="1" x:Name="br_FirmName" Margin="0,8"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Logo (file path or URL)" Foreground="#B8A97E" VerticalAlignment="Center" Margin="0,8"/>
+            <Grid Grid.Row="1" Grid.Column="1" Margin="0,8">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+              <TextBox Grid.Column="0" x:Name="br_LogoPath"/>
+              <Button  Grid.Column="1" x:Name="br_BrowseLogo" Content="Browse..." Style="{StaticResource SecondaryButton}" Margin="8,0,0,0"/>
+            </Grid>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Consultant name" Foreground="#B8A97E" VerticalAlignment="Center" Margin="0,8"/>
+            <TextBox   Grid.Row="2" Grid.Column="1" x:Name="br_ConsultantName" Margin="0,8"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Consultant email" Foreground="#B8A97E" VerticalAlignment="Center" Margin="0,8"/>
+            <TextBox   Grid.Row="3" Grid.Column="1" x:Name="br_ConsultantEmail" Margin="0,8"/>
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Client / org assessed" Foreground="#B8A97E" VerticalAlignment="Center" Margin="0,8"/>
+            <TextBox   Grid.Row="4" Grid.Column="1" x:Name="br_ClientName" Margin="0,8"/>
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="Confidentiality banner" Foreground="#B8A97E" VerticalAlignment="Center" Margin="0,8"/>
+            <TextBox   Grid.Row="5" Grid.Column="1" x:Name="br_Confidentiality" Margin="0,8"/>
+            <TextBlock Grid.Row="6" Grid.Column="1" x:Name="br_StatusLine" Foreground="#6B8E6B" Margin="0,16,0,0"/>
+          </Grid>
+        </ScrollViewer>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,12,0,0">
+          <Button x:Name="br_Save"   Content="Save"   Style="{StaticResource PrimaryButton}" Margin="0,0,8,0"/>
+          <Button x:Name="br_Revert" Content="Revert" Style="{StaticResource SecondaryButton}"/>
+        </StackPanel>
+      </Grid>
+
     </Grid>
   </Grid>
 </Window>
@@ -481,7 +543,7 @@ function Show-GuerrillaWindow {
     # ── Helpers ───────────────────────────────────────────────────────────
     $setActiveTab = {
         param([string]$Tab)
-        foreach ($t in @('Operations', 'Safehouse', 'Patrol', 'Reports', 'Settings', 'Source')) {
+        foreach ($t in @('Operations', 'Safehouse', 'Patrol', 'Reports', 'Settings', 'Source', 'Branding')) {
             $panel = $session.Controls["panel_$t"]
             $navBtn = $session.Controls["nav_$t"]
             if ($t -eq $Tab) {
@@ -500,6 +562,7 @@ function Show-GuerrillaWindow {
             'Reports'   { & $refreshReportsGrid }
             'Settings'  { & $loadSettings }
             'Source'    { & $refreshSourceList }
+            'Branding'  { & $loadBranding }
         }
     }
 
@@ -616,6 +679,7 @@ function Show-GuerrillaWindow {
         $mode         = if ($session.Controls['ops_ModeFull'].IsChecked) { 'Full' } else { 'Fast' }
         $noReports    = $session.Controls['ops_NoReports'].IsChecked
         $noDelta      = $session.Controls['ops_NoDelta'].IsChecked
+        $reportStyle  = "$($session.Controls['ops_ReportStyle'].SelectedItem.Content)"
         $selectedCats = & $getSelectedCategories
 
         $cmdletName = if ($session.Controls['ops_TheaterAD'].IsChecked)        { 'Invoke-Reconnaissance' }
@@ -629,7 +693,8 @@ function Show-GuerrillaWindow {
         # closure capture — closures don't survive the runspace transfer reliably.
         $action = {
             param([string]$CmdletName, [string]$OutputDir, [string]$Mode,
-                  [bool]$NoReports, [bool]$NoDelta, [string[]]$Categories, [string]$VaultName)
+                  [bool]$NoReports, [bool]$NoDelta, [string[]]$Categories, [string]$VaultName,
+                  [string]$ReportStyle)
             # Only pass parameters the target cmdlet actually declares. The four
             # theater cmdlets have different surfaces (e.g. Invoke-Campaign has no
             # -Categories/-NoReports; none take -ScanMode), so gating on the real
@@ -646,9 +711,10 @@ function Show-GuerrillaWindow {
             if ($NoDelta            -and $params.ContainsKey('NoDelta'))         { $invokeArgs.NoDelta = $true }
             if ($Categories.Count -gt 0 -and $params.ContainsKey('Categories')) { $invokeArgs.Categories = $Categories }
             if ($Mode               -and $params.ContainsKey('ScanMode'))       { $invokeArgs.ScanMode = $Mode }
+            if ($ReportStyle        -and $params.ContainsKey('ReportStyle'))    { $invokeArgs.ReportStyle = $ReportStyle }
             & $CmdletName @invokeArgs
         }
-        $actionArgs = @($cmdletName, $outDir, $mode, [bool]$noReports, [bool]$noDelta, @($selectedCats), $session.VaultName)
+        $actionArgs = @($cmdletName, $outDir, $mode, [bool]$noReports, [bool]$noDelta, @($selectedCats), $session.VaultName, $reportStyle)
 
         # Invoke-GuerrillaGuiAsync fires these callbacks from its own DispatcherTimer
         # scope, so they must carry everything they need by closure. GetNewClosure()
@@ -1050,8 +1116,60 @@ function Show-GuerrillaWindow {
         if ($code) { try { [System.Windows.Clipboard]::SetText($code) } catch { } }
     })
 
+    # ── Branding (white-label) tab handlers ───────────────────────────────
+    $loadBranding = {
+        $b = @{}
+        try {
+            if ($session.ConfigPath -and (Test-Path $session.ConfigPath)) {
+                $cfg = Get-Content $session.ConfigPath -Raw | ConvertFrom-Json -AsHashtable
+                if ($cfg.branding) { $b = $cfg.branding }
+            }
+        } catch { }
+        $session.Controls['br_FirmName'].Text        = [string]($b.FirmName ?? '')
+        $session.Controls['br_LogoPath'].Text        = [string]($b.LogoPath ?? '')
+        $session.Controls['br_ConsultantName'].Text  = [string]($b.ConsultantName ?? '')
+        $session.Controls['br_ConsultantEmail'].Text = [string]($b.ConsultantEmail ?? '')
+        $session.Controls['br_ClientName'].Text      = [string]($b.ClientName ?? '')
+        $session.Controls['br_Confidentiality'].Text = [string]($b.Confidentiality ?? '')
+        $session.Controls['br_StatusLine'].Foreground = $brushes.Sage
+        $session.Controls['br_StatusLine'].Text = ''
+    }
+
+    $session.Controls['br_BrowseLogo'].Add_Click({
+        $dlg = New-Object System.Windows.Forms.OpenFileDialog
+        $dlg.Filter = 'Images|*.png;*.jpg;*.jpeg;*.gif;*.svg|All files|*.*'
+        if ($dlg.ShowDialog() -eq 'OK') { $session.Controls['br_LogoPath'].Text = $dlg.FileName }
+    })
+
+    $session.Controls['br_Save'].Add_Click({
+        try {
+            $cfg = @{}
+            if ($session.ConfigPath -and (Test-Path $session.ConfigPath)) {
+                $cfg = Get-Content $session.ConfigPath -Raw | ConvertFrom-Json -AsHashtable
+            }
+            if (-not $cfg) { $cfg = @{} }
+            $cfg.branding = @{
+                FirmName        = $session.Controls['br_FirmName'].Text
+                LogoPath        = $session.Controls['br_LogoPath'].Text
+                ConsultantName  = $session.Controls['br_ConsultantName'].Text
+                ConsultantEmail = $session.Controls['br_ConsultantEmail'].Text
+                ClientName      = $session.Controls['br_ClientName'].Text
+                Confidentiality = $session.Controls['br_Confidentiality'].Text
+            }
+            $dir = Split-Path $session.ConfigPath -Parent
+            if ($dir -and -not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
+            $cfg | ConvertTo-Json -Depth 8 | Set-Content -Path $session.ConfigPath -Encoding UTF8
+            $session.Controls['br_StatusLine'].Foreground = $brushes.Sage
+            $session.Controls['br_StatusLine'].Text = "Saved at $([datetime]::Now.ToString('HH:mm:ss')). Applied on your next scan."
+        } catch {
+            $session.Controls['br_StatusLine'].Foreground = $brushes.Red
+            $session.Controls['br_StatusLine'].Text = "Save failed: $_"
+        }
+    })
+    $session.Controls['br_Revert'].Add_Click({ & $loadBranding })
+
     # ── Nav button wiring ─────────────────────────────────────────────────
-    foreach ($t in @('Operations','Safehouse','Patrol','Reports','Settings','Source')) {
+    foreach ($t in @('Operations','Safehouse','Patrol','Reports','Settings','Source','Branding')) {
         $btn = $session.Controls["nav_$t"]
         $tab = $t  # capture
         $btn.Add_Click({ & $setActiveTab $tab }.GetNewClosure())

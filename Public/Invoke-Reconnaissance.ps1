@@ -25,7 +25,10 @@ function Invoke-Reconnaissance {
         [string]$WeakPasswordList,
 
         [int]$InactiveDays = 90,
-        [int]$PasswordAgeDays = 365
+        [int]$PasswordAgeDays = 365,
+
+        [ValidateSet('Guerrilla', 'Professional', 'Slate')]
+        [string]$ReportStyle = 'Guerrilla'
     )
 
     # --- Resolve mission config (guerrilla-config.json) ---
@@ -223,6 +226,10 @@ function Invoke-Reconnaissance {
             if (-not $Quiet) { Write-ProgressLine -Phase REPORTING -Message 'CSV report' -Detail $csvPath }
         }
         if ($genHtml) {
+            if (-not $PSBoundParameters.ContainsKey('ReportStyle') -and $config -and $config.output -and ($config.output.reportStyle -in 'Guerrilla', 'Professional', 'Slate')) {
+                $ReportStyle = [string]$config.output.reportStyle
+            }
+            $reportBranding = Get-GuerrillaBranding -Config $config
             $htmlPath = Join-Path $outDir "reconnaissance_report_$timestamp.html"
             Export-ReconnaissanceReportHtml `
                 -Findings @($allFindings) `
@@ -231,7 +238,9 @@ function Invoke-Reconnaissance {
                 -CategoryScores $scoreResult.CategoryScores `
                 -DomainName $domainName `
                 -Delta $delta `
-                -FilePath $htmlPath
+                -FilePath $htmlPath `
+                -Style $ReportStyle `
+                -Branding $reportBranding
             if (-not $Quiet) { Write-ProgressLine -Phase REPORTING -Message 'HTML report' -Detail $htmlPath }
         }
         if ($genJson) {

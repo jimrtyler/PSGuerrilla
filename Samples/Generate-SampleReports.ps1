@@ -31,7 +31,10 @@
     .\Samples\Generate-SampleReports.ps1
 #>
 [CmdletBinding()]
-param()
+param(
+    [ValidateSet('Guerrilla', 'Professional', 'Slate')]
+    [string]$Style = 'Guerrilla'
+)
 
 $ErrorActionPreference = 'Stop'
 
@@ -41,6 +44,21 @@ Import-Module (Join-Path $PSScriptRoot '../PSGuerrilla.psd1') -Force
 $env:PSGUERRILLA_QUIET = $null
 
 $samplesDir = $PSScriptRoot
+
+# Non-default themes are written to suffixed showcase files (e.g.
+# Fortification-AllFail-Professional.html) and carry demo white-label branding so
+# the professional look and the firm header are both visible. The default
+# 'Guerrilla' run keeps the canonical committed filenames and no branding.
+$styleSuffix = if ($Style -eq 'Guerrilla') { '' } else { "-$Style" }
+$demoBranding = if ($Style -eq 'Guerrilla') { $null } else {
+    @{
+        FirmName        = 'Northwind Security'
+        ConsultantName  = 'A. Analyst'
+        ConsultantEmail = 'analyst@northwind.example'
+        ClientName      = 'Globex Corporation'
+        Confidentiality = 'CONFIDENTIAL'
+    }
+}
 $dataDir = Join-Path $PSScriptRoot '../Data/AuditChecks'
 
 # --- Helper: generate a realistic "bad" CurrentValue based on check context ---
@@ -244,18 +262,20 @@ $gwsFiles = @(
 $gwsFindings = New-AllFailFindings -CheckFiles $gwsFiles
 $gwsScore = Get-PostureScore -Findings $gwsFindings
 $gwsLabel = Get-ScoreLabel -Score $gwsScore.OverallScore
-$gwsPath = Join-Path $samplesDir 'Fortification-AllFail.html'
+$gwsPath = Join-Path $samplesDir "Fortification-AllFail$styleSuffix.html"
 
 & $mod {
-    param($Findings, $OverallScore, $ScoreLabel, $CategoryScores, $TenantDomain, $FilePath)
+    param($Findings, $OverallScore, $ScoreLabel, $CategoryScores, $TenantDomain, $FilePath, $Style, $Branding)
     Export-FortificationReportHtml `
         -Findings $Findings `
         -OverallScore $OverallScore `
         -ScoreLabel $ScoreLabel `
         -CategoryScores $CategoryScores `
         -TenantDomain $TenantDomain `
-        -FilePath $FilePath
-} $gwsFindings $gwsScore.OverallScore $gwsLabel $gwsScore.CategoryScores 'sample.org' $gwsPath
+        -FilePath $FilePath `
+        -Style $Style `
+        -Branding $Branding
+} $gwsFindings $gwsScore.OverallScore $gwsLabel $gwsScore.CategoryScores 'sample.org' $gwsPath $Style $demoBranding
 
 Write-Host "  -> $gwsPath ($($gwsFindings.Count) checks, score: $($gwsScore.OverallScore))" -ForegroundColor Green
 
@@ -280,18 +300,20 @@ $adFiles = @(
 $adFindings = New-AllFailFindings -CheckFiles $adFiles
 $adScore = Get-PostureScore -Findings $adFindings
 $adLabel = Get-ScoreLabel -Score $adScore.OverallScore
-$adPath = Join-Path $samplesDir 'Reconnaissance-AllFail.html'
+$adPath = Join-Path $samplesDir "Reconnaissance-AllFail$styleSuffix.html"
 
 & $mod {
-    param($Findings, $OverallScore, $ScoreLabel, $CategoryScores, $DomainName, $FilePath)
+    param($Findings, $OverallScore, $ScoreLabel, $CategoryScores, $DomainName, $FilePath, $Style, $Branding)
     Export-ReconnaissanceReportHtml `
         -Findings $Findings `
         -OverallScore $OverallScore `
         -ScoreLabel $ScoreLabel `
         -CategoryScores $CategoryScores `
         -DomainName $DomainName `
-        -FilePath $FilePath
-} $adFindings $adScore.OverallScore $adLabel $adScore.CategoryScores 'SAMPLE.LOCAL' $adPath
+        -FilePath $FilePath `
+        -Style $Style `
+        -Branding $Branding
+} $adFindings $adScore.OverallScore $adLabel $adScore.CategoryScores 'SAMPLE.LOCAL' $adPath $Style $demoBranding
 
 Write-Host "  -> $adPath ($($adFindings.Count) checks, score: $($adScore.OverallScore))" -ForegroundColor Green
 
@@ -319,7 +341,7 @@ $entraFiles = @(
 
 $entraFindings = New-AllFailFindings -CheckFiles $entraFiles
 $entraScore = Get-PostureScore -Findings $entraFindings
-$entraPath = Join-Path $samplesDir 'Infiltration-AllFail.html'
+$entraPath = Join-Path $samplesDir "Infiltration-AllFail$styleSuffix.html"
 
 $infiltrationResult = [PSCustomObject]@{
     PSTypeName = 'PSGuerrilla.InfiltrationResult'
@@ -330,9 +352,9 @@ $infiltrationResult = [PSCustomObject]@{
 }
 
 & $mod {
-    param($Result, $OutputPath)
-    Export-InfiltrationReportHtml -Result $Result -OutputPath $OutputPath
-} $infiltrationResult $entraPath
+    param($Result, $OutputPath, $Style, $Branding)
+    Export-InfiltrationReportHtml -Result $Result -OutputPath $OutputPath -Style $Style -Branding $Branding
+} $infiltrationResult $entraPath $Style $demoBranding
 
 Write-Host "  -> $entraPath ($($entraFindings.Count) checks, score: $($entraScore.OverallScore))" -ForegroundColor Green
 

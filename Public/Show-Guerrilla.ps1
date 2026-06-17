@@ -21,6 +21,8 @@ function Show-Guerrilla {
           * Settings   — edit runtime config (profile, alert level, output dir).
           * Inspector  — browse and read the source of every scan, check, and helper
             function in the module, filtered by area or searched by name.
+          * Branding   — white-label report fields (firm, logo, consultant, client,
+            confidentiality). The PSGuerrilla / Jim Tyler footer attribution is kept.
 
         The GUI is a wrapper around the existing public cmdlets — every action it
         takes is the equivalent of running Set-Safehouse / Invoke-Reconnaissance /
@@ -59,7 +61,7 @@ function Show-Guerrilla {
         [Alias('RuntimeConfig')]
         [string]$ConfigPath,
 
-        [ValidateSet('Operations', 'Safehouse', 'Patrol', 'Reports', 'Settings', 'Source')]
+        [ValidateSet('Operations', 'Safehouse', 'Patrol', 'Reports', 'Settings', 'Source', 'Branding')]
         [string]$StartOn = 'Operations'
     )
 

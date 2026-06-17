@@ -84,7 +84,10 @@ function Invoke-Infiltration {
         [string]$ConfigPath,
         [Alias('MissionConfig')]
         [string]$ConfigFile,
-        [string]$VaultName = 'PSGuerrilla'
+        [string]$VaultName = 'PSGuerrilla',
+
+        [ValidateSet('Guerrilla', 'Professional', 'Slate')]
+        [string]$ReportStyle = 'Guerrilla'
     )
 
     $vaultName = $VaultName
@@ -362,8 +365,13 @@ function Invoke-Infiltration {
         }
 
         try {
+            if (-not $PSBoundParameters.ContainsKey('ReportStyle') -and $config -and $config.output -and ($config.output.reportStyle -in 'Guerrilla', 'Professional', 'Slate')) {
+                $ReportStyle = [string]$config.output.reportStyle
+            }
             Export-InfiltrationReportHtml -Result $result -OutputPath (Join-Path $outDir "$baseName.html") `
-                -PreviousFindings $previousFindings
+                -PreviousFindings $previousFindings `
+                -Style $ReportStyle `
+                -Branding (Get-GuerrillaBranding -Config $config)
         } catch {
             Write-Warning "HTML report generation failed: $_"
         }
