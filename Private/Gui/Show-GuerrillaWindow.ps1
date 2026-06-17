@@ -14,7 +14,7 @@ function Show-GuerrillaWindow {
     param(
         [string]$VaultName  = 'PSGuerrilla',
         [string]$ConfigPath,
-        [ValidateSet('Operations', 'Safehouse', 'Patrol', 'Reports', 'Settings')]
+        [ValidateSet('Operations', 'Safehouse', 'Patrol', 'Reports', 'Settings', 'Source')]
         [string]$StartOn    = 'Operations',
         [Parameter(Mandatory)]
         [string]$ModulePath
@@ -131,6 +131,12 @@ function Show-GuerrillaWindow {
       <Setter Property="Foreground" Value="#F5F0E6"/>
       <Setter Property="Margin" Value="0,4,16,4"/>
     </Style>
+    <Style TargetType="ListBox">
+      <Setter Property="Background" Value="#252420"/>
+      <Setter Property="Foreground" Value="#F5F0E6"/>
+      <Setter Property="BorderBrush" Value="#55524A"/>
+      <Setter Property="BorderThickness" Value="1"/>
+    </Style>
   </Window.Resources>
 
   <Grid>
@@ -157,6 +163,7 @@ function Show-GuerrillaWindow {
           <Button x:Name="nav_Patrol"     Content="Patrol"      Style="{StaticResource NavButton}"/>
           <Button x:Name="nav_Reports"    Content="Reports"     Style="{StaticResource NavButton}"/>
           <Button x:Name="nav_Settings"   Content="Settings"    Style="{StaticResource NavButton}"/>
+          <Button x:Name="nav_Source"     Content="Inspector"   Style="{StaticResource NavButton}"/>
         </StackPanel>
       </DockPanel>
     </Border>
@@ -392,6 +399,52 @@ function Show-GuerrillaWindow {
         </StackPanel>
       </Grid>
 
+      <!-- ─── INSPECTOR PANEL ─── -->
+      <Grid x:Name="panel_Source" Visibility="Collapsed">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="Function &amp; Scan Inspector" FontSize="22" FontWeight="Bold" Foreground="#F5F0E6" Margin="0,0,0,4"/>
+        <TextBlock Grid.Row="1" Text="Read the actual source of every scan, check, and helper in this module. Filter by area or search by name, then select a function to view its code." Foreground="#8B8B7A" Margin="0,0,0,16" TextWrapping="Wrap"/>
+        <Grid Grid.Row="2" Margin="0,0,0,12">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="240"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+          </Grid.ColumnDefinitions>
+          <ComboBox  Grid.Column="0" x:Name="src_AreaFilter" Margin="0,0,8,0"/>
+          <TextBox   Grid.Column="1" x:Name="src_Search"/>
+          <TextBlock Grid.Column="2" x:Name="src_Count" Foreground="#8B8B7A" VerticalAlignment="Center" Margin="12,0,0,0"/>
+        </Grid>
+        <Grid Grid.Row="3">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="320"/>
+            <ColumnDefinition Width="*"/>
+          </Grid.ColumnDefinitions>
+          <ListBox Grid.Column="0" x:Name="src_List"/>
+          <Grid Grid.Column="1" Margin="12,0,0,0">
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Margin="0,0,0,6">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+              <TextBlock Grid.Column="0" x:Name="src_Meta" Foreground="#8B8B7A" VerticalAlignment="Center" TextWrapping="Wrap" Text="Select a function to view its source."/>
+              <Button Grid.Column="1" x:Name="src_Copy" Content="Copy" Style="{StaticResource SecondaryButton}" Margin="8,0,0,0"/>
+            </Grid>
+            <TextBox Grid.Row="1" x:Name="src_Code" IsReadOnly="True" FontFamily="Consolas, Courier New" FontSize="12"
+                     Background="#161512" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                     TextWrapping="NoWrap" AcceptsReturn="True" AcceptsTab="True"/>
+          </Grid>
+        </Grid>
+      </Grid>
+
     </Grid>
   </Grid>
 </Window>
@@ -422,12 +475,13 @@ function Show-GuerrillaWindow {
         CurrentTab      = 'Operations'
         CurrentAsync    = $null
         LastReportPath  = $null
+        FunctionIndex   = $null
     }
 
     # ── Helpers ───────────────────────────────────────────────────────────
     $setActiveTab = {
         param([string]$Tab)
-        foreach ($t in @('Operations', 'Safehouse', 'Patrol', 'Reports', 'Settings')) {
+        foreach ($t in @('Operations', 'Safehouse', 'Patrol', 'Reports', 'Settings', 'Source')) {
             $panel = $session.Controls["panel_$t"]
             $navBtn = $session.Controls["nav_$t"]
             if ($t -eq $Tab) {
@@ -445,6 +499,7 @@ function Show-GuerrillaWindow {
             'Patrol'    { & $refreshPatrolGrid }
             'Reports'   { & $refreshReportsGrid }
             'Settings'  { & $loadSettings }
+            'Source'    { & $refreshSourceList }
         }
     }
 
@@ -479,6 +534,10 @@ function Show-GuerrillaWindow {
             @()  # Campaign runs everything by default
         }
 
+        # Categories that start unchecked even though they belong to the theater.
+        # Email Security is opt-in for Google Workspace scans (noisier, slower set).
+        $defaultUnchecked = if ($session.Controls['ops_TheaterWorkspace'].IsChecked) { @('EmailSecurity') } else { @() }
+
         if ($categories.Count -eq 0) {
             $panel.Children.Add([Windows.Controls.TextBlock]@{
                 Text       = 'Campaign runs the default set in each enabled theater.'
@@ -491,7 +550,7 @@ function Show-GuerrillaWindow {
         # "All" toggle
         $allCb = New-Object System.Windows.Controls.CheckBox
         $allCb.Content     = 'All'
-        $allCb.IsChecked   = $true
+        $allCb.IsChecked   = ($defaultUnchecked.Count -eq 0)
         $allCb.FontWeight  = 'Bold'
         $allCb.Foreground  = $brushes.Amber
         $allCb.Margin      = '0,4,16,4'
@@ -514,7 +573,7 @@ function Show-GuerrillaWindow {
         foreach ($cat in $categories) {
             $cb = New-Object System.Windows.Controls.CheckBox
             $cb.Content   = $cat
-            $cb.IsChecked = $true
+            $cb.IsChecked = ($cat -notin $defaultUnchecked)
             $cb.Margin    = '0,4,16,4'
             $panel.Children.Add($cb) | Out-Null
         }
@@ -895,8 +954,104 @@ function Show-GuerrillaWindow {
 
     $session.Controls['st_Revert'].Add_Click({ & $loadSettings })
 
+    # ── Inspector tab handlers ────────────────────────────────────────────
+    # Map a module-relative file path (and function name as a fallback) to a
+    # friendly area label used by the Inspector's area filter.
+    $classifyFunctionArea = {
+        param([string]$Rel, [string]$Name)
+        $p = ($Rel -replace '\\', '/')
+        if ($p -match '^Private/AD/'     -or $Name -match '^(Test-ReconAD|Test-ReconTIER|Invoke-AD|Invoke-TierZero)') { return 'Active Directory' }
+        if ($p -match '^Private/Audit/'  -or $Name -match 'Fortification') { return 'Google Workspace' }
+        if ($p -match '^Private/Entra/'  -or $Name -match '^(Test-Infiltration|Invoke-Entra|Invoke-M365|Invoke-Azure|Invoke-Intune)') { return 'Entra / Azure / M365' }
+        if ($p -match 'Monitor')         { return 'Monitoring' }
+        if ($p -match '^Private/Export/') { return 'Reporting & Export' }
+        if ($p -match '^Private/Gui/')   { return 'GUI' }
+        if ($p -match '^Public/')        { return 'Public cmdlets' }
+        return 'Core & helpers'
+    }
+
+    # Parse every module .ps1 once and index each function's name, area, source
+    # location, and full source text. Built lazily on first Inspector visit.
+    $ensureFunctionIndex = {
+        if ($session.FunctionIndex) { return }
+        $root = Split-Path $session.ModulePath -Parent
+        $index = [System.Collections.Generic.List[object]]::new()
+        foreach ($sub in @('Public', 'Private')) {
+            $dir = Join-Path $root $sub
+            if (-not (Test-Path $dir)) { continue }
+            foreach ($file in (Get-ChildItem -Path $dir -Recurse -Filter *.ps1 -File)) {
+                $tokens = $null; $perrors = $null
+                try {
+                    $ast = [System.Management.Automation.Language.Parser]::ParseFile($file.FullName, [ref]$tokens, [ref]$perrors)
+                } catch { continue }
+                $funcs = $ast.FindAll({ param($n) $n -is [System.Management.Automation.Language.FunctionDefinitionAst] }, $true)
+                foreach ($fn in $funcs) {
+                    $rel = $file.FullName.Substring($root.Length).TrimStart('\', '/')
+                    $index.Add([PSCustomObject]@{
+                        Name      = $fn.Name
+                        Area      = (& $classifyFunctionArea $rel $fn.Name)
+                        RelFile   = $rel
+                        StartLine = $fn.Extent.StartLineNumber
+                        Source    = $fn.Extent.Text
+                    })
+                }
+            }
+        }
+        $session.FunctionIndex = @($index | Sort-Object Area, Name)
+
+        # Populate the area filter dropdown once: "All areas" + each distinct area.
+        $combo = $session.Controls['src_AreaFilter']
+        if ($combo.Items.Count -eq 0) {
+            $allItem = New-Object System.Windows.Controls.ComboBoxItem
+            $allItem.Content = 'All areas'
+            [void]$combo.Items.Add($allItem)
+            foreach ($area in (@($session.FunctionIndex.Area) | Sort-Object -Unique)) {
+                $ci = New-Object System.Windows.Controls.ComboBoxItem
+                $ci.Content = $area
+                [void]$combo.Items.Add($ci)
+            }
+            $combo.SelectedIndex = 0
+        }
+    }
+
+    # Filter the index by area + search term and rebuild the function list.
+    $refreshSourceList = {
+        & $ensureFunctionIndex
+        $area = if ($session.Controls['src_AreaFilter'].SelectedItem) {
+            [string]$session.Controls['src_AreaFilter'].SelectedItem.Content
+        } else { 'All areas' }
+        $term = [string]$session.Controls['src_Search'].Text
+        $items = @($session.FunctionIndex)
+        if ($area -and $area -ne 'All areas') { $items = @($items | Where-Object { $_.Area -eq $area }) }
+        if ($term) { $items = @($items | Where-Object { $_.Name -like "*$term*" }) }
+
+        $list = $session.Controls['src_List']
+        $list.Items.Clear()
+        foreach ($it in $items) {
+            $li = New-Object System.Windows.Controls.ListBoxItem
+            $li.Content = $it.Name
+            $li.Tag     = $it
+            [void]$list.Items.Add($li)
+        }
+        $session.Controls['src_Count'].Text = "$($items.Count) function(s)"
+    }
+
+    $session.Controls['src_List'].Add_SelectionChanged({
+        $sel = $session.Controls['src_List'].SelectedItem
+        if (-not $sel) { return }
+        $info = $sel.Tag
+        $session.Controls['src_Code'].Text = $info.Source
+        $session.Controls['src_Meta'].Text = "$($info.Name)   $([char]0x2014)   $($info.RelFile) : line $($info.StartLine)   $([char]0x00B7)   $($info.Area)"
+    })
+    $session.Controls['src_Search'].Add_TextChanged({ & $refreshSourceList })
+    $session.Controls['src_AreaFilter'].Add_SelectionChanged({ & $refreshSourceList })
+    $session.Controls['src_Copy'].Add_Click({
+        $code = $session.Controls['src_Code'].Text
+        if ($code) { try { [System.Windows.Clipboard]::SetText($code) } catch { } }
+    })
+
     # ── Nav button wiring ─────────────────────────────────────────────────
-    foreach ($t in @('Operations','Safehouse','Patrol','Reports','Settings')) {
+    foreach ($t in @('Operations','Safehouse','Patrol','Reports','Settings','Source')) {
         $btn = $session.Controls["nav_$t"]
         $tab = $t  # capture
         $btn.Add_Click({ & $setActiveTab $tab }.GetNewClosure())

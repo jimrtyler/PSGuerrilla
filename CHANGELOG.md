@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.7.0] - 2026-06-17
+
+### Added
+- **`Show-Guerrilla` GUI: new "Inspector" tab** — a built-in function & scan **source browser**. Lists every function in the module (801 today), filterable by **area** (Active Directory, Google Workspace, Entra / Azure / M365, Monitoring, Reporting & Export, Public cmdlets, Core & helpers, GUI) and searchable by name. Selecting a function shows its **full source**, the **file path and line number** it lives at, and a **Copy** button — so an operator can confirm exactly what any scan/check is doing without leaving the console or opening the repo. `Show-Guerrilla -StartOn Source` opens directly to it.
+
+### Changed
+- **Google Workspace scans now leave "Email Security" unchecked by default** in the GUI's category picker — it's opt-in (the noisier, slower set). Every other Workspace category stays checked, and the "All" toggle reflects the partial selection. Active Directory and Entra / M365 category defaults are unchanged (all checked).
+
 ## [2.6.0] - 2026-06-16
 
 ### Added

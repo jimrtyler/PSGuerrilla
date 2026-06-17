@@ -19,6 +19,8 @@ function Show-Guerrilla {
             monitoring).
           * Reports    — browse HTML reports, open in browser, convert to PDF.
           * Settings   — edit runtime config (profile, alert level, output dir).
+          * Inspector  — browse and read the source of every scan, check, and helper
+            function in the module, filtered by area or searched by name.
 
         The GUI is a wrapper around the existing public cmdlets — every action it
         takes is the equivalent of running Set-Safehouse / Invoke-Reconnaissance /
@@ -36,7 +38,7 @@ function Show-Guerrilla {
 
     .PARAMETER StartOn
         Which tab to open on launch. One of: Operations, Safehouse, Patrol, Reports,
-        Settings. Default: Operations.
+        Settings, Source. Default: Operations.
 
     .EXAMPLE
         Show-Guerrilla
@@ -57,7 +59,7 @@ function Show-Guerrilla {
         [Alias('RuntimeConfig')]
         [string]$ConfigPath,
 
-        [ValidateSet('Operations', 'Safehouse', 'Patrol', 'Reports', 'Settings')]
+        [ValidateSet('Operations', 'Safehouse', 'Patrol', 'Reports', 'Settings', 'Source')]
         [string]$StartOn = 'Operations'
     )
 
