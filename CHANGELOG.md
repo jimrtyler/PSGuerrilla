@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.9.1] - 2026-06-18
+
+### Fixed
+_Surfaced by a live-environment validation pass against a production Active Directory domain and Entra tenant._
+- **AD ACL / DCSync / GPO-delegation checks were silently dead.** `Resolve-ADSid` referenced three module-scope caches (`$script:SidCache`, `$script:WellKnownSids`, `$script:WellKnownRids`) that the `.psm1` bootstrap never initialized — so every ACL read threw *"You cannot call a method on a null-valued expression"*, `Get-ADObjectACLs` swallowed it, and `ADACL-012`/`ADACL-014`, `ADGPO-007`/`ADGPO-009`, and the **DCSync-rights check `ADPRIV-028`** all became false SKIPs. The caches are now initialized at load (with the well-known SID/RID tables), with a belt-and-suspenders guard in `Resolve-ADSid`; the domain-RID lookup is gated on `S-1-5-21-*` SIDs to avoid collisions.
+- **Tier-0 "tier bleed" checks ERRORed on clean environments.** `ADTIER-002/003/004/005` (Veeam/vCenter/SCCM/SQL service accounts in privileged groups) called `New-TierBleedFinding`, whose `[Parameter(Mandatory)][array]$Hits` **rejected an empty collection** — so the *secure* state (zero hits) threw instead of returning PASS. Added `[AllowEmptyCollection()]`.
+- **Entra password-protection checks falsely reported "settings not found".** `Get-EntraAuthMethodsData` queried `/settings` (a beta-only segment that 400s on v1.0); it now uses the v1.0 `/groupSettings` resource, so `EIDAUTH-013`/`EIDAUTH-014` read the real Azure AD Password Protection posture.
+- **Removed a redundant, always-400 Graph call.** The standalone `.../authenticationMethodsPolicy/authenticationMethodConfigurations` endpoint isn't directly addressable; the configurations are now sourced from the parent `authenticationMethodsPolicy` object (which already includes them).
+- **Quieter logs on healthy domains.** `Invoke-LdapQuery` now treats *"no such object"* (e.g. a domain with no AD CS / Enterprise CA, or an empty DNS partition) as `Write-Verbose` + empty result instead of an alarming `Write-Warning`. The dependent check still SKIPs the same way.
+
+### Notes
+- Added `Tests/verify-core-fixes.ps1` covering the `Resolve-ADSid` and `New-TierBleedFinding` regressions.
+- Larger improvements from the same validation report — license-gated PIM checks surfacing raw HTTP 400s instead of clean "requires Entra ID P2" SKIPs, app-only Graph coverage for M365 workloads (opt-in EXO/Teams/SharePoint), and Azure IAM "no access vs. no resources" messaging — are tracked as follow-ups.
+
 ## [2.9.0] - 2026-06-17
 
 ### Added

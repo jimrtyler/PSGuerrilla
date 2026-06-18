@@ -84,7 +84,9 @@ function Get-Tier0HighPrivMembers {
 function New-TierBleedFinding {
     param(
         [Parameter(Mandatory)][hashtable]$CheckDefinition,
-        [Parameter(Mandatory)][array]$Hits,
+        # AllowEmptyCollection so the secure/clean state (zero hits) reaches the PASS
+        # branch — a Mandatory [array] rejects @() at bind time and would ERROR instead.
+        [Parameter(Mandatory)][AllowEmptyCollection()][array]$Hits,
         [string]$ProductLabel
     )
     if ($Hits.Count -eq 0) {

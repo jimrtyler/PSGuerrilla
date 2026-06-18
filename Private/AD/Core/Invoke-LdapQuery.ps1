@@ -42,7 +42,14 @@ function Invoke-LdapQuery {
     try {
         $searchResults = $searcher.FindAll()
     } catch {
-        Write-Warning "LDAP query failed: $Filter — $_"
+        # A missing container (e.g. no AD CS / Enterprise CA, or an empty DNS partition)
+        # is a legitimate state, not a failure — surface it quietly so clean domains don't
+        # emit alarming warnings. The downstream check still SKIPs the same way.
+        if ($_.Exception.Message -match 'no such object|0x80072030') {
+            Write-Verbose "LDAP query found no matching container/object for: $Filter — $_"
+        } else {
+            Write-Warning "LDAP query failed: $Filter — $_"
+        }
         return @()
     }
 

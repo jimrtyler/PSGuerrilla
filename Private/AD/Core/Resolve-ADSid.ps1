@@ -10,6 +10,12 @@ function Resolve-ADSid {
         [System.DirectoryServices.DirectoryEntry]$SearchRoot
     )
 
+    # Belt-and-suspenders: ensure the module-scope caches/tables exist even if the
+    # .psm1 bootstrap didn't run (e.g. the function dot-sourced in isolation by a test).
+    if ($null -eq $script:SidCache)      { $script:SidCache = @{} }
+    if ($null -eq $script:WellKnownSids) { $script:WellKnownSids = @{} }
+    if ($null -eq $script:WellKnownRids) { $script:WellKnownRids = @{} }
+
     # Check cache first
     if ($script:SidCache.ContainsKey($SidString)) {
         return $script:SidCache[$SidString]
@@ -22,9 +28,10 @@ function Resolve-ADSid {
         return $name
     }
 
-    # Check domain-relative well-known RIDs
+    # Check domain-relative well-known RIDs (only meaningful for S-1-5-21-<domain>-<RID>;
+    # gating on the domain-SID prefix avoids a raw RID colliding with a builtin's last segment).
     $sidParts = $SidString -split '-'
-    if ($sidParts.Count -ge 5) {
+    if ($SidString -like 'S-1-5-21-*' -and $sidParts.Count -ge 5) {
         $rid = [int]$sidParts[-1]
         if ($script:WellKnownRids.ContainsKey($rid)) {
             $name = $script:WellKnownRids[$rid]

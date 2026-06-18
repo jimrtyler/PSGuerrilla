@@ -134,6 +134,42 @@ foreach ($file in Get-ChildItem -Path (Join-Path $ModuleRoot 'Public') -Filter '
 $script:IpClassCache = @{}
 $script:GeoCache = @{}
 
+# SID-resolution caches/tables (reset per module load). Resolve-ADSid references all
+# three; without these the AD ACL/DCSync/GPO-delegation collectors throw
+# "You cannot call a method on a null-valued expression" and silently return empty.
+$script:SidCache = @{}
+
+$script:WellKnownSids = @{
+    'S-1-0-0'      = 'NULL';                       'S-1-1-0'      = 'Everyone'
+    'S-1-2-0'      = 'Local';                      'S-1-3-0'      = 'Creator Owner'
+    'S-1-3-1'      = 'Creator Group';              'S-1-5-2'      = 'Network'
+    'S-1-5-4'      = 'Interactive';                'S-1-5-6'      = 'Service'
+    'S-1-5-7'      = 'Anonymous';                  'S-1-5-9'      = 'Enterprise Domain Controllers'
+    'S-1-5-10'     = 'Principal Self';             'S-1-5-11'     = 'Authenticated Users'
+    'S-1-5-13'     = 'Terminal Server Users';      'S-1-5-18'     = 'SYSTEM'
+    'S-1-5-19'     = 'Local Service';              'S-1-5-20'     = 'Network Service'
+    'S-1-5-32-544' = 'Administrators';             'S-1-5-32-545' = 'Users'
+    'S-1-5-32-546' = 'Guests';                     'S-1-5-32-548' = 'Account Operators'
+    'S-1-5-32-549' = 'Server Operators';           'S-1-5-32-550' = 'Print Operators'
+    'S-1-5-32-551' = 'Backup Operators';           'S-1-5-32-554' = 'Pre-Windows 2000 Compatible Access'
+    'S-1-5-32-555' = 'Remote Desktop Users';       'S-1-5-32-557' = 'Incoming Forest Trust Builders'
+    'S-1-5-32-562' = 'Distributed COM Users';      'S-1-5-32-568' = 'IIS_IUSRS'
+    'S-1-5-32-569' = 'Cryptographic Operators';    'S-1-5-32-573' = 'Event Log Readers'
+    'S-1-5-32-578' = 'Hyper-V Administrators';     'S-1-5-32-579' = 'Access Control Assistance Operators'
+    'S-1-5-32-580' = 'Remote Management Users'
+}
+
+# Domain-RELATIVE RIDs (last sub-authority of a domain SID, S-1-5-21-...-RID)
+$script:WellKnownRids = @{
+    500 = 'Administrator';  501 = 'Guest';                     502 = 'krbtgt'
+    512 = 'Domain Admins';  513 = 'Domain Users';              514 = 'Domain Guests'
+    515 = 'Domain Computers'; 516 = 'Domain Controllers';      517 = 'Cert Publishers'
+    518 = 'Schema Admins';  519 = 'Enterprise Admins';         520 = 'Group Policy Creator Owners'
+    521 = 'Read-only Domain Controllers'; 522 = 'Cloneable Domain Controllers'
+    525 = 'Protected Users'; 526 = 'Key Admins';               527 = 'Enterprise Key Admins'
+    553 = 'RAS and IAS Servers'
+}
+
 # --- Color palette ---
 # Defined once in module scope so per-file color blocks all point at the same
 # palette. Change a shade here and every cmdlet picks it up automatically.

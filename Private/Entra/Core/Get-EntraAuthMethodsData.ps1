@@ -32,13 +32,11 @@ function Get-EntraAuthMethodsData {
     }
 
     # ── Authentication Method Configurations ──────────────────────────────
-    try {
-        $data.MethodConfigurations = @(Invoke-GraphApi -AccessToken $AccessToken `
-            -Uri '/policies/authenticationMethodsPolicy/authenticationMethodConfigurations' `
-            -Paginate -Quiet:$Quiet)
-    } catch {
-        $data.Errors['MethodConfigurations'] = $_.Exception.Message
-    }
+    # The parent authenticationMethodsPolicy already includes the full
+    # authenticationMethodConfigurations array. The standalone collection endpoint
+    # (.../authenticationMethodsPolicy/authenticationMethodConfigurations) is NOT directly
+    # addressable — it 400s on both v1.0 and beta — so source it from the parent object.
+    $data.MethodConfigurations = @($data.AuthMethodsPolicy.authenticationMethodConfigurations)
 
     # ── User Registration Details (MFA status) ────────────────────────────
     if (-not $Quiet) {
@@ -64,9 +62,12 @@ function Get-EntraAuthMethodsData {
     }
 
     # ── Directory Settings (password protection) ──────────────────────────
+    # Directory/group settings live at /groupSettings on v1.0 (the bare /settings segment
+    # is beta-only and 400s on v1.0). The "Password Rule Settings" template
+    # (BannedPasswordList, EnableBannedPasswordCheck, LockoutThreshold, ...) is here.
     try {
         $data.DirectorySettings = @(Invoke-GraphApi -AccessToken $AccessToken `
-            -Uri '/settings' -Paginate -Quiet:$Quiet)
+            -Uri '/groupSettings' -Paginate -Quiet:$Quiet)
     } catch {
         $data.Errors['DirectorySettings'] = $_.Exception.Message
     }
