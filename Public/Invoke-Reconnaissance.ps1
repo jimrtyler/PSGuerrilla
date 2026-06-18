@@ -6,7 +6,7 @@ function Invoke-Reconnaissance {
     param(
         [ValidateSet('All', 'DomainForest', 'Trusts', 'PrivilegedAccounts', 'PasswordPolicy',
                      'Kerberos', 'ACLDelegation', 'GroupPolicy', 'LogonScripts',
-                     'CertificateServices', 'StaleObjects', 'Network', 'TierZero', 'Logging', 'Tradecraft')]
+                     'CertificateServices', 'StaleObjects', 'Network', 'TierZero', 'Logging', 'Tradecraft', 'AttackPath')]
         [string[]]$Categories = @('All'),
 
         [string]$Server,
@@ -140,6 +140,7 @@ function Invoke-Reconnaissance {
         TierZero           = 'Invoke-TierZeroChecks'
         Logging            = 'Invoke-ADLoggingChecks'
         Tradecraft         = 'Invoke-ADTradecraftChecks'
+        AttackPath         = 'Invoke-ADAttackPathChecks'
     }
 
     $categoriesToRun = if ($Categories -contains 'All') { $categoryMap.Keys } else { $Categories }

@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.10.0] - 2026-06-18
+
+### Added
+- **AD attack-path analysis** (`ADPATH-001`, new **"AttackPath"** category). `Invoke-Reconnaissance` now turns the flat dangerous-ACL findings into named **privilege-escalation paths to Tier-0**, each annotated with the concrete takeover technique it enables (e.g. *"CORP\HelpDesk --[WriteDacl]--> Domain Root ⇒ can grant themselves DCSync replication rights and extract every domain hash — Domain Admin equivalent"*). v1 models the highest-value edge class — non-default control (GenericAll / WriteDacl / WriteOwner / replication rights) over a Tier-0 object (the domain root, AdminSDHolder, the Domain Controllers OU, the GPO / Configuration / Schema containers) — which is a **one-hop path to Domain Admin equivalence**. Paths from genuinely **non-privileged** principals are surfaced first as the highest risk. Built entirely on the already-collected ACL + privileged-group data (no new collection); runs under `-Categories All` or `ACLDelegation` / `AttackPath`. **AD coverage is now 204 checks across 15 categories** (460 total).
+
+### Notes
+- This is the first increment of the roadmap's headline gap (graph-based attack-path computation). Full **domain-wide transitive** path computation (low-priv user → nested-group control → Domain Admins) requires a full-domain ACL collector, which PSGuerrilla does not yet run (it reads ACLs on the 6 critical objects only); that deeper traversal is the next step, and the engine (`Get-ADAttackPath`) is structured to take additional edge sources directly.
+- Regression tests added to `Tests/verify-core-fixes.ps1` (the engine derives paths, flags non-privileged sources, and the check returns FAIL/PASS/SKIP correctly).
+
 ## [2.9.4] - 2026-06-18
 
 ### Fixed

@@ -1,0 +1,23 @@
+{
+  "categoryId": "attackpath",
+  "categoryName": "Attack Paths",
+  "categoryDescription": "Computed privilege-escalation paths to Tier-0, derived from the collected ACL and privileged-group data.",
+  "checks": [
+    {
+      "id": "ADPATH-001",
+      "name": "Escalation Paths to Tier-0",
+      "description": "Models non-default control over Tier-0 objects (the domain root, AdminSDHolder, the Domain Controllers OU, and the GPO / Configuration / Schema containers) as privilege-escalation PATHS and reports the concrete takeover technique each one enables. Any non-default principal holding GenericAll / WriteDacl / WriteOwner / replication rights over one of these objects is a one-hop path to Domain Admin equivalence. Full domain-wide transitive path computation (low-priv user through nested group control to Domain Admins) requires full-domain ACL collection, which is a separate roadmap item.",
+      "severity": "Critical",
+      "subcategory": "Attack Path Analysis",
+      "recommendedValue": "No non-default principals have control over Tier-0 objects.",
+      "remediationSteps": "For each reported path, remove the attacker-controllable ACE from the target object's DACL (Active Directory Users and Computers > Advanced Security, or Set-Acl), or remove the principal from whatever group grants it. Only Tier-0 administrators should hold GenericAll/WriteDacl/WriteOwner or replication rights on the domain root, AdminSDHolder, the Domain Controllers OU, and the Policies/Configuration/Schema containers.",
+      "referenceUrl": "https://attack.mitre.org/techniques/T1098/",
+      "referenceTitle": "MITRE ATT&CK T1098 — Account Manipulation (ACL-based privilege escalation)",
+      "compliance": {
+        "nistSp80053": ["AC-5", "AC-6"],
+        "mitreAttack": ["T1098", "T1222.001", "T1484.001"],
+        "cisAd": []
+      }
+    }
+  ]
+}

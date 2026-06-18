@@ -36,6 +36,7 @@ function Get-ReconnaissanceData {
         TierZero            = @('PrivilegedMembers', 'TierZeroSignals')
         Logging             = @('NetworkConfig')
         Tradecraft          = @('DomainControllers', 'TradecraftSignals')
+        AttackPath          = @('ObjectACLs', 'PrivilegedMembers')
     }
 
     # Resolve which data sources are required

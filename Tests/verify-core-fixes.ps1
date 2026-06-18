@@ -34,8 +34,27 @@ $r = & (Get-Module PSGuerrilla) {
         $mon4 = @{ Run1 = 0; Run2 = 0; Collapsed = 0; Threw = $true; Err = "$_" }
     }
 
+    # ADPATH: attack-path engine (Get-ADAttackPath + Test-ReconADPATH001)
+    $adpathDef = @{ id = 'ADPATH-001'; name = 'Escalation Paths'; severity = 'Critical'; _categoryName = 'Attack Paths' }
+    $aclMock = @{ DangerousACEs = @(
+            @{ IdentityReference = 'CORP\HelpDesk'; IdentitySID = 'S-1-5-21-1-2-3-1111'; ActiveDirectoryRights = 'WriteDacl'; ObjectName = 'Domain Root'; ObjectType = $null; IsInherited = $false }
+            @{ IdentityReference = 'CORP\svc_app'; IdentitySID = 'S-1-5-21-1-2-3-2222'; ActiveDirectoryRights = 'GenericAll'; ObjectName = 'AdminSDHolder'; ObjectType = $null; IsInherited = $false }
+        ) }
+    $privMock = @{ PrivilegedGroups = @{ 'Domain Admins' = @(@{ SamAccountName = 'Administrator'; SID = 'S-1-5-21-1-2-3-500' }) } }
+    $adWithPaths = @{ ACLs = $aclMock; PrivilegedAccounts = $privMock }
+    $adpathAll = @((Get-ADAttackPath -AuditData $adWithPaths).Paths)
+    $adpath = @{
+        Count    = $adpathAll.Count
+        NonPriv  = @($adpathAll | Where-Object { -not $_.SourceIsPrivileged }).Count
+        Critical = @($adpathAll | Where-Object { $_.Severity -eq 'Critical' }).Count
+        Fail     = (Test-ReconADPATH001 -AuditData $adWithPaths -CheckDefinition $adpathDef).Status
+        Pass     = (Test-ReconADPATH001 -AuditData @{ ACLs = @{ DangerousACEs = @() }; PrivilegedAccounts = $privMock } -CheckDefinition $adpathDef).Status
+        Skip     = (Test-ReconADPATH001 -AuditData @{} -CheckDefinition $adpathDef).Status
+    }
+
     @{
         SidCacheInit = ($null -ne $script:SidCache)
+        AdPath       = $adpath
         WkSids       = $script:WellKnownSids.Count
         WkRids       = $script:WellKnownRids.Count
         Sys          = (Resolve-ADSid -SidString 'S-1-5-18')
@@ -66,6 +85,12 @@ Test-Case 'MON-4: scan-history second run does not throw' (-not $r.Mon4.Threw)
 Test-Case 'MON-4: run 1 -> 1 entry'                       ($r.Mon4.Run1 -eq 1)
 Test-Case 'MON-4: run 2 (after JSON round-trip) -> 2'     ($r.Mon4.Run2 -eq 2)
 Test-Case 'MON-4: collapsed single-object history -> 2'  ($r.Mon4.Collapsed -eq 2)
+Test-Case 'ADPATH: 2 escalation paths derived'           ($r.AdPath.Count -eq 2)
+Test-Case 'ADPATH: both from non-privileged principals'  ($r.AdPath.NonPriv -eq 2)
+Test-Case 'ADPATH: both Critical severity'               ($r.AdPath.Critical -eq 2)
+Test-Case 'ADPATH: check FAILs when paths exist'         ($r.AdPath.Fail -eq 'FAIL')
+Test-Case 'ADPATH: check PASSes with no dangerous ACEs'  ($r.AdPath.Pass -eq 'PASS')
+Test-Case 'ADPATH: check SKIPs when no ACL data'         ($r.AdPath.Skip -eq 'SKIP')
 
 Write-Host "`n  Summary: $pass passed, $fail failed`n" -ForegroundColor Cyan
 if ($fail -gt 0) { exit 1 }

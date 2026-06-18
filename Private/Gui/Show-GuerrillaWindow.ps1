@@ -609,7 +609,7 @@ function Show-GuerrillaWindow {
         $panel.Children.Clear()
         $categories = if ($session.Controls['ops_TheaterAD'].IsChecked) {
             @('DomainForest','Trusts','PrivilegedAccounts','PasswordPolicy','Kerberos','ACLDelegation',
-              'GroupPolicy','LogonScripts','CertificateServices','StaleObjects','Network','TierZero','Logging','Tradecraft')
+              'GroupPolicy','LogonScripts','CertificateServices','StaleObjects','Network','TierZero','Logging','Tradecraft','AttackPath')
         } elseif ($session.Controls['ops_TheaterWorkspace'].IsChecked) {
             @('Authentication','EmailSecurity','DriveSecurity','OAuthSecurity','AdminManagement',
               'Collaboration','DeviceManagement','LoggingAlerting')

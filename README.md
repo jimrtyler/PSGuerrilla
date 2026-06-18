@@ -15,11 +15,11 @@ Security assessment, threat detection, and continuous monitoring for Google Work
 | Theater | Capability | Checks |
 |---------|-----------|--------|
 | Google Workspace | Compromise assessment, 23 detection signals, 8 audit categories | 98 |
-| Active Directory | 14-category security reconnaissance | 203 |
+| Active Directory | 15-category security reconnaissance (incl. attack-path analysis) | 204 |
 | Entra ID / Azure / Intune / M365 | Infiltration audit across 14 categories | 158 |
 | All theaters | Continuous monitoring with baseline drift detection | Real-time |
 
-**Total: 459 security checks** across authentication, email security, drive/SharePoint, OAuth, admin management, conditional access, PIM, Kerberos, certificate services, group policy, Intune endpoint compliance, NTLM-relay preconditions, Tier-0 hygiene, logging/telemetry posture, adversary-tradecraft indicators (GPP cpassword, DCShadow, BitLocker hygiene, RODC PRP), and more.
+**Total: 460 security checks** across authentication, email security, drive/SharePoint, OAuth, admin management, conditional access, PIM, Kerberos, certificate services, group policy, Intune endpoint compliance, NTLM-relay preconditions, Tier-0 hygiene, logging/telemetry posture, adversary-tradecraft indicators (GPP cpassword, DCShadow, BitLocker hygiene, RODC PRP), and more.
 
 ## Requirements
 
@@ -149,7 +149,7 @@ Invoke-Campaign -ConfigFile './guerrilla-config.json'
 
 # Or run individual theaters
 Invoke-Fortification                    # Google Workspace audit (98 checks)
-Invoke-Reconnaissance                   # Active Directory audit (203 checks)
+Invoke-Reconnaissance                   # Active Directory audit (204 checks)
 Invoke-Infiltration                     # Entra/Azure/Intune/M365 audit (158 checks)
 ```
 
@@ -326,7 +326,7 @@ Set-Safehouse -ConfigFile './guerrilla-config.json'
 |----------|-------|-------------|
 | `Invoke-Recon` | `Invoke-WorkspaceRecon` | Google Workspace compromise assessment with 23 behavioral detection signals |
 | `Invoke-Fortification` | — | Google Workspace security configuration audit (8 categories) |
-| `Invoke-Reconnaissance` | `Invoke-ADRecon` | Active Directory security audit across 14 categories (203 checks) |
+| `Invoke-Reconnaissance` | `Invoke-ADRecon` | Active Directory security audit across 15 categories (204 checks) |
 | `Invoke-Infiltration` | `Invoke-CloudRecon` | Entra ID, Azure, Intune, and M365 security assessment (158 checks) |
 | `Invoke-Campaign` | — | Unified audit across all theaters in a single run |
 
@@ -521,7 +521,7 @@ PSGuerrilla/
   PSGuerrilla.format.ps1xml     # Custom table formatters
   Config/                        # JSON schema and defaults
   Data/                          # Threat intel, audit check definitions, compliance crosswalks
-    AuditChecks/                 # 36 JSON files defining all 459 security checks
+    AuditChecks/                 # 37 JSON files defining all 460 security checks
     Profiles/                    # Scoring profiles (Default, K12)
   Public/                        # 43 exported functions
   Private/                       # 234 internal function files
