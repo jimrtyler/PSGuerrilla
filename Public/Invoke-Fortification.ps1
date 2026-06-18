@@ -27,7 +27,11 @@ function Invoke-Fortification {
         [ValidateSet('Guerrilla', 'Professional', 'Slate')]
         [string]$ReportStyle = 'Guerrilla',
 
-        [switch]$TestMode
+        [switch]$TestMode,
+
+        # Skip the slow per-user Gmail-settings crawl (directory + DNS + OAuth still run;
+        # the Gmail-dependent EMAIL checks SKIP). Fast iteration on large tenants.
+        [switch]$Quick
     )
 
     $tempSaPath = $null
@@ -152,6 +156,7 @@ function Invoke-Fortification {
             -Categories $Categories `
             -UserSampleSize $UserSampleSize `
             -TargetOU $TargetOU `
+            -Quick:$Quick `
             -Quiet:$Quiet
 
         # Report collection errors

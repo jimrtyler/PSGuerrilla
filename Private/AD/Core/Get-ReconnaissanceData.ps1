@@ -191,6 +191,37 @@ function Get-ReconnaissanceData {
             Write-Warning "Failed to audit object ACLs: $_"
             $data.Errors['ObjectACLs'] = $_.Exception.Message
         }
+
+        # Derive DCSync principals from the domain-root DACL so ADPRIV-028 (DCSync rights)
+        # lights up — the data is in ACLs.DangerousACEs but ADPRIV-028 reads a top-level
+        # DCSyncAccounts field. Only set it when ACL data was actually collected, so a
+        # failed ACL collection leaves it unset and ADPRIV-028 SKIPs (not a false PASS).
+        if ($data.ACLs -and $null -ne $data.ACLs.DangerousACEs) {
+            $dcSyncGuids = @(
+                '1131f6aa-9c07-11d1-f79f-00c04fc2dcd2'  # DS-Replication-Get-Changes
+                '1131f6ad-9c07-11d1-f79f-00c04fc2dcd2'  # DS-Replication-Get-Changes-All
+                '89e95b76-444d-4c62-991a-0facbeda640c'  # DS-Replication-Get-Changes-In-Filtered-Set
+            )
+            $dcSyncAces = @($data.ACLs.DangerousACEs | Where-Object {
+                    ($_.ObjectTypeGUID -and $_.ObjectTypeGUID -in $dcSyncGuids) -or
+                    ($_.ObjectType -and $_.ObjectType -match 'DS-Replication-Get-Changes')
+                } | Where-Object {
+                    -not (Test-SafeAdminSid -Sid $_.IdentitySID -IdentityReference $_.IdentityReference)
+                })
+            $byIdentity = @{}
+            foreach ($ace in $dcSyncAces) {
+                $id = $ace.IdentityReference ?? $ace.IdentitySID
+                if (-not $id) { continue }
+                if (-not $byIdentity.ContainsKey($id)) {
+                    $byIdentity[$id] = [System.Collections.Generic.List[string]]::new()
+                }
+                $rn = $ace.ObjectType ?? $ace.ObjectTypeGUID ?? 'ExtendedRight'
+                if (-not $byIdentity[$id].Contains($rn)) { [void]$byIdentity[$id].Add($rn) }
+            }
+            $data.DCSyncAccounts = @($byIdentity.Keys | ForEach-Object {
+                    @{ SamAccountName = $_; Rights = @($byIdentity[$_]) }
+                })
+        }
     }
 
     # ── 9. Group Policy Objects ──────────────────────────────────────────

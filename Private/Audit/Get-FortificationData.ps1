@@ -19,7 +19,12 @@ function Get-FortificationData {
 
         [string]$TargetOU = '/',
 
-        [switch]$Quiet
+        [switch]$Quiet,
+
+        # Skip the per-user Gmail-settings crawl (the slow part — ~1.4s/user serial).
+        # Directory, DNS, and OAuth collection still run; the Gmail-dependent EMAIL checks
+        # SKIP cleanly. Intended for fast iteration on large tenants.
+        [switch]$Quick
     )
 
     # ── Category-to-data-source mapping ──────────────────────────────────
@@ -293,7 +298,9 @@ function Get-FortificationData {
     }
 
     # ── 11. Gmail Settings (per-user sample) ─────────────────────────────
-    if (& $needsSource 'GmailSettings') {
+    # -Quick skips this entirely (it dominates wall-clock on large tenants); the
+    # Gmail-dependent EMAIL checks then SKIP with "No Gmail settings data available".
+    if (-not $Quick -and (& $needsSource 'GmailSettings')) {
         if (-not $Quiet) {
             Write-ProgressLine -Phase AUDITING -Message 'Sampling Gmail user settings'
         }

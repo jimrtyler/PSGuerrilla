@@ -17,6 +17,23 @@ Import-Module (Join-Path $PSScriptRoot '..' 'PSGuerrilla.psd1') -Force
 $r = & (Get-Module PSGuerrilla) {
     $def = @{ id = 'ADTIER-002'; name = 'x'; severity = 'High'; _categoryName = 'TierZero' }
     $hit = [pscustomobject]@{ Group = 'Domain Admins'; SamAccountName = 'svc_veeam'; MatchedKeyword = 'veeam' }
+
+    # MON-4: simulate the monitoring scan-history lifecycle that crashed on run #2.
+    $mon4 = @{}
+    try {
+        # Run 1: no prior state -> 1 entry
+        $h1 = Add-ScanHistoryEntry -ExistingHistory $null -Entry @{ scanId = '1'; timestamp = 't1'; highCount = 2 }
+        # Round-trip through the same JSON save/load the cmdlets use, then run 2.
+        $reloaded = (@{ scanHistory = $h1 } | ConvertTo-Json -Depth 10 | ConvertFrom-Json -AsHashtable)
+        $h2 = Add-ScanHistoryEntry -ExistingHistory $reloaded.scanHistory -Entry @{ scanId = '2'; timestamp = 't2'; highCount = 3 }
+        # Collapsed-object case (a 1-element array that serialized as a bare object)
+        $collapsed = (@{ scanHistory = @{ scanId = '1'; timestamp = 't1'; highCount = 2 } } | ConvertTo-Json -Depth 10 | ConvertFrom-Json -AsHashtable)
+        $h3 = Add-ScanHistoryEntry -ExistingHistory $collapsed.scanHistory -Entry @{ scanId = '2'; timestamp = 't2'; highCount = 3 }
+        $mon4 = @{ Run1 = @($h1).Count; Run2 = @($h2).Count; Collapsed = @($h3).Count; Threw = $false }
+    } catch {
+        $mon4 = @{ Run1 = 0; Run2 = 0; Collapsed = 0; Threw = $true; Err = "$_" }
+    }
+
     @{
         SidCacheInit = ($null -ne $script:SidCache)
         WkSids       = $script:WellKnownSids.Count
@@ -26,6 +43,7 @@ $r = & (Get-Module PSGuerrilla) {
         Dom512       = (Resolve-ADSid -SidString 'S-1-5-21-1-2-3-512')
         TierEmpty    = (New-TierBleedFinding -CheckDefinition $def -Hits @() -ProductLabel 'Veeam').Status
         TierHit      = (New-TierBleedFinding -CheckDefinition $def -Hits @($hit) -ProductLabel 'Veeam').Status
+        Mon4         = $mon4
     }
 }
 
@@ -44,6 +62,10 @@ Test-Case 'AD-1: Resolve-ADSid builtin admins'           ($r.Admins -eq 'Adminis
 Test-Case 'AD-1: Resolve-ADSid domain RID 512'           ($r.Dom512 -eq 'Domain Admins')
 Test-Case 'AD-2: New-TierBleedFinding @() -> PASS'       ($r.TierEmpty -eq 'PASS')
 Test-Case 'AD-2: New-TierBleedFinding with a hit -> FAIL' ($r.TierHit -eq 'FAIL')
+Test-Case 'MON-4: scan-history second run does not throw' (-not $r.Mon4.Threw)
+Test-Case 'MON-4: run 1 -> 1 entry'                       ($r.Mon4.Run1 -eq 1)
+Test-Case 'MON-4: run 2 (after JSON round-trip) -> 2'     ($r.Mon4.Run2 -eq 2)
+Test-Case 'MON-4: collapsed single-object history -> 2'  ($r.Mon4.Collapsed -eq 2)
 
 Write-Host "`n  Summary: $pass passed, $fail failed`n" -ForegroundColor Cyan
 if ($fail -gt 0) { exit 1 }

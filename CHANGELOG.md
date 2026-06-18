@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.9.4] - 2026-06-18
+
+### Fixed
+_From the v2.9.3 live re-validation._
+- **MON-4 (regression) — continuous monitoring broke after the first run.** `Invoke-Surveillance` and `Invoke-Wiretap` succeeded once and then threw *"Item has already been added"* on every subsequent run, silently killing `Register-Patrol` scheduled monitoring. The scan-history append used `@($state.scanHistory) += @{...}`, which — once a prior single-entry history reloaded from JSON — performed a hashtable-key merge and threw. Both cmdlets now build history via a new `Add-ScanHistoryEntry` helper (List-based, tolerant of a collapsed single-object history) that always returns a clean array. A two-run regression test was added (the exact case that was missing). (MON-4)
+- **`ADPRIV-028` (DCSync rights) now reports instead of always SKIPping.** With the AD-1 ACL fix in place the domain-root DACL is collected, but `ADPRIV-028` read a `DCSyncAccounts` field nothing ever populated. The collector now derives `DCSyncAccounts` from the dangerous-ACE set (filtering the replication extended-right GUIDs `1131f6aa` / `1131f6ad` / `89e95b76` and dropping default Tier-0 principals), so `ADPRIV-028` lights up — completing the DCSync attack-path coverage that AD-1 unblocked. (AD-1b)
+
+### Added
+- **`Invoke-Fortification -Quick`** — skips the slow per-user Gmail-settings crawl (which dominates wall-clock on large tenants: ~1.4 s/user, ~11 min for 500 users). Directory, DNS, and OAuth collection still run; the Gmail-dependent EMAIL checks SKIP cleanly. For fast iteration. (GWS-3, partial)
+
+### Notes
+- The **full GWS-3 fix** (parallelizing the per-user crawl with `ForEach-Object -Parallel`) is deferred: it needs care with module-function/token availability inside parallel runspaces and live-tenant validation, and getting it wrong would risk the core exfil-detection checks. The `-Quick` profile is the safe mitigation for now.
+- **GWS-2b** (labeling sampled-clean results *"SAMPLED N of M"*) already shipped in v2.9.3 via `Get-GmailSampleNote`. Still open from the re-validation: **GWS-1** (Cloud Identity Policy API — blocked on the `cloud-identity.policies.readonly` DWD scope), **ENT-4** (M365 workload coverage), **ENT-5** (Azure IAM messaging).
+
 ## [2.9.3] - 2026-06-18
 
 ### Added

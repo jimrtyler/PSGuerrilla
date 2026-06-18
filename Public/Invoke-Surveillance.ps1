@@ -558,8 +558,9 @@ function Invoke-Surveillance {
         }
     }
 
-    $scanHistory = if ($state -and $state.scanHistory) { @($state.scanHistory) } else { @() }
-    $scanHistory += @{
+    # MON-4: append via Add-ScanHistoryEntry (List-based) — the old `+=` idiom threw
+    # "Item has already been added" on every run after the first.
+    $scanHistory = Add-ScanHistoryEntry -ExistingHistory $state.scanHistory -Entry @{
         scanId        = $scanId
         timestamp     = [datetime]::UtcNow.ToString('o')
         daysAnalyzed  = $days
