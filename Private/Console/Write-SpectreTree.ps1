@@ -29,7 +29,13 @@ function Write-SpectreTree {
     )
 
     if ($script:HasSpectre) {
-        Write-SpectreTreeEnhanced @PSBoundParameters
+        # Fall back to indented text if the Spectre call path fails rather than spamming errors.
+        try {
+            Write-SpectreTreeEnhanced @PSBoundParameters
+        } catch {
+            Write-Verbose "Spectre tree failed, using text fallback: $_"
+            Write-SpectreTreeFallback @PSBoundParameters
+        }
     } else {
         Write-SpectreTreeFallback @PSBoundParameters
     }
@@ -51,7 +57,8 @@ function Write-SpectreTreeEnhanced {
     $rootMarkup = [Spectre.Console.Markup]::new("[bold $($rColor.ToMarkup())]$escapedRoot[/]")
     $tree = [Spectre.Console.Tree]::new($rootMarkup)
     $tree.Guide = [Spectre.Console.TreeGuide]::Line
-    $tree.GuideColor($gColor) | Out-Null
+    # (Guide colour omitted — the GuideColor extension method isn't callable from
+    # PowerShell in current Spectre.Console; the default guide colour renders fine.)
 
     foreach ($child in $Children) {
         Add-SpectreTreeNode -Parent $tree -Node $child
@@ -70,7 +77,8 @@ function Add-SpectreTreeNode {
     $nodeColor = $script:SpectreColors[$Node.Color] ?? $script:SpectreColors.Olive
     $escapedLabel = [Spectre.Console.Markup]::Escape($Node.Label)
     $markup = [Spectre.Console.Markup]::new("[$($nodeColor.ToMarkup())]$escapedLabel[/]")
-    $treeNode = $Parent.AddNode($markup)
+    # AddNode is a C# extension method — invoke on the static extension class.
+    $treeNode = [Spectre.Console.HasTreeNodeExtensions]::AddNode($Parent, $markup)
 
     if ($Node.Children) {
         foreach ($child in $Node.Children) {

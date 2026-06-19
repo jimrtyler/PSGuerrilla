@@ -29,7 +29,14 @@ function Write-SpectreBarChart {
     if ($activeItems.Count -eq 0) { return }
 
     if ($script:HasSpectre) {
-        Write-SpectreBarChartEnhanced -Items $activeItems -Title $Title
+        # Fall back to the text renderer if the Spectre call path fails (e.g. a future
+        # Spectre.Console version moves/renames a method) rather than spamming errors.
+        try {
+            Write-SpectreBarChartEnhanced -Items $activeItems -Title $Title
+        } catch {
+            Write-Verbose "Spectre bar chart failed, using text fallback: $_"
+            Write-SpectreBarChartFallback -Items $activeItems -Title $Title -MaxBarWidth $MaxBarWidth -ShowValues $ShowValues
+        }
     } else {
         Write-SpectreBarChartFallback -Items $activeItems -Title $Title -MaxBarWidth $MaxBarWidth -ShowValues $ShowValues
     }
@@ -53,7 +60,10 @@ function Write-SpectreBarChartEnhanced {
     foreach ($item in $Items) {
         $color = $script:SpectreColors[$item.Color] ?? $script:SpectreColors.Olive
         $label = [Spectre.Console.Markup]::Escape($item.Label)
-        $chart.AddItem($label, [double]$item.Value, $color)
+        # AddItem is a C# extension method — PowerShell can't call it as an instance
+        # method ($chart.AddItem(...) throws "does not contain a method named 'AddItem'"),
+        # so invoke it on the static extension class.
+        [void][Spectre.Console.BarChartExtensions]::AddItem($chart, $label, [double]$item.Value, $color)
     }
 
     [Spectre.Console.AnsiConsole]::Write($chart)

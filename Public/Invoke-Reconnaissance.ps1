@@ -231,7 +231,8 @@ function Invoke-Reconnaissance {
         if (-not (Test-Path $outDir)) {
             New-Item -Path $outDir -ItemType Directory -Force | Out-Null
         }
-        $timestamp = Get-Date -Format 'yyyyMMdd_HHmmss'
+        # Test mode uses a zeroed timestamp so report filenames are deterministic.
+        $timestamp = if ($script:GuerrillaTestMode) { '00000000_000000' } else { Get-Date -Format 'yyyyMMdd_HHmmss' }
 
         $genCsv  = if ($config -and $null -ne $config.output.generateCsv) { $config.output.generateCsv } else { $true }
         $genHtml = if ($config -and $null -ne $config.output.generateHtml) { $config.output.generateHtml } else { $true }

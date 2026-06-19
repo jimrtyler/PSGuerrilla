@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.10.7] - 2026-06-19
+
+### Fixed
+- **Spectre.Console console rendering restored (no more `AddItem`/`AddRow`/`BorderColor` errors).** When `PwshSpectreConsole` is installed, the bar charts and tables were calling Spectre.Console **C# extension methods** as instance methods (`$chart.AddItem(…)`, `$table.AddRow(…)`, `$table.BorderColor(…)`, `$tree.AddNode(…)`) — which PowerShell can't do, so every non-`-Quiet` scan spammed *"does not contain a method named …"* and the chart/table/tree came out blank. They now call the correct static extension classes (`BarChartExtensions::AddItem`, `TableExtensions::AddRow`, `HasTreeNodeExtensions::AddNode`) and set the border via `BorderStyle`, so the **category bar charts, "Findings by severity" chart, and the Priority-findings table now render** in the console. Each enhanced renderer is also wrapped in a try/catch that falls back to the text renderer, so a future Spectre.Console API change degrades gracefully instead of spamming.
+- **Test mode now uses a zeroed report-filename timestamp.** With `-TestMode` the CSV/HTML/JSON reports are written as `…_report_00000000_000000.…` (Reconnaissance / Fortification) and `…-00000000-000000.…` (Infiltration / Campaign) instead of the live clock, so demo/sample output is fully deterministic — completing the test-mode determinism started in v2.10.5. (Real scans keep the real timestamp.)
+
 ## [2.10.6] - 2026-06-19
 
 ### Documentation

@@ -34,7 +34,14 @@ function Write-SpectreTable {
     )
 
     if ($script:HasSpectre) {
-        Write-SpectreTableEnhanced @PSBoundParameters
+        # Fall back to the box-drawing renderer if the Spectre call path fails (e.g. a
+        # future Spectre.Console version moves/renames a method) instead of spamming errors.
+        try {
+            Write-SpectreTableEnhanced @PSBoundParameters
+        } catch {
+            Write-Verbose "Spectre table failed, using text fallback: $_"
+            Write-SpectreTableFallback @PSBoundParameters
+        }
     } else {
         Write-SpectreTableFallback @PSBoundParameters
     }
@@ -57,7 +64,9 @@ function Write-SpectreTableEnhanced {
         $table.Border = [Spectre.Console.TableBorder]::None
     } else {
         $table.Border = [Spectre.Console.TableBorder]::Rounded
-        $table.BorderColor($script:SpectreColors[$BorderColor] ?? $script:SpectreColors.Dim)
+        # BorderColor is an extension method that isn't callable from PowerShell (and isn't
+        # in TableExtensions in current Spectre.Console) — set the BorderStyle directly.
+        $table.BorderStyle = [Spectre.Console.Style]::new($script:SpectreColors[$BorderColor] ?? $script:SpectreColors.Dim)
     }
 
     if ($Title) {
@@ -99,7 +108,9 @@ function Write-SpectreTableEnhanced {
             }
         }
 
-        $table.AddRow($cells)
+        # AddRow is a C# extension method — call it on the static extension class and pass
+        # the cells as a typed IRenderable[] so the overload resolves.
+        [void][Spectre.Console.TableExtensions]::AddRow($table, [Spectre.Console.Rendering.IRenderable[]]$cells)
     }
 
     [Spectre.Console.AnsiConsole]::Write($table)

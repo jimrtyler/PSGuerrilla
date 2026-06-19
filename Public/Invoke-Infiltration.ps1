@@ -374,7 +374,8 @@ function Invoke-Infiltration {
             New-Item -Path $outDir -ItemType Directory -Force | Out-Null
         }
 
-        $timestamp = $scanStart.ToString('yyyyMMdd-HHmmss')
+        # Test mode uses a zeroed timestamp so report filenames are deterministic.
+        $timestamp = if ($script:GuerrillaTestMode) { '00000000-000000' } else { $scanStart.ToString('yyyyMMdd-HHmmss') }
         $tenantLabel = $TenantId -replace '[^a-zA-Z0-9]', '_'
 
         # Delta comparison
