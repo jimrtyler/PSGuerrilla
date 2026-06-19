@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.10.6] - 2026-06-19
+
+### Documentation
+- **Defender / EDR false-positive guidance (the most common first-run failure).** PSGuerrilla's AD attack-detection files (DCSync GUIDs, `GenericAll`/`WriteDacl`, shadow-admin, Tier-0 patterns) can trip antivirus heuristics — Microsoft Defender real-time protection in particular blocks *read* access to them, so `Import-Module` fails with *"Access to the path '…Invoke-ADAclDelegationChecks.ps1' is denied"* (often a different AD file each attempt). README now documents this prominently in **Requirements** with the `Add-MpPreference -ExclusionPath` fix and a Protection-history "Allow" alternative, plus a dedicated **Troubleshooting** section. Surfaced by the v2.10.4 live validation.
+- Added **`AppCatalog.Read.All`** to the documented Entra app-registration scopes (the Teams app-catalog collection calls `/appCatalogs/teamsApps`; without the scope that portion logs a handled 403 and stays empty). Added Troubleshooting entries for that 403 and for the "No accessible Azure subscriptions" SKIP.
+
 ## [2.10.5] - 2026-06-19
 
 ### Changed

@@ -36,6 +36,22 @@ Security assessment, threat detection, and continuous monitoring for Google Work
 | **Entra ID / Azure / M365** | App registration with appropriate Microsoft Graph API permissions |
 | **Intune** | Same app registration — DeviceManagementConfiguration.Read.All scope |
 
+> ### ⚠️ Endpoint protection (Microsoft Defender / EDR) may block the module
+>
+> PSGuerrilla is an offensive-capable security tool: several of its AD attack-detection files reference DCSync replication GUIDs, `GenericAll`/`WriteDacl`, shadow-admin and Tier-0 patterns. Antivirus heuristics — **Microsoft Defender real-time protection in particular** — can flag these as suspicious and **block read access to the files**, which makes `Import-Module PSGuerrilla` fail (often on a different AD file each attempt) with:
+>
+> ```
+> Access to the path '…\Invoke-ADAclDelegationChecks.ps1' is denied
+> ```
+>
+> This is a **false positive** — the files are inert PowerShell, not malware — but it stops the module from loading. Fix it by adding a path exclusion for the module from an **elevated** PowerShell:
+>
+> ```powershell
+> Add-MpPreference -ExclusionPath "$HOME\Documents\PowerShell\Modules\PSGuerrilla"
+> ```
+>
+> Alternatively, in **Windows Security → Virus & threat protection → Protection history**, choose **Allow** on the blocked item. On managed/EDR hosts, ask your security team to allowlist the module path. More detail under [Troubleshooting](#troubleshooting).
+
 ---
 
 ## Setup Guide
@@ -294,6 +310,7 @@ Set-Safehouse -ExportMetadata
    - `DeviceManagementConfiguration.Read.All` (for Intune)
    - `Mail.Read` (for Exchange checks)
    - `Sites.Read.All` (for SharePoint checks)
+   - `AppCatalog.Read.All` (for Teams app-catalog checks)
 3. **Grant admin consent** for the permissions
 4. **Create a client secret** (note the expiration date)
 5. During `Set-Safehouse`, provide:
@@ -315,6 +332,30 @@ Set-Safehouse -ConfigFile './guerrilla-config.json'
 - Domain-joined machine, or RSAT tools installed
 - Read access to AD objects (Domain Admins or delegated Read permissions)
 - For certificate services checks: Enterprise Admin or CA Admin access
+
+---
+
+## Troubleshooting
+
+### `Import-Module` fails with "Access to the path '…Invoke-ADAclDelegationChecks.ps1' is denied"
+
+Your endpoint protection is blocking PSGuerrilla's AD attack-detection files (a false positive — see the **Endpoint protection (Microsoft Defender / EDR)** callout in [Requirements](#requirements)). Tell-tale signs it's antivirus, not a permissions problem: your account has FullControl on the file, yet even **copying** it is denied, and a *different* AD file is blocked on each import attempt. Fix:
+
+```powershell
+# Elevated PowerShell — exclude the module path, then re-import
+Add-MpPreference -ExclusionPath "$HOME\Documents\PowerShell\Modules\PSGuerrilla"
+Import-Module PSGuerrilla -Force
+```
+
+If you installed the module somewhere else, exclude that path instead (`(Get-Module PSGuerrilla -ListAvailable).ModuleBase`). On EDR-managed hosts, your security team adds the allowlist entry.
+
+### A scan reports "No accessible Azure subscriptions"
+
+The Entra app has no Azure Resource Manager access. Grant it the **Reader** role at the root management group to enable the `AZIAM-*` Azure resource checks (they SKIP cleanly without it).
+
+### Teams checks log a 403 for `/appCatalogs/teamsApps`
+
+Add the **`AppCatalog.Read.All`** application permission to the app registration (and grant admin consent). The scan continues without it; the Teams app-catalog portion just stays empty.
 
 ---
 
