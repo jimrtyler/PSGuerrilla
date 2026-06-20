@@ -395,3 +395,112 @@ function Test-FortificationAUTH013 {
         -CurrentValue "All $($superAdmins.Count) super admins have logged in within the last $staleDays days" `
         -OrgUnitPath $OrgUnitPath
 }
+
+# ── AUTH-014: 2SV Enrollment Allowed ────────────────────────────────────────
+function Test-FortificationAUTH014 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    # GWS-1: security.two_step_verification_enrollment { allowEnrollment=bool }. true=GOOD.
+    $pol = $AuditData.CloudIdentityPolicies
+    if (-not $pol) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Cloud Identity Policy API not available (cloud-identity.policies.readonly not delegated, or API disabled)' `
+            -OrgUnitPath $OrgUnitPath
+    }
+    $vals = @(Resolve-GooglePolicyValue -Policies $pol -Type 'security.two_step_verification_enrollment' -Field 'allowEnrollment')
+    if ($vals.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'No 2SV-enrollment policy returned for this tenant' -OrgUnitPath $OrgUnitPath
+    }
+    $disabled = @($vals | Where-Object { $_ -ne $true })
+    if ($disabled.Count -gt 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
+            -CurrentValue "2SV enrollment not allowed in $($disabled.Count) of $($vals.Count) targeted policy/policies (blocks MFA adoption)" `
+            -OrgUnitPath $OrgUnitPath
+    }
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+        -CurrentValue 'Users allowed to enroll in 2SV' -OrgUnitPath $OrgUnitPath
+}
+
+# ── AUTH-015: 2SV Enrollment Grace Period ───────────────────────────────────
+function Test-FortificationAUTH015 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    # GWS-1: security.two_step_verification_grace_period { enrollmentGracePeriod=str("604800s") }.
+    # Grade the LONGEST OU; 0 is strongest.
+    $pol = $AuditData.CloudIdentityPolicies
+    if (-not $pol) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Cloud Identity Policy API not available (cloud-identity.policies.readonly not delegated, or API disabled)' `
+            -OrgUnitPath $OrgUnitPath
+    }
+    $vals = @(Resolve-GooglePolicyValue -Policies $pol -Type 'security.two_step_verification_grace_period' -Field 'enrollmentGracePeriod')
+    $seconds = @($vals | ForEach-Object { ConvertFrom-GoogleDurationSeconds $_ } | Where-Object { $null -ne $_ })
+    if ($seconds.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'No 2SV-grace-period policy returned for this tenant' -OrgUnitPath $OrgUnitPath
+    }
+    $maxSec = ($seconds | Measure-Object -Maximum).Maximum
+    $hours  = [Math]::Round($maxSec / 3600, 1)
+    $status = if ($hours -le 168) { 'PASS' } else { 'WARN' }
+    $scope  = if ($seconds.Count -gt 1) { " (longest of $($seconds.Count) targeted policies)" } else { '' }
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status $status `
+        -CurrentValue "2SV enrollment grace period: $hours hours$scope" -OrgUnitPath $OrgUnitPath
+}
+
+# ── AUTH-016: Advanced Protection Self-Enrollment ───────────────────────────
+function Test-FortificationAUTH016 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    # GWS-1: security.advanced_protection_program { enableAdvancedProtectionSelfEnrollment=bool }. true=GOOD.
+    $pol = $AuditData.CloudIdentityPolicies
+    if (-not $pol) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Cloud Identity Policy API not available (cloud-identity.policies.readonly not delegated, or API disabled)' `
+            -OrgUnitPath $OrgUnitPath
+    }
+    $vals = @(Resolve-GooglePolicyValue -Policies $pol -Type 'security.advanced_protection_program' -Field 'enableAdvancedProtectionSelfEnrollment')
+    if ($vals.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'No advanced-protection policy returned for this tenant' -OrgUnitPath $OrgUnitPath
+    }
+    $disabled = @($vals | Where-Object { $_ -ne $true })
+    if ($disabled.Count -gt 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
+            -CurrentValue "Advanced Protection self-enrollment not allowed in $($disabled.Count) of $($vals.Count) targeted policy/policies" `
+            -OrgUnitPath $OrgUnitPath
+    }
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+        -CurrentValue 'Advanced Protection self-enrollment allowed' -OrgUnitPath $OrgUnitPath
+}
+
+# ── AUTH-017: Super Admin Account Self-Recovery ─────────────────────────────
+function Test-FortificationAUTH017 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    # GWS-1: security.super_admin_account_recovery { enableAccountRecovery=bool }. true=BAD.
+    # Weakest-OU-wins: self-recovery enabled anywhere is a takeover path -> FAIL.
+    $pol = $AuditData.CloudIdentityPolicies
+    if (-not $pol) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Cloud Identity Policy API not available (cloud-identity.policies.readonly not delegated, or API disabled)' `
+            -OrgUnitPath $OrgUnitPath
+    }
+    $vals = @(Resolve-GooglePolicyValue -Policies $pol -Type 'security.super_admin_account_recovery' -Field 'enableAccountRecovery')
+    if ($vals.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'No super-admin-recovery policy returned for this tenant' -OrgUnitPath $OrgUnitPath
+    }
+    $enabled = @($vals | Where-Object { $_ -eq $true })
+    if ($enabled.Count -gt 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'FAIL' `
+            -CurrentValue "Super admin self-recovery enabled in $($enabled.Count) of $($vals.Count) targeted policy/policies" `
+            -OrgUnitPath $OrgUnitPath
+    }
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+        -CurrentValue 'Super admin self-recovery disabled' -OrgUnitPath $OrgUnitPath
+}

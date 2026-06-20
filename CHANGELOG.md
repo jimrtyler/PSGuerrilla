@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.13.0] - 2026-06-19
+
+_Google Workspace coverage expansion — 6 net-new checks + ADMIN-008/009 converted. GWS is now 104 checks (466 total)._
+
+### Added
+- **6 net-new Google Workspace security checks** (all read live Cloud Identity policy, weakest-OU-wins, API-unavailable → SKIP):
+  - **AUTH-014 (2SV Enrollment Allowed)** → `security.two_step_verification_enrollment.allowEnrollment` — WARN if users are blocked from enrolling in 2SV.
+  - **AUTH-015 (2SV Enrollment Grace Period)** → `security.two_step_verification_grace_period.enrollmentGracePeriod` — PASS ≤ 7 days, WARN if longer (longest-OU).
+  - **AUTH-016 (Advanced Protection Self-Enrollment)** → `security.advanced_protection_program.enableAdvancedProtectionSelfEnrollment` — PASS when high-risk users can self-enroll in APP.
+  - **AUTH-017 (Super Admin Account Self-Recovery)** → `security.super_admin_account_recovery.enableAccountRecovery` — **FAIL** if super-admin self-service recovery is on (account-takeover path).
+  - **COLLAB-011 (Meet External Participant Labeling)** → `meet.safety_external_participants.enableExternalLabel` — PASS when external participants are visibly labeled.
+  - **COLLAB-012 (Meet Host Management)** → `meet.safety_host_management.enableHostManagement` — PASS when hosts have moderation controls (mute/remove/lock).
+
+### Changed
+- **ADMIN-008 / ADMIN-009 converted from placeholders to real checks** via `directory.workspace_resource_type_visibility` (the only `directory.*` policy type). ADMIN-008 (directory shared-contacts visibility) and ADMIN-009 (groups directory visibility) now read live config and WARN on broad directory exposure (audience-appropriate "review this," not FAIL), instead of an always-WARN "verify in Admin Console."
+
+### Notes
+- **Google Workspace is now 104 checks** (was 98); module total **466** (was 460). Counts updated in README. **39 of the 104 GWS checks now read live Cloud Identity policy** (33 conversions + 6 net-new).
+- All net-new functions are dispatched and evaluate cleanly (test-mode Fortification: 104 findings, 0 ERROR). New regression suites: `Tests/verify-gws1-{auth,collab,admin}-p3.ps1`.
+
 ## [2.12.1] - 2026-06-19
 
 _Live-validation fixes: the Lookout baseline-persistence bug + confirmed-enum tighten-ups._

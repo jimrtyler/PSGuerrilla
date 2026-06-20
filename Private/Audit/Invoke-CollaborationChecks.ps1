@@ -327,3 +327,63 @@ function Test-FortificationCOLLAB010 {
         -OrgUnitPath $OrgUnitPath `
         -Details @{ Note = 'Appointment slot visibility controls how much scheduling detail is exposed to external users' }
 }
+
+# ── COLLAB-011: Meet External Participant Labeling ───────────────────────
+function Test-FortificationCOLLAB011 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    # GWS-1: meet.safety_external_participants { enableExternalLabel=bool }. External participants
+    # should be visibly labeled so hosts/attendees can spot outsiders; true=secure. Weakest-OU-wins
+    # (WARN if labeling off in any targeted OU).
+    $pol = $AuditData.CloudIdentityPolicies
+    if (-not $pol) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Cloud Identity Policy API not available (cloud-identity.policies.readonly not delegated, or API disabled)' `
+            -OrgUnitPath $OrgUnitPath
+    }
+    $vals = @(Resolve-GooglePolicyValue -Policies $pol -Type 'meet.safety_external_participants' -Field 'enableExternalLabel')
+    if ($vals.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'No meet.safety_external_participants policy returned for this tenant' -OrgUnitPath $OrgUnitPath
+    }
+    $off = @($vals | Where-Object { $_ -ne $true })
+    if ($off.Count -gt 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
+            -CurrentValue "External participant labeling off in $($off.Count) of $($vals.Count) targeted policy/policies" `
+            -OrgUnitPath $OrgUnitPath `
+            -Details @{ Note = 'External participants should be visibly labeled so hosts and attendees can identify outsiders in meetings' }
+    }
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+        -CurrentValue 'External participant labeling is enabled' -OrgUnitPath $OrgUnitPath
+}
+
+# ── COLLAB-012: Meet Host Management ─────────────────────────────────────
+function Test-FortificationCOLLAB012 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    # GWS-1: meet.safety_host_management { enableHostManagement=bool }. Host management gives hosts
+    # moderation controls (mute/remove/lock) to prevent meeting hijacking/disruption; true=secure.
+    # Weakest-OU-wins (WARN if host management off in any targeted OU).
+    $pol = $AuditData.CloudIdentityPolicies
+    if (-not $pol) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Cloud Identity Policy API not available (cloud-identity.policies.readonly not delegated, or API disabled)' `
+            -OrgUnitPath $OrgUnitPath
+    }
+    $vals = @(Resolve-GooglePolicyValue -Policies $pol -Type 'meet.safety_host_management' -Field 'enableHostManagement')
+    if ($vals.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'No meet.safety_host_management policy returned for this tenant' -OrgUnitPath $OrgUnitPath
+    }
+    $off = @($vals | Where-Object { $_ -ne $true })
+    if ($off.Count -gt 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
+            -CurrentValue "Host management off in $($off.Count) of $($vals.Count) targeted policy/policies" `
+            -OrgUnitPath $OrgUnitPath `
+            -Details @{ Note = 'Host management gives meeting hosts moderation controls (mute, remove, lock) to prevent meeting hijacking and disruption' }
+    }
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+        -CurrentValue 'Host management is enabled' -OrgUnitPath $OrgUnitPath
+}

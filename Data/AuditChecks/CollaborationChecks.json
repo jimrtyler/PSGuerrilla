@@ -152,6 +152,36 @@
         "mitreAttack": ["T1589.002"],
         "cisBenchmark": ["5.10"]
       }
+    },
+    {
+      "id": "COLLAB-011",
+      "name": "Meet External Participant Labeling",
+      "description": "External participants in meetings should be visibly labeled so hosts and attendees can readily identify outsiders and avoid disclosing sensitive information",
+      "severity": "Low",
+      "subcategory": "Google Meet",
+      "recommendedValue": "External participant labeling enabled",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/625702498764/meetingsettings",
+      "remediationSteps": "Apps > Google Workspace > Google Meet > Meet safety settings > External participants > Enable labeling of external participants",
+      "compliance": {
+        "nistSp80053": ["AC-22"],
+        "mitreAttack": ["T1199"],
+        "cisBenchmark": ["6.1"]
+      }
+    },
+    {
+      "id": "COLLAB-012",
+      "name": "Meet Host Management",
+      "description": "Host management should be enabled so meeting hosts retain moderation controls such as muting, removing, and locking to prevent meeting hijacking and disruption",
+      "severity": "Medium",
+      "subcategory": "Google Meet",
+      "recommendedValue": "Host management enabled",
+      "remediationUrl": "https://admin.google.com/ac/appsettings/625702498764/meetingsettings",
+      "remediationSteps": "Apps > Google Workspace > Google Meet > Meet safety settings > Host management > Enable host management controls",
+      "compliance": {
+        "nistSp80053": ["AC-3"],
+        "mitreAttack": ["T1199"],
+        "cisBenchmark": ["6.2"]
+      }
     }
   ]
 }

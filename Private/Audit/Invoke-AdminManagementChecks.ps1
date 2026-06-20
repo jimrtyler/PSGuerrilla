@@ -240,10 +240,36 @@ function Test-FortificationADMIN008 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
-    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
-        -CurrentValue 'Directory sharing settings not available via API. Verify in Admin Console > Directory > Directory settings > Sharing settings that contact sharing is restricted' `
+    # GWS-1: directory.workspace_resource_type_visibility { domainSharedContacts=bool }.
+    # When true, domain shared contacts are exposed across the global directory — a directory-
+    # exposure surface worth review (especially for K-12 / student OUs). This is intentionally
+    # WARN-on-exposure ("review this"), not FAIL — appropriateness depends on the audience.
+    # Grade the WEAKEST OU: if ANY targeted policy exposes shared contacts the tenant WARNs;
+    # PASS only when every targeted policy keeps them hidden.
+    $pol = $AuditData.CloudIdentityPolicies
+    if (-not $pol) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Cloud Identity Policy API not available (cloud-identity.policies.readonly not delegated, or API disabled)' `
+            -OrgUnitPath $OrgUnitPath
+    }
+    $vals = @(Resolve-GooglePolicyValue -Policies $pol -Type 'directory.workspace_resource_type_visibility' -Field 'domainSharedContacts')
+    if ($vals.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'No directory.workspace_resource_type_visibility policy returned for this tenant' -OrgUnitPath $OrgUnitPath
+    }
+
+    $visible = @($vals | Where-Object { $_ -eq $true })
+    $note = "domainSharedContacts: $((@($vals | ForEach-Object { "$_" }) | Select-Object -Unique) -join ', ') ($($visible.Count) of $($vals.Count) targeted policies)"
+    if ($visible.Count -gt 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
+            -CurrentValue "Domain shared contacts visible in the directory — review whether this exposure is appropriate ($($visible.Count) of $($vals.Count) targeted policies)" `
+            -OrgUnitPath $OrgUnitPath `
+            -Details @{ Note = 'Domain shared contacts visible in the global directory expose contact information; review whether this is appropriate for the audience (e.g. K-12 / student OUs)'; ExposingPolicies = $visible.Count; TargetedPolicies = $vals.Count; DomainSharedContacts = $note }
+    }
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+        -CurrentValue "Domain shared contacts not exposed in the directory in all $($vals.Count) targeted policies" `
         -OrgUnitPath $OrgUnitPath `
-        -Details @{ Note = 'External directory sharing exposes organizational structure and contact information to external parties' }
+        -Details @{ DomainSharedContacts = $note }
 }
 
 # ── ADMIN-009: User Profile Visibility ───────────────────────────────────
@@ -251,10 +277,36 @@ function Test-FortificationADMIN009 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
-    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
-        -CurrentValue 'User profile visibility settings not available via API. Verify in Admin Console > Directory > Directory settings > Profile sharing that visibility is appropriately restricted' `
+    # GWS-1: directory.workspace_resource_type_visibility { googleGroups=bool }. This is the
+    # closest directory-visibility signal this policy type exposes — when true, groups are
+    # visible in the global directory. Intentionally WARN-on-exposure ("review this"), not FAIL.
+    # Grade the WEAKEST OU: if ANY targeted policy makes groups visible the tenant WARNs; PASS
+    # only when every targeted policy keeps them hidden.
+    $pol = $AuditData.CloudIdentityPolicies
+    if (-not $pol) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Cloud Identity Policy API not available (cloud-identity.policies.readonly not delegated, or API disabled)' `
+            -OrgUnitPath $OrgUnitPath
+    }
+    $vals = @(Resolve-GooglePolicyValue -Policies $pol -Type 'directory.workspace_resource_type_visibility' -Field 'googleGroups')
+    if ($vals.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'No directory.workspace_resource_type_visibility policy returned for this tenant' -OrgUnitPath $OrgUnitPath
+    }
+
+    $visible = @($vals | Where-Object { $_ -eq $true })
+    $note = "googleGroups: $((@($vals | ForEach-Object { "$_" }) | Select-Object -Unique) -join ', ') ($($visible.Count) of $($vals.Count) targeted policies)"
+    $detail = 'This policy type (directory.workspace_resource_type_visibility) exposes googleGroups + domainSharedContacts only; profile-level visibility may also warrant manual review in Admin Console > Directory > Directory settings > Profile sharing'
+    if ($visible.Count -gt 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
+            -CurrentValue "Groups visible in the global directory — review whether this exposure is appropriate ($($visible.Count) of $($vals.Count) targeted policies)" `
+            -OrgUnitPath $OrgUnitPath `
+            -Details @{ Note = $detail; ExposingPolicies = $visible.Count; TargetedPolicies = $vals.Count; GoogleGroups = $note }
+    }
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+        -CurrentValue "Groups not exposed in the global directory in all $($vals.Count) targeted policies" `
         -OrgUnitPath $OrgUnitPath `
-        -Details @{ Note = 'Profile information can aid reconnaissance; restrict visibility to internal users' }
+        -Details @{ Note = $detail; GoogleGroups = $note }
 }
 
 # ── ADMIN-010: Groups Settings and External Membership ───────────────────

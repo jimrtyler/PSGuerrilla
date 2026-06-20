@@ -228,6 +228,74 @@
         "mitreAttack": ["T1078.004"],
         "cisBenchmark": ["1.13"]
       }
+    },
+    {
+      "id": "AUTH-014",
+      "name": "2SV Enrollment Allowed",
+      "description": "Users must be allowed to enroll in two-step verification. Disabling 2SV enrollment blocks MFA adoption and leaves accounts protected by passwords alone",
+      "severity": "Medium",
+      "subcategory": "Multi-Factor Authentication",
+      "recommendedValue": "2SV enrollment allowed in all organizational units",
+      "remediationUrl": "https://admin.google.com/ac/security/2sv",
+      "remediationSteps": "Security > Authentication > 2-step verification > Set 'Allow users to turn on 2-Step Verification' to On for all organizational units",
+      "referenceUrl": "https://support.google.com/a/answer/9176657",
+      "referenceTitle": "Google: Turn on 2-Step Verification",
+      "compliance": {
+        "nistSp80053": ["IA-2(1)"],
+        "mitreAttack": ["T1078.004"],
+        "cisBenchmark": ["1.2"]
+      }
+    },
+    {
+      "id": "AUTH-015",
+      "name": "2SV Enrollment Grace Period",
+      "description": "The grace period before newly added users must enroll in 2SV should be short. A long grace period leaves accounts unprotected by MFA for an extended window after creation",
+      "severity": "Low",
+      "subcategory": "Multi-Factor Authentication",
+      "recommendedValue": "Grace period of 7 days (168 hours) or less",
+      "remediationUrl": "https://admin.google.com/ac/security/2sv",
+      "remediationSteps": "Security > Authentication > 2-step verification > Set the new-user enrollment grace period to 7 days or less",
+      "referenceUrl": "https://support.google.com/a/answer/9176657",
+      "referenceTitle": "Google: Set a 2-Step Verification enrollment period",
+      "compliance": {
+        "nistSp80053": ["IA-2(1)"],
+        "mitreAttack": ["T1078.004"],
+        "cisBenchmark": ["1.2"]
+      }
+    },
+    {
+      "id": "AUTH-016",
+      "name": "Advanced Protection Self-Enrollment",
+      "description": "Allowing self-enrollment in the Advanced Protection Program lets high-risk users adopt the strongest available account protections without admin intervention",
+      "severity": "Low",
+      "subcategory": "Account Security",
+      "recommendedValue": "Advanced Protection self-enrollment allowed in all organizational units",
+      "remediationUrl": "https://admin.google.com/ac/security/advanced-protection",
+      "remediationSteps": "Security > Authentication > Advanced Protection Program > Allow users to self-enroll in Advanced Protection",
+      "referenceUrl": "https://support.google.com/a/answer/9378686",
+      "referenceTitle": "Google: Protect users with the Advanced Protection Program",
+      "compliance": {
+        "nistSp80053": ["IA-2(1)"],
+        "mitreAttack": ["T1078.004"],
+        "cisBenchmark": ["1.14"]
+      }
+    },
+    {
+      "id": "AUTH-017",
+      "name": "Super Admin Account Self-Recovery",
+      "description": "Self-service account recovery for super admins is an account-takeover path via social engineering and should be turned off. Super admins should be recovered only by another administrator",
+      "severity": "High",
+      "subcategory": "Account Security",
+      "recommendedValue": "Super admin self-recovery disabled in all organizational units",
+      "remediationUrl": "https://admin.google.com/ac/security/accountrecovery",
+      "remediationSteps": "Security > Authentication > Account recovery > Turn off 'Allow super admins to recover their account' for all organizational units",
+      "referenceUrl": "https://support.google.com/a/answer/9436964",
+      "referenceTitle": "Google: Allow super administrators to recover their password",
+      "compliance": {
+        "nistSp80053": ["IA-4", "AC-6(5)"],
+        "mitreAttack": ["T1078.004", "T1098"],
+        "cisBenchmark": ["1.15"]
+      }
     }
   ]
 }

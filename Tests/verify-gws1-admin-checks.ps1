@@ -6,11 +6,10 @@
 # to a real Cloud Identity policy type — ADMIN-012 (Groups for Business) via
 # groups_for_business.service_status — grades correctly (DISABLED->PASS, ENABLED->WARN since
 # granular sharing isn't in the policy API, unknown enum->WARN never PASS, weakest-OU-wins,
-# unavailable->SKIP, type-absent->SKIP). ADMIN-008 (directory sharing) and ADMIN-009 (profile
-# visibility) have NO sensible policy type in this category's schema bindings and remain
-# manual-verify WARN — asserted here so the intentional non-conversion is documented.
-# (ADMIN-011 group creation is now policy-backed via groups_for_business.groups_sharing — see
-# verify-gws1-admin-p2.ps1; with no policy data it SKIPs.)
+# unavailable->SKIP, type-absent->SKIP). ADMIN-008 (directory sharing), ADMIN-009 (profile
+# visibility, both via directory.workspace_resource_type_visibility — see verify-gws1-admin-p3.ps1)
+# and ADMIN-011 (group creation, via groups_for_business.groups_sharing — see
+# verify-gws1-admin-p2.ps1) are all now policy-backed; with no policy data they SKIP.
 # Run: pwsh -File Tests/verify-gws1-admin-checks.ps1
 
 $ErrorActionPreference = 'Stop'
@@ -76,8 +75,8 @@ Add-R 'ADMIN-012 weakest OU (1 enabled) -> WARN' ($out.A012_weak -eq 'WARN') ("g
 Add-R 'ADMIN-012 unknown enum -> WARN (no PASS)' ($out.A012_unknown -eq 'WARN') ("got=$($out.A012_unknown)")
 Add-R 'ADMIN-012 type absent -> SKIP'            ($out.A012_absent -eq 'SKIP') ("got=$($out.A012_absent)")
 Add-R 'ADMIN-012 API unavailable -> SKIP'        ($out.A012_skip -eq 'SKIP') ("got=$($out.A012_skip)")
-Add-R 'ADMIN-008 still manual -> WARN'           ($out.A008 -eq 'WARN') ("got=$($out.A008)")
-Add-R 'ADMIN-009 still manual -> WARN'           ($out.A009 -eq 'WARN') ("got=$($out.A009)")
+Add-R 'ADMIN-008 now policy-backed, no data -> SKIP' ($out.A008 -eq 'SKIP') ("got=$($out.A008)")
+Add-R 'ADMIN-009 now policy-backed, no data -> SKIP' ($out.A009 -eq 'SKIP') ("got=$($out.A009)")
 Add-R 'ADMIN-011 now policy-backed, no data -> SKIP' ($out.A011 -eq 'SKIP') ("got=$($out.A011)")
 
 $pass = @($results | Where-Object Pass).Count
