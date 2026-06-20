@@ -67,7 +67,8 @@ function Get-GuerrillaSimulatedFindings {
     $defNames = switch ($Theater) {
         'GoogleWorkspace' {
             @('AuthenticationChecks', 'EmailSecurityChecks', 'DriveSecurityChecks', 'OAuthSecurityChecks',
-              'AdminManagementChecks', 'CollaborationChecks', 'DeviceManagementChecks', 'LoggingAlertingChecks')
+              'AdminManagementChecks', 'CollaborationChecks', 'DeviceManagementChecks', 'LoggingAlertingChecks',
+              'GoogleTradecraftChecks')
         }
         'EntraM365' {
             @('EntraAuthChecks', 'EntraCAChecks', 'EntraPIMChecks', 'EntraAppChecks', 'EntraFedChecks',

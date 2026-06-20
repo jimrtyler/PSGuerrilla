@@ -14,12 +14,12 @@ Security assessment, threat detection, and continuous monitoring for Google Work
 
 | Theater | Capability | Checks |
 |---------|-----------|--------|
-| Google Workspace | Compromise assessment, 23 detection signals, 8 audit categories | 104 |
+| Google Workspace | Compromise assessment, 23 detection signals, 9 audit categories (incl. adversary tradecraft) | 110 |
 | Active Directory | 15-category security reconnaissance (incl. attack-path analysis) | 204 |
 | Entra ID / Azure / Intune / M365 | Infiltration audit across 14 categories | 158 |
 | All theaters | Continuous monitoring with baseline drift detection | Real-time |
 
-**Total: 466 security checks** across authentication, email security, drive/SharePoint, OAuth, admin management, conditional access, PIM, Kerberos, certificate services, group policy, Intune endpoint compliance, NTLM-relay preconditions, Tier-0 hygiene, logging/telemetry posture, adversary-tradecraft indicators (GPP cpassword, DCShadow, BitLocker hygiene, RODC PRP), and more.
+**Total: 472 security checks** across authentication, email security, drive/SharePoint, OAuth, admin management, conditional access, PIM, Kerberos, certificate services, group policy, Intune endpoint compliance, NTLM-relay preconditions, Tier-0 hygiene, logging/telemetry posture, adversary-tradecraft indicators (GPP cpassword, DCShadow, BitLocker hygiene, RODC PRP), and more.
 
 ## Requirements
 
@@ -164,7 +164,7 @@ Opens a five-tab WPF window: Operations (run scans), Safehouse (manage credentia
 Invoke-Campaign -ConfigFile './guerrilla-config.json'
 
 # Or run individual theaters
-Invoke-Fortification                    # Google Workspace audit (104 checks)
+Invoke-Fortification                    # Google Workspace audit (110 checks)
 Invoke-Reconnaissance                   # Active Directory audit (204 checks)
 Invoke-Infiltration                     # Entra/Azure/Intune/M365 audit (158 checks)
 ```
@@ -563,7 +563,7 @@ PSGuerrilla/
   PSGuerrilla.format.ps1xml     # Custom table formatters
   Config/                        # JSON schema and defaults
   Data/                          # Threat intel, audit check definitions, compliance crosswalks
-    AuditChecks/                 # 37 JSON files defining all 466 security checks
+    AuditChecks/                 # 38 JSON files defining all 472 security checks
     Profiles/                    # Scoring profiles (Default, K12)
   Public/                        # 43 exported functions
   Private/                       # 234 internal function files

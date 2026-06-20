@@ -183,6 +183,7 @@ function Invoke-Fortification {
             Collaboration    = 'Invoke-CollaborationChecks'
             DeviceManagement = 'Invoke-DeviceManagementChecks'
             LoggingAlerting  = 'Invoke-LoggingAlertingChecks'
+            Tradecraft       = 'Invoke-GoogleTradecraftChecks'
         }
 
         $categoriesToRun = if ($Categories -contains 'All') { $categoryMap.Keys } else { $Categories }

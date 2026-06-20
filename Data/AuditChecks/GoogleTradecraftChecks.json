@@ -1,0 +1,109 @@
+{
+  "categoryId": "gwstradecraft",
+  "categoryName": "Adversary Tradecraft",
+  "categoryDescription": "Attack preconditions and exposures that Google does not natively surface or alert on — domain-wide delegation takeover (DeleFriend), public/open groups, privileged-role sprawl, and persistent OAuth grants.",
+  "checks": [
+    {
+      "id": "GTRADE-001",
+      "name": "Domain-Wide Delegation Org-Takeover Exposure",
+      "description": "Domain-wide delegation binds impersonation to a service account's OAuth client ID, not its key — so anyone who can mint a key on a delegated SA holding broad scopes gains org-wide impersonation without super admin (the DeleFriend technique). Delegated grants carrying full Gmail/Drive/Directory/cloud-platform scopes are the takeover precondition.",
+      "severity": "Critical",
+      "subcategory": "Domain-Wide Delegation",
+      "recommendedValue": "No service account delegated org-impersonation scopes (full Gmail/Drive/Directory/cloud-platform); narrow read-only scopes only",
+      "remediationUrl": "https://admin.google.com/ac/owl/domainwidedelegation",
+      "remediationSteps": "Security > API controls > Domain-wide delegation: remove or narrow any grant holding full mail.google.com, full drive, admin.directory, or cloud-platform scopes; restrict to the minimum read-only scopes required. In GCP, deny key creation on delegated service accounts (iam.disableServiceAccountKeyCreation).",
+      "referenceUrl": "https://www.hunters.security/en/blog/delefriend-a-newly-discovered-design-flaw-in-domain-wide-delegation-could-leave-google-workspace-vulnerable-for-takeover",
+      "referenceTitle": "Hunters: DeleFriend — domain-wide delegation design flaw",
+      "compliance": {
+        "nistSp80053": ["AC-6", "IA-2", "AC-6(5)"],
+        "mitreAttack": ["T1078.004", "T1098"],
+        "cisBenchmark": ["1.x"]
+      }
+    },
+    {
+      "id": "GTRADE-002",
+      "name": "Internet-Readable Google Groups",
+      "description": "Groups whose topics are viewable by 'anyone on the internet' silently leak their entire message history — a class that has exposed thousands of organizations' internal mail (financials, credentials, PII). Google provides no native alert for this exposure.",
+      "severity": "High",
+      "subcategory": "Google Groups",
+      "recommendedValue": "No group viewable by anyone on the internet (whoCanViewGroup not ANYONE_CAN_VIEW)",
+      "remediationUrl": "https://admin.google.com/ac/groups",
+      "remediationSteps": "Apps > Google Workspace > Groups for Business > Sharing settings, and per-group access settings: set 'Who can view conversations' away from 'Anyone on the internet' to members/organization only.",
+      "referenceUrl": "https://krebsonsecurity.com/2018/06/is-your-google-groups-leaking-data/",
+      "referenceTitle": "Krebs/Kenna: Google Groups data exposure",
+      "compliance": {
+        "nistSp80053": ["AC-22", "AC-3"],
+        "mitreAttack": ["T1213"],
+        "cisBenchmark": ["1.x"]
+      }
+    },
+    {
+      "id": "GTRADE-003",
+      "name": "Open-Join / External-Member Groups",
+      "description": "Groups that anyone (or anyone in the domain) can join, or that allow external members, widen the trust boundary and enable self-service access — if such a group also holds resource or IAM access, joining it inherits that access (a privilege-escalation path Google classifies as intended behavior).",
+      "severity": "Medium",
+      "subcategory": "Google Groups",
+      "recommendedValue": "Groups restricted to invited members; no anyone-can-join and no external members unless explicitly required",
+      "remediationUrl": "https://admin.google.com/ac/groups",
+      "remediationSteps": "Apps > Google Workspace > Groups for Business: set default 'Who can join' to 'Only invited users' and disable 'Allow external members' unless a group explicitly requires them; review groups that grant resource/IAM access.",
+      "referenceUrl": "https://www.netspi.com/blog/technical-blog/cloud-pentesting/escalating-privileges-in-google-cloud-via-open-groups/",
+      "referenceTitle": "NetSPI: privilege escalation via open Google groups",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-6"],
+        "mitreAttack": ["T1078", "T1136"],
+        "cisBenchmark": ["1.x"]
+      }
+    },
+    {
+      "id": "GTRADE-004",
+      "name": "Super-Admin Sprawl",
+      "description": "Super administrators bypass SSO and most controls; a large super-admin population expands the org's highest-value attack surface. Google best practice is to keep the count small (fewer than five) with day-to-day work done under least-privilege roles.",
+      "severity": "Medium",
+      "subcategory": "Privileged Access",
+      "recommendedValue": "Fewer than 5 active super administrators",
+      "remediationUrl": "https://admin.google.com/ac/roles",
+      "remediationSteps": "Account > Admin roles > Super Admin: reduce membership to the minimum break-glass set; move routine duties to least-privilege custom/prebuilt roles; enforce phishing-resistant 2SV on all remaining super admins.",
+      "referenceUrl": "https://knowledge.workspace.google.com/admin/users/security-best-practices-for-administrator-accounts",
+      "referenceTitle": "Google: admin account security best practices",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-6(5)"],
+        "mitreAttack": ["T1078.004"],
+        "cisBenchmark": ["1.x"]
+      }
+    },
+    {
+      "id": "GTRADE-005",
+      "name": "Super-Admin-Equivalent Custom Roles",
+      "description": "Custom admin roles carrying high-power privileges (user management, security settings, role management, data export/Takeout) can approximate super-admin capability while evading a simple super-admin head-count — a quiet privilege-concentration and persistence vector.",
+      "severity": "Medium",
+      "subcategory": "Privileged Access",
+      "recommendedValue": "No custom role carries super-admin-equivalent privileges (user/security/role management or data export) outside break-glass use",
+      "remediationUrl": "https://admin.google.com/ac/roles",
+      "remediationSteps": "Account > Admin roles: review custom roles holding user-management, security-settings, role-management, or data-export/Takeout privileges; split into narrowly-scoped roles and limit assignees.",
+      "referenceUrl": "https://knowledge.workspace.google.com/admin/users/security-best-practices-for-administrator-accounts",
+      "referenceTitle": "Google: admin account security best practices",
+      "compliance": {
+        "nistSp80053": ["AC-6", "AC-6(7)"],
+        "mitreAttack": ["T1098"],
+        "cisBenchmark": ["1.x"]
+      }
+    },
+    {
+      "id": "GTRADE-006",
+      "name": "Persistent / Over-Scoped OAuth Grants",
+      "description": "Third-party OAuth grants holding full Gmail/Drive/admin scopes bypass MFA and survive a password reset (Apps Script, app passwords, and IMAP-OAuth sessions are not revoked by a reset) — a durable persistence channel. Google logs grants but ships no default malicious-grant classifier.",
+      "severity": "High",
+      "subcategory": "OAuth & Tokens",
+      "recommendedValue": "No third-party OAuth app holding full mail/drive/admin scopes; persistent grants reviewed and explicitly revoked",
+      "remediationUrl": "https://admin.google.com/ac/owl/list",
+      "remediationSteps": "Security > API controls > App access control: review apps with full Gmail/Drive/Directory scopes, restrict to allowlisted apps, and explicitly revoke unneeded grants (a password reset alone does NOT revoke OAuth, app-password, or Apps Script access).",
+      "referenceUrl": "https://astrix.security/learn/blog/ghosttoken-exploiting-gcp-application-infrastructure-to-create-invisible-unremovable-trojan-app-on-google-accounts/",
+      "referenceTitle": "Astrix: GhostToken / persistent OAuth access",
+      "compliance": {
+        "nistSp80053": ["AC-6", "IA-5"],
+        "mitreAttack": ["T1550.001", "T1098.001"],
+        "cisBenchmark": ["1.x"]
+      }
+    }
+  ]
+}

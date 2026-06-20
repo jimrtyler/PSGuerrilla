@@ -37,6 +37,7 @@ function Get-FortificationData {
         Collaboration    = @('OrgUnits', 'Groups')
         DeviceManagement = @('MobileDevices', 'ChromeDevices', 'ChromePolicies')
         LoggingAlerting  = @('AlertRules')
+        Tradecraft       = @('DomainWideDelegation', 'Users', 'Roles', 'OAuthApps', 'Groups', 'GroupSettings')
     }
 
     # Resolve which data sources are required
@@ -199,6 +200,20 @@ function Get-FortificationData {
             $data.Groups = @($groups ?? @())
         } catch {
             $data.Errors['Groups'] = $_.Exception.Message
+        }
+    }
+
+    # ── Group exposure settings (per-group; gated by -Quick like the Gmail crawl) ──
+    if (-not $Quick -and (& $needsSource 'GroupSettings')) {
+        if (-not $Quiet) {
+            Write-ProgressLine -Phase AUDITING -Message 'Retrieving group exposure settings' -Detail "($(@($data.Groups).Count) groups)"
+        }
+        try {
+            $gs = Get-GoogleGroupSettings -ServiceAccountKeyPath $ServiceAccountKeyPath `
+                -AdminEmail $AdminEmail -Groups @($data.Groups) -Quiet:$Quiet
+            if ($null -ne $gs) { $data.GroupSettings = $gs }
+        } catch {
+            $data.Errors['GroupSettings'] = $_.Exception.Message
         }
     }
 

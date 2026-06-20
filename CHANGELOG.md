@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.14.0] - 2026-06-20
+
+_New Google Workspace **Adversary Tradecraft** category — detecting attack preconditions Google itself does not surface or alert on. GWS is now 110 checks across 9 categories (472 total)._
+
+### Added
+- **New GWS category: Adversary Tradecraft** (`GoogleTradecraftChecks`, 6 checks), the Google-Workspace analog of the AD Tier-0 / NTLM-relay-precondition checks. All read-only, weakest-OU/any-hit grading, graceful SKIP when data is unavailable:
+  - **GTRADE-001 — Domain-Wide Delegation org-takeover exposure (DeleFriend).** Flags DWD grants holding org-impersonation scopes (full `mail.google.com`, full `drive`, `admin.directory` write, `cloud-platform`, `apps.groups`) — each is a DeleFriend takeover target if its service account gets a new key. (Full confirmation — a user-managed key on the SA — needs GCP IAM, a Phase-2 scope; flagged in the finding.)
+  - **GTRADE-002 — Internet-readable Google Groups** (`whoCanViewGroup = ANYONE_CAN_VIEW`), the Kenna/UpGuard data-leak class Google doesn't alert on.
+  - **GTRADE-003 — Open-join / external-member groups** (anyone-can-join or external members) — the open-group → IAM escalation precondition Google classifies "Won't Fix."
+  - **GTRADE-004 — Super-admin sprawl** (count vs. the <5 best practice).
+  - **GTRADE-005 — Super-admin-equivalent custom roles** (custom roles carrying user/security/role-management or data-export privileges).
+  - **GTRADE-006 — Persistent / over-scoped OAuth grants** (full mail/drive/admin scopes that bypass MFA and survive a password reset — GhostToken-class).
+- **New collector `Get-GoogleGroupSettings`** — enriches directory groups with exposure settings (`whoCanViewGroup` / `whoCanJoin` / `allowExternalMembers`) via the Groups Settings API on the **already-requested `apps.groups.settings` scope**. Isolated token (graceful SKIP if undelegated); per-group, gated by `-Quick` like the Gmail crawl; caps at 1000 groups and logs truncation (never silent). Wired into `Get-FortificationData` as `$data.GroupSettings`.
+
+### Notes
+- **Google Workspace is now 110 checks across 9 categories** (was 104 / 8); module total **472** (was 466). Counts updated in README; the new category runs under `Invoke-Fortification` (real + test mode) and `Invoke-Campaign`.
+- **Phase-2 (deferred, needs a GCP IAM / `cloud-platform` read scope + new collector):** full DeleFriend confirmation (SA user-managed key × DWD), stale long-lived SA keys, and open-group→IAM-binding correlation. These can't be added without a new scope and live validation, so they're tracked, not shipped.
+- Regression test: `Tests/verify-gws-tradecraft.ps1` (23/23). Test-mode Fortification dispatches all 110 findings with 0 ERROR.
+
 ## [2.13.0] - 2026-06-19
 
 _Google Workspace coverage expansion — 6 net-new checks + ADMIN-008/009 converted. GWS is now 104 checks (466 total)._
