@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.11.1] - 2026-06-19
+
+_GWS-1 coverage extension — 7 more placeholders converted to real Cloud Identity policy checks (33 total)._
+
+### Added
+- **7 additional Fortification checks now read live Cloud Identity policy** instead of an always-WARN "verify in Admin Console":
+  - **EMAIL-018 (Compliance Rules)** → `gmail.content_compliance` — PASS when ≥1 content-compliance rule is configured, else WARN.
+  - **EMAIL-019 (DLP Rules)** → `rule.dlp` — counts **active, Gmail-scoped** DLP rules (state `ACTIVE` + `action.gmailAction`); PASS if ≥1, else WARN.
+  - **DRIVE-010 (Drive DLP Rules)** → `rule.dlp` — counts active **Drive-scoped** rules (`action.driveAction`); PASS if ≥1, else WARN. (Gmail-only or inactive rules correctly don't count.)
+  - **ADMIN-010 (Groups External Membership)** → `groups_for_business.groups_sharing.ownersCanAllowExternalMembers` — FAIL if external members allowed in any OU (weakest-OU-wins).
+  - **ADMIN-011 (Group Creation Restrictions)** → `groups_for_business.groups_sharing.createGroupsAccessLevel` — FAIL on open creation, PASS on admin-restricted, WARN on unrecognized enum.
+  - **COLLAB-004 (Chat External Communication)** → `chat.external_chat_restriction` (policy-primary, with the existing OrgUnitPolicies path kept as fallback).
+  - **COLLAB-008 (Calendar External Sharing)** → `calendar.primary_calendar_max_allowed_external_sharing` (policy-primary, OrgUnitPolicies fallback retained).
+
+### Notes
+- **GWS-1 coverage is now 33 real policy-backed checks** (was 26 in v2.11.0). Check counts unchanged (AD 204 / GWS 98 / Entra 158) — logic changed, not the check set.
+- Same safety rails as v2.11.0: weakest-OU-wins grading, API-unavailable→SKIP vs policy-absent→SKIP, and **unrecognized enums grade WARN, never PASS** (DLP/state matching is anchored so `INACTIVE` never counts as active). Enum strings for ADMIN-011, COLLAB-004/008 remain best-effort pending live confirmation.
+- Remaining placeholders with **no Cloud Identity Policy API equivalent** stay documented manual-verify (TLS, inbound gateway, SSO, app passwords, unverified-apps, appointment slots, ownership transfer). The MDM/device family and directory/profile-sharing checks are pending the full 173-type schema dump.
+- New regression suites (all green): `Tests/verify-gws1-{email,drive,admin,collab}-p2.ps1`; existing suites unchanged.
+
 ## [2.11.0] - 2026-06-19
 
 _GWS-1 complete — the Cloud Identity policy data layer (v2.10.8) is now wired into real checks._

@@ -262,28 +262,31 @@ function Test-FortificationADMIN010 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
-    # Groups data may be available if collected
-    if ($AuditData.Groups) {
-        $groups = @($AuditData.Groups)
-        $externalGroups = @($groups | Where-Object {
-            $_.allowExternalMembers -eq $true -or $_.whoCanJoin -eq 'ANYONE_CAN_JOIN'
-        })
-
-        if ($externalGroups.Count -gt 0) {
-            $groupEmails = @($externalGroups | ForEach-Object { $_.email } | Select-Object -First 20)
-            return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'FAIL' `
-                -CurrentValue "$($externalGroups.Count) of $($groups.Count) group(s) allow external members" `
-                -OrgUnitPath $OrgUnitPath `
-                -Details @{ ExternalGroups = $groupEmails; TotalGroups = $groups.Count }
-        }
-
-        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
-            -CurrentValue "None of the $($groups.Count) group(s) allow external members" `
+    # GWS-1: groups_for_business.groups_sharing { ownersCanAllowExternalMembers=bool }.
+    # When true, group owners may add members outside the organization — an external data
+    # exposure surface. Grade the WEAKEST OU: if ANY targeted policy allows external members
+    # the tenant FAILs; PASS only when every targeted policy disallows it.
+    $pol = $AuditData.CloudIdentityPolicies
+    if (-not $pol) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Cloud Identity Policy API not available (cloud-identity.policies.readonly not delegated, or API disabled)' `
             -OrgUnitPath $OrgUnitPath
     }
+    $vals = @(Resolve-GooglePolicyValue -Policies $pol -Type 'groups_for_business.groups_sharing' -Field 'ownersCanAllowExternalMembers')
+    if ($vals.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'No groups_for_business.groups_sharing policy returned for this tenant' -OrgUnitPath $OrgUnitPath
+    }
 
-    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
-        -CurrentValue 'Groups data not available. Verify in Admin Console > Apps > Groups for Business > Sharing settings that external membership is restricted' `
+    $allowed = @($vals | Where-Object { $_ -eq $true })
+    if ($allowed.Count -gt 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'FAIL' `
+            -CurrentValue "Group owners can allow external members in $($allowed.Count) of $($vals.Count) targeted policies — external membership exposes organizational data" `
+            -OrgUnitPath $OrgUnitPath `
+            -Details @{ Note = 'Restrict in Admin Console > Apps > Groups for Business > Sharing settings'; AllowingPolicies = $allowed.Count; TargetedPolicies = $vals.Count }
+    }
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+        -CurrentValue "External members disallowed in all $($vals.Count) targeted policies" `
         -OrgUnitPath $OrgUnitPath
 }
 
@@ -292,10 +295,53 @@ function Test-FortificationADMIN011 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
-    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
-        -CurrentValue 'Group creation restrictions not available via API. Verify in Admin Console > Apps > Groups for Business > Sharing settings that group creation is restricted to admins' `
+    # GWS-1: groups_for_business.groups_sharing { createGroupsAccessLevel=enum }.
+    # Open creation (anyone / any user in domain) is a weaker posture than admin-restricted
+    # creation, because it lets unmanaged sharing channels proliferate. The Cloud Identity
+    # Policy API documents a small enum set, but the exact spelling has varied, so we match
+    # known OPEN and known ADMIN-RESTRICTED values case-insensitively and treat anything we
+    # don't recognise as WARN (never PASS on an unknown enum). Grade the WEAKEST (most-open)
+    # OU: if any targeted policy is open the tenant FAILs; an unrecognised value WARNs.
+    $pol = $AuditData.CloudIdentityPolicies
+    if (-not $pol) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Cloud Identity Policy API not available (cloud-identity.policies.readonly not delegated, or API disabled)' `
+            -OrgUnitPath $OrgUnitPath
+    }
+    $vals = @(Resolve-GooglePolicyValue -Policies $pol -Type 'groups_for_business.groups_sharing' -Field 'createGroupsAccessLevel')
+    if ($vals.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'No groups_for_business.groups_sharing policy returned for this tenant' -OrgUnitPath $OrgUnitPath
+    }
+
+    $levels  = @($vals | ForEach-Object { "$_" })
+    $note    = "Create-group access level: $((@($levels) | Select-Object -Unique) -join ', ') (across $($levels.Count) targeted policy/policies)"
+    # Known OPEN spellings (any user / anyone in domain) — weakest posture.
+    $openRe  = '(?i)^(ANYONE_CAN_CREATE|ALL|ANYONE|EVERYONE|USERS_IN_DOMAIN|DOMAIN_USERS)$'
+    # Known ADMIN-RESTRICTED spellings — secure posture.
+    $adminRe = '(?i)^(ADMIN_ONLY|ADMINS_ONLY|ADMIN)$'
+    $open    = @($levels | Where-Object { $_ -match $openRe })
+    $admin   = @($levels | Where-Object { $_ -match $adminRe })
+    $unknown = @($levels | Where-Object { $_ -notmatch $openRe -and $_ -notmatch $adminRe })
+
+    if ($unknown.Count -gt 0) {
+        # Never PASS/FAIL on an enum value we don't recognise — surface it for manual review.
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
+            -CurrentValue "Unrecognized group-creation access level — verify manually whether creation is admin-restricted — $note" `
+            -OrgUnitPath $OrgUnitPath `
+            -Details @{ Note = 'Enum spelling not recognized; the known OPEN/ADMIN values are best-effort guesses (ANYONE_CAN_CREATE/ALL/ANYONE/EVERYONE/USERS_IN_DOMAIN/DOMAIN_USERS vs ADMIN_ONLY/ADMINS_ONLY/ADMIN)' }
+    }
+    if ($open.Count -gt 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'FAIL' `
+            -CurrentValue "Group creation is open (non-admin) in $($open.Count) of $($levels.Count) targeted policy/policies — restrict to admins — $note" `
+            -OrgUnitPath $OrgUnitPath `
+            -Details @{ Note = 'Unrestricted group creation can lead to unmanaged data sharing channels; OPEN enum spellings (ANYONE_CAN_CREATE/ALL/ANYONE/EVERYONE/USERS_IN_DOMAIN/DOMAIN_USERS) are best-effort guesses' }
+    }
+    # All targeted OUs restrict creation to admins.
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+        -CurrentValue "Group creation restricted to admins in all $($admin.Count) targeted policy/policies — $note" `
         -OrgUnitPath $OrgUnitPath `
-        -Details @{ Note = 'Unrestricted group creation can lead to unmanaged data sharing channels' }
+        -Details @{ Note = 'ADMIN-restricted enum spellings (ADMIN_ONLY/ADMINS_ONLY/ADMIN) are best-effort guesses' }
 }
 
 # ── ADMIN-012: Groups for Business Settings ──────────────────────────────

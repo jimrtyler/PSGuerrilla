@@ -299,9 +299,32 @@ function Test-FortificationDRIVE010 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
-    # DLP rules are not directly available via the Admin SDK
+    # GWS-1: rule.dlp value objects { state=enum(ACTIVE/INACTIVE), action={ gmailAction|driveAction|alertCenterAction } }.
+    # PASS if >= 1 ACTIVE rule whose action object is Drive-scoped (has a driveAction); WARN if none.
+    $pol = $AuditData.CloudIdentityPolicies
+    if (-not $pol) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Cloud Identity Policy API not available (cloud-identity.policies.readonly not delegated, or API disabled)' `
+            -OrgUnitPath $OrgUnitPath
+    }
+    $vals = @(Resolve-GooglePolicyValue -Policies $pol -Type 'rule.dlp')
+    if ($vals.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'No rule.dlp policy returned for this tenant' -OrgUnitPath $OrgUnitPath
+    }
+    # Count ACTIVE rules whose action object is Drive-scoped (anchored state match; action must have a driveAction).
+    $activeDrive = @($vals | Where-Object {
+        ($_.state -eq 'ACTIVE') -and
+        $_.action -and
+        ($_.action.PSObject.Properties.Name -contains 'driveAction')
+    })
+    if ($activeDrive.Count -ge 1) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+            -CurrentValue "$($activeDrive.Count) active Drive DLP rule(s) configured (of $($vals.Count) DLP rule(s))" `
+            -OrgUnitPath $OrgUnitPath
+    }
     return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
-        -CurrentValue 'DLP rules configuration not available via API. Verify in Admin Console > Security > Data protection > Manage rules that DLP rules are configured for Drive' `
+        -CurrentValue "No active Drive-scoped DLP rule found ($($vals.Count) DLP rule(s) present). Configure a Drive DLP rule in Admin Console > Security > Data protection > Manage rules" `
         -OrgUnitPath $OrgUnitPath `
         -Details @{ Note = 'DLP rules should cover sensitive data types including PII, financial data, and health records' }
 }

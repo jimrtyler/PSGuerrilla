@@ -584,10 +584,34 @@ function Test-FortificationEMAIL018 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
-    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
-        -CurrentValue 'Content compliance rules require manual review. Verify in Admin Console > Apps > Gmail > Compliance > Content compliance' `
-        -OrgUnitPath $OrgUnitPath `
-        -Details @{ Note = 'Content compliance configuration is an OU-level policy not fully available via API' }
+    # GWS-1: gmail.content_compliance { contentComplianceRules=[ rule, ... ] }. This is a
+    # "control present?" check, not insecure-if-present: count configured content-compliance
+    # rules across all returned policies. PASS if at least one rule exists; WARN if none.
+    $pol = $AuditData.CloudIdentityPolicies
+    if (-not $pol) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Cloud Identity Policy API not available (cloud-identity.policies.readonly not delegated, or API disabled)' `
+            -OrgUnitPath $OrgUnitPath
+    }
+    $vals = @(Resolve-GooglePolicyValue -Policies $pol -Type 'gmail.content_compliance')
+    if ($vals.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'No gmail.content_compliance policy returned for this tenant' -OrgUnitPath $OrgUnitPath
+    }
+    $ruleCount = 0
+    foreach ($v in $vals) {
+        if ($v.PSObject.Properties.Name -contains 'contentComplianceRules') {
+            $ruleCount += @($v.contentComplianceRules).Count
+        }
+    }
+    if ($ruleCount -lt 1) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
+            -CurrentValue 'No content compliance rules configured — verify in Admin Console > Apps > Gmail > Compliance > Content compliance' `
+            -OrgUnitPath $OrgUnitPath
+    }
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+        -CurrentValue "$ruleCount content compliance rule(s) configured across $($vals.Count) targeted policy/policies" `
+        -OrgUnitPath $OrgUnitPath
 }
 
 # ── EMAIL-019: DLP Rules Configuration ────────────────────────────────────────
@@ -595,10 +619,38 @@ function Test-FortificationEMAIL019 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
-    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
-        -CurrentValue 'DLP rules configuration requires manual review. Verify in Admin Console > Security > Data protection > Manage rules' `
-        -OrgUnitPath $OrgUnitPath `
-        -Details @{ Note = 'DLP rule configuration is an OU-level policy not fully available via API' }
+    # GWS-1: rule.dlp value objects { state=ACTIVE|INACTIVE; action={ gmailAction?; driveAction?;
+    # alertCenterAction? } }. Count rules that are ACTIVE (anchored — INACTIVE must not count) AND
+    # Gmail-scoped (action has a gmailAction). PASS if at least one active Gmail DLP rule; WARN if none.
+    $pol = $AuditData.CloudIdentityPolicies
+    if (-not $pol) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Cloud Identity Policy API not available (cloud-identity.policies.readonly not delegated, or API disabled)' `
+            -OrgUnitPath $OrgUnitPath
+    }
+    $vals = @(Resolve-GooglePolicyValue -Policies $pol -Type 'rule.dlp')
+    if ($vals.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'No rule.dlp policy returned for this tenant' -OrgUnitPath $OrgUnitPath
+    }
+    $activeGmail = 0
+    foreach ($v in $vals) {
+        $props = $v.PSObject.Properties.Name
+        if (($props -notcontains 'state') -or ($v.state -ne 'ACTIVE')) { continue }
+        if ($props -notcontains 'action') { continue }
+        $action = $v.action
+        if ($null -ne $action -and ($action.PSObject.Properties.Name -contains 'gmailAction')) {
+            $activeGmail++
+        }
+    }
+    if ($activeGmail -lt 1) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
+            -CurrentValue 'No active Gmail DLP rules configured — verify in Admin Console > Security > Data protection > Manage rules' `
+            -OrgUnitPath $OrgUnitPath
+    }
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+        -CurrentValue "$activeGmail active Gmail DLP rule(s) configured across $($vals.Count) targeted policy/policies" `
+        -OrgUnitPath $OrgUnitPath
 }
 
 # ── EMAIL-020: Gmail Confidential Mode ────────────────────────────────────────

@@ -137,6 +137,35 @@ function Test-FortificationCOLLAB004 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
+    # GWS-1 PRIMARY: chat.external_chat_restriction { allowExternalChat=bool,
+    # externalChatRestriction=enum }. External chat with no restriction lets users message and
+    # share data to outside contacts freely; weakest-OU-wins. ENUM GUESS: NO_RESTRICTION/ALL/
+    # UNRESTRICTED is fully open (insecure); any other restriction value is "allowed but limited"
+    # (WARN). Unknown values WARN — never PASS blindly. (OrgUnitPolicies fallback retained below.)
+    $pol = $AuditData.CloudIdentityPolicies
+    if ($pol) {
+        $vals = @(Resolve-GooglePolicyValue -Policies $pol -Type 'chat.external_chat_restriction')
+        if ($vals.Count -gt 0) {
+            $allowed     = @($vals | Where-Object { $_.allowExternalChat -eq $true })
+            $unrestricted = @($allowed | Where-Object { "$($_.externalChatRestriction)" -match '(?i)\b(NO_RESTRICTION|ALL|UNRESTRICTED)\b' })
+            if ($unrestricted.Count -gt 0) {
+                return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'FAIL' `
+                    -CurrentValue "External Chat is enabled with no restriction in $($unrestricted.Count) of $($vals.Count) targeted policy/policies" `
+                    -OrgUnitPath $OrgUnitPath `
+                    -Details @{ Note = 'External chat allows users to communicate with and share data to contacts outside the organization' }
+            }
+            if ($allowed.Count -gt 0) {
+                $restrictions = (@($allowed | ForEach-Object { "$($_.externalChatRestriction)" }) | Select-Object -Unique) -join ', '
+                return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
+                    -CurrentValue "External Chat is enabled but restricted in $($allowed.Count) of $($vals.Count) targeted policy/policies (restriction: $restrictions)" `
+                    -OrgUnitPath $OrgUnitPath `
+                    -Details @{ Note = 'External chat allows users to communicate with and share data to contacts outside the organization' }
+            }
+            return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+                -CurrentValue 'External Chat communication is disabled' -OrgUnitPath $OrgUnitPath
+        }
+    }
+
     $policy = $AuditData.OrgUnitPolicies[$OrgUnitPath]
     if ($policy -and $null -ne $policy.chatExternalEnabled) {
         $status = if ($policy.chatExternalEnabled -eq $false) { 'PASS' } else { 'FAIL' }
@@ -228,6 +257,32 @@ function Test-FortificationCOLLAB007 {
 function Test-FortificationCOLLAB008 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    # GWS-1 PRIMARY: calendar.primary_calendar_max_allowed_external_sharing
+    # { maxAllowedExternalSharing=enum }. The most-permissive value shares all event details
+    # externally (insecure); weakest-OU-wins. ENUM GUESS: READ_WRITE_ACCESS/MANAGE/ALL/EVERYTHING/
+    # READ_ALL/SHARE_ALL_INFO are permissive (FAIL); FREE_BUSY_ONLY/LIMITED/NONE/DOMAIN_ONLY are
+    # limited (PASS). Unknown values WARN — never PASS blindly. (OrgUnitPolicies fallback retained.)
+    $pol = $AuditData.CloudIdentityPolicies
+    if ($pol) {
+        $vals = @(Resolve-GooglePolicyValue -Policies $pol -Type 'calendar.primary_calendar_max_allowed_external_sharing' -Field 'maxAllowedExternalSharing')
+        if ($vals.Count -gt 0) {
+            $note = "Max allowed external sharing: $((@($vals) | Select-Object -Unique) -join ', ') (across $($vals.Count) targeted policy/policies)"
+            $permissive = @($vals | Where-Object { "$_" -match '(?i)\b(READ_WRITE_ACCESS|MANAGE|ALL|EVERYTHING|READ_ALL|SHARE_ALL_INFO)\b' })
+            $limited    = @($vals | Where-Object { "$_" -match '(?i)\b(FREE_BUSY_ONLY|LIMITED|NONE|DOMAIN_ONLY)\b' })
+            if ($permissive.Count -gt 0) {
+                return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'FAIL' `
+                    -CurrentValue "Calendar shares full event details externally — $note" -OrgUnitPath $OrgUnitPath `
+                    -Details @{ Note = 'Sharing full calendar details externally exposes meeting content, attendees, and organizational schedules' }
+            }
+            if ($limited.Count -eq $vals.Count) {
+                return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+                    -CurrentValue "Calendar external sharing limited — $note" -OrgUnitPath $OrgUnitPath
+            }
+            return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
+                -CurrentValue "Calendar external sharing level could not be confirmed as limited — $note" -OrgUnitPath $OrgUnitPath
+        }
+    }
 
     $policy = $AuditData.OrgUnitPolicies[$OrgUnitPath]
     if ($policy -and $null -ne $policy.calendarExternalSharing) {
