@@ -380,6 +380,7 @@ Add the **`AppCatalog.Read.All`** application permission to the app registration
 | `Invoke-Surveillance` | Entra ID sign-in risk and directory change monitoring via Graph API |
 | `Invoke-Watchtower` | Active Directory baseline monitoring with drift detection |
 | `Invoke-Wiretap` | M365 audit log monitoring (Exchange, SharePoint, Teams, Defender, Power Platform) |
+| `Invoke-Lookout` | Google Workspace posture monitoring with configuration-drift detection (read-only; baselines the Fortification audit and reports newly-failing / resolved controls) |
 
 ### Credential & Configuration Management
 

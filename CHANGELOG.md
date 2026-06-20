@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.12.0] - 2026-06-19
+
+_Google Workspace continuous monitoring — `Invoke-Lookout` closes the last gap in the GWS theater._
+
+### Added
+- **`Invoke-Lookout` — Google Workspace configuration-drift monitor.** The GWS theater finally has a continuous-monitoring cmdlet to sit alongside `Invoke-Surveillance` (Entra), `Invoke-Watchtower` (AD), and `Invoke-Wiretap` (M365). It runs the **read-only** Fortification posture audit, stores it as a baseline, and on each subsequent run diffs the current posture against the baseline — surfacing **newly-failing controls (drift)**, **resolved controls**, and the **posture-score change**. It complements `Invoke-Recon` (which watches user *behaviour* for compromise) by watching the tenant's *configuration* for regressions.
+  - First run establishes the baseline (no drift reported); subsequent runs report the delta. `-Force` re-baselines. `-ScanMode Fast` (default) skips the slow per-user Gmail crawl (via Fortification `-Quick`); `Full` does the complete sweep.
+  - New failures are surfaced on the result's `.NewThreats`, so it plugs straight into the alert wiring. Baseline state is stored under theater `workspace`. Built on the existing `Compare-FortificationState` engine — no new collection.
+- **`Register-Patrol` now schedules `Invoke-Lookout` for the Workspace theater** (alongside `Invoke-Recon`), so a scheduled Workspace patrol covers both behavioural threats *and* configuration drift, each dispatching alerts when `SendAlerts` is set.
+
+### Notes
+- **Read-only.** Like the rest of the audit/monitor suite, Lookout makes no changes to Google Workspace — it only reads policy/config (the same collection `Invoke-Fortification` performs) and writes local state/reports. (Verified: the only POSTs in the codebase are read queries — Graph `$batch`, Azure Policy `summarize`, Chrome Policy `resolve` — and there are no AD/Google write cmdlets.)
+- Exported cmdlet count is now 44 public functions (was 43). Check counts unchanged (AD 204 / GWS 98 / Entra 158).
+- Regression test: `Tests/verify-lookout.ps1` (16/16 — baseline, drift, resolved, no-findings guard, read-only call shape, Fast/Full `-Quick` handling).
+
 ## [2.11.1] - 2026-06-19
 
 _GWS-1 coverage extension — 7 more placeholders converted to real Cloud Identity policy checks (33 total)._

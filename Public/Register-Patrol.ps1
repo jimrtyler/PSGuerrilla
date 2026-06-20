@@ -75,6 +75,11 @@ function Register-Patrol {
         if ($SendAlerts) {
             $commands += "if (`$r.NewThreats.Count -gt 0) { `$r | Send-Signal $signalArgs }"
         }
+        # Configuration-drift monitor (complements Invoke-Recon's behavioural watch)
+        $commands += "`$l = Invoke-Lookout -ConfigPath '$cfgPathQ'$cfgFileArg -ScanMode '$ScanMode' -Quiet"
+        if ($SendAlerts) {
+            $commands += "if (`$l.NewThreats.Count -gt 0) { `$l | Send-Signal $signalArgs }"
+        }
     }
 
     if ('Entra' -in $Theaters) {
