@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PSGuerrilla Campaign Report - 2026-06-21 11:04:07 UTC</title>
+<title>PSGuerrilla Campaign Report - 2026-06-21 12:57:47 UTC</title>
 <style>
   :root { --font-body: 'Fira Code', 'JetBrains Mono', Consolas, 'Courier New', monospace; --bg: #1a1f16; --surface: #242b1e; --surface-alt: #2d3526; --border: #3d4a35; --text: #d4c9a8; --text-muted: #8a8468; --olive: #a8b58b; --amber: #d4883a; --sage: #6b9b6b; --parchment: #d4c4a0; --gold: #c9a84c; --dim: #6b6b5a; --deep-orange: #c75c2e; --dark-red: #8b2500; --critical: #c75c2e; --high: #d4883a; --medium: #c9a84c; --low: #6b9b6b; --clean: #4a7a4a; --pass: #4a7a4a; --fail: #c75c2e; --warn: #c9a84c; --skip: #6b6b5a; --info: #a8b58b; }
   .wl-banner { background: var(--dark-red); color: #fff; text-align: center;
@@ -261,7 +261,7 @@
 
 <h1>&#x2694; Campaign Report</h1>
 <div class="subtitle">
-  Unified Security Posture Assessment &mdash; Generated 2026-06-21 11:04:07 UTC &mdash;
+  Unified Security Posture Assessment &mdash; Generated 2026-06-21 12:57:47 UTC &mdash;
   467 checks across 3 theaters (Google Workspace, Active Directory, Entra ID / M365)<br>
   Scan ID: sample-campaign &mdash; Duration: 5m 0s &mdash;
   PSGuerrilla v2.0.0
@@ -322,21 +322,6 @@
 </style><h2>Attack Paths to Tier-0</h2><p class="ap-note">4 escalation path(s) reaching Tier-0 &mdash; 3 from NON-privileged principals (shown first, highest risk). Each arrow is a control or membership edge an attacker can traverse.</p><ul class="ap-list"><li class="ap-item"><div class="ap-path">SAMPLE\jsmith --[WriteDacl]--&gt; ServiceDesk-Operators  ==&gt;  ServiceDesk-Operators --[GenericAll]--&gt; Tier1-Server-Admins  ==&gt;  Tier1-Server-Admins --[MemberOf]--&gt; Domain Admins  =&gt;  reaches domain admins (Tier-0 group)</div><div class="ap-meta">3 hops &middot; non-privileged source</div></li><li class="ap-item"><div class="ap-path">SAMPLE\HelpDesk --[GenericAll]--&gt; Workstation-Admins  ==&gt;  Workstation-Admins --[MemberOf]--&gt; Domain Admins  =&gt;  reaches domain admins (Tier-0 group)</div><div class="ap-meta">2 hops &middot; non-privileged source</div></li><li class="ap-item"><div class="ap-path">SAMPLE\BackupOperators --[WriteDacl]--&gt; AdminSDHolder  =&gt;  reaches all protected groups via SDProp</div><div class="ap-meta">1 hop &middot; non-privileged source</div></li><li class="ap-item priv"><div class="ap-path">Account Operators --[GenericWrite]--&gt; Backup-Admins  ==&gt;  Backup-Admins --[MemberOf]--&gt; Administrators  =&gt;  reaches administrators (Tier-0 group)</div><div class="ap-meta">2 hops &middot; already-privileged source</div></li></ul><h2>Theater Summary</h2><div class="theater-grid"><div class="theater-card">
   <div class="theater-header">
     <div>
-      <span class="theater-name">Active Directory</span>
-      <div class="theater-label">OVERRUN &mdash; 205 checks</div>
-    </div>
-    <span class="theater-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="theater-bar-bg"><div class="theater-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="theater-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 205</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-    <span style="color:var(--skip)">Skip: 0</span>
-  </div>
-</div><div class="theater-card">
-  <div class="theater-header">
-    <div>
       <span class="theater-name">Entra ID / M365</span>
       <div class="theater-label">OVERRUN &mdash; 158 checks</div>
     </div>
@@ -346,6 +331,21 @@
   <div class="theater-counts">
     <span style="color:var(--pass)">Pass: 0</span>
     <span style="color:var(--fail)">Fail: 158</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+    <span style="color:var(--skip)">Skip: 0</span>
+  </div>
+</div><div class="theater-card">
+  <div class="theater-header">
+    <div>
+      <span class="theater-name">Active Directory</span>
+      <div class="theater-label">OVERRUN &mdash; 205 checks</div>
+    </div>
+    <span class="theater-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="theater-bar-bg"><div class="theater-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="theater-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 205</span>
     <span style="color:var(--warn)">Warn: 0</span>
     <span style="color:var(--skip)">Skip: 0</span>
   </div>
@@ -377,17 +377,6 @@
   </div>
 </div><div class="cat-card">
   <div class="cat-header">
-    <span class="cat-name">AD Logging &amp; EDR Posture</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 7</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
     <span class="cat-name">Tier-0 Hygiene &amp; Hybrid Identity Surface</span>
     <span class="cat-score" style="color:var(--dark-red)">0</span>
   </div>
@@ -395,105 +384,6 @@
   <div class="cat-counts">
     <span style="color:var(--pass)">Pass: 0</span>
     <span style="color:var(--fail)">Fail: 7</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">AD ACL &amp; Delegation</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 16</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">AD Privileged Account Security</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 30</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">AD Password &amp; Lockout Policies</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 22</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">AD Stale &amp; Obsolete Objects</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 11</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">AD Group Policy</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 24</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">AD Adversary Tradecraft Indicators</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 4</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">AD Trust Relationships</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 11</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">AD Network &amp; Relay Preconditions</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 10</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">AD Kerberos Security</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 11</span>
     <span style="color:var(--warn)">Warn: 0</span>
   </div>
 </div><div class="cat-card">
@@ -509,13 +399,46 @@
   </div>
 </div><div class="cat-card">
   <div class="cat-header">
-    <span class="cat-name">AD Logon Scripts &amp; Network Shares</span>
+    <span class="cat-name">AD Stale &amp; Obsolete Objects</span>
     <span class="cat-score" style="color:var(--dark-red)">0</span>
   </div>
   <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
   <div class="cat-counts">
     <span style="color:var(--pass)">Pass: 0</span>
     <span style="color:var(--fail)">Fail: 11</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">AD Password &amp; Lockout Policies</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 22</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">AD Adversary Tradecraft Indicators</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 4</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">AD Network &amp; Relay Preconditions</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 10</span>
     <span style="color:var(--warn)">Warn: 0</span>
   </div>
 </div><div class="cat-card">
@@ -529,48 +452,92 @@
     <span style="color:var(--fail)">Fail: 19</span>
     <span style="color:var(--warn)">Warn: 0</span>
   </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">AD Trust Relationships</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 11</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">AD Logging &amp; EDR Posture</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 7</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">AD Group Policy</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 24</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">AD Privileged Account Security</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 30</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">AD ACL &amp; Delegation</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 16</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">AD Logon Scripts &amp; Network Shares</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 11</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">AD Kerberos Security</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 11</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
 </div></div></div></details><details class="theater-detail" open><summary>Entra ID / M365 <span style="color:var(--dim);font-weight:400;font-size:0.85em;text-transform:none">(14 categories)</span></summary><div class="detail-body"><div class="category-grid"><div class="cat-card">
   <div class="cat-header">
-    <span class="cat-name">Intune / Endpoint Management</span>
+    <span class="cat-name">Azure IAM &amp; Resource Security</span>
     <span class="cat-score" style="color:var(--dark-red)">0</span>
   </div>
   <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
   <div class="cat-counts">
     <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 23</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">SharePoint &amp; OneDrive Security</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 5</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">Entra ID Federation &amp; Hybrid Identity</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 12</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">Power Platform Security</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 3</span>
+    <span style="color:var(--fail)">Fail: 10</span>
     <span style="color:var(--warn)">Warn: 0</span>
   </div>
 </div><div class="cat-card">
@@ -586,24 +553,35 @@
   </div>
 </div><div class="cat-card">
   <div class="cat-header">
-    <span class="cat-name">Entra ID Privileged Identity Management</span>
+    <span class="cat-name">Unified Audit &amp; Logging</span>
     <span class="cat-score" style="color:var(--dark-red)">0</span>
   </div>
   <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
   <div class="cat-counts">
     <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 14</span>
+    <span style="color:var(--fail)">Fail: 3</span>
     <span style="color:var(--warn)">Warn: 0</span>
   </div>
 </div><div class="cat-card">
   <div class="cat-header">
-    <span class="cat-name">Entra ID Application &amp; Service Principal Security</span>
+    <span class="cat-name">Entra ID Federation &amp; Hybrid Identity</span>
     <span class="cat-score" style="color:var(--dark-red)">0</span>
   </div>
   <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
   <div class="cat-counts">
     <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 19</span>
+    <span style="color:var(--fail)">Fail: 12</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">SharePoint &amp; OneDrive Security</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 5</span>
     <span style="color:var(--warn)">Warn: 0</span>
   </div>
 </div><div class="cat-card">
@@ -619,7 +597,29 @@
   </div>
 </div><div class="cat-card">
   <div class="cat-header">
-    <span class="cat-name">Unified Audit &amp; Logging</span>
+    <span class="cat-name">Entra ID Application &amp; Service Principal Security</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 19</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">Intune / Endpoint Management</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 23</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">Power Platform Security</span>
     <span class="cat-score" style="color:var(--dark-red)">0</span>
   </div>
   <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
@@ -652,6 +652,28 @@
   </div>
 </div><div class="cat-card">
   <div class="cat-header">
+    <span class="cat-name">Entra ID Conditional Access</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 16</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">Entra ID Privileged Identity Management</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 14</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
     <span class="cat-name">Entra ID Tenant Configuration</span>
     <span class="cat-score" style="color:var(--dark-red)">0</span>
   </div>
@@ -661,9 +683,9 @@
     <span style="color:var(--fail)">Fail: 13</span>
     <span style="color:var(--warn)">Warn: 0</span>
   </div>
-</div><div class="cat-card">
+</div></div></div></details><details class="theater-detail" open><summary>Google Workspace <span style="color:var(--dim);font-weight:400;font-size:0.85em;text-transform:none">(8 categories)</span></summary><div class="detail-body"><div class="category-grid"><div class="cat-card">
   <div class="cat-header">
-    <span class="cat-name">Azure IAM &amp; Resource Security</span>
+    <span class="cat-name">OAuth &amp; API Security</span>
     <span class="cat-score" style="color:var(--dark-red)">0</span>
   </div>
   <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
@@ -674,16 +696,38 @@
   </div>
 </div><div class="cat-card">
   <div class="cat-header">
-    <span class="cat-name">Entra ID Conditional Access</span>
+    <span class="cat-name">Email Security</span>
     <span class="cat-score" style="color:var(--dark-red)">0</span>
   </div>
   <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
   <div class="cat-counts">
     <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 16</span>
+    <span style="color:var(--fail)">Fail: 22</span>
     <span style="color:var(--warn)">Warn: 0</span>
   </div>
-</div></div></div></details><details class="theater-detail" open><summary>Google Workspace <span style="color:var(--dim);font-weight:400;font-size:0.85em;text-transform:none">(8 categories)</span></summary><div class="detail-body"><div class="category-grid"><div class="cat-card">
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">Collaboration &amp; Communication Security</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 12</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">Admin &amp; User Management</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 13</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
   <div class="cat-header">
     <span class="cat-name">Drive Security &amp; Data Protection</span>
     <span class="cat-score" style="color:var(--dark-red)">0</span>
@@ -692,6 +736,17 @@
   <div class="cat-counts">
     <span style="color:var(--pass)">Pass: 0</span>
     <span style="color:var(--fail)">Fail: 13</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">Device &amp; Endpoint Management</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 11</span>
     <span style="color:var(--warn)">Warn: 0</span>
   </div>
 </div><div class="cat-card">
@@ -714,61 +769,6 @@
   <div class="cat-counts">
     <span style="color:var(--pass)">Pass: 0</span>
     <span style="color:var(--fail)">Fail: 17</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">Collaboration &amp; Communication Security</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 12</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">Email Security</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 22</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">Admin &amp; User Management</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 13</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">Device &amp; Endpoint Management</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 11</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">OAuth &amp; API Security</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 10</span>
     <span style="color:var(--warn)">Warn: 0</span>
   </div>
 </div></div></div></details><h2>All Findings</h2><div class="filter-bar" id="filterBar"><div class="filter-group"><span class="filter-label">Theater:</span><button class="filter-btn active" data-filter-type="theater" data-filter-value="all" onclick="toggleFilter(this)">All</button><button class="filter-btn" data-filter-type="theater" data-filter-value="active-directory" onclick="toggleFilter(this)">Active Directory</button><button class="filter-btn" data-filter-type="theater" data-filter-value="entra-id---m365" onclick="toggleFilter(this)">Entra ID / M365</button><button class="filter-btn" data-filter-type="theater" data-filter-value="google-workspace" onclick="toggleFilter(this)">Google Workspace</button></div><div class="filter-group"><span class="filter-label">Status:</span><button class="filter-btn active" data-filter-type="status" data-filter-value="all" onclick="toggleFilter(this)">All</button><button class="filter-btn" data-filter-type="status" data-filter-value="PASS" onclick="toggleFilter(this)">PASS</button><button class="filter-btn" data-filter-type="status" data-filter-value="FAIL" onclick="toggleFilter(this)">FAIL</button><button class="filter-btn" data-filter-type="status" data-filter-value="WARN" onclick="toggleFilter(this)">WARN</button><button class="filter-btn" data-filter-type="status" data-filter-value="SKIP" onclick="toggleFilter(this)">SKIP</button></div><div class="filter-group"><span class="filter-label">Severity:</span><button class="filter-btn active" data-filter-type="severity" data-filter-value="all" onclick="toggleFilter(this)">All</button><button class="filter-btn" data-filter-type="severity" data-filter-value="Critical" onclick="toggleFilter(this)">Critical</button><button class="filter-btn" data-filter-type="severity" data-filter-value="High" onclick="toggleFilter(this)">High</button><button class="filter-btn" data-filter-type="severity" data-filter-value="Medium" onclick="toggleFilter(this)">Medium</button><button class="filter-btn" data-filter-type="severity" data-filter-value="Low" onclick="toggleFilter(this)">Low</button></div><span class="filter-count" id="filterCount">Showing all findings</span></div><table id="findingsTable">
@@ -1403,7 +1403,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SC-8</code> <code>SC-8(1)</code> <code>SC-23</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1557</code><br><strong>CIS Benchmark:</strong> <code>2.3.5.1</code><br><strong>CisAd:</strong> <code>2.1.1</code><br><strong>NsaAsd:</strong> <code>LDAP-1</code><br><strong>Anssi:</strong> <code>R25</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SC-8</code> <code>SC-8(1)</code> <code>SC-23</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1557</code><br><strong>CIS Benchmark:</strong> <code>2.3.5.1</code><br><strong>NsaAsd:</strong> <code>LDAP-1</code><br><strong>CisAd:</strong> <code>2.1.1</code><br><strong>Anssi:</strong> <code>R25</code></div>
         </div>
       </div>
     </td>
@@ -1440,7 +1440,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SC-8</code> <code>SC-8(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1557</code> <code>T1021.002</code><br><strong>CIS Benchmark:</strong> <code>2.3.8.1</code> <code>2.3.8.2</code><br><strong>CisAd:</strong> <code>2.2.1</code><br><strong>NsaAsd:</strong> <code>SMB-1</code><br><strong>Anssi:</strong> <code>R26</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SC-8</code> <code>SC-8(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1557</code> <code>T1021.002</code><br><strong>CIS Benchmark:</strong> <code>2.3.8.1</code> <code>2.3.8.2</code><br><strong>NsaAsd:</strong> <code>SMB-1</code><br><strong>CisAd:</strong> <code>2.2.1</code><br><strong>Anssi:</strong> <code>R26</code></div>
         </div>
       </div>
     </td>
@@ -1477,7 +1477,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(2)</code> <code>SC-8</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1557</code> <code>T1003</code><br><strong>CIS Benchmark:</strong> <code>2.3.8.4</code><br><strong>CisAd:</strong> <code>2.3.1</code><br><strong>NsaAsd:</strong> <code>NTLM-1</code><br><strong>Anssi:</strong> <code>R27</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(2)</code> <code>SC-8</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1557</code> <code>T1003</code><br><strong>CIS Benchmark:</strong> <code>2.3.8.4</code><br><strong>NsaAsd:</strong> <code>NTLM-1</code><br><strong>CisAd:</strong> <code>2.3.1</code><br><strong>Anssi:</strong> <code>R27</code></div>
         </div>
       </div>
     </td>
@@ -4548,7 +4548,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SC-8</code> <code>SC-8(1)</code> <code>SC-23</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1557</code><br><strong>CIS Benchmark:</strong> <code>18.3.5</code><br><strong>CisAd:</strong> <code>2.1.2</code><br><strong>NsaAsd:</strong> <code>LDAP-2</code><br><strong>Anssi:</strong> <code>R25</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SC-8</code> <code>SC-8(1)</code> <code>SC-23</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1557</code><br><strong>CIS Benchmark:</strong> <code>18.3.5</code><br><strong>NsaAsd:</strong> <code>LDAP-2</code><br><strong>CisAd:</strong> <code>2.1.2</code><br><strong>Anssi:</strong> <code>R25</code></div>
         </div>
       </div>
     </td>
@@ -4585,7 +4585,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(2)</code> <code>SC-8</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1557</code> <code>T1003</code><br><strong>CIS Benchmark:</strong> <code>2.3.8.4</code><br><strong>CisAd:</strong> <code>2.3.2</code><br><strong>NsaAsd:</strong> <code>NTLM-2</code><br><strong>Anssi:</strong> <code>R27</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(2)</code> <code>SC-8</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1557</code> <code>T1003</code><br><strong>CIS Benchmark:</strong> <code>2.3.8.4</code><br><strong>NsaAsd:</strong> <code>NTLM-2</code><br><strong>CisAd:</strong> <code>2.3.2</code><br><strong>Anssi:</strong> <code>R27</code></div>
         </div>
       </div>
     </td>
@@ -6620,7 +6620,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code> <code>AC-6</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.003</code> <code>T1003</code><br><strong>CIS Benchmark:</strong> <code>18.2.1</code><br><strong>CisAd:</strong> <code>5.7.1</code><br><strong>NsaAsd:</strong> <code>LAPS-1</code><br><strong>Anssi:</strong> <code>R42</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code> <code>AC-6</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.003</code> <code>T1003</code><br><strong>CIS Benchmark:</strong> <code>18.2.1</code><br><strong>NsaAsd:</strong> <code>LAPS-1</code><br><strong>CisAd:</strong> <code>5.7.1</code><br><strong>Anssi:</strong> <code>R42</code></div>
         </div>
       </div>
     </td>
@@ -21859,7 +21859,7 @@
 </script><div style="margin-top: 40px; padding-top: 16px; border-top: 2px solid var(--border);
             color: var(--dim); font-size: 0.8em; text-align: center; letter-spacing: 1px;">
   &#x2694; PSGuerrilla Campaign Report &nbsp;|&nbsp;
-  2026-06-21 11:04:07 UTC &nbsp;|&nbsp;
+  2026-06-21 12:57:47 UTC &nbsp;|&nbsp;
   Generated by PSGuerrilla v2.0.0 &nbsp;|&nbsp;
   467 checks across 3 theaters &nbsp;|&nbsp; Score: 0/100 (OVERRUN)
   <br>By Jim Tyler, Microsoft MVP &nbsp;|&nbsp; <a href="https://github.com/jimrtyler" style="color:var(--dim)">GitHub</a> &nbsp;|&nbsp; <a href="https://linkedin.com/in/jamestyler" style="color:var(--dim)">LinkedIn</a> &nbsp;|&nbsp; <a href="https://youtube.com/@jimrtyler" style="color:var(--dim)">YouTube</a>

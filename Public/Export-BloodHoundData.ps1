@@ -52,6 +52,39 @@ function Export-BloodHoundData {
 
     $idFor = { param($name, $sid) if ($sid) { "$sid".ToUpper() } else { ("NAME:" + ("$name").Trim().ToUpper()) } }
 
+    # Derive the domain SID from any domain-relative member/principal SID we hold, so well-known
+    # privileged groups (whose own SID isn't on the membership key) can be keyed by their real SID
+    # and overlay SharpHound's nodes instead of landing as parallel NAME:<group> nodes.
+    $domainSid = $null
+    $sidPool = @()
+    if ($AuditData.PrivilegedAccounts.PrivilegedGroups) {
+        foreach ($e in $AuditData.PrivilegedAccounts.PrivilegedGroups.GetEnumerator()) {
+            foreach ($m in @($e.Value)) { if ($m.SID) { $sidPool += "$($m.SID)" } }
+        }
+    }
+    foreach ($ace in @($AuditData.ACLs.DangerousACEs)) { if ($ace.IdentitySID) { $sidPool += "$($ace.IdentitySID)" }; if ($ace.ObjectSID) { $sidPool += "$($ace.ObjectSID)" } }
+    foreach ($s in $sidPool) { if ("$s" -match '^(S-1-5-21-\d+-\d+-\d+)-\d+$') { $domainSid = $Matches[1]; break } }
+
+    # Built-in alias SIDs (constant) + domain-relative well-known RIDs.
+    $builtinAlias = @{
+        'administrators' = 'S-1-5-32-544'; 'account operators' = 'S-1-5-32-548'; 'server operators' = 'S-1-5-32-549'
+        'print operators' = 'S-1-5-32-550'; 'backup operators' = 'S-1-5-32-551'; 'remote desktop users' = 'S-1-5-32-555'
+        'network configuration operators' = 'S-1-5-32-556'; 'pre-windows 2000 compatible access' = 'S-1-5-32-554'
+    }
+    $wellKnownRid = @{
+        'domain admins' = 512; 'enterprise admins' = 519; 'schema admins' = 518; 'domain controllers' = 516
+        'cert publishers' = 517; 'group policy creator owners' = 520; 'read-only domain controllers' = 521
+        'enterprise read-only domain controllers' = 498; 'key admins' = 526; 'enterprise key admins' = 527
+        'administrator' = 500; 'krbtgt' = 502
+    }
+    $resolveWellKnownSid = {
+        param($name)
+        $n = ("$name" -split '\\')[-1].Trim().ToLower()
+        if ($builtinAlias.ContainsKey($n)) { return $builtinAlias[$n] }
+        if ($domainSid -and $wellKnownRid.ContainsKey($n)) { return "$domainSid-$($wellKnownRid[$n])" }
+        return $null
+    }
+
     $kindForObject = {
         param($objClass, $objName)
         $oc = "$objClass".ToLower(); $on = "$objName".ToLower()
@@ -91,12 +124,16 @@ function Export-BloodHoundData {
     if ($AuditData.PrivilegedAccounts -and $AuditData.PrivilegedAccounts.PrivilegedGroups) {
         foreach ($entry in $AuditData.PrivilegedAccounts.PrivilegedGroups.GetEnumerator()) {
             $gName = "$($entry.Key)"
-            $gId = (& $idFor $gName $null)   # group SID usually not on the key; key by name
-            & $addNode $gId $gName 'Group' $null
+            # Resolve the group's real SID where it's a well-known privileged group, so the node
+            # overlays SharpHound's SID-keyed equivalent instead of a parallel NAME: node.
+            $gSid = (& $resolveWellKnownSid $gName)
+            $gId = (& $idFor $gName $gSid)
+            & $addNode $gId $gName 'Group' $gSid
             foreach ($m in @($entry.Value)) {
                 $sam = "$($m.SamAccountName)"
                 if (-not $sam) { continue }
-                $mSid = "$($m.SID)"
+                # Member SID if present, else resolve well-known (covers nested built-in groups).
+                $mSid = if ($m.SID) { "$($m.SID)" } else { (& $resolveWellKnownSid $sam) }
                 $mId = (& $idFor $sam $mSid)
                 & $addNode $mId $sam (& $kindForMember $m.IsGroup $sam) $mSid
                 & $addEdge $mId $gId 'MemberOf'

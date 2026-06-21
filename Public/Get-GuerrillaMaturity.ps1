@@ -54,7 +54,10 @@ function Get-GuerrillaMaturity {
     process { foreach ($f in $Findings) { if ($null -ne $f) { $all.Add($f) } } }
     end {
         $findings = @($all)
-        $levelLabels = @{ 1 = 'Initial'; 2 = 'Managed'; 3 = 'Defined'; 4 = 'Quantitatively Managed'; 5 = 'Optimized' }
+        # Level 0 is a sentinel: the scope produced no PASS/FAIL/WARN (everything SKIP/ERROR), so it
+        # was never actually assessed — absence of evidence must NOT read as Level 5 Optimized.
+        $levelLabels = @{ 0 = 'Not Assessed'; 1 = 'Initial'; 2 = 'Managed'; 3 = 'Defined'; 4 = 'Quantitatively Managed'; 5 = 'Optimized' }
+        $assessedStatuses = @('PASS', 'FAIL', 'WARN')
 
         # The maturity ceiling a single finding imposes (lower = worse). 5 == imposes no cap.
         $capFor = {
@@ -75,8 +78,12 @@ function Get-GuerrillaMaturity {
         $capped = @($capped)
 
         $capping = @($capped | Where-Object { $_.Cap -lt 5 })
+        $assessedCount = @($findings | Where-Object { "$($_.Status)" -in $assessedStatuses }).Count
         # Cast to [int] — Measure-Object -Minimum returns a double, which misses the int hashtable keys.
-        $overallLevel = if ($capping.Count -gt 0) { [int]($capping.Cap | Measure-Object -Minimum).Minimum } else { 5 }
+        # Nothing assessed -> Level 0 (Not Assessed), never 5.
+        $overallLevel = if ($assessedCount -eq 0) { 0 }
+                        elseif ($capping.Count -gt 0) { [int]($capping.Cap | Measure-Object -Minimum).Minimum }
+                        else { 5 }
         $anchors = @($capped | Where-Object { $_.Cap -eq $overallLevel -and $_.Cap -lt 5 } | ForEach-Object { $_.Finding })
 
         # Per-category maturity (same worst-anchors logic within each category)
@@ -85,7 +92,10 @@ function Get-GuerrillaMaturity {
         foreach ($cat in $cats) {
             $catCapped = @($capped | Where-Object { "$($_.Finding.Category)" -eq $cat })
             $catCap = @($catCapped | Where-Object { $_.Cap -lt 5 })
-            $lvl = if ($catCap.Count -gt 0) { [int]($catCap.Cap | Measure-Object -Minimum).Minimum } else { 5 }
+            $catAssessed = @($catCapped | Where-Object { "$($_.Finding.Status)" -in $assessedStatuses }).Count
+            $lvl = if ($catAssessed -eq 0) { 0 }
+                   elseif ($catCap.Count -gt 0) { [int]($catCap.Cap | Measure-Object -Minimum).Minimum }
+                   else { 5 }
             $categoryLevels[$cat] = [PSCustomObject]@{
                 Category = $cat
                 Level    = $lvl
@@ -104,7 +114,7 @@ function Get-GuerrillaMaturity {
             Theater           = $Theater
             OverallLevel      = $overallLevel
             OverallLabel      = $levelLabels[$overallLevel]
-            NextLevel         = if ($overallLevel -lt 5) { $overallLevel + 1 } else { $null }
+            NextLevel         = if ($overallLevel -ge 1 -and $overallLevel -lt 5) { $overallLevel + 1 } else { $null }
             NextLevelBlockers = $blockers
             Anchors           = $anchors
             AnchorCheckIds    = @($anchors | ForEach-Object { $_.CheckId } | Select-Object -Unique)

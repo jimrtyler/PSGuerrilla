@@ -62,6 +62,17 @@ $m = Get-GuerrillaMaturity -Findings @((F 'c' 'FAIL' 'Critical'), (F 'h' 'FAIL' 
 Add-R 'Summary counts correct' ($m.Summary.CriticalFail -eq 1 -and $m.Summary.HighFail -eq 1 -and $m.Summary.Warn -eq 1 -and $m.Summary.Pass -eq 1) `
     ("c=$($m.Summary.CriticalFail) h=$($m.Summary.HighFail) w=$($m.Summary.Warn) p=$($m.Summary.Pass)")
 
+# 10. All-SKIP estate -> Level 0 Not Assessed (absence of evidence is NOT Optimized)
+$m = Get-GuerrillaMaturity -Findings @((F 'S1' 'SKIP'), (F 'S2' 'SKIP' 'Critical'))
+Add-R 'All-SKIP -> Level 0 (Not Assessed)' ($m.OverallLevel -eq 0 -and $m.OverallLabel -eq 'Not Assessed') ("L=$($m.OverallLevel)")
+Add-R 'All-SKIP -> NextLevel null'         ($null -eq $m.NextLevel) ""
+
+# 11. Mixed: assessed CatA + all-SKIP CatB -> CatB Level 0, overall driven by CatA only
+$m = Get-GuerrillaMaturity -Findings @((F 'A1' 'FAIL' 'High' 'CatA'), (F 'B1' 'SKIP' 'Critical' 'CatB'), (F 'B2' 'SKIP' 'High' 'CatB'))
+Add-R 'all-SKIP category -> Level 0'       ($m.CategoryLevels['CatB'].Level -eq 0) ("got=$($m.CategoryLevels['CatB'].Level)")
+Add-R 'assessed category keeps its level'  ($m.CategoryLevels['CatA'].Level -eq 2) ("got=$($m.CategoryLevels['CatA'].Level)")
+Add-R 'overall ignores all-SKIP category'  ($m.OverallLevel -eq 2) ("L=$($m.OverallLevel)")
+
 $pass = @($results | Where-Object Pass).Count
 $total = $results.Count
 Write-Host ''

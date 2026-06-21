@@ -62,6 +62,12 @@ try {
 
     # Edges carry provenance
     Add-R 'edges tagged source=PSGuerrilla' (@($json.graph.edges | Where-Object { $_.properties.source -eq 'PSGuerrilla' }).Count -eq @($json.graph.edges).Count) ""
+
+    # Well-known group name -> real SID so the node overlays SharpHound instead of a parallel NAME: node.
+    # Member SIDs are S-1-5-21-1-2-3-* so the domain SID derives to S-1-5-21-1-2-3; Domain Admins -> -512.
+    $da = @($json.graph.nodes | Where-Object { $_.id -eq 'S-1-5-21-1-2-3-512' })
+    Add-R 'Domain Admins keyed by real SID (-512)' ($da.Count -eq 1) ("got=$($da.Count)")
+    Add-R 'no NAME:DOMAIN ADMINS node'             (@($json.graph.nodes | Where-Object { $_.id -eq 'NAME:DOMAIN ADMINS' }).Count -eq 0) ""
 }
 finally { Remove-Item $tmp -ErrorAction SilentlyContinue }
 

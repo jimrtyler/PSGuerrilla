@@ -87,7 +87,11 @@ function Get-ComplianceCrosswalk {
 
     foreach ($finding in $Findings) {
         if ($FailOnly -and $finding.Status -ne 'FAIL') { continue }
-        if ($finding.Status -in @('SKIP', 'ERROR')) { continue }
+        # ERROR = the check failed to run (no signal). SKIP = the control was not assessed (e.g. the
+        # data source / admin module wasn't connected). We KEEP SKIP rows so a compliance crosswalk
+        # distinguishes "passed" from "not looked at" instead of silently under-reporting coverage —
+        # the row carries Status='SKIP' (render as "Not Assessed"). Only ERROR is dropped.
+        if ($finding.Status -eq 'ERROR') { continue }
 
         $checkId   = $finding.CheckId ?? $finding.Id ?? ''
         $checkName = $finding.CheckName ?? $finding.Name ?? $checkId

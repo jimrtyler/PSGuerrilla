@@ -96,9 +96,12 @@ function Get-ADFullDomainAcl {
 
     Write-Verbose 'Full-domain ACL sweep: querying nTSecurityDescriptor for all groups/users/computers/gMSAs...'
     try {
+        # Include organizationalUnit — OU delegation (full-control / WriteDacl / WriteOwner on an OU,
+        # i.e. control of every child object) is the classic escalation surface and would otherwise be
+        # invisible to the sweep. OUs have no objectSid, which is fine: they key by DN downstream.
         $objects = @(Invoke-LdapQuery -SearchRoot $searchRoot `
-            -Filter '(|(objectCategory=group)(objectCategory=person)(objectCategory=computer)(objectCategory=msDS-GroupManagedServiceAccount))' `
-            -Properties @('ntsecuritydescriptor', 'objectsid', 'samaccountname', 'objectclass', 'distinguishedname') `
+            -Filter '(|(objectCategory=group)(objectCategory=person)(objectCategory=computer)(objectCategory=msDS-GroupManagedServiceAccount)(objectCategory=organizationalUnit))' `
+            -Properties @('ntsecuritydescriptor', 'objectsid', 'samaccountname', 'objectclass', 'distinguishedname', 'name') `
             -PageSize 1000)
     } catch {
         $result.Error = "Full-domain ACL query failed: $_"
@@ -129,6 +132,11 @@ function Get-ADFullDomainAcl {
         $ocRaw  = $obj['objectclass']
         # objectClass is multi-valued (top, ..., <mostSpecific>); the last entry is the leaf class.
         $objClass = if ($ocRaw -is [System.Array]) { "$($ocRaw[-1])" } else { "$ocRaw" }
+        # OUs have no sAMAccountName — name them by their 'name' attribute, else the leftmost RDN.
+        $objName = if ($objSam) { $objSam }
+                   elseif ($obj['name']) { "$($obj['name'])" }
+                   elseif ($objDN) { (($objDN -split ',', 2)[0] -replace '^(?i)(OU|CN)=', '') }
+                   else { '' }
 
         $sd = New-Object System.DirectoryServices.ActiveDirectorySecurity
         try {
@@ -185,7 +193,7 @@ function Get-ADFullDomainAcl {
                 ObjectType            = $objectTypeName
                 ObjectTypeGUID        = $objectTypeGuid
                 ObjectClass           = $objClass        # NEW: lets the engine classify group targets
-                ObjectName            = $objSam          # sAMAccountName of the controlled object
+                ObjectName            = $objName         # sAMAccountName, or OU/container name
                 ObjectSID             = $objSid          # NEW: lets BloodHound key the target by SID
                 ObjectDN              = $objDN
                 IsInherited           = $rule.IsInherited

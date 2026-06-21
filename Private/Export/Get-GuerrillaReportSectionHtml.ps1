@@ -39,7 +39,8 @@ function Get-GuerrillaMaturitySectionHtml {
     foreach ($k in ($maturity.CategoryLevels.Keys | Sort-Object { [int]$maturity.CategoryLevels[$_].Level })) {
         $cl = $maturity.CategoryLevels[$k]
         $cc = Get-GuerrillaMaturityLevelColor ([int]$cl.Level)
-        $catRows += "<tr><td>$(& $Esc ([string]$cl.Category))</td><td style='color:$cc;font-weight:700'>Level $([int]$cl.Level)</td><td>$(& $Esc ([string]$cl.Label))</td></tr>"
+        $lvlCell = if ([int]$cl.Level -eq 0) { 'n/a' } else { "Level $([int]$cl.Level)" }
+        $catRows += "<tr><td>$(& $Esc ([string]$cl.Category))</td><td style='color:$cc;font-weight:700'>$lvlCell</td><td>$(& $Esc ([string]$cl.Label))</td></tr>"
     }
     $blockerHtml = ''
     if ($maturity.NextLevel) {
@@ -66,6 +67,38 @@ function Get-GuerrillaMaturitySectionHtml {
 "@
 }
 
+# Shared gather: collect the renderable attack chains from the ADPATH-001/002 findings.
+# ADPATH-001 carries its rich objects under Details.Paths; ADPATH-002 under Details.Chains — read
+# BOTH. Filter $null explicitly (an absent property wrapped with @() yields @($null) whose .Count is
+# 1, which would otherwise defeat the AffectedItems fallback). Exclude Expected (by-design Tier-0
+# service-account) paths — they're tracked by ADTIER-001, not escalation findings. Dedup by path.
+function Get-GuerrillaAttackChainData {
+    [CmdletBinding()]
+    param([Parameter(Mandatory)][AllowEmptyCollection()][AllowNull()][PSCustomObject[]]$Findings)
+
+    $pathFails = @($Findings | Where-Object { $_.CheckId -in @('ADPATH-001', 'ADPATH-002') -and $_.Status -eq 'FAIL' })
+    $map = [ordered]@{}
+    foreach ($pf in $pathFails) {
+        $rich = @(@($pf.Details.Paths) + @($pf.Details.Chains) | Where-Object { $null -ne $_ })
+        if ($rich.Count -gt 0) {
+            foreach ($c in $rich) {
+                if ($c.Expected) { continue }
+                $p = "$($c.Path)"
+                if (-not $p -or $map.Contains($p)) { continue }
+                $len = if ($c.Length) { [int]$c.Length } else { ([regex]::Matches($p, '==>').Count + 1) }
+                $map[$p] = [PSCustomObject]@{ Path = $p; NonPriv = (-not $c.SourceIsPrivileged); Length = $len }
+            }
+        } else {
+            foreach ($p in @($pf.Details.AffectedItems | Where-Object { $null -ne $_ })) {
+                $ps = "$p"
+                if (-not $ps -or $map.Contains($ps)) { continue }
+                $map[$ps] = [PSCustomObject]@{ Path = $ps; NonPriv = $true; Length = ([regex]::Matches($ps, '==>').Count + 1) }
+            }
+        }
+    }
+    return @($map.Values)
+}
+
 # Attack Paths to Tier-0 section, rendered from the ADPATH-001/002 findings' chain detail.
 # -OmitIfAbsent returns '' when there are no attack-path findings at all (e.g. a GWS-only report or
 # a multi-theater report with no AD theater); otherwise it emits a coverage note when none are found.
@@ -80,27 +113,7 @@ function Get-GuerrillaAttackPathSectionHtml {
     $pathFindings = @($Findings | Where-Object { $_.CheckId -in @('ADPATH-001', 'ADPATH-002') })
     if ($pathFindings.Count -eq 0 -and $OmitIfAbsent) { return '' }
 
-    $pathFails = @($pathFindings | Where-Object Status -eq 'FAIL')
-    $chainMap = [ordered]@{}
-    foreach ($pf in $pathFails) {
-        $rich = @($pf.Details.Chains)
-        if ($rich.Count -gt 0) {
-            foreach ($cc in $rich) {
-                $p = "$($cc.Path)"
-                if ($p -and -not $chainMap.Contains($p)) {
-                    $chainMap[$p] = [PSCustomObject]@{ Path = $p; NonPriv = (-not $cc.SourceIsPrivileged); Length = $cc.Length }
-                }
-            }
-        } else {
-            foreach ($p in @($pf.Details.AffectedItems)) {
-                $ps = "$p"
-                if ($ps -and -not $chainMap.Contains($ps)) {
-                    $chainMap[$ps] = [PSCustomObject]@{ Path = $ps; NonPriv = $true; Length = $null }
-                }
-            }
-        }
-    }
-    $chains = @($chainMap.Values | Sort-Object `
+    $chains = @((Get-GuerrillaAttackChainData -Findings $Findings) | Sort-Object `
         @{ Expression = { if ($_.NonPriv) { 0 } else { 1 } } }, `
         @{ Expression = { -1 * ([int]($_.Length ?? 0)) } })
 
@@ -154,20 +167,9 @@ function Get-GuerrillaCartographyHtml {
         [int]$MaxChains = 25
     )
 
-    $pathFindings = @($Findings | Where-Object { $_.CheckId -in @('ADPATH-001', 'ADPATH-002') -and $_.Status -eq 'FAIL' })
-    if ($pathFindings.Count -eq 0) { return '' }
-
-    # Gather unique chain Path strings (prefer rich Chains, fall back to AffectedItems) + priv flag.
-    $chainList = [System.Collections.Generic.List[object]]::new()
-    $seen = [System.Collections.Generic.HashSet[string]]::new()
-    foreach ($pf in $pathFindings) {
-        $rich = @($pf.Details.Chains)
-        if ($rich.Count -gt 0) {
-            foreach ($c in $rich) { $p = "$($c.Path)"; if ($p -and $seen.Add($p)) { $chainList.Add([PSCustomObject]@{ Path = $p; NonPriv = (-not $c.SourceIsPrivileged) }) } }
-        } else {
-            foreach ($p in @($pf.Details.AffectedItems)) { $ps = "$p"; if ($ps -and $seen.Add($ps)) { $chainList.Add([PSCustomObject]@{ Path = $ps; NonPriv = $true }) } }
-        }
-    }
+    # Same gather as the attack-path list: reads Details.Paths (ADPATH-001) + Details.Chains
+    # (ADPATH-002), filters $null, excludes by-design Expected paths.
+    $chainList = @(Get-GuerrillaAttackChainData -Findings $Findings)
     if ($chainList.Count -eq 0) { return '' }
     $truncated = $false
     if ($chainList.Count -gt $MaxChains) { $truncated = $true; $chainList = @($chainList | Select-Object -First $MaxChains) }

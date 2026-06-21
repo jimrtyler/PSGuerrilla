@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.23.0] - 2026-06-21
+
+_Fixes from the v2.22.0 live-validation pass — the attack-path visuals now render on real data, and "not assessed" stops reading as "compliant."_
+
+### Fixed
+- 🔴 **Attack-path visuals rendered empty on real domains.** The shared report code read `Details.Chains` (only `ADPATH-002` carries that) but `ADPATH-001` exposes its rich objects under **`Details.Paths`**, and the `@($null).Count == 1` gotcha defeated the `AffectedItems` fallback — so both the **Attack Paths to Tier-0** list and the **Attack-Path Cartography** SVG came up empty despite real escalation paths. A shared gather now reads **both** shapes, filters `$null` explicitly, excludes by-design `Expected` service-account paths, and derives hop count when `Length` is absent. Fixes all three reports (Reconnaissance / Campaign / Technical). Unit tests now exercise the `ADPATH-001` `Paths` shape and `Expected` exclusion.
+- **Compliance crosswalk silently dropped SKIP'd checks**, making coverage read artificially low (e.g. ~24 surfaced vs ~72 tagged on a partial connection). SKIP findings now surface with `Status='SKIP'` ("Not Assessed") so the crosswalk distinguishes *passed* from *not looked at*; only `ERROR` is dropped. (`-FailOnly` behaviour unchanged.)
+- **Maturity model rated all-SKIP categories as "Level 5 — Optimized"** (absence of evidence scored as success — same class as the old GTRADE-001 false-PASS). An estate or category with no PASS/FAIL/WARN now reports **Level 0 = "Not Assessed"**, never 5.
+
+### Changed
+- **BloodHound export** now resolves well-known privileged groups (Domain/Enterprise/Schema Admins, builtin operator aliases, etc.) to their **real SIDs** — domain SID derived from member SIDs + well-known RID/alias tables — so they overlay SharpHound's nodes instead of landing as parallel `NAME:<group>` nodes that break cross-tool pathfinding.
+- **Full-domain ACL sweep now includes `organizationalUnit` objects**, so OU delegation (full-control / WriteDacl / WriteOwner on an OU) is no longer invisible to the sweep.
+
+### Notes
+- All report/honesty fixes — no check logic, scoring, or count changes (473 checks, 46 public functions). Credit: the live-validation pass on a ~19.5k-object domain + partial-connection tenant. Tests: report-sections 29/29, maturity 22/22, bloodhound 14/14, full-domain ACL 18/18, SCuBA 12/12.
+
 ## [2.22.0] - 2026-06-21
 
 _CISA SCuBA baseline crosswalk — PSGuerrilla now produces a SCuBA secure-configuration mapping, not just prose references._
