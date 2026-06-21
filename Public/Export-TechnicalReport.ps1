@@ -139,9 +139,14 @@ pre { background:var(--surface-alt); padding:10px; border-radius:4px; overflow-x
         [void]$html.Append("<tr><td>$(& $esc $cat.Name)</td><td style='color:var(--sage)'>$cp</td><td style='color:var(--deep-orange)'>$cf</td><td style='color:var(--gold)'>$cw</td><td>$($cat.Count)</td></tr>`n")
     }
 
-    [void]$html.Append(@"
-</table>
+    [void]$html.Append('</table>')
 
+    # Security Maturity + Attack Paths (shared sections). Maturity spans all checks; the attack-path
+    # section only renders when AD attack-path findings are present (-OmitIfAbsent).
+    [void]$html.Append((Get-GuerrillaMaturitySectionHtml -Findings $Findings -Esc $esc))
+    [void]$html.Append((Get-GuerrillaAttackPathSectionHtml -Findings $Findings -Esc $esc -OmitIfAbsent))
+
+    [void]$html.Append(@"
 <h2>Detailed Findings ($($displayFindings.Count))</h2>
 "@)
 

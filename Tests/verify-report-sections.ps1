@@ -125,6 +125,19 @@ try {
     Add-R 'campaign: both theaters present'      (($html3 -match 'Active Directory') -and ($html3 -match 'Google Workspace')) ''
 } finally { Remove-Item $tmp3 -ErrorAction SilentlyContinue }
 
+# ── 5. Technical report (README-linked sample type): maturity + attack paths via shared helpers ──
+$tmp4 = Join-Path ([System.IO.Path]::GetTempPath()) ("psg-tech-" + [guid]::NewGuid().ToString('N').Substring(0,8) + ".html")
+try {
+    & $mod {
+        param($f, $fp)
+        Export-TechnicalReport -Findings $f -OutputPath $fp -OrganizationName 'Test Org' | Out-Null
+    } $adFindings $tmp4
+    $html4 = Get-Content $tmp4 -Raw
+    Add-R 'technical: Security Maturity present' ($html4 -match '<h2>Security Maturity</h2>') ''
+    Add-R 'technical: Attack Paths present'      ($html4 -match '<h2>Attack Paths to Tier-0</h2>') ''
+    Add-R 'technical: full chain rendered'       ($html4 -match 'MemberOf.*Domain Admins') ''
+} finally { Remove-Item $tmp4 -ErrorAction SilentlyContinue }
+
 $pass = @($results | Where-Object Pass).Count
 $total = $results.Count
 Write-Host ''

@@ -108,7 +108,7 @@ function Get-GuerrillaAttackPathSectionHtml {
 <style>
   .ap-note { color: var(--dim); font-size: 0.85em; margin: 4px 0 12px; }
   .ap-list { list-style: none; margin: 0 0 24px; padding: 0; }
-  .ap-item { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--fail);
+  .ap-item { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--deep-orange);
              border-radius: 0 4px 4px 0; padding: 10px 14px; margin-bottom: 8px; }
   .ap-item.priv { border-left-color: var(--amber); }
   .ap-path { font-size: 0.9em; color: var(--parchment); word-break: break-word; }

@@ -1,0 +1,102 @@
+{
+  "metadata": {
+    "version": 1,
+    "generated_by": "PSGuerrilla",
+    "source_kind": "PSGuerrilla"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "S-1-5-21-99-1-1-1200",
+        "kinds": [
+          "Group",
+          "Base"
+        ],
+        "properties": {
+          "objectid": "S-1-5-21-99-1-1-1200",
+          "name": "WORKSTATION-ADMINS"
+        }
+      },
+      {
+        "id": "S-1-5-21-99-1-1-1149",
+        "kinds": [
+          "Base",
+          "Base"
+        ],
+        "properties": {
+          "objectid": "S-1-5-21-99-1-1-1149",
+          "name": "BACKUPOPERATORS"
+        }
+      },
+      {
+        "id": "NAME:DOMAIN ADMINS",
+        "kinds": [
+          "Group",
+          "Base"
+        ],
+        "properties": {
+          "name": "DOMAIN ADMINS"
+        }
+      },
+      {
+        "id": "NAME:ADMINSDHOLDER",
+        "kinds": [
+          "Base",
+          "Base"
+        ],
+        "properties": {
+          "name": "ADMINSDHOLDER"
+        }
+      },
+      {
+        "id": "S-1-5-21-99-1-1-1147",
+        "kinds": [
+          "Base",
+          "Base"
+        ],
+        "properties": {
+          "objectid": "S-1-5-21-99-1-1-1147",
+          "name": "HELPDESK"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "start": {
+          "value": "S-1-5-21-99-1-1-1200"
+        },
+        "end": {
+          "value": "NAME:DOMAIN ADMINS"
+        },
+        "kind": "MemberOf",
+        "properties": {
+          "source": "PSGuerrilla"
+        }
+      },
+      {
+        "start": {
+          "value": "S-1-5-21-99-1-1-1147"
+        },
+        "end": {
+          "value": "S-1-5-21-99-1-1-1200"
+        },
+        "kind": "GenericAll",
+        "properties": {
+          "source": "PSGuerrilla"
+        }
+      },
+      {
+        "start": {
+          "value": "S-1-5-21-99-1-1-1149"
+        },
+        "end": {
+          "value": "NAME:ADMINSDHOLDER"
+        },
+        "kind": "WriteDacl",
+        "properties": {
+          "source": "PSGuerrilla"
+        }
+      }
+    ]
+  }
+}

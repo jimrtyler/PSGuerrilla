@@ -298,12 +298,45 @@ $adFiles = @(
 )
 
 $adFindings = New-AllFailFindings -CheckFiles $adFiles
+
+# Populate realistic transitive attack-path chains on the ADPATH findings so the sample report's
+# "Attack Paths to Tier-0" section showcases real chains (live scans fill these from collected
+# ACL + privileged-membership data; the all-FAIL generator can't synthesize a graph on its own).
+$sampleChains = @(
+    [PSCustomObject]@{ SourceIsPrivileged = $false; Length = 3; Path = 'SAMPLE\jsmith --[WriteDacl]--> ServiceDesk-Operators  ==>  ServiceDesk-Operators --[GenericAll]--> Tier1-Server-Admins  ==>  Tier1-Server-Admins --[MemberOf]--> Domain Admins  =>  reaches domain admins (Tier-0 group)' }
+    [PSCustomObject]@{ SourceIsPrivileged = $false; Length = 2; Path = 'SAMPLE\HelpDesk --[GenericAll]--> Workstation-Admins  ==>  Workstation-Admins --[MemberOf]--> Domain Admins  =>  reaches domain admins (Tier-0 group)' }
+    [PSCustomObject]@{ SourceIsPrivileged = $true;  Length = 2; Path = 'Account Operators --[GenericWrite]--> Backup-Admins  ==>  Backup-Admins --[MemberOf]--> Administrators  =>  reaches administrators (Tier-0 group)' }
+)
+$sampleSingleHop = @(
+    [PSCustomObject]@{ SourceIsPrivileged = $false; Length = 1; Path = 'SAMPLE\BackupOperators --[WriteDacl]--> AdminSDHolder  =>  reaches all protected groups via SDProp' }
+)
+foreach ($f in $adFindings) {
+    if ($f.CheckId -eq 'ADPATH-002') {
+        $f.Details = @{ ChainCount = $sampleChains.Count; NonPrivilegedCount = 2; Chains = $sampleChains; AffectedItems = @($sampleChains.Path) }
+    } elseif ($f.CheckId -eq 'ADPATH-001') {
+        $f.Details = @{ Chains = $sampleSingleHop; AffectedItems = @($sampleSingleHop.Path) }
+    }
+}
+
 $adScore = Get-PostureScore -Findings $adFindings
 $adLabel = Get-ScoreLabel -Score $adScore.OverallScore
 $adPath = Join-Path $samplesDir "Reconnaissance-AllFail$styleSuffix.html"
 
+# Sample BloodHound OpenGraph export so the report's BloodHound callout references a real artifact.
+$bhSamplePath = Join-Path $samplesDir 'Reconnaissance-BloodHound.json'
+$sampleBhAudit = @{
+    ACLs = @{ DangerousACEs = @(
+        [PSCustomObject]@{ IdentityReference = 'SAMPLE\HelpDesk'; IdentitySID = 'S-1-5-21-99-1-1-1147'; ActiveDirectoryRights = 'GenericAll'; ObjectClass = 'group'; ObjectName = 'Workstation-Admins'; ObjectSID = 'S-1-5-21-99-1-1-1200' }
+        [PSCustomObject]@{ IdentityReference = 'SAMPLE\BackupOperators'; IdentitySID = 'S-1-5-21-99-1-1-1149'; ActiveDirectoryRights = 'WriteDacl'; ObjectName = 'AdminSDHolder' }
+    ) }
+    PrivilegedAccounts = @{ PrivilegedGroups = @{
+        'Domain Admins' = @( [PSCustomObject]@{ IsGroup = $true; SamAccountName = 'Workstation-Admins'; SID = 'S-1-5-21-99-1-1-1200' } )
+    } }
+}
+& $mod { param($a, $p) Export-BloodHoundData -AuditData $a -OutputPath $p | Out-Null } $sampleBhAudit $bhSamplePath
+
 & $mod {
-    param($Findings, $OverallScore, $ScoreLabel, $CategoryScores, $DomainName, $FilePath, $Style, $Branding)
+    param($Findings, $OverallScore, $ScoreLabel, $CategoryScores, $DomainName, $FilePath, $Style, $Branding, $BloodHoundPath)
     Export-ReconnaissanceReportHtml `
         -Findings $Findings `
         -OverallScore $OverallScore `
@@ -312,8 +345,9 @@ $adPath = Join-Path $samplesDir "Reconnaissance-AllFail$styleSuffix.html"
         -DomainName $DomainName `
         -FilePath $FilePath `
         -Style $Style `
-        -Branding $Branding
-} $adFindings $adScore.OverallScore $adLabel $adScore.CategoryScores 'SAMPLE.LOCAL' $adPath $Style $demoBranding
+        -Branding $Branding `
+        -BloodHoundPath $BloodHoundPath
+} $adFindings $adScore.OverallScore $adLabel $adScore.CategoryScores 'SAMPLE.LOCAL' $adPath $Style $demoBranding $bhSamplePath
 
 Write-Host "  -> $adPath ($($adFindings.Count) checks, score: $($adScore.OverallScore))" -ForegroundColor Green
 
@@ -359,6 +393,67 @@ $infiltrationResult = [PSCustomObject]@{
 Write-Host "  -> $entraPath ($($entraFindings.Count) checks, score: $($entraScore.OverallScore))" -ForegroundColor Green
 
 # ============================================================================
+# REPORT 4: Campaign (unified — all theaters in one report)
+# ============================================================================
+Write-Host 'Generating Campaign report (all theaters)...' -ForegroundColor Cyan
+
+function New-TheaterEntry {
+    param([hashtable]$Score, [PSCustomObject[]]$Findings)
+    @{
+        Score          = $Score.OverallScore
+        ScoreLabel     = (Get-ScoreLabel -Score $Score.OverallScore)
+        PassCount      = @($Findings | Where-Object Status -eq 'PASS').Count
+        FailCount      = @($Findings | Where-Object Status -eq 'FAIL').Count
+        WarnCount      = @($Findings | Where-Object Status -eq 'WARN').Count
+        SkipCount      = @($Findings | Where-Object Status -in @('SKIP', 'ERROR')).Count
+        FindingCount   = @($Findings).Count
+        CategoryScores = $Score.CategoryScores
+    }
+}
+
+$campaignFindings = @($gwsFindings + $adFindings + $entraFindings)
+$campaignScore = Get-PostureScore -Findings $campaignFindings
+$campaignPath = Join-Path $samplesDir "Campaign-AllFail$styleSuffix.html"
+
+$campaignResult = [PSCustomObject]@{
+    PSTypeName    = 'PSGuerrilla.CampaignResult'
+    Findings      = $campaignFindings
+    OverallScore  = $campaignScore.OverallScore
+    ScoreLabel    = (Get-ScoreLabel -Score $campaignScore.OverallScore)
+    Theaters      = @('Google Workspace', 'Active Directory', 'Entra ID / M365')
+    TheaterScores = @{
+        'Google Workspace'  = (New-TheaterEntry -Score $gwsScore   -Findings $gwsFindings)
+        'Active Directory'  = (New-TheaterEntry -Score $adScore    -Findings $adFindings)
+        'Entra ID / M365'   = (New-TheaterEntry -Score $entraScore -Findings $entraFindings)
+    }
+    ScanStart     = [datetime]::UtcNow
+    Duration      = [timespan]::FromMinutes(5)
+    ScanId        = 'sample-campaign'
+}
+
+& $mod {
+    param($Result, $OutputPath, $Style, $Branding)
+    Export-CampaignReportHtml -Result $Result -OutputPath $OutputPath -Style $Style -Branding $Branding
+} $campaignResult $campaignPath $Style $demoBranding
+
+Write-Host "  -> $campaignPath ($($campaignFindings.Count) checks, score: $($campaignScore.OverallScore))" -ForegroundColor Green
+
+# ============================================================================
+# REPORT 5: Technical (all checks) — the README-linked sample at the repo root
+# ============================================================================
+# Only (re)generated for the default Guerrilla style; the README links this single file, so keeping
+# it in the generator means it can never silently fall behind the report templates again.
+if ($Style -eq 'Guerrilla') {
+    Write-Host 'Generating Technical report (README sample)...' -ForegroundColor Cyan
+    $techPath = Join-Path $PSScriptRoot '../PSGuerrilla-Sample-Report.html'
+    & $mod {
+        param($Findings, $OutputPath)
+        Export-TechnicalReport -Findings $Findings -OutputPath $OutputPath -OrganizationName 'Sample Organization (All Checks Failing)'
+    } $campaignFindings $techPath
+    Write-Host "  -> $techPath ($($campaignFindings.Count) checks)" -ForegroundColor Green
+}
+
+# ============================================================================
 Write-Host ''
 Write-Host 'All sample reports generated.' -ForegroundColor Cyan
-Write-Host "Total checks: GWS=$($gwsFindings.Count), AD=$($adFindings.Count), Entra=$($entraFindings.Count)" -ForegroundColor DarkGray
+Write-Host "Total checks: GWS=$($gwsFindings.Count), AD=$($adFindings.Count), Entra=$($entraFindings.Count), Campaign=$($campaignFindings.Count)" -ForegroundColor DarkGray

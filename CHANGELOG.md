@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.20.1] - 2026-06-21
+
+_All four HTML report types now carry maturity + attack paths; sample reports regenerated to match._
+
+### Changed
+- **`Export-TechnicalReport`** (the README-linked "all checks" report) now also includes the **Security Maturity** and **Attack Paths to Tier-0** sections, so all four report types (Reconnaissance, Fortification, Campaign, Technical) are consistent.
+- Shared section accent colour made theme-portable (`--deep-orange`, defined in every report theme) so the sections render correctly in the Technical report's standalone stylesheet.
+- **Sample/showcase reports regenerated**: every sample now shows maturity; the AD, Campaign, and Technical samples show full attack-path chains; the AD sample shows the BloodHound callout. Added a **Campaign sample** (`Samples/Campaign-AllFail.html`) and a **sample BloodHound export** (`Samples/Reconnaissance-BloodHound.json`). `Generate-SampleReports.ps1` now also (re)generates the README root sample (`PSGuerrilla-Sample-Report.html`) so it can't fall behind the templates again.
+
+### Notes
+- Report/presentation only — no engine, check, or scoring changes. Check counts and 46 public functions unchanged. Test: `Tests/verify-report-sections.ps1` (18/18 — now covers all four report types).
+- **PingCastle plan remaining: cartography** (the visual domain/trust/attack-path map).
+
 ## [2.20.0] - 2026-06-21
 
 _Reports now showcase what PSGuerrilla actually does — maturity, attack paths, and the BloodHound export are no longer buried._

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PSGuerrilla Fortification Report - sample.org - 2026-06-18 16:35:14 UTC</title>
+<title>PSGuerrilla Fortification Report - sample.org - 2026-06-21 10:52:56 UTC</title>
 <style>
   :root { --font-body: 'Segoe UI', 'Helvetica Neue', Arial, system-ui, sans-serif; --bg: #ffffff; --surface: #f8fafc; --surface-alt: #eef2f7; --border: #d8dee9; --text: #1e293b; --text-muted: #64748b; --olive: #0f766e; --amber: #c2620f; --sage: #15803d; --parchment: #0f172a; --gold: #b7791f; --dim: #64748b; --deep-orange: #c2410c; --dark-red: #b91c1c; --critical: #b91c1c; --high: #c2410c; --medium: #b45309; --low: #15803d; --clean: #15803d; --pass: #15803d; --fail: #b91c1c; --warn: #b45309; --skip: #94a3b8; --info: #1d4ed8; }
   .wl-banner { background: var(--dark-red); color: #fff; text-align: center;
@@ -195,8 +195,8 @@
 <div class="wl-header"><div><div class="wl-firm">Northwind Security</div><div class="wl-meta">Prepared by A. Analyst &middot; analyst@northwind.example</div><div class="wl-meta">Prepared for Globex Corporation</div></div></div>
 <h1>&#x1F6E1; PSGuerrilla Fortification Report</h1>
 <div class="subtitle">
-  Generated 2026-06-18 16:35:14 UTC &mdash; sample.org &mdash;
-  98 configuration checks evaluated
+  Generated 2026-06-21 10:52:56 UTC &mdash; sample.org &mdash;
+  104 configuration checks evaluated
 </div><div class="score-panel">
   <div class="score-ring">
     <svg width="120" height="120" viewBox="0 0 120 120">
@@ -209,23 +209,48 @@
   </div>
   <div class="score-detail">
     <div class="label" style="color:var(--dark-red)">Critical Risk</div>
-    <div class="desc">Fortification Score (0&ndash;100). Weighted assessment of 98 Google Workspace configuration checks.</div>
+    <div class="desc">Fortification Score (0&ndash;100). Weighted assessment of 104 Google Workspace configuration checks.</div>
   </div>
 </div><div class="exec-summary">
   <h3>Executive Summary</h3>
   <p><strong>Assessment:</strong> Immediate action required. 9 critical-severity configuration failure(s) detected that expose the tenant to significant risk.</p>
-  <p><strong>Scope:</strong> 98 configuration checks across 8 categories.</p>
-  <p><strong>Results:</strong> 0 passed, 98 failed, 0 warnings, 0 skipped.</p><p style="color:var(--critical)"><strong>&#9888; 9 critical finding(s) require immediate remediation.</strong></p></div><div class="stat-grid">
-  <div class="stat-card"><div class="value" style="color:var(--parchment)">98</div><div class="label">Total Checks</div></div>
+  <p><strong>Scope:</strong> 104 configuration checks across 8 categories.</p>
+  <p><strong>Results:</strong> 0 passed, 104 failed, 0 warnings, 0 skipped.</p><p style="color:var(--critical)"><strong>&#9888; 9 critical finding(s) require immediate remediation.</strong></p></div><div class="stat-grid">
+  <div class="stat-card"><div class="value" style="color:var(--parchment)">104</div><div class="label">Total Checks</div></div>
   <div class="stat-card"><div class="value" style="color:var(--pass)">0</div><div class="label">Passed</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--fail)">98</div><div class="label">Failed</div></div>
+  <div class="stat-card"><div class="value" style="color:var(--fail)">104</div><div class="label">Failed</div></div>
   <div class="stat-card"><div class="value" style="color:var(--warn)">0</div><div class="label">Warnings</div></div>
   <div class="stat-card"><div class="value" style="color:var(--skip)">0</div><div class="label">Skipped</div></div>
   <div class="stat-card"><div class="value" style="color:var(--critical)">9</div><div class="label">Critical</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--high)">39</div><div class="label">High</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--medium)">41</div><div class="label">Medium</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--low)">9</div><div class="label">Low</div></div>
+  <div class="stat-card"><div class="value" style="color:var(--high)">40</div><div class="label">High</div></div>
+  <div class="stat-card"><div class="value" style="color:var(--medium)">43</div><div class="label">Medium</div></div>
+  <div class="stat-card"><div class="value" style="color:var(--low)">12</div><div class="label">Low</div></div>
+</div><style>
+  .mat-sec { background: var(--surface-alt, var(--surface)); border: 1px solid var(--border); border-left: 4px solid var(--dark-red);
+             border-radius: 0 4px 4px 0; padding: 16px 20px; margin-bottom: 24px; }
+  .mat-sec h3 { margin-top: 0; }
+  .mat-tbl { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.85em; }
+  .mat-tbl th, .mat-tbl td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); }
+  .mat-tbl th { opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8em; }
+</style>
+<h2>Security Maturity</h2>
+<div class="mat-sec">
+  <h3 style="color:var(--dark-red)">Overall maturity: Level 1 of 5 &mdash; Initial</h3>
+  <p>The lowest unmet control anchors the rating (CMMI-style scale: 1 Initial to 5 Optimized), so a single critical exposure caps the score until it is resolved.</p>
+  <p>To reach <strong>Level 2</strong>, address:</p><ul style='margin:4px 0 8px 20px'><li>AUTH-001: 2SV Enforcement</li><li>AUTH-012: Super Admin 2SV Enrollment</li><li>EMAIL-001: SPF Record Validation</li><li>EMAIL-002: DKIM Signing Enabled</li><li>EMAIL-003: DMARC Policy Audit</li><li>EMAIL-017: Spoofing and Authentication Protection</li><li>OAUTH-003: OAuth Scope Analysis</li><li>OAUTH-008: Domain-Wide Delegation Grants Audit</li></ul>
+  <table class="mat-tbl"><thead><tr><th>Category</th><th>Level</th><th>Maturity</th></tr></thead><tbody><tr><td>Admin &amp; User Management</td><td style='color:var(--dark-red);font-weight:700'>Level 1</td><td>Initial</td></tr><tr><td>Authentication &amp; Access Controls</td><td style='color:var(--dark-red);font-weight:700'>Level 1</td><td>Initial</td></tr><tr><td>Email Security</td><td style='color:var(--dark-red);font-weight:700'>Level 1</td><td>Initial</td></tr><tr><td>OAuth &amp; API Security</td><td style='color:var(--dark-red);font-weight:700'>Level 1</td><td>Initial</td></tr><tr><td>Collaboration &amp; Communication Security</td><td style='color:var(--deep-orange);font-weight:700'>Level 2</td><td>Managed</td></tr><tr><td>Device &amp; Endpoint Management</td><td style='color:var(--deep-orange);font-weight:700'>Level 2</td><td>Managed</td></tr><tr><td>Drive Security &amp; Data Protection</td><td style='color:var(--deep-orange);font-weight:700'>Level 2</td><td>Managed</td></tr><tr><td>Logging, Alerting &amp; Monitoring</td><td style='color:var(--deep-orange);font-weight:700'>Level 2</td><td>Managed</td></tr></tbody></table>
 </div><h2>Category Scores</h2><div class="category-grid"><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">Drive Security &amp; Data Protection</span>
+    <span class="cat-score" style="color:var(--deep-orange)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--deep-orange)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 13</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
   <div class="cat-header">
     <span class="cat-name">Email Security</span>
     <span class="cat-score" style="color:var(--deep-orange)">0</span>
@@ -238,57 +263,13 @@
   </div>
 </div><div class="cat-card">
   <div class="cat-header">
-    <span class="cat-name">Collaboration &amp; Communication Security</span>
-    <span class="cat-score" style="color:var(--deep-orange)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--deep-orange)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 10</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">Admin &amp; User Management</span>
-    <span class="cat-score" style="color:var(--deep-orange)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--deep-orange)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 13</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">Logging, Alerting &amp; Monitoring</span>
-    <span class="cat-score" style="color:var(--deep-orange)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--deep-orange)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 6</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
     <span class="cat-name">Authentication &amp; Access Controls</span>
     <span class="cat-score" style="color:var(--deep-orange)">0</span>
   </div>
   <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--deep-orange)"></div></div>
   <div class="cat-counts">
     <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 13</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">OAuth &amp; API Security</span>
-    <span class="cat-score" style="color:var(--deep-orange)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--deep-orange)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 10</span>
+    <span style="color:var(--fail)">Fail: 17</span>
     <span style="color:var(--warn)">Warn: 0</span>
   </div>
 </div><div class="cat-card">
@@ -304,7 +285,40 @@
   </div>
 </div><div class="cat-card">
   <div class="cat-header">
-    <span class="cat-name">Drive Security &amp; Data Protection</span>
+    <span class="cat-name">Logging, Alerting &amp; Monitoring</span>
+    <span class="cat-score" style="color:var(--deep-orange)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--deep-orange)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 6</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">OAuth &amp; API Security</span>
+    <span class="cat-score" style="color:var(--deep-orange)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--deep-orange)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 10</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">Collaboration &amp; Communication Security</span>
+    <span class="cat-score" style="color:var(--deep-orange)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--deep-orange)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 12</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">Admin &amp; User Management</span>
     <span class="cat-score" style="color:var(--deep-orange)">0</span>
   </div>
   <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--deep-orange)"></div></div>
@@ -442,6 +456,13 @@
     <td><span class="badge badge-high">High</span></td>
     <td>Excessive permissions found</td>
     <td><a href="https://admin.google.com/ac/users" target="_blank" rel="noopener">&#x2699; Fix in Admin Console &#x2197;</a><br><a href="https://cloud.google.com/resource-manager/docs/super-admin-best-practices" target="_blank" rel="noopener" style="color:var(--gold)">&#9888; Why it's unsafe &#x2197;</a></td>
+  </tr>  <tr>
+    <td><code>AUTH-017</code></td>
+    <td>Super Admin Account Self-Recovery</td>
+    <td>Authentication &amp; Access Controls</td>
+    <td><span class="badge badge-high">High</span></td>
+    <td>Excessive permissions found</td>
+    <td><a href="https://admin.google.com/ac/security/accountrecovery" target="_blank" rel="noopener">&#x2699; Fix in Admin Console &#x2197;</a><br><a href="https://support.google.com/a/answer/9436964" target="_blank" rel="noopener" style="color:var(--gold)">&#9888; Why it's unsafe &#x2197;</a></td>
   </tr>  <tr>
     <td><code>COLLAB-004</code></td>
     <td>Chat External Communication</td>
@@ -760,7 +781,7 @@
     <td>Not configured</td>
     <td>User profile visibility restricted to internal users</td>
     <td><div class="remediation-cell">Admin Console &gt; Directory &gt; Directory settings &gt; Profile sharing &gt; Restrict profile visibility</div></td>
-  </tr><tr class="finding-extra"><td colspan="7"><div class="extra-wrap"><div class="extra-links"><a class="admin-link" href="https://admin.google.com/ac/appsettings/986702928867/profilesharing" target="_blank" rel="noopener">&#x2699; Fix in Admin Console &#x2197;</a></div></div></td></tr></table></div></details><details class="cat-detail" open><summary>Authentication &amp; Access Controls &mdash; Score: 0/100 <span style="color:var(--dim);font-weight:400;font-size:0.85em;text-transform:none">(13 checks)</span></summary><div class="detail-body"><table>
+  </tr><tr class="finding-extra"><td colspan="7"><div class="extra-wrap"><div class="extra-links"><a class="admin-link" href="https://admin.google.com/ac/appsettings/986702928867/profilesharing" target="_blank" rel="noopener">&#x2699; Fix in Admin Console &#x2197;</a></div></div></td></tr></table></div></details><details class="cat-detail" open><summary>Authentication &amp; Access Controls &mdash; Score: 0/100 <span style="color:var(--dim);font-weight:400;font-size:0.85em;text-transform:none">(17 checks)</span></summary><div class="detail-body"><table>
   <tr>
     <th>Check ID</th><th>Name</th><th>Severity</th><th>Status</th>
     <th>Current Value</th><th>Recommended Value</th><th>Remediation Steps</th>
@@ -821,6 +842,14 @@
     <td>No super admin accounts inactive for more than 90 days</td>
     <td><div class="remediation-cell">Admin Console &gt; Directory &gt; Users &gt; Filter by admin role &gt; Review and remove or suspend inactive super admin accounts</div></td>
   </tr><tr class="finding-extra"><td colspan="7"><div class="extra-wrap"><div class="affected"><span class="affected-label">Stale super admin accounts (6):</span> <span class="affected-items">jsmith@sample.org, akumar@sample.org, mchen@sample.org, rlopez@sample.org, tokafor@sample.org, dwilson@sample.org</span></div><div class="extra-links"><span class="why">&#9888; <a href="https://cloud.google.com/resource-manager/docs/super-admin-best-practices" target="_blank" rel="noopener">Why this is unsafe: Google Cloud: Super administrator account best practices &#x2197;</a></span><a class="admin-link" href="https://admin.google.com/ac/users" target="_blank" rel="noopener">&#x2699; Fix in Admin Console &#x2197;</a></div></div></td></tr>  <tr>
+    <td><code>AUTH-017</code></td>
+    <td>Super Admin Account Self-Recovery</td>
+    <td><span class="badge badge-high">High</span></td>
+    <td><span class="badge badge-fail">FAIL</span></td>
+    <td>Excessive permissions found</td>
+    <td>Super admin self-recovery disabled in all organizational units</td>
+    <td><div class="remediation-cell">Security &gt; Authentication &gt; Account recovery &gt; Turn off &#39;Allow super admins to recover their account&#39; for all organizational units</div></td>
+  </tr><tr class="finding-extra"><td colspan="7"><div class="extra-wrap"><div class="extra-links"><span class="why">&#9888; <a href="https://support.google.com/a/answer/9436964" target="_blank" rel="noopener">Why this is unsafe: Google: Allow super administrators to recover their password &#x2197;</a></span><a class="admin-link" href="https://admin.google.com/ac/security/accountrecovery" target="_blank" rel="noopener">&#x2699; Fix in Admin Console &#x2197;</a></div></div></td></tr>  <tr>
     <td><code>AUTH-003</code></td>
     <td>2SV Method Strength</td>
     <td><span class="badge badge-medium">Medium</span></td>
@@ -868,7 +897,31 @@
     <td>Disabled</td>
     <td>Login challenges enabled with employee ID or other verification</td>
     <td><div class="remediation-cell">Admin Console &gt; Security &gt; Authentication &gt; Login challenges &gt; Enable</div></td>
-  </tr><tr class="finding-extra"><td colspan="7"><div class="extra-wrap"><div class="extra-links"><span class="why">&#9888; <a href="https://support.google.com/a/answer/6002699" target="_blank" rel="noopener">Why this is unsafe: Google: Protect accounts with security challenges &#x2197;</a></span><a class="admin-link" href="https://admin.google.com/ac/security/loginchallenges" target="_blank" rel="noopener">&#x2699; Fix in Admin Console &#x2197;</a></div></div></td></tr></table></div></details><details class="cat-detail" open><summary>Collaboration &amp; Communication Security &mdash; Score: 0/100 <span style="color:var(--dim);font-weight:400;font-size:0.85em;text-transform:none">(10 checks)</span></summary><div class="detail-body"><table>
+  </tr><tr class="finding-extra"><td colspan="7"><div class="extra-wrap"><div class="extra-links"><span class="why">&#9888; <a href="https://support.google.com/a/answer/6002699" target="_blank" rel="noopener">Why this is unsafe: Google: Protect accounts with security challenges &#x2197;</a></span><a class="admin-link" href="https://admin.google.com/ac/security/loginchallenges" target="_blank" rel="noopener">&#x2699; Fix in Admin Console &#x2197;</a></div></div></td></tr>  <tr>
+    <td><code>AUTH-014</code></td>
+    <td>2SV Enrollment Allowed</td>
+    <td><span class="badge badge-medium">Medium</span></td>
+    <td><span class="badge badge-fail">FAIL</span></td>
+    <td>Default (insecure)</td>
+    <td>2SV enrollment allowed in all organizational units</td>
+    <td><div class="remediation-cell">Security &gt; Authentication &gt; 2-step verification &gt; Set &#39;Allow users to turn on 2-Step Verification&#39; to On for all organizational units</div></td>
+  </tr><tr class="finding-extra"><td colspan="7"><div class="extra-wrap"><div class="extra-links"><span class="why">&#9888; <a href="https://support.google.com/a/answer/9176657" target="_blank" rel="noopener">Why this is unsafe: Google: Turn on 2-Step Verification &#x2197;</a></span><a class="admin-link" href="https://admin.google.com/ac/security/2sv" target="_blank" rel="noopener">&#x2699; Fix in Admin Console &#x2197;</a></div></div></td></tr>  <tr>
+    <td><code>AUTH-015</code></td>
+    <td>2SV Enrollment Grace Period</td>
+    <td><span class="badge badge-low">Low</span></td>
+    <td><span class="badge badge-fail">FAIL</span></td>
+    <td>Not configured</td>
+    <td>Grace period of 7 days (168 hours) or less</td>
+    <td><div class="remediation-cell">Security &gt; Authentication &gt; 2-step verification &gt; Set the new-user enrollment grace period to 7 days or less</div></td>
+  </tr><tr class="finding-extra"><td colspan="7"><div class="extra-wrap"><div class="extra-links"><span class="why">&#9888; <a href="https://support.google.com/a/answer/9176657" target="_blank" rel="noopener">Why this is unsafe: Google: Set a 2-Step Verification enrollment period &#x2197;</a></span><a class="admin-link" href="https://admin.google.com/ac/security/2sv" target="_blank" rel="noopener">&#x2699; Fix in Admin Console &#x2197;</a></div></div></td></tr>  <tr>
+    <td><code>AUTH-016</code></td>
+    <td>Advanced Protection Self-Enrollment</td>
+    <td><span class="badge badge-low">Low</span></td>
+    <td><span class="badge badge-fail">FAIL</span></td>
+    <td>Not configured</td>
+    <td>Advanced Protection self-enrollment allowed in all organizational units</td>
+    <td><div class="remediation-cell">Security &gt; Authentication &gt; Advanced Protection Program &gt; Allow users to self-enroll in Advanced Protection</div></td>
+  </tr><tr class="finding-extra"><td colspan="7"><div class="extra-wrap"><div class="extra-links"><span class="why">&#9888; <a href="https://support.google.com/a/answer/9378686" target="_blank" rel="noopener">Why this is unsafe: Google: Protect users with the Advanced Protection Program &#x2197;</a></span><a class="admin-link" href="https://admin.google.com/ac/security/advanced-protection" target="_blank" rel="noopener">&#x2699; Fix in Admin Console &#x2197;</a></div></div></td></tr></table></div></details><details class="cat-detail" open><summary>Collaboration &amp; Communication Security &mdash; Score: 0/100 <span style="color:var(--dim);font-weight:400;font-size:0.85em;text-transform:none">(12 checks)</span></summary><div class="detail-body"><table>
   <tr>
     <th>Check ID</th><th>Name</th><th>Severity</th><th>Status</th>
     <th>Current Value</th><th>Recommended Value</th><th>Remediation Steps</th>
@@ -937,6 +990,14 @@
     <td>External invitation warnings enabled</td>
     <td><div class="remediation-cell">Admin Console &gt; Apps &gt; Google Workspace &gt; Calendar &gt; Sharing settings &gt; Enable external invitation warnings</div></td>
   </tr><tr class="finding-extra"><td colspan="7"><div class="extra-wrap"><div class="extra-links"><a class="admin-link" href="https://admin.google.com/ac/appsettings/435070579839/sharing" target="_blank" rel="noopener">&#x2699; Fix in Admin Console &#x2197;</a></div></div></td></tr>  <tr>
+    <td><code>COLLAB-012</code></td>
+    <td>Meet Host Management</td>
+    <td><span class="badge badge-medium">Medium</span></td>
+    <td><span class="badge badge-fail">FAIL</span></td>
+    <td>Default (insecure)</td>
+    <td>Host management enabled</td>
+    <td><div class="remediation-cell">Apps &gt; Google Workspace &gt; Google Meet &gt; Meet safety settings &gt; Host management &gt; Enable host management controls</div></td>
+  </tr><tr class="finding-extra"><td colspan="7"><div class="extra-wrap"><div class="extra-links"><a class="admin-link" href="https://admin.google.com/ac/appsettings/625702498764/meetingsettings" target="_blank" rel="noopener">&#x2699; Fix in Admin Console &#x2197;</a></div></div></td></tr>  <tr>
     <td><code>COLLAB-007</code></td>
     <td>Chat App Installation Settings</td>
     <td><span class="badge badge-low">Low</span></td>
@@ -952,7 +1013,15 @@
     <td>Anyone (no restrictions)</td>
     <td>Appointment slot external visibility restricted</td>
     <td><div class="remediation-cell">Admin Console &gt; Apps &gt; Google Workspace &gt; Calendar &gt; Sharing settings &gt; Review appointment slot visibility settings</div></td>
-  </tr><tr class="finding-extra"><td colspan="7"><div class="extra-wrap"><div class="extra-links"><a class="admin-link" href="https://admin.google.com/ac/appsettings/435070579839/sharing" target="_blank" rel="noopener">&#x2699; Fix in Admin Console &#x2197;</a></div></div></td></tr></table></div></details><details class="cat-detail" open><summary>Device &amp; Endpoint Management &mdash; Score: 0/100 <span style="color:var(--dim);font-weight:400;font-size:0.85em;text-transform:none">(11 checks)</span></summary><div class="detail-body"><table>
+  </tr><tr class="finding-extra"><td colspan="7"><div class="extra-wrap"><div class="extra-links"><a class="admin-link" href="https://admin.google.com/ac/appsettings/435070579839/sharing" target="_blank" rel="noopener">&#x2699; Fix in Admin Console &#x2197;</a></div></div></td></tr>  <tr>
+    <td><code>COLLAB-011</code></td>
+    <td>Meet External Participant Labeling</td>
+    <td><span class="badge badge-low">Low</span></td>
+    <td><span class="badge badge-fail">FAIL</span></td>
+    <td>Anyone (no restrictions)</td>
+    <td>External participant labeling enabled</td>
+    <td><div class="remediation-cell">Apps &gt; Google Workspace &gt; Google Meet &gt; Meet safety settings &gt; External participants &gt; Enable labeling of external participants</div></td>
+  </tr><tr class="finding-extra"><td colspan="7"><div class="extra-wrap"><div class="extra-links"><a class="admin-link" href="https://admin.google.com/ac/appsettings/625702498764/meetingsettings" target="_blank" rel="noopener">&#x2699; Fix in Admin Console &#x2197;</a></div></div></td></tr></table></div></details><details class="cat-detail" open><summary>Device &amp; Endpoint Management &mdash; Score: 0/100 <span style="color:var(--dim);font-weight:400;font-size:0.85em;text-transform:none">(11 checks)</span></summary><div class="detail-body"><table>
   <tr>
     <th>Check ID</th><th>Name</th><th>Severity</th><th>Status</th>
     <th>Current Value</th><th>Recommended Value</th><th>Remediation Steps</th>
@@ -1315,7 +1384,7 @@
     <td><span class="badge badge-fail">FAIL</span></td>
     <td>Insecure rules found</td>
     <td>DLP rules configured for key data types (credit cards, SSNs, health records) with block or warn action</td>
-    <td><div class="remediation-cell">Admin Console &gt; Security &gt; Data protection &gt; Manage rules &gt; Create DLP rules for Gmail that detect sensitive content patterns and apply appropriate actions</div></td>
+    <td><div class="remediation-cell">Security &gt; Data protection &gt; Manage rules: create a Gmail DLP rule that detects sensitive content patterns (credit cards, SSNs, health records) and applies a block or warn action</div></td>
   </tr><tr class="finding-extra"><td colspan="7"><div class="extra-wrap"><div class="extra-links"><a class="admin-link" href="https://admin.google.com/ac/apps/gmail/compliance" target="_blank" rel="noopener">&#x2699; Fix in Admin Console &#x2197;</a></div></div></td></tr>  <tr>
     <td><code>EMAIL-020</code></td>
     <td>Gmail Confidential Mode</td>
@@ -1598,6 +1667,13 @@
     <td><code>AC-2(3)</code> <code>AC-2(4)</code></td>
     <td><code>T1078.004</code></td>
     <td><code>1.13</code></td>
+  </tr>  <tr>
+    <td><code>AUTH-017</code></td>
+    <td>Super Admin Account Self-Recovery</td>
+    <td><span class="badge badge-high">High</span></td>
+    <td><code>IA-4</code> <code>AC-6(5)</code></td>
+    <td><code>T1078.004</code> <code>T1098</code></td>
+    <td><code>1.15</code></td>
   </tr>  <tr>
     <td><code>COLLAB-004</code></td>
     <td>Chat External Communication</td>
@@ -1893,6 +1969,13 @@
     <td><code>T1078.004</code></td>
     <td><code>1.11</code></td>
   </tr>  <tr>
+    <td><code>AUTH-014</code></td>
+    <td>2SV Enrollment Allowed</td>
+    <td><span class="badge badge-medium">Medium</span></td>
+    <td><code>IA-2(1)</code></td>
+    <td><code>T1078.004</code></td>
+    <td><code>1.2</code></td>
+  </tr>  <tr>
     <td><code>COLLAB-001</code></td>
     <td>Meet Recording Settings</td>
     <td><span class="badge badge-medium">Medium</span></td>
@@ -1934,6 +2017,13 @@
     <td><code>AC-4</code> <code>SI-11</code></td>
     <td><code>T1589</code></td>
     <td><code>5.9</code></td>
+  </tr>  <tr>
+    <td><code>COLLAB-012</code></td>
+    <td>Meet Host Management</td>
+    <td><span class="badge badge-medium">Medium</span></td>
+    <td><code>AC-3</code></td>
+    <td><code>T1199</code></td>
+    <td><code>6.2</code></td>
   </tr>  <tr>
     <td><code>DEVICE-007</code></td>
     <td>Chrome Browser Management</td>
@@ -2110,6 +2200,20 @@
     <td><code>T1589.002</code></td>
     <td><code>4.9</code></td>
   </tr>  <tr>
+    <td><code>AUTH-015</code></td>
+    <td>2SV Enrollment Grace Period</td>
+    <td><span class="badge badge-low">Low</span></td>
+    <td><code>IA-2(1)</code></td>
+    <td><code>T1078.004</code></td>
+    <td><code>1.2</code></td>
+  </tr>  <tr>
+    <td><code>AUTH-016</code></td>
+    <td>Advanced Protection Self-Enrollment</td>
+    <td><span class="badge badge-low">Low</span></td>
+    <td><code>IA-2(1)</code></td>
+    <td><code>T1078.004</code></td>
+    <td><code>1.14</code></td>
+  </tr>  <tr>
     <td><code>COLLAB-007</code></td>
     <td>Chat App Installation Settings</td>
     <td><span class="badge badge-low">Low</span></td>
@@ -2123,6 +2227,13 @@
     <td><code>AC-22</code></td>
     <td><code>T1589.002</code></td>
     <td><code>5.10</code></td>
+  </tr>  <tr>
+    <td><code>COLLAB-011</code></td>
+    <td>Meet External Participant Labeling</td>
+    <td><span class="badge badge-low">Low</span></td>
+    <td><code>AC-22</code></td>
+    <td><code>T1199</code></td>
+    <td><code>6.1</code></td>
   </tr>  <tr>
     <td><code>DEVICE-011</code></td>
     <td>Company-Owned Device Inventory</td>
@@ -2161,9 +2272,9 @@
   </tr></table><div style="margin-top: 40px; padding-top: 16px; border-top: 2px solid var(--border);
             color: var(--dim); font-size: 0.8em; text-align: center; letter-spacing: 1px;">
   &#x1F6E1; PSGuerrilla Fortification Report &nbsp;|&nbsp;
-  2026-06-18 16:35:14 UTC &nbsp;|&nbsp;
-  Generated by PSGuerrilla v2.10.3 &nbsp;|&nbsp;
-  98 checks &nbsp;|&nbsp; Score: 0/100 (Critical Risk)
+  2026-06-21 10:52:56 UTC &nbsp;|&nbsp;
+  Generated by PSGuerrilla v2.20.0 &nbsp;|&nbsp;
+  104 checks &nbsp;|&nbsp; Score: 0/100 (Critical Risk)
   <br>By Jim Tyler, Microsoft MVP &nbsp;|&nbsp; <a href="https://github.com/jimrtyler" style="color:var(--dim)">GitHub</a> &nbsp;|&nbsp; <a href="https://linkedin.com/in/jamestyler" style="color:var(--dim)">LinkedIn</a> &nbsp;|&nbsp; <a href="https://youtube.com/@jimrtyler" style="color:var(--dim)">YouTube</a>
 </div>
 </body>
