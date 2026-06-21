@@ -1,6 +1,6 @@
 @{
     RootModule        = 'PSGuerrilla.psm1'
-    ModuleVersion     = '2.17.0'
+    ModuleVersion     = '2.18.0'
     GUID              = 'f7a3b2c1-4d5e-6f78-9a0b-1c2d3e4f5a6b'
     Author            = 'Jim Tyler, Microsoft MVP'
     CompanyName       = 'Jim Tyler'
@@ -52,6 +52,7 @@
         'Get-TrendReport'
         'Export-ReportPdf'
         'Export-Dashboard'
+        'Export-BloodHoundData'
         'Show-Guerrilla'
     )
     CmdletsToExport   = @()
@@ -80,7 +81,7 @@
             Tags       = @('GoogleWorkspace', 'ActiveDirectory', 'EntraID', 'AzureAD', 'Intune', 'M365', 'Security', 'CompromiseAssessment', 'IncidentResponse', 'ThreatDetection', 'ADSecurity', 'CloudSecurity', 'NTLMRelay', 'TierZero', 'GUI', 'WPF', 'PSGuerrilla')
             LicenseUri = 'https://creativecommons.org/licenses/by/4.0/'
             ProjectUri = 'https://guerrilla.army'
-            ReleaseNotes = 'v2.17.0: Transitive attack-path engine (Resolve-AttackPathGraph + Get-ADTransitiveAttackPath): a directed privilege graph with a BFS shortest-path resolver that chains control + group-membership edges of arbitrary length to Tier-0, e.g. HelpDesk -WriteDacl-> CORP-Admins -MemberOf-> Domain Admins. Cycle-safe, depth-bounded, reuses the default-principal exclusion. New check ADPATH-002 Transitive Escalation Chains to Tier-0 (AttackPath category) reports multi-hop chains (single-hop stays ADPATH-001), non-privileged sources first. AD is now 205 checks (473 total). Chain depth is bounded by ACL coverage: todays six-critical-object collection is mostly one-hop so ADPATH-002 is typically clean now; the full-domain ACL collector (live-gated, next) unlocks deep low-priv-to-DA chains. Engine validated for arbitrary depth (verify-transitive-attackpath.ps1 13/13). The leapfrog half of the PingCastle plan; still to come: full-domain ACL collector, BloodHound/AzureHound export, cartography. v2.16.0: Export-ExecutiveSummary now surfaces the Security Maturity rating (via Get-GuerrillaMaturity): a color-coded Level X/5 badge in the stat row, plus a Security Maturity card with the overall level+label, the next-level blockers, and a per-category maturity table. This is the board-facing executive artifact that matches PingCastle maturity presentation and is stricter (worst-unmet-control anchors the rating). Report-only change, no new checks. Severity-color-coded L1 red to L5 green; empty-findings path safe. Remaining PingCastle items: report cartography (domain/trust/attack-path map) + full-domain transitive attack-path graph with BloodHound/AzureHound export. See CHANGELOG.md for v2.16.0 and earlier.'
+            ReleaseNotes = 'v2.18.0: New Export-BloodHoundData cmdlet - exports the collected AD graph (privileged-group membership + dangerous ACLs) to a BloodHound CE OpenGraph file. SID-keyed nodes (overlay native SharpHound data) and BloodHound native edge kinds (GenericAll/WriteDacl/WriteOwner/GenericWrite/AllExtendedRights/GetChanges/GetChangesAll/MemberOf) so BloodHound pathfinding works directly. Full graph (no default-principal exclusion) - BloodHound does its own reachability. Invoke-Reconnaissance -BloodHoundPath writes it during a scan. Makes PSGuerrilla a free, agentless BloodHound feeder that does not touch endpoints (unlike SharpHound). Exported coverage tracks ACL collection; the full-domain ACL collector (roadmap) widens it. Read-only. 46 public functions. Test verify-bloodhound-export.ps1 (12/12). Check counts unchanged. PingCastle plan remaining: full-domain ACL collector + cartography. v2.17.0: Transitive attack-path engine (Resolve-AttackPathGraph + Get-ADTransitiveAttackPath): a directed privilege graph with a BFS shortest-path resolver that chains control + group-membership edges of arbitrary length to Tier-0, e.g. HelpDesk -WriteDacl-> CORP-Admins -MemberOf-> Domain Admins. Cycle-safe, depth-bounded, reuses the default-principal exclusion. New check ADPATH-002 Transitive Escalation Chains to Tier-0 (AttackPath category) reports multi-hop chains (single-hop stays ADPATH-001), non-privileged sources first. AD is now 205 checks (473 total). Chain depth is bounded by ACL coverage: todays six-critical-object collection is mostly one-hop so ADPATH-002 is typically clean now; the full-domain ACL collector (live-gated, next) unlocks deep low-priv-to-DA chains. Engine validated for arbitrary depth (verify-transitive-attackpath.ps1 13/13). The leapfrog half of the PingCastle plan; still to come: full-domain ACL collector, BloodHound/AzureHound export, cartography. See CHANGELOG.md for v2.17.0 and earlier.'
         }
     }
 }

@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.18.0] - 2026-06-20
+
+_BloodHound export — PSGuerrilla now feeds the best attack-path graph tool, free._
+
+### Added
+- **`Export-BloodHoundData`** — exports the collected AD graph (privileged-group membership + dangerous ACLs) to a **BloodHound CE OpenGraph** file. Nodes are **SID-keyed** (overlay cleanly with native SharpHound data) and edges use BloodHound's **native kinds** (`GenericAll`, `WriteDacl`, `WriteOwner`, `GenericWrite`, `AllExtendedRights`, `GetChanges`, `GetChangesAll`, `MemberOf`) so BloodHound's built-in pathfinding works over them directly. Unlike the in-report engine, the export includes the **full** graph (no default-principal exclusion) — BloodHound does its own reachability analysis. Import via BloodHound CE > Administration > File Ingest.
+- **`Invoke-Reconnaissance -BloodHoundPath <file>`** writes the export as part of a normal scan; the result object gains `BloodHoundPath`.
+
+### Notes
+- This makes PSGuerrilla a **free BloodHound feeder** — the agentless, quiet collector that also hands you a graph (SharpHound gets flagged by EDR; this doesn't touch endpoints). Exported edge coverage tracks ACL collection (the six critical Tier-0 objects + privileged membership today); the full-domain ACL collector (roadmap) widens it and the exporter consumes it unchanged.
+- Read-only. 46 public functions. Test: `Tests/verify-bloodhound-export.ps1` (12/12 — OpenGraph shape, SID-keyed nodes, native edge kinds incl. replication→GetChangesAll, MemberOf, provenance). Check counts unchanged.
+- PingCastle plan remaining: the **full-domain ACL collector** (deepens both ADPATH-002 and this export) and **cartography**.
+
 ## [2.17.0] - 2026-06-20
 
 _Transitive attack-path engine — the leapfrog half of the PingCastle plan (their attack-path is weak and defers to BloodHound)._

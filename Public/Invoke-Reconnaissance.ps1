@@ -30,7 +30,10 @@ function Invoke-Reconnaissance {
         [ValidateSet('Guerrilla', 'Professional', 'Slate')]
         [string]$ReportStyle = 'Guerrilla',
 
-        [switch]$TestMode
+        [switch]$TestMode,
+
+        # When set, also writes a BloodHound OpenGraph export of the collected AD graph to this path.
+        [string]$BloodHoundPath
     )
 
     # --- Resolve mission config (guerrilla-config.json) ---
@@ -303,6 +306,16 @@ function Invoke-Reconnaissance {
         $newState | ConvertTo-Json -Depth 5 | Set-Content -Path $statePath -Encoding UTF8
     }
 
+    # --- Optional BloodHound OpenGraph export of the collected AD graph ---
+    if ($BloodHoundPath -and -not $TestMode -and $auditData) {
+        try {
+            $bh = Export-BloodHoundData -AuditData $auditData -OutputPath $BloodHoundPath
+            if (-not $Quiet) { Write-ProgressLine -Phase REPORTING -Message 'BloodHound export' -Detail $bh.Message }
+        } catch {
+            Write-Warning "BloodHound export failed: $_"
+        }
+    }
+
     # --- Emit result object ---
     $result = [PSCustomObject]@{
         PSTypeName     = 'PSGuerrilla.ReconResult'
@@ -326,6 +339,7 @@ function Invoke-Reconnaissance {
         HtmlReportPath = $htmlPath
         CsvReportPath  = $csvPath
         JsonReportPath = $jsonPath
+        BloodHoundPath = if ($BloodHoundPath -and (Test-Path $BloodHoundPath)) { $BloodHoundPath } else { $null }
     }
 
     return $result
