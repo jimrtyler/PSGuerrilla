@@ -5,7 +5,7 @@ function Export-GuerrillaJUnit {
     <#
     .SYNOPSIS
         Exports PSGuerrilla findings as JUnit XML — the format GitHub Actions, Azure DevOps, and GitLab
-        render natively as pass/fail — so PSGuerrilla drops into the same CI pipelines as Maester.
+        render natively as pass/fail — so PSGuerrilla results show up in CI/CD pipelines.
 
     .DESCRIPTION
         Turns any theater's findings (AD / Entra / M365 / Google Workspace) into a JUnit test report:

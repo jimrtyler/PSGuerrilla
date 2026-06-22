@@ -12,8 +12,8 @@ function Invoke-Infiltration {
         privileged identity management, application security, federation configuration, tenant
         settings, Azure IAM, Intune endpoint management, and M365 service configurations.
 
-        Emulates: ScubaGear, Maester (EIDSCA), EntraFalcon, Mandiant Azure AD Investigator,
-        M365SAT, ROADtools, AADInternals (defensive), Azure AD Assessment, and others.
+        Mapped to recognized security baselines: CIS Microsoft 365, NIST SP 800-53, MITRE ATT&CK,
+        CISA SCuBA, and the EIDSCA Entra ID security-configuration controls.
 
     .PARAMETER Categories
         Specifies which audit categories to run. Default is 'All'.

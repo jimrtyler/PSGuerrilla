@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.29.1] - 2026-06-21
+
+_Documentation cleanup — no functional change._
+
+### Changed
+- Re-articulated the **EIDSCA checks** to describe each control by its Microsoft Graph setting and recommended value (functional remediation, no external links). Removed third-party product references from shipped help text, check descriptions, and this changelog — describing every feature on its own merits. No code, check logic, scoring, or count changes (517 checks, 49 public functions).
+
 ## [2.29.0] - 2026-06-21
 
 _Turnkey CI/CD — a GitHub Action and a severity gate for security-config-as-code._
@@ -20,45 +27,45 @@ _Release-notes maintenance — no functional change._
 
 ## [2.28.0] - 2026-06-21
 
-_Interactive findings filter in the AD report — completes the Maester-class report (roadmap M3 done)._
+_Interactive findings filter in the AD report — completes the interactive report experience._
 
 ### Added
-- **Interactive findings filter** in the Reconnaissance report — a Maester-style live filter bar (**status + severity buttons + text search**) over both findings tables, matching what the Campaign report already had. New shared helper `Get-GuerrillaFindingsFilterHtml`; finding rows are tagged `gg-row` / `data-status` / `data-sev` / `data-text` and filtered client-side (auto-opens collapsed categories so matches show, with a "no findings match" notice). Print-safe (the bar hides on print).
+- **Interactive findings filter** in the Reconnaissance report — a live filter bar (**status + severity buttons + text search**) over both findings tables, matching what the Campaign report already had. New shared helper `Get-GuerrillaFindingsFilterHtml`; finding rows are tagged `gg-row` / `data-status` / `data-sev` / `data-text` and filtered client-side (auto-opens collapsed categories so matches show, with a "no findings match" notice). Print-safe (the bar hides on print).
 
 ### Notes
-- This completes **roadmap M3** (interactive report + Indicators of Exposure). Report/presentation only — no engine, check, or scoring changes (517 checks, 48 public functions). Samples regenerated. Test: `Tests/verify-report-sections.ps1` (39/39 — filter bar, tagged rows, and filter script present).
-- **Maester roadmap: M1 (EIDSCA), M2 (CA what-if), M3 (report + IOE + filtering), M4 (CI/CD) done.** Remaining: **M6** (EXO/email depth — needs a live tenant to build with integrity), M7 (Entra governance). **Purple Knight: fully addressed.**
+- This completes the interactive report work (filter + Indicators of Exposure). Report/presentation only — no engine, check, or scoring changes (517 checks, 48 public functions). Samples regenerated. Test: `Tests/verify-report-sections.ps1` (39/39 — filter bar, tagged rows, and filter script present).
+- Remaining roadmap: deeper Exchange Online coverage (needs a live tenant) and additional Entra ID governance checks.
 
 ## [2.27.0] - 2026-06-21
 
-_Indicators of Exposure — a ranked, severity-scored exposure view in every report. Closes Purple Knight's signature edge (roadmap M3)._
+_Indicators of Exposure — a ranked, severity-scored exposure view in every report._
 
 ### Added
-- **Indicators of Exposure** (`Get-GuerrillaIndicatorsOfExposureHtml`) — a Purple-Knight-style ranked view of the estate's *actual* exposures, added to the **Reconnaissance, Google Workspace, Campaign, and Technical** reports. Each open (FAIL/WARN) finding becomes a named, severity-scored indicator with its **blast radius** (affected-object count); the list is ranked by severity → FAIL-before-WARN → impact, under a Critical/High/Medium/Low summary. It's the same data you already collect, presented the way a CISO (or a Purple Knight user) expects to read it.
+- **Indicators of Exposure** (`Get-GuerrillaIndicatorsOfExposureHtml`) — a ranked view of the estate's *actual* exposures, added to the **Reconnaissance, Google Workspace, Campaign, and Technical** reports. Each open (FAIL/WARN) finding becomes a named, severity-scored indicator with its **blast radius** (affected-object count); the list is ranked by severity → FAIL-before-WARN → impact, under a Critical/High/Medium/Low summary. It's the same data you already collect, presented the way a CISO expects to read it.
 
 ### Notes
 - Report/presentation only — no engine, check, or scoring changes (517 checks, 48 public functions). Samples regenerated (the Infiltration/Campaign samples now also include the 44 EIDSCA checks). Test: `Tests/verify-report-sections.ps1` (36/36 — IOE ranking, severity ordering, empty-when-all-pass, plus presence in all four reports).
-- Maester roadmap: **M1 (EIDSCA), M2 (CA what-if), M4 (CI/CD), M3 (Indicators of Exposure) done.** Remaining: M3 interactive filtering (polish), **M6 (EXO/email depth + SCuBA EXO baseline refresh)**, M7 (Entra governance). **Purple Knight: presentation edge closed.**
+- Remaining roadmap: interactive findings filter, deeper Exchange Online coverage (+ SCuBA MS.EXO baseline refresh), and additional Entra ID governance checks.
 
 ## [2.26.0] - 2026-06-21
 
-_Security config as code — JUnit output so PSGuerrilla drops into CI/CD like Maester (roadmap M4)._
+_Security config as code — JUnit output for CI/CD pipelines._
 
 ### Added
 - **`Export-GuerrillaJUnit`** — converts any theater's findings (AD / Entra / M365 / Google Workspace) to **JUnit XML**, the format GitHub Actions, Azure DevOps, and GitLab render natively as pass/fail. One `<testsuite>` per category, one `<testcase>` per check: **FAIL → `<failure>`** (typed by severity), **SKIP/ERROR → `<skipped>`** ("Not Assessed", never a silent pass), WARN passes with output (or `-WarningsAsFailures` to gate on it too). Returns `{Tests; Failures; Skipped; Passed}` so a pipeline can `if ($r.Failures) { exit 1 }`.
 
 ### Notes
-- This is the tooling half of Maester's CI/CD moat — PSGuerrilla now feeds the same pipelines that render Maester results, across **all four theaters** (not just M365/Entra). Copy-paste GitHub Actions / Azure DevOps / GitLab templates are available; a dedicated GitHub Action is a follow-on.
+- PSGuerrilla results now render natively in CI/CD pipelines, across **all four theaters**. Copy-paste GitHub Actions / Azure DevOps / GitLab templates are available; a dedicated GitHub Action is a follow-on.
 - 48 public functions; check counts unchanged (517). Test: `Tests/verify-junit.ps1` (14/14 — valid XML, per-category suites, FAIL/SKIP/WARN mapping, `-WarningsAsFailures`, XML escaping, gating counts).
-- Maester roadmap: **M1 (EIDSCA), M2 (CA what-if), M4 (CI/CD JUnit) done.** Remaining: **M3** (interactive report + Indicators of Exposure — also closes Purple Knight), **M6** (EXO/email depth + SCuBA EXO baseline refresh), M7 (Entra governance).
+- Remaining roadmap: the interactive report (filter + Indicators of Exposure), deeper Exchange Online coverage, and additional Entra ID governance checks.
 
 ## [2.25.0] - 2026-06-21
 
-_Conditional Access what-if simulation — the live Graph evaluate API, with pre-built attack scenarios (Maester parity M2)._
+_Conditional Access what-if simulation — the live Graph evaluate API, with pre-built attack scenarios._
 
 ### Added
-- **`Test-GuerrillaConditionalAccess`** — the free answer to Maester's `Test-MtConditionalAccessWhatIf`. Simulates a sign-in against the tenant's live CA policies via `POST /beta/identity/conditionalAccess/evaluate` (same request shape as Maester: `signInIdentity` / `signInContext` / `signInConditions`) and **normalizes the applied policies into a single verdict** (Block / MfaRequired / CompliantDeviceRequired / PasswordChangeRequired / Grant / NotApplied / Unknown).
-- **`Invoke-Infiltration -WhatIfUserId <guid>`** runs a **pre-built attack-scenario matrix** (legacy-auth, no-MFA cloud sign-in, high sign-in risk, high user risk, unmanaged device) against that user and grades each PASS/FAIL — *more opinionated than Maester's bring-your-own-test model*. Results land in `ConditionalAccess.WhatIf` and drive **`EIDCA-015`**, which was a placeholder/inference and is now a real, authoritative simulation when a user is supplied.
+- **`Test-GuerrillaConditionalAccess`** — simulates a sign-in against the tenant's live CA policies via `POST /beta/identity/conditionalAccess/evaluate` (`signInIdentity` / `signInContext` / `signInConditions`) and **normalizes the applied policies into a single verdict** (Block / MfaRequired / CompliantDeviceRequired / PasswordChangeRequired / Grant / NotApplied / Unknown).
+- **`Invoke-Infiltration -WhatIfUserId <guid>`** runs a **pre-built attack-scenario matrix** (legacy-auth, no-MFA cloud sign-in, high sign-in risk, high user risk, unmanaged device) against that user and grades each PASS/FAIL . Results land in `ConditionalAccess.WhatIf` and drive **`EIDCA-015`**, which was a placeholder/inference and is now a real, authoritative simulation when a user is supplied.
 
 ### Changed
 - `EIDCA-015` now reports **live what-if** results when available; without `-WhatIfUserId` it falls back to the previous policy-config **inference, clearly labeled** as such (not a live simulation).
@@ -66,14 +73,14 @@ _Conditional Access what-if simulation — the live Graph evaluate API, with pre
 ### Notes
 - The CA evaluate API is **beta**: any empty/unrecognised response normalizes to `Unknown` → the scenario grader returns **SKIP = "Not Assessed"**, never a false PASS. (Same honesty rule; will need re-pinning if the API GAs with a changed shape.)
 - 47 public functions; check counts unchanged (517). Test: `Tests/verify-ca-whatif.ps1` (19/19 — normalizer across response shapes, grader, scenario catalog, and EIDCA-015 live grading incl. no-data→SKIP). Live Graph POST validated separately on a tenant.
-- Maester roadmap: **M1 (EIDSCA) + M2 (CA what-if) done.** Remaining named gap: M6 EXO/email depth (+ SCuBA EXO baseline refresh).
+- Remaining roadmap: deeper Exchange Online coverage (+ SCuBA MS.EXO baseline refresh).
 
 ## [2.24.0] - 2026-06-21
 
-_Full EIDSCA coverage — the 44-control Entra ID Security Config Analyzer baseline, evaluated for real (Maester parity item M1)._
+_Full EIDSCA coverage — the 44-control Entra ID Security Config Analyzer baseline, evaluated for real._
 
 ### Added
-- **Full EIDSCA baseline (44 controls)** as a new **`Eidsca`** category — matches Maester's EIDSCA test set 1:1 (AF/AG/AM/AS/AT/AV authentication-method controls, AP authorization-policy, CP/CR consent, PR password-protection, ST guest-group settings). Control definitions (Graph object + exact property path + operator + expected value) were extracted from the **authoritative Maester corpus**, not fabricated, and live in `Data/AuditChecks/EidscaChecks.json`.
+- **Full EIDSCA baseline (44 controls)** as a new **`Eidsca`** category covering the EIDSCA control set (AF/AG/AM/AS/AT/AV authentication-method controls, AP authorization-policy, CP/CR consent, PR password-protection, ST guest-group settings). Each control is evaluated against its documented Microsoft Graph setting (Graph object + exact property path + operator + expected value), defined in `Data/AuditChecks/EidscaChecks.json`.
 - A data-driven evaluator (`Resolve-EidscaControl`) runs the catalog against the raw Graph policy objects PSGuerrilla **already collects** (`authenticationMethodsPolicy`, `authorizationPolicy`, `adminConsentRequestPolicy`, directory `settings`) — no new collection needed. Surfaced via `Get-ComplianceCrosswalk -Framework EIDSCA` and the new category in `Invoke-Infiltration`.
 
 ### Changed
@@ -82,8 +89,8 @@ _Full EIDSCA coverage — the 44-control Entra ID Security Config Analyzer basel
 
 ### Notes
 - **Honest by design**: any control whose source policy/setting wasn't collected (scope/module not connected) returns **SKIP = "Not Assessed"**, never PASS. Verified.
-- Test: `Tests/verify-eidsca.ps1` (18/18 — every source type + operator, FAIL on misconfig, SKIP on missing data, dispatcher + crosswalk). Offline-validated; live confirmation via the Maester head-to-head harness.
-- Roadmap M1 done. Next named Maester gaps: **M2 CA what-if** and **M6 EXO/email depth** (the M0 audit found Maester's MS.EXO SCuBA depth is far higher than our v2.22.0 mapping — that baseline needs a refresh too).
+- Test: `Tests/verify-eidsca.ps1` (18/18 — every source type + operator, FAIL on misconfig, SKIP on missing data, dispatcher + crosswalk). Offline-validated; live confirmation pending on a tenant.
+- Next: Conditional Access what-if and deeper Exchange Online coverage (the SCuBA MS.EXO baseline mapping was undercounted and needs a refresh).
 
 ## [2.23.0] - 2026-06-21
 
@@ -106,8 +113,8 @@ _Fixes from the v2.22.0 live-validation pass — the attack-path visuals now ren
 _CISA SCuBA baseline crosswalk — PSGuerrilla now produces a SCuBA secure-configuration mapping, not just prose references._
 
 ### Added
-- **CISA SCuBA crosswalk**: 55 Entra/M365 checks now carry `scuba` compliance tags mapping to live CISA ScubaGear baseline policy IDs (MS.AAD / MS.EXO / MS.SHAREPOINT / MS.TEAMS / MS.DEFENDER / MS.POWERPLATFORM). `Get-ComplianceCrosswalk -Framework SCUBA` emits per-policy mapping rows, and the Executive Summary auto-surfaces a "SCUBA: N gap(s)" chip. **~76% of the assessable SCuBA baseline mapped** (72 of 95 policies; see the coverage matrix). Baseline IDs were pulled live from `cisagov/ScubaGear`, not fabricated.
-- **EIDSCA tagging** (Maester EIDSCA / P4.2): 8 checks tagged with `eidsca` control IDs; `Get-ComplianceCrosswalk -Framework EIDSCA`.
+- **CISA SCuBA crosswalk**: 55 Entra/M365 checks now carry `scuba` compliance tags mapping to the published CISA SCuBA baseline policy IDs (MS.AAD / MS.EXO / MS.SHAREPOINT / MS.TEAMS / MS.DEFENDER / MS.POWERPLATFORM). `Get-ComplianceCrosswalk -Framework SCUBA` emits per-policy mapping rows, and the Executive Summary auto-surfaces a "SCUBA: N gap(s)" chip. **~76% of the assessable SCuBA baseline mapped** (72 of 95 policies; see the coverage matrix). Baseline IDs were taken from CISA's published SCuBA baselines, not fabricated.
+- **EIDSCA tagging**: 8 checks tagged with `eidsca` control IDs; `Get-ComplianceCrosswalk -Framework EIDSCA`.
 
 ### Changed
 - `New-AuditFinding` now carries `Scuba` and `Eidsca` compliance arrays through to finding objects — the one engine change required for the new tags to flow into the crosswalk.
@@ -118,13 +125,13 @@ _CISA SCuBA baseline crosswalk — PSGuerrilla now produces a SCuBA secure-confi
 
 ## [2.21.0] - 2026-06-21
 
-_Attack-Path Cartography — a native visual map of escalation routes to Tier-0. The last PingCastle gap, closed._
+_Attack-Path Cartography — a native visual map of escalation routes to Tier-0._
 
 ### Added
 - **Attack-Path Cartography** (`Get-GuerrillaCartographyHtml`) — a native, in-report **SVG node-link map** of the escalation routes to Tier-0, laid out left-to-right by longest-path rank. Non-privileged starting points are red (&#9873;), already-privileged amber, Tier-0 objectives gold (&#9733;); shared targets (e.g. Domain Admins reached from multiple sources) converge into one node. It's built entirely from the attack-path chain data already in findings — **no extra collection, no external tool** — so it renders self-contained in the HTML. Added to the **AD reconnaissance**, **Campaign**, and **Technical** reports (renders only when AD attack paths exist; capped at 25 paths with a shown notice).
 
 ### Notes
-- This is the cartography half of the PingCastle plan. Unlike PingCastle's built-in map it's free, and it sits *alongside* the BloodHound export (static picture in the report + the full interactive graph in BloodHound CE). **The PingCastle plan is now complete** — maturity model, transitive attack-path engine, full-domain ACL collection, BloodHound export, and cartography all shipped.
+- Sits *alongside* the BloodHound export (a static picture in the report + the full interactive graph in BloodHound CE). The attack-path program is now complete — maturity model, transitive attack-path engine, full-domain ACL collection, BloodHound export, and cartography all shipped.
 - Report/presentation only — no engine, check, or scoring changes. Check counts and 46 public functions unchanged. Samples regenerated to include the map. Test: `Tests/verify-report-sections.ps1` (24/24).
 
 ## [2.20.1] - 2026-06-21
@@ -138,7 +145,7 @@ _All four HTML report types now carry maturity + attack paths; sample reports re
 
 ### Notes
 - Report/presentation only — no engine, check, or scoring changes. Check counts and 46 public functions unchanged. Test: `Tests/verify-report-sections.ps1` (18/18 — now covers all four report types).
-- **PingCastle plan remaining: cartography** (the visual domain/trust/attack-path map).
+- Remaining: cartography (the visual domain/trust/attack-path map).
 
 ## [2.20.0] - 2026-06-21
 
@@ -159,7 +166,7 @@ _Reports now showcase what PSGuerrilla actually does — maturity, attack paths,
 ### Notes
 - Report/presentation only — no engine, check, or scoring changes. Check counts and 46 public functions unchanged.
 - Test: `Tests/verify-report-sections.ps1` (15/15 — shared helpers in isolation, plus maturity/attack-path/BloodHound inclusion across the recon, GWS, and Campaign reports).
-- **PingCastle plan remaining: cartography** (the visual domain/trust/attack-path map).
+- Remaining: cartography (the visual domain/trust/attack-path map).
 
 ## [2.19.0] - 2026-06-20
 
@@ -175,7 +182,7 @@ _Full-domain ACL collector — shallow one-hop findings become deep low-priv →
 - **Opt-in** (off by default — it is the heaviest read PSGuerrilla performs). `MaxObjects` cap of 50000 with **explicit truncation reporting** (`FullDomainTruncated` + a log line — never a silent cap). SID→name resolution is cached. Read-only throughout.
 - Detection vocabulary matches the critical-object pass (GenericAll/GenericWrite/WriteDacl/WriteOwner + dangerous extended rights + WriteProperty on dangerous GUIDs incl. `member`, `msDS-KeyCredentialLink`, DCSync, ForceChangePassword), with self-ACE / SELF / CREATOR OWNER skips on top of the existing default-principal ignores; the engine still applies its own default-principal exclusion downstream.
 - 46 public functions. Test: `Tests/verify-fulldomain-acl.ps1` (18/18 — dangerous-ACE predicate, the `ObjectClass`/`ObjectSID` chain fix end-to-end through the engine, a regression guard proving no `ObjectClass` → no chain, and SID-keyed BloodHound nodes). Check counts unchanged.
-- **PingCastle plan remaining: cartography** (the visual domain/trust/attack-path map). The next depth lever beyond this is full-domain *group membership* (control edges already land in the existing Tier-0 closure; all-group membership widens multi-control-hop chains through non-privileged groups).
+- Remaining: cartography (the visual domain/trust/attack-path map). The next depth lever beyond this is full-domain *group membership* (control edges already land in the existing Tier-0 closure; all-group membership widens multi-control-hop chains through non-privileged groups).
 
 ## [2.18.0] - 2026-06-20
 
@@ -188,11 +195,11 @@ _BloodHound export — PSGuerrilla now feeds the best attack-path graph tool, fr
 ### Notes
 - This makes PSGuerrilla a **free BloodHound feeder** — the agentless, quiet collector that also hands you a graph (SharpHound gets flagged by EDR; this doesn't touch endpoints). Exported edge coverage tracks ACL collection (the six critical Tier-0 objects + privileged membership today); the full-domain ACL collector (roadmap) widens it and the exporter consumes it unchanged.
 - Read-only. 46 public functions. Test: `Tests/verify-bloodhound-export.ps1` (12/12 — OpenGraph shape, SID-keyed nodes, native edge kinds incl. replication→GetChangesAll, MemberOf, provenance). Check counts unchanged.
-- PingCastle plan remaining: the **full-domain ACL collector** (deepens both ADPATH-002 and this export) and **cartography**.
+- Remaining: the **full-domain ACL collector** (deepens both ADPATH-002 and this export) and **cartography**.
 
 ## [2.17.0] - 2026-06-20
 
-_Transitive attack-path engine — the leapfrog half of the PingCastle plan (their attack-path is weak and defers to BloodHound)._
+_Transitive attack-path engine — chains control + group-membership edges to Tier-0._
 
 ### Added
 - **Transitive attack-path engine** (`Resolve-AttackPathGraph` + `Get-ADTransitiveAttackPath`). A directed privilege graph where every edge points "toward more privilege" (control + group-membership), with a **BFS shortest-path** resolver that chains edges of **arbitrary length** to Tier-0 — e.g. `HelpDesk --[WriteDacl]--> CORP-Admins --[MemberOf]--> Domain Admins`. Cycle-safe and depth-bounded. Builds on the existing default-principal exclusion (no v2.10.x false positives).
@@ -200,22 +207,22 @@ _Transitive attack-path engine — the leapfrog half of the PingCastle plan (the
 
 ### Notes
 - **Chain depth is bounded by ACL-collection coverage.** Today's six-critical-object collection yields mostly one-hop edges, so ADPATH-002 is typically clean on current data; the **full-domain ACL collector** (live-gated, next increment) populates control edges over arbitrary objects and unlocks deep low-privilege-to-Domain-Admin chains. The engine itself is validated for arbitrary depth: `Tests/verify-transitive-attackpath.ps1` (13/13) proves 3-hop chaining, shortest-path selection, cycle-safety, and depth bounding.
-- **Still to come on the PingCastle plan:** the full-domain ACL collector, the **BloodHound/AzureHound export**, and **cartography** (visual domain/trust/attack-path map). With the maturity model (2.15/2.16) + this engine, the only PingCastle lead left is brand/tuning, which is earned, not coded.
+- **Still to come:** the full-domain ACL collector, the **BloodHound export**, and **cartography** (visual domain/trust/attack-path map).
 
 ## [2.16.0] - 2026-06-20
 
-_Maturity rating now lands in the board-facing report (PingCastle-killer, part 1 complete)._
+_Maturity rating now lands in the board-facing report._
 
 ### Added
-- **`Export-ExecutiveSummary` now surfaces the Security Maturity rating.** A color-coded **Level X/5** badge in the stat row, plus a **"Security Maturity"** card with the overall level + label, the **next-level blockers** (what to fix to climb one level), and a **per-category maturity table** — computed via `Get-GuerrillaMaturity` from the report's findings. This is the executive artifact that matches PingCastle's maturity presentation, and it's stricter (worst-unmet-control anchors the rating).
+- **`Export-ExecutiveSummary` now surfaces the Security Maturity rating.** A color-coded **Level X/5** badge in the stat row, plus a **"Security Maturity"** card with the overall level + label, the **next-level blockers** (what to fix to climb one level), and a **per-category maturity table** — computed via `Get-GuerrillaMaturity` from the report's findings. This is a board-facing maturity artifact, and it's strict (worst-unmet-control anchors the rating).
 
 ### Notes
 - Report-only change; no new checks (counts unchanged). Validated: the section/badge/table render and are severity-color-coded (Level 1 = red through Level 5 = green); empty-findings path is safe.
-- Remaining on the PingCastle plan: **cartography** (visual domain/trust/attack-path map in the report) and the **full-domain transitive attack-path graph + BloodHound/AzureHound export**. Surfacing maturity in the per-theater Reconnaissance and Campaign reports is a small follow-on.
+- Remaining: **cartography** (visual domain/trust/attack-path map in the report) and the **full-domain transitive attack-path graph + BloodHound export**. Surfacing maturity in the per-theater Reconnaissance and Campaign reports is a small follow-on.
 
 ## [2.15.0] - 2026-06-20
 
-_Maturity model — the first half of the "executive-grade artifact" push (matches and is stricter than PingCastle's maturity rating)._
+_Maturity model — an executive-grade CMMI 1-5 maturity rating._
 
 ### Added
 - **`Get-GuerrillaMaturity`** — a CMMI-style **1–5 security maturity** rating computed from audit findings (Active Directory, Google Workspace, or Entra/M365). Like a maturity model should, the **worst unmet control anchors the score**: a single open Critical caps the whole estate at **Level 1 (Initial)** regardless of how much else passes — stricter and more honest than an averaged 0–100 score, and the way an auditor/board reads posture.
@@ -223,7 +230,7 @@ _Maturity model — the first half of the "executive-grade artifact" push (match
   - Returns the **overall level + label**, **per-category levels**, the exact **anchor findings** holding you at the current level, and the **next-level blockers** (so advancement is concrete). Accepts pipeline input: `(Invoke-Reconnaissance).Findings | Get-GuerrillaMaturity -Theater ActiveDirectory`.
 
 ### Notes
-- This is step 1 of two toward closing PingCastle's only real lead (their executive presentation). Next: surface this in the AD/Campaign reports as a maturity section + **cartography** (visual domain/trust/attack-path map), then the **full-domain transitive attack-path graph + BloodHound/AzureHound export**.
+- Next: surface this in the AD/Campaign reports as a maturity section + **cartography** (visual domain/trust/attack-path map), then the **full-domain transitive attack-path graph + BloodHound export**.
 - 45 public functions now (was 44). Regression test: `Tests/verify-maturity.ps1` (17/17). Check counts unchanged.
 
 ## [2.14.1] - 2026-06-20

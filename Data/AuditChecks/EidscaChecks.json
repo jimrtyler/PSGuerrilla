@@ -5,14 +5,14 @@
       "id": "EIDSCA-AP01",
       "name": "EIDSCA AP01: Default Authorization Settings - Enabled Self service password reset for administrators",
       "severity": "High",
-      "description": "Entra ID Security Config Analyzer control AP01.",
+      "description": "Entra ID security-configuration control (EIDSCA AP01): evaluates 'allowedToUseSSPR' on the Entra ID authorization policy against the recommended secure value.",
       "source": "authorizationPolicy",
       "configId": null,
       "path": "allowedToUseSSPR",
       "op": "eq",
       "expected": "false",
       "recommendedValue": "eq false",
-      "remediationSteps": "Review Entra setting per EIDSCA AP01. See https://maester.dev/docs/tests/EIDSCA.AP01",
+      "remediationSteps": "Configure the Entra ID authorization policy so 'allowedToUseSSPR' is set to false. (Entra ID security-configuration baseline, control EIDSCA AP01.)",
       "compliance": {
         "eidsca": [
           "AP01"
@@ -23,7 +23,7 @@
       "id": "EIDSCA-AP04",
       "name": "EIDSCA AP04: Default Authorization Settings - Guest invite restrictions",
       "severity": "High",
-      "description": "Entra ID Security Config Analyzer control AP04.",
+      "description": "Entra ID security-configuration control (EIDSCA AP04): evaluates 'allowInvitesFrom' on the Entra ID authorization policy against the recommended secure value.",
       "source": "authorizationPolicy",
       "configId": null,
       "path": "allowInvitesFrom",
@@ -33,7 +33,7 @@
         "none"
       ],
       "recommendedValue": "in adminsAndGuestInviters, none",
-      "remediationSteps": "Review Entra setting per EIDSCA AP04. See https://maester.dev/docs/tests/EIDSCA.AP04",
+      "remediationSteps": "Configure the Entra ID authorization policy so 'allowInvitesFrom' is set to one of adminsAndGuestInviters, none. (Entra ID security-configuration baseline, control EIDSCA AP04.)",
       "compliance": {
         "eidsca": [
           "AP04"
@@ -44,14 +44,14 @@
       "id": "EIDSCA-AP05",
       "name": "EIDSCA AP05: Default Authorization Settings - Sign-up for email based subscription",
       "severity": "Medium",
-      "description": "Entra ID Security Config Analyzer control AP05.",
+      "description": "Entra ID security-configuration control (EIDSCA AP05): evaluates 'allowedToSignUpEmailBasedSubscriptions' on the Entra ID authorization policy against the recommended secure value.",
       "source": "authorizationPolicy",
       "configId": null,
       "path": "allowedToSignUpEmailBasedSubscriptions",
       "op": "eq",
       "expected": "false",
       "recommendedValue": "eq false",
-      "remediationSteps": "Review Entra setting per EIDSCA AP05. See https://maester.dev/docs/tests/EIDSCA.AP05",
+      "remediationSteps": "Configure the Entra ID authorization policy so 'allowedToSignUpEmailBasedSubscriptions' is set to false. (Entra ID security-configuration baseline, control EIDSCA AP05.)",
       "compliance": {
         "eidsca": [
           "AP05"
@@ -62,14 +62,14 @@
       "id": "EIDSCA-AP06",
       "name": "EIDSCA AP06: Default Authorization Settings - User can join the tenant by email validation",
       "severity": "Medium",
-      "description": "Entra ID Security Config Analyzer control AP06.",
+      "description": "Entra ID security-configuration control (EIDSCA AP06): evaluates 'allowEmailVerifiedUsersToJoinOrganization' on the Entra ID authorization policy against the recommended secure value.",
       "source": "authorizationPolicy",
       "configId": null,
       "path": "allowEmailVerifiedUsersToJoinOrganization",
       "op": "eq",
       "expected": "false",
       "recommendedValue": "eq false",
-      "remediationSteps": "Review Entra setting per EIDSCA AP06. See https://maester.dev/docs/tests/EIDSCA.AP06",
+      "remediationSteps": "Configure the Entra ID authorization policy so 'allowEmailVerifiedUsersToJoinOrganization' is set to false. (Entra ID security-configuration baseline, control EIDSCA AP06.)",
       "compliance": {
         "eidsca": [
           "AP06"
@@ -80,14 +80,14 @@
       "id": "EIDSCA-AP07",
       "name": "EIDSCA AP07: Default Authorization Settings - Guest user access",
       "severity": "High",
-      "description": "Entra ID Security Config Analyzer control AP07.",
+      "description": "Entra ID security-configuration control (EIDSCA AP07): evaluates 'guestUserRoleId' on the Entra ID authorization policy against the recommended secure value.",
       "source": "authorizationPolicy",
       "configId": null,
       "path": "guestUserRoleId",
       "op": "eq",
       "expected": "2af84b1e-32c8-42b7-82bc-daa82404023b",
       "recommendedValue": "eq 2af84b1e-32c8-42b7-82bc-daa82404023b",
-      "remediationSteps": "Review Entra setting per EIDSCA AP07. See https://maester.dev/docs/tests/EIDSCA.AP07",
+      "remediationSteps": "Configure the Entra ID authorization policy so 'guestUserRoleId' is set to 2af84b1e-32c8-42b7-82bc-daa82404023b. (Entra ID security-configuration baseline, control EIDSCA AP07.)",
       "compliance": {
         "eidsca": [
           "AP07"
@@ -98,14 +98,14 @@
       "id": "EIDSCA-AP08",
       "name": "EIDSCA AP08: Default Authorization Settings - User consent policy assigned for applications",
       "severity": "High",
-      "description": "Entra ID Security Config Analyzer control AP08.",
+      "description": "Entra ID security-configuration control (EIDSCA AP08): evaluates 'permissionGrantPolicyIdsAssignedToDefaultUserRole' on the Entra ID authorization policy against the recommended secure value.",
       "source": "authorizationPolicy",
       "configId": null,
       "path": "permissionGrantPolicyIdsAssignedToDefaultUserRole",
       "op": "clike-any",
       "expected": "ManagePermissionGrantsForSelf",
       "recommendedValue": "clike-any ManagePermissionGrantsForSelf",
-      "remediationSteps": "Review Entra setting per EIDSCA AP08. See https://maester.dev/docs/tests/EIDSCA.AP08",
+      "remediationSteps": "Configure the Entra ID authorization policy so 'permissionGrantPolicyIdsAssignedToDefaultUserRole' is include ManagePermissionGrantsForSelf. (Entra ID security-configuration baseline, control EIDSCA AP08.)",
       "compliance": {
         "eidsca": [
           "AP08"
@@ -116,14 +116,14 @@
       "id": "EIDSCA-AP09",
       "name": "EIDSCA AP09: Default Authorization Settings - Allow user consent on risk-based apps",
       "severity": "High",
-      "description": "Entra ID Security Config Analyzer control AP09.",
+      "description": "Entra ID security-configuration control (EIDSCA AP09): evaluates 'allowUserConsentForRiskyApps' on the Entra ID authorization policy against the recommended secure value.",
       "source": "authorizationPolicy",
       "configId": null,
       "path": "allowUserConsentForRiskyApps",
       "op": "eq",
       "expected": "false",
       "recommendedValue": "eq false",
-      "remediationSteps": "Review Entra setting per EIDSCA AP09. See https://maester.dev/docs/tests/EIDSCA.AP09",
+      "remediationSteps": "Configure the Entra ID authorization policy so 'allowUserConsentForRiskyApps' is set to false. (Entra ID security-configuration baseline, control EIDSCA AP09.)",
       "compliance": {
         "eidsca": [
           "AP09"
@@ -134,14 +134,14 @@
       "id": "EIDSCA-AP10",
       "name": "EIDSCA AP10: Default Authorization Settings - Default User Role Permissions - Allowed to create Apps",
       "severity": "Medium",
-      "description": "Entra ID Security Config Analyzer control AP10.",
+      "description": "Entra ID security-configuration control (EIDSCA AP10): evaluates 'defaultUserRolePermissions.allowedToCreateApps' on the Entra ID authorization policy against the recommended secure value.",
       "source": "authorizationPolicy",
       "configId": null,
       "path": "defaultUserRolePermissions.allowedToCreateApps",
       "op": "eq",
       "expected": "false",
       "recommendedValue": "eq false",
-      "remediationSteps": "Review Entra setting per EIDSCA AP10. See https://maester.dev/docs/tests/EIDSCA.AP10",
+      "remediationSteps": "Configure the Entra ID authorization policy so 'defaultUserRolePermissions.allowedToCreateApps' is set to false. (Entra ID security-configuration baseline, control EIDSCA AP10.)",
       "compliance": {
         "eidsca": [
           "AP10"
@@ -152,14 +152,14 @@
       "id": "EIDSCA-AP14",
       "name": "EIDSCA AP14: Default Authorization Settings - Default User Role Permissions - Allowed to read other users",
       "severity": "Low",
-      "description": "Entra ID Security Config Analyzer control AP14.",
+      "description": "Entra ID security-configuration control (EIDSCA AP14): evaluates 'defaultUserRolePermissions.allowedToReadOtherUsers' on the Entra ID authorization policy against the recommended secure value.",
       "source": "authorizationPolicy",
       "configId": null,
       "path": "defaultUserRolePermissions.allowedToReadOtherUsers",
       "op": "eq",
       "expected": "true",
       "recommendedValue": "eq true",
-      "remediationSteps": "Review Entra setting per EIDSCA AP14. See https://maester.dev/docs/tests/EIDSCA.AP14",
+      "remediationSteps": "Configure the Entra ID authorization policy so 'defaultUserRolePermissions.allowedToReadOtherUsers' is set to true. (Entra ID security-configuration baseline, control EIDSCA AP14.)",
       "compliance": {
         "eidsca": [
           "AP14"
@@ -170,14 +170,14 @@
       "id": "EIDSCA-CP01",
       "name": "EIDSCA CP01: Default Settings - Consent Policy Settings - Group owner consent for apps accessing data",
       "severity": "High",
-      "description": "Entra ID Security Config Analyzer control CP01.",
+      "description": "Entra ID security-configuration control (EIDSCA CP01): evaluates the 'EnableGroupSpecificConsent' setting on the Entra ID directory (group) settings against the recommended secure value.",
       "source": "directorySetting",
       "configId": null,
       "path": "EnableGroupSpecificConsent",
       "op": "eq",
       "expected": "False",
       "recommendedValue": "eq False",
-      "remediationSteps": "Review Entra setting per EIDSCA CP01. See https://maester.dev/docs/tests/EIDSCA.CP01",
+      "remediationSteps": "Configure the Entra ID directory (group) settings so the 'EnableGroupSpecificConsent' setting is set to False. (Entra ID security-configuration baseline, control EIDSCA CP01.)",
       "compliance": {
         "eidsca": [
           "CP01"
@@ -188,14 +188,14 @@
       "id": "EIDSCA-CP03",
       "name": "EIDSCA CP03: Default Settings - Consent Policy Settings - Block user consent for risky apps",
       "severity": "High",
-      "description": "Entra ID Security Config Analyzer control CP03.",
+      "description": "Entra ID security-configuration control (EIDSCA CP03): evaluates the 'BlockUserConsentForRiskyApps' setting on the Entra ID directory (group) settings against the recommended secure value.",
       "source": "directorySetting",
       "configId": null,
       "path": "BlockUserConsentForRiskyApps",
       "op": "eq",
       "expected": "true",
       "recommendedValue": "eq true",
-      "remediationSteps": "Review Entra setting per EIDSCA CP03. See https://maester.dev/docs/tests/EIDSCA.CP03",
+      "remediationSteps": "Configure the Entra ID directory (group) settings so the 'BlockUserConsentForRiskyApps' setting is set to true. (Entra ID security-configuration baseline, control EIDSCA CP03.)",
       "compliance": {
         "eidsca": [
           "CP03"
@@ -206,14 +206,14 @@
       "id": "EIDSCA-CP04",
       "name": "EIDSCA CP04: Default Settings - Consent Policy Settings - Users can request admin consent to apps they are unable to consent to",
       "severity": "Medium",
-      "description": "Entra ID Security Config Analyzer control CP04.",
+      "description": "Entra ID security-configuration control (EIDSCA CP04): evaluates the 'EnableAdminConsentRequests' setting on the Entra ID directory (group) settings against the recommended secure value.",
       "source": "directorySetting",
       "configId": null,
       "path": "EnableAdminConsentRequests",
       "op": "eq",
       "expected": "true",
       "recommendedValue": "eq true",
-      "remediationSteps": "Review Entra setting per EIDSCA CP04. See https://maester.dev/docs/tests/EIDSCA.CP04",
+      "remediationSteps": "Configure the Entra ID directory (group) settings so the 'EnableAdminConsentRequests' setting is set to true. (Entra ID security-configuration baseline, control EIDSCA CP04.)",
       "compliance": {
         "eidsca": [
           "CP04"
@@ -224,14 +224,14 @@
       "id": "EIDSCA-PR01",
       "name": "EIDSCA PR01: Default Settings - Password Rule Settings - Password Protection - Mode",
       "severity": "Medium",
-      "description": "Entra ID Security Config Analyzer control PR01.",
+      "description": "Entra ID security-configuration control (EIDSCA PR01): evaluates the 'BannedPasswordCheckOnPremisesMode' setting on the Entra ID directory (group) settings against the recommended secure value.",
       "source": "directorySetting",
       "configId": null,
       "path": "BannedPasswordCheckOnPremisesMode",
       "op": "eq",
       "expected": "Enforce",
       "recommendedValue": "eq Enforce",
-      "remediationSteps": "Review Entra setting per EIDSCA PR01. See https://maester.dev/docs/tests/EIDSCA.PR01",
+      "remediationSteps": "Configure the Entra ID directory (group) settings so the 'BannedPasswordCheckOnPremisesMode' setting is set to Enforce. (Entra ID security-configuration baseline, control EIDSCA PR01.)",
       "compliance": {
         "eidsca": [
           "PR01"
@@ -242,14 +242,14 @@
       "id": "EIDSCA-PR02",
       "name": "EIDSCA PR02: Default Settings - Password Rule Settings - Password Protection - Enable password protection on Windows Server Active Directory",
       "severity": "Medium",
-      "description": "Entra ID Security Config Analyzer control PR02.",
+      "description": "Entra ID security-configuration control (EIDSCA PR02): evaluates the 'EnableBannedPasswordCheckOnPremises' setting on the Entra ID directory (group) settings against the recommended secure value.",
       "source": "directorySetting",
       "configId": null,
       "path": "EnableBannedPasswordCheckOnPremises",
       "op": "eq",
       "expected": "True",
       "recommendedValue": "eq True",
-      "remediationSteps": "Review Entra setting per EIDSCA PR02. See https://maester.dev/docs/tests/EIDSCA.PR02",
+      "remediationSteps": "Configure the Entra ID directory (group) settings so the 'EnableBannedPasswordCheckOnPremises' setting is set to True. (Entra ID security-configuration baseline, control EIDSCA PR02.)",
       "compliance": {
         "eidsca": [
           "PR02"
@@ -260,14 +260,14 @@
       "id": "EIDSCA-PR03",
       "name": "EIDSCA PR03: Default Settings - Password Rule Settings - Enforce custom list",
       "severity": "High",
-      "description": "Entra ID Security Config Analyzer control PR03.",
+      "description": "Entra ID security-configuration control (EIDSCA PR03): evaluates the 'EnableBannedPasswordCheck' setting on the Entra ID directory (group) settings against the recommended secure value.",
       "source": "directorySetting",
       "configId": null,
       "path": "EnableBannedPasswordCheck",
       "op": "eq",
       "expected": "True",
       "recommendedValue": "eq True",
-      "remediationSteps": "Review Entra setting per EIDSCA PR03. See https://maester.dev/docs/tests/EIDSCA.PR03",
+      "remediationSteps": "Configure the Entra ID directory (group) settings so the 'EnableBannedPasswordCheck' setting is set to True. (Entra ID security-configuration baseline, control EIDSCA PR03.)",
       "compliance": {
         "eidsca": [
           "PR03"
@@ -278,14 +278,14 @@
       "id": "EIDSCA-PR05",
       "name": "EIDSCA PR05: Default Settings - Password Rule Settings - Smart Lockout - Lockout duration in seconds",
       "severity": "Medium",
-      "description": "Entra ID Security Config Analyzer control PR05.",
+      "description": "Entra ID security-configuration control (EIDSCA PR05): evaluates the 'LockoutDurationInSeconds' setting on the Entra ID directory (group) settings against the recommended secure value.",
       "source": "directorySetting",
       "configId": null,
       "path": "LockoutDurationInSeconds",
       "op": "ge",
       "expected": "60",
       "recommendedValue": "ge 60",
-      "remediationSteps": "Review Entra setting per EIDSCA PR05. See https://maester.dev/docs/tests/EIDSCA.PR05",
+      "remediationSteps": "Configure the Entra ID directory (group) settings so the 'LockoutDurationInSeconds' setting is at least 60. (Entra ID security-configuration baseline, control EIDSCA PR05.)",
       "compliance": {
         "eidsca": [
           "PR05"
@@ -296,14 +296,14 @@
       "id": "EIDSCA-PR06",
       "name": "EIDSCA PR06: Default Settings - Password Rule Settings - Smart Lockout - Lockout threshold",
       "severity": "High",
-      "description": "Entra ID Security Config Analyzer control PR06.",
+      "description": "Entra ID security-configuration control (EIDSCA PR06): evaluates the 'LockoutThreshold' setting on the Entra ID directory (group) settings against the recommended secure value.",
       "source": "directorySetting",
       "configId": null,
       "path": "LockoutThreshold",
       "op": "le",
       "expected": "10",
       "recommendedValue": "le 10",
-      "remediationSteps": "Review Entra setting per EIDSCA PR06. See https://maester.dev/docs/tests/EIDSCA.PR06",
+      "remediationSteps": "Configure the Entra ID directory (group) settings so the 'LockoutThreshold' setting is at most 10. (Entra ID security-configuration baseline, control EIDSCA PR06.)",
       "compliance": {
         "eidsca": [
           "PR06"
@@ -314,14 +314,14 @@
       "id": "EIDSCA-ST08",
       "name": "EIDSCA ST08: Default Settings - Classification and M365 Groups - M365 groups - Allow Guests to become Group Owner",
       "severity": "Medium",
-      "description": "Entra ID Security Config Analyzer control ST08.",
+      "description": "Entra ID security-configuration control (EIDSCA ST08): evaluates the 'AllowGuestsToBeGroupOwner' setting on the Entra ID directory (group) settings against the recommended secure value.",
       "source": "directorySetting",
       "configId": null,
       "path": "AllowGuestsToBeGroupOwner",
       "op": "eq",
       "expected": "false",
       "recommendedValue": "eq false",
-      "remediationSteps": "Review Entra setting per EIDSCA ST08. See https://maester.dev/docs/tests/EIDSCA.ST08",
+      "remediationSteps": "Configure the Entra ID directory (group) settings so the 'AllowGuestsToBeGroupOwner' setting is set to false. (Entra ID security-configuration baseline, control EIDSCA ST08.)",
       "compliance": {
         "eidsca": [
           "ST08"
@@ -332,14 +332,14 @@
       "id": "EIDSCA-ST09",
       "name": "EIDSCA ST09: Default Settings - Classification and M365 Groups - M365 groups - Allow Guests to have access to groups content",
       "severity": "High",
-      "description": "Entra ID Security Config Analyzer control ST09.",
+      "description": "Entra ID security-configuration control (EIDSCA ST09): evaluates the 'AllowGuestsToAccessGroups' setting on the Entra ID directory (group) settings against the recommended secure value.",
       "source": "directorySetting",
       "configId": null,
       "path": "AllowGuestsToAccessGroups",
       "op": "eq",
       "expected": "True",
       "recommendedValue": "eq True",
-      "remediationSteps": "Review Entra setting per EIDSCA ST09. See https://maester.dev/docs/tests/EIDSCA.ST09",
+      "remediationSteps": "Configure the Entra ID directory (group) settings so the 'AllowGuestsToAccessGroups' setting is set to True. (Entra ID security-configuration baseline, control EIDSCA ST09.)",
       "compliance": {
         "eidsca": [
           "ST09"
@@ -350,7 +350,7 @@
       "id": "EIDSCA-AG01",
       "name": "EIDSCA AG01: Authentication Method - General Settings - Manage migration",
       "severity": "Medium",
-      "description": "Entra ID Security Config Analyzer control AG01.",
+      "description": "Entra ID security-configuration control (EIDSCA AG01): evaluates 'policyMigrationState' on the Entra ID authentication methods policy against the recommended secure value.",
       "source": "authMethodsPolicy",
       "configId": null,
       "path": "policyMigrationState",
@@ -360,7 +360,7 @@
         ""
       ],
       "recommendedValue": "in migrationComplete, ",
-      "remediationSteps": "Review Entra setting per EIDSCA AG01. See https://maester.dev/docs/tests/EIDSCA.AG01",
+      "remediationSteps": "Configure the Entra ID authentication methods policy so 'policyMigrationState' is set to one of migrationComplete, . (Entra ID security-configuration baseline, control EIDSCA AG01.)",
       "compliance": {
         "eidsca": [
           "AG01"
@@ -371,14 +371,14 @@
       "id": "EIDSCA-AG02",
       "name": "EIDSCA AG02: Authentication Method - General Settings - Report suspicious activity - State",
       "severity": "Medium",
-      "description": "Entra ID Security Config Analyzer control AG02.",
+      "description": "Entra ID security-configuration control (EIDSCA AG02): evaluates 'reportSuspiciousActivitySettings.state' on the Entra ID authentication methods policy against the recommended secure value.",
       "source": "authMethodsPolicy",
       "configId": null,
       "path": "reportSuspiciousActivitySettings.state",
       "op": "eq",
       "expected": "enabled",
       "recommendedValue": "eq enabled",
-      "remediationSteps": "Review Entra setting per EIDSCA AG02. See https://maester.dev/docs/tests/EIDSCA.AG02",
+      "remediationSteps": "Configure the Entra ID authentication methods policy so 'reportSuspiciousActivitySettings.state' is set to enabled. (Entra ID security-configuration baseline, control EIDSCA AG02.)",
       "compliance": {
         "eidsca": [
           "AG02"
@@ -389,14 +389,14 @@
       "id": "EIDSCA-AG03",
       "name": "EIDSCA AG03: Authentication Method - General Settings - Report suspicious activity - Included users/groups",
       "severity": "Medium",
-      "description": "Entra ID Security Config Analyzer control AG03.",
+      "description": "Entra ID security-configuration control (EIDSCA AG03): evaluates 'reportSuspiciousActivitySettings.includeTarget.id' on the Entra ID authentication methods policy against the recommended secure value.",
       "source": "authMethodsPolicy",
       "configId": null,
       "path": "reportSuspiciousActivitySettings.includeTarget.id",
       "op": "eq",
       "expected": "all_users",
       "recommendedValue": "eq all_users",
-      "remediationSteps": "Review Entra setting per EIDSCA AG03. See https://maester.dev/docs/tests/EIDSCA.AG03",
+      "remediationSteps": "Configure the Entra ID authentication methods policy so 'reportSuspiciousActivitySettings.includeTarget.id' is set to all_users. (Entra ID security-configuration baseline, control EIDSCA AG03.)",
       "compliance": {
         "eidsca": [
           "AG03"
@@ -407,14 +407,14 @@
       "id": "EIDSCA-AM01",
       "name": "EIDSCA AM01: Authentication Method - Microsoft Authenticator - State",
       "severity": "Medium",
-      "description": "Entra ID Security Config Analyzer control AM01.",
+      "description": "Entra ID security-configuration control (EIDSCA AM01): evaluates 'state' on the MicrosoftAuthenticator authentication method against the recommended secure value.",
       "source": "authMethodConfig",
       "configId": "MicrosoftAuthenticator",
       "path": "state",
       "op": "eq",
       "expected": "enabled",
       "recommendedValue": "eq enabled",
-      "remediationSteps": "Review Entra setting per EIDSCA AM01. See https://maester.dev/docs/tests/EIDSCA.AM01",
+      "remediationSteps": "Configure the MicrosoftAuthenticator authentication method so 'state' is set to enabled. (Entra ID security-configuration baseline, control EIDSCA AM01.)",
       "compliance": {
         "eidsca": [
           "AM01"
@@ -425,14 +425,14 @@
       "id": "EIDSCA-AM02",
       "name": "EIDSCA AM02: Authentication Method - Microsoft Authenticator - Allow use of Microsoft Authenticator OTP",
       "severity": "Medium",
-      "description": "Entra ID Security Config Analyzer control AM02.",
+      "description": "Entra ID security-configuration control (EIDSCA AM02): evaluates 'isSoftwareOathEnabled' on the MicrosoftAuthenticator authentication method against the recommended secure value.",
       "source": "authMethodConfig",
       "configId": "MicrosoftAuthenticator",
       "path": "isSoftwareOathEnabled",
       "op": "eq",
       "expected": "false",
       "recommendedValue": "eq false",
-      "remediationSteps": "Review Entra setting per EIDSCA AM02. See https://maester.dev/docs/tests/EIDSCA.AM02",
+      "remediationSteps": "Configure the MicrosoftAuthenticator authentication method so 'isSoftwareOathEnabled' is set to false. (Entra ID security-configuration baseline, control EIDSCA AM02.)",
       "compliance": {
         "eidsca": [
           "AM02"
@@ -443,14 +443,14 @@
       "id": "EIDSCA-AM03",
       "name": "EIDSCA AM03: Authentication Method - Microsoft Authenticator - Require number matching for push notifications",
       "severity": "High",
-      "description": "Entra ID Security Config Analyzer control AM03.",
+      "description": "Entra ID security-configuration control (EIDSCA AM03): evaluates 'featureSettings.numberMatchingRequiredState.state' on the MicrosoftAuthenticator authentication method against the recommended secure value.",
       "source": "authMethodConfig",
       "configId": "MicrosoftAuthenticator",
       "path": "featureSettings.numberMatchingRequiredState.state",
       "op": "eq",
       "expected": "enabled",
       "recommendedValue": "eq enabled",
-      "remediationSteps": "Review Entra setting per EIDSCA AM03. See https://maester.dev/docs/tests/EIDSCA.AM03",
+      "remediationSteps": "Configure the MicrosoftAuthenticator authentication method so 'featureSettings.numberMatchingRequiredState.state' is set to enabled. (Entra ID security-configuration baseline, control EIDSCA AM03.)",
       "compliance": {
         "eidsca": [
           "AM03"
@@ -461,14 +461,14 @@
       "id": "EIDSCA-AM04",
       "name": "EIDSCA AM04: Authentication Method - Microsoft Authenticator - Included users/groups of number matching for push notifications",
       "severity": "High",
-      "description": "Entra ID Security Config Analyzer control AM04.",
+      "description": "Entra ID security-configuration control (EIDSCA AM04): evaluates 'featureSettings.numberMatchingRequiredState.includeTarget.id' on the MicrosoftAuthenticator authentication method against the recommended secure value.",
       "source": "authMethodConfig",
       "configId": "MicrosoftAuthenticator",
       "path": "featureSettings.numberMatchingRequiredState.includeTarget.id",
       "op": "eq",
       "expected": "all_users",
       "recommendedValue": "eq all_users",
-      "remediationSteps": "Review Entra setting per EIDSCA AM04. See https://maester.dev/docs/tests/EIDSCA.AM04",
+      "remediationSteps": "Configure the MicrosoftAuthenticator authentication method so 'featureSettings.numberMatchingRequiredState.includeTarget.id' is set to all_users. (Entra ID security-configuration baseline, control EIDSCA AM04.)",
       "compliance": {
         "eidsca": [
           "AM04"
@@ -479,14 +479,14 @@
       "id": "EIDSCA-AM06",
       "name": "EIDSCA AM06: Authentication Method - Microsoft Authenticator - Show application name in push and passwordless notifications",
       "severity": "Medium",
-      "description": "Entra ID Security Config Analyzer control AM06.",
+      "description": "Entra ID security-configuration control (EIDSCA AM06): evaluates 'featureSettings.displayAppInformationRequiredState.state' on the MicrosoftAuthenticator authentication method against the recommended secure value.",
       "source": "authMethodConfig",
       "configId": "MicrosoftAuthenticator",
       "path": "featureSettings.displayAppInformationRequiredState.state",
       "op": "eq",
       "expected": "enabled",
       "recommendedValue": "eq enabled",
-      "remediationSteps": "Review Entra setting per EIDSCA AM06. See https://maester.dev/docs/tests/EIDSCA.AM06",
+      "remediationSteps": "Configure the MicrosoftAuthenticator authentication method so 'featureSettings.displayAppInformationRequiredState.state' is set to enabled. (Entra ID security-configuration baseline, control EIDSCA AM06.)",
       "compliance": {
         "eidsca": [
           "AM06"
@@ -497,14 +497,14 @@
       "id": "EIDSCA-AM07",
       "name": "EIDSCA AM07: Authentication Method - Microsoft Authenticator - Included users/groups to show application name in push and passwordless notifications",
       "severity": "Medium",
-      "description": "Entra ID Security Config Analyzer control AM07.",
+      "description": "Entra ID security-configuration control (EIDSCA AM07): evaluates 'featureSettings.displayAppInformationRequiredState.includeTarget.id' on the MicrosoftAuthenticator authentication method against the recommended secure value.",
       "source": "authMethodConfig",
       "configId": "MicrosoftAuthenticator",
       "path": "featureSettings.displayAppInformationRequiredState.includeTarget.id",
       "op": "eq",
       "expected": "all_users",
       "recommendedValue": "eq all_users",
-      "remediationSteps": "Review Entra setting per EIDSCA AM07. See https://maester.dev/docs/tests/EIDSCA.AM07",
+      "remediationSteps": "Configure the MicrosoftAuthenticator authentication method so 'featureSettings.displayAppInformationRequiredState.includeTarget.id' is set to all_users. (Entra ID security-configuration baseline, control EIDSCA AM07.)",
       "compliance": {
         "eidsca": [
           "AM07"
@@ -515,14 +515,14 @@
       "id": "EIDSCA-AM09",
       "name": "EIDSCA AM09: Authentication Method - Microsoft Authenticator - Show geographic location in push and passwordless notifications",
       "severity": "Low",
-      "description": "Entra ID Security Config Analyzer control AM09.",
+      "description": "Entra ID security-configuration control (EIDSCA AM09): evaluates 'featureSettings.displayLocationInformationRequiredState.state' on the MicrosoftAuthenticator authentication method against the recommended secure value.",
       "source": "authMethodConfig",
       "configId": "MicrosoftAuthenticator",
       "path": "featureSettings.displayLocationInformationRequiredState.state",
       "op": "eq",
       "expected": "enabled",
       "recommendedValue": "eq enabled",
-      "remediationSteps": "Review Entra setting per EIDSCA AM09. See https://maester.dev/docs/tests/EIDSCA.AM09",
+      "remediationSteps": "Configure the MicrosoftAuthenticator authentication method so 'featureSettings.displayLocationInformationRequiredState.state' is set to enabled. (Entra ID security-configuration baseline, control EIDSCA AM09.)",
       "compliance": {
         "eidsca": [
           "AM09"
@@ -533,14 +533,14 @@
       "id": "EIDSCA-AM10",
       "name": "EIDSCA AM10: Authentication Method - Microsoft Authenticator - Included users/groups to show geographic location in push and passwordless notifications",
       "severity": "Low",
-      "description": "Entra ID Security Config Analyzer control AM10.",
+      "description": "Entra ID security-configuration control (EIDSCA AM10): evaluates 'featureSettings.displayLocationInformationRequiredState.includeTarget.id' on the MicrosoftAuthenticator authentication method against the recommended secure value.",
       "source": "authMethodConfig",
       "configId": "MicrosoftAuthenticator",
       "path": "featureSettings.displayLocationInformationRequiredState.includeTarget.id",
       "op": "eq",
       "expected": "all_users",
       "recommendedValue": "eq all_users",
-      "remediationSteps": "Review Entra setting per EIDSCA AM10. See https://maester.dev/docs/tests/EIDSCA.AM10",
+      "remediationSteps": "Configure the MicrosoftAuthenticator authentication method so 'featureSettings.displayLocationInformationRequiredState.includeTarget.id' is set to all_users. (Entra ID security-configuration baseline, control EIDSCA AM10.)",
       "compliance": {
         "eidsca": [
           "AM10"
@@ -551,14 +551,14 @@
       "id": "EIDSCA-AF01",
       "name": "EIDSCA AF01: Authentication Method - FIDO2 security key - State",
       "severity": "Medium",
-      "description": "Entra ID Security Config Analyzer control AF01.",
+      "description": "Entra ID security-configuration control (EIDSCA AF01): evaluates 'state' on the Fido2 authentication method against the recommended secure value.",
       "source": "authMethodConfig",
       "configId": "Fido2",
       "path": "state",
       "op": "eq",
       "expected": "enabled",
       "recommendedValue": "eq enabled",
-      "remediationSteps": "Review Entra setting per EIDSCA AF01. See https://maester.dev/docs/tests/EIDSCA.AF01",
+      "remediationSteps": "Configure the Fido2 authentication method so 'state' is set to enabled. (Entra ID security-configuration baseline, control EIDSCA AF01.)",
       "compliance": {
         "eidsca": [
           "AF01"
@@ -569,14 +569,14 @@
       "id": "EIDSCA-AF02",
       "name": "EIDSCA AF02: Authentication Method - FIDO2 security key - Allow self-service set up",
       "severity": "Low",
-      "description": "Entra ID Security Config Analyzer control AF02.",
+      "description": "Entra ID security-configuration control (EIDSCA AF02): evaluates 'isSelfServiceRegistrationAllowed' on the Fido2 authentication method against the recommended secure value.",
       "source": "authMethodConfig",
       "configId": "Fido2",
       "path": "isSelfServiceRegistrationAllowed",
       "op": "eq",
       "expected": "true",
       "recommendedValue": "eq true",
-      "remediationSteps": "Review Entra setting per EIDSCA AF02. See https://maester.dev/docs/tests/EIDSCA.AF02",
+      "remediationSteps": "Configure the Fido2 authentication method so 'isSelfServiceRegistrationAllowed' is set to true. (Entra ID security-configuration baseline, control EIDSCA AF02.)",
       "compliance": {
         "eidsca": [
           "AF02"
@@ -587,14 +587,14 @@
       "id": "EIDSCA-AF03",
       "name": "EIDSCA AF03: Authentication Method - FIDO2 security key - Enforce attestation",
       "severity": "Medium",
-      "description": "Entra ID Security Config Analyzer control AF03.",
+      "description": "Entra ID security-configuration control (EIDSCA AF03): evaluates 'isAttestationEnforced' on the Fido2 authentication method against the recommended secure value.",
       "source": "authMethodConfig",
       "configId": "Fido2",
       "path": "isAttestationEnforced",
       "op": "eq",
       "expected": "true",
       "recommendedValue": "eq true",
-      "remediationSteps": "Review Entra setting per EIDSCA AF03. See https://maester.dev/docs/tests/EIDSCA.AF03",
+      "remediationSteps": "Configure the Fido2 authentication method so 'isAttestationEnforced' is set to true. (Entra ID security-configuration baseline, control EIDSCA AF03.)",
       "compliance": {
         "eidsca": [
           "AF03"
@@ -605,14 +605,14 @@
       "id": "EIDSCA-AF04",
       "name": "EIDSCA AF04: Authentication Method - FIDO2 security key - Enforce key restrictions",
       "severity": "Medium",
-      "description": "Entra ID Security Config Analyzer control AF04.",
+      "description": "Entra ID security-configuration control (EIDSCA AF04): evaluates 'keyRestrictions.isEnforced' on the Fido2 authentication method against the recommended secure value.",
       "source": "authMethodConfig",
       "configId": "Fido2",
       "path": "keyRestrictions.isEnforced",
       "op": "eq",
       "expected": "true",
       "recommendedValue": "eq true",
-      "remediationSteps": "Review Entra setting per EIDSCA AF04. See https://maester.dev/docs/tests/EIDSCA.AF04",
+      "remediationSteps": "Configure the Fido2 authentication method so 'keyRestrictions.isEnforced' is set to true. (Entra ID security-configuration baseline, control EIDSCA AF04.)",
       "compliance": {
         "eidsca": [
           "AF04"
@@ -623,14 +623,14 @@
       "id": "EIDSCA-AF05",
       "name": "EIDSCA AF05: Authentication Method - FIDO2 security key - Restricted",
       "severity": "Low",
-      "description": "Entra ID Security Config Analyzer control AF05.",
+      "description": "Entra ID security-configuration control (EIDSCA AF05): evaluates 'keyRestrictions.aaGuids' on the Fido2 authentication method against the recommended secure value.",
       "source": "authMethodConfig",
       "configId": "Fido2",
       "path": "keyRestrictions.aaGuids",
       "op": "notempty",
       "expected": "",
       "recommendedValue": "notempty ",
-      "remediationSteps": "Review Entra setting per EIDSCA AF05. See https://maester.dev/docs/tests/EIDSCA.AF05",
+      "remediationSteps": "Ensure 'keyRestrictions.aaGuids' on the Fido2 authentication method is configured (non-empty). (Entra ID security-configuration baseline, control EIDSCA AF05.)",
       "compliance": {
         "eidsca": [
           "AF05"
@@ -641,14 +641,14 @@
       "id": "EIDSCA-AF06",
       "name": "EIDSCA AF06: Authentication Method - FIDO2 security key - Restrict specific keys",
       "severity": "Low",
-      "description": "Entra ID Security Config Analyzer control AF06.",
+      "description": "Entra ID security-configuration control (EIDSCA AF06): evaluates 'keyRestrictions' on the Fido2 authentication method against the recommended secure value.",
       "source": "authMethodConfig",
       "configId": "Fido2",
       "path": "keyRestrictions",
       "op": "fido2-aaguid-enforced",
       "expected": "",
       "recommendedValue": "fido2-aaguid-enforced ",
-      "remediationSteps": "Review Entra setting per EIDSCA AF06. See https://maester.dev/docs/tests/EIDSCA.AF06",
+      "remediationSteps": "Ensure 'keyRestrictions' on the Fido2 authentication method is enforced with an AAGUID allow/block list. (Entra ID security-configuration baseline, control EIDSCA AF06.)",
       "compliance": {
         "eidsca": [
           "AF06"
@@ -659,14 +659,14 @@
       "id": "EIDSCA-AT01",
       "name": "EIDSCA AT01: Authentication Method - Temporary Access Pass - State",
       "severity": "Low",
-      "description": "Entra ID Security Config Analyzer control AT01.",
+      "description": "Entra ID security-configuration control (EIDSCA AT01): evaluates 'state' on the TemporaryAccessPass authentication method against the recommended secure value.",
       "source": "authMethodConfig",
       "configId": "TemporaryAccessPass",
       "path": "state",
       "op": "eq",
       "expected": "enabled",
       "recommendedValue": "eq enabled",
-      "remediationSteps": "Review Entra setting per EIDSCA AT01. See https://maester.dev/docs/tests/EIDSCA.AT01",
+      "remediationSteps": "Configure the TemporaryAccessPass authentication method so 'state' is set to enabled. (Entra ID security-configuration baseline, control EIDSCA AT01.)",
       "compliance": {
         "eidsca": [
           "AT01"
@@ -677,14 +677,14 @@
       "id": "EIDSCA-AT02",
       "name": "EIDSCA AT02: Authentication Method - Temporary Access Pass - One-time",
       "severity": "Medium",
-      "description": "Entra ID Security Config Analyzer control AT02.",
+      "description": "Entra ID security-configuration control (EIDSCA AT02): evaluates 'isUsableOnce' on the TemporaryAccessPass authentication method against the recommended secure value.",
       "source": "authMethodConfig",
       "configId": "TemporaryAccessPass",
       "path": "isUsableOnce",
       "op": "eq",
       "expected": "true",
       "recommendedValue": "eq true",
-      "remediationSteps": "Review Entra setting per EIDSCA AT02. See https://maester.dev/docs/tests/EIDSCA.AT02",
+      "remediationSteps": "Configure the TemporaryAccessPass authentication method so 'isUsableOnce' is set to true. (Entra ID security-configuration baseline, control EIDSCA AT02.)",
       "compliance": {
         "eidsca": [
           "AT02"
@@ -695,14 +695,14 @@
       "id": "EIDSCA-AV01",
       "name": "EIDSCA AV01: Authentication Method - Voice call - State",
       "severity": "Medium",
-      "description": "Entra ID Security Config Analyzer control AV01.",
+      "description": "Entra ID security-configuration control (EIDSCA AV01): evaluates 'state' on the Voice authentication method against the recommended secure value.",
       "source": "authMethodConfig",
       "configId": "Voice",
       "path": "state",
       "op": "eq",
       "expected": "disabled",
       "recommendedValue": "eq disabled",
-      "remediationSteps": "Review Entra setting per EIDSCA AV01. See https://maester.dev/docs/tests/EIDSCA.AV01",
+      "remediationSteps": "Configure the Voice authentication method so 'state' is set to disabled. (Entra ID security-configuration baseline, control EIDSCA AV01.)",
       "compliance": {
         "eidsca": [
           "AV01"
@@ -713,14 +713,14 @@
       "id": "EIDSCA-AS04",
       "name": "EIDSCA AS04: Authentication Method - SMS - Use for sign-in",
       "severity": "High",
-      "description": "Entra ID Security Config Analyzer control AS04.",
+      "description": "Entra ID security-configuration control (EIDSCA AS04): evaluates 'includeTargets.isUsableForSignIn' on the Sms authentication method against the recommended secure value.",
       "source": "authMethodConfig",
       "configId": "Sms",
       "path": "includeTargets.isUsableForSignIn",
       "op": "eq",
       "expected": "false",
       "recommendedValue": "eq false",
-      "remediationSteps": "Review Entra setting per EIDSCA AS04. See https://maester.dev/docs/tests/EIDSCA.AS04",
+      "remediationSteps": "Configure the Sms authentication method so 'includeTargets.isUsableForSignIn' is set to false. (Entra ID security-configuration baseline, control EIDSCA AS04.)",
       "compliance": {
         "eidsca": [
           "AS04"
@@ -731,14 +731,14 @@
       "id": "EIDSCA-CR01",
       "name": "EIDSCA CR01: Consent Framework - Admin Consent Request - Policy to enable or disable admin consent request feature",
       "severity": "Medium",
-      "description": "Entra ID Security Config Analyzer control CR01.",
+      "description": "Entra ID security-configuration control (EIDSCA CR01): evaluates 'isEnabled' on the Entra ID admin consent request policy against the recommended secure value.",
       "source": "adminConsentRequestPolicy",
       "configId": null,
       "path": "isEnabled",
       "op": "eq",
       "expected": "true",
       "recommendedValue": "eq true",
-      "remediationSteps": "Review Entra setting per EIDSCA CR01. See https://maester.dev/docs/tests/EIDSCA.CR01",
+      "remediationSteps": "Configure the Entra ID admin consent request policy so 'isEnabled' is set to true. (Entra ID security-configuration baseline, control EIDSCA CR01.)",
       "compliance": {
         "eidsca": [
           "CR01"
@@ -749,14 +749,14 @@
       "id": "EIDSCA-CR02",
       "name": "EIDSCA CR02: Consent Framework - Admin Consent Request - Reviewers will receive email notifications for requests",
       "severity": "Low",
-      "description": "Entra ID Security Config Analyzer control CR02.",
+      "description": "Entra ID security-configuration control (EIDSCA CR02): evaluates 'notifyReviewers' on the Entra ID admin consent request policy against the recommended secure value.",
       "source": "adminConsentRequestPolicy",
       "configId": null,
       "path": "notifyReviewers",
       "op": "eq",
       "expected": "true",
       "recommendedValue": "eq true",
-      "remediationSteps": "Review Entra setting per EIDSCA CR02. See https://maester.dev/docs/tests/EIDSCA.CR02",
+      "remediationSteps": "Configure the Entra ID admin consent request policy so 'notifyReviewers' is set to true. (Entra ID security-configuration baseline, control EIDSCA CR02.)",
       "compliance": {
         "eidsca": [
           "CR02"
@@ -767,14 +767,14 @@
       "id": "EIDSCA-CR03",
       "name": "EIDSCA CR03: Consent Framework - Admin Consent Request - Reviewers will receive email notifications when admin consent requests are about to expire",
       "severity": "Low",
-      "description": "Entra ID Security Config Analyzer control CR03.",
+      "description": "Entra ID security-configuration control (EIDSCA CR03): evaluates 'remindersEnabled' on the Entra ID admin consent request policy against the recommended secure value.",
       "source": "adminConsentRequestPolicy",
       "configId": null,
       "path": "remindersEnabled",
       "op": "eq",
       "expected": "true",
       "recommendedValue": "eq true",
-      "remediationSteps": "Review Entra setting per EIDSCA CR03. See https://maester.dev/docs/tests/EIDSCA.CR03",
+      "remediationSteps": "Configure the Entra ID admin consent request policy so 'remindersEnabled' is set to true. (Entra ID security-configuration baseline, control EIDSCA CR03.)",
       "compliance": {
         "eidsca": [
           "CR03"
@@ -785,14 +785,14 @@
       "id": "EIDSCA-CR04",
       "name": "EIDSCA CR04: Consent Framework - Admin Consent Request - Consent request duration (days)",
       "severity": "Low",
-      "description": "Entra ID Security Config Analyzer control CR04.",
+      "description": "Entra ID security-configuration control (EIDSCA CR04): evaluates 'requestDurationInDays' on the Entra ID admin consent request policy against the recommended secure value.",
       "source": "adminConsentRequestPolicy",
       "configId": null,
       "path": "requestDurationInDays",
       "op": "le",
       "expected": "30",
       "recommendedValue": "le 30",
-      "remediationSteps": "Review Entra setting per EIDSCA CR04. See https://maester.dev/docs/tests/EIDSCA.CR04",
+      "remediationSteps": "Configure the Entra ID admin consent request policy so 'requestDurationInDays' is at most 30. (Entra ID security-configuration baseline, control EIDSCA CR04.)",
       "compliance": {
         "eidsca": [
           "CR04"

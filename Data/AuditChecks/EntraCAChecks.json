@@ -6,7 +6,7 @@
     {
       "id": "EIDCA-001",
       "name": "Full CA Policy Inventory",
-      "description": "A complete inventory of all Conditional Access policies with their settings should be maintained. This provides visibility into the security posture and enables gap analysis, change tracking, and compliance auditing across the tenant. Emulates inventory capabilities found in Maester, EntraFalcon, and ScubaGear.",
+      "description": "A complete inventory of all Conditional Access policies with their settings should be maintained. This provides visibility into the security posture and enables gap analysis, change tracking, and compliance auditing across the tenant.",
       "severity": "Info",
       "subcategory": "Policy Inventory",
       "recommendedValue": "All Conditional Access policies documented with state, conditions, grant controls, and session controls",

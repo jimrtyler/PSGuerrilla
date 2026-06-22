@@ -13,8 +13,8 @@ function Invoke-Surveillance {
         spray attacks, privileged role changes, conditional access policy modifications,
         service principal credential additions, federation domain changes, and more.
 
-        Emulates: Microsoft Entra ID Protection, Microsoft Sentinel UEBA, and similar
-        identity threat detection tools.
+        Provides agentless identity threat detection — UEBA-style behavioral analysis and sign-in
+        risk evaluation over Entra ID sign-in and audit telemetry.
 
     .PARAMETER TenantId
         The Azure AD / Entra ID tenant ID.

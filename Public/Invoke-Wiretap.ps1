@@ -13,8 +13,8 @@ function Invoke-Wiretap {
         Teams external access changes, bulk file exfiltration, Power Automate flow creation,
         Defender alert policy changes, and audit log disablements.
 
-        Emulates: Microsoft 365 Defender Advanced Hunting, Microsoft Sentinel M365 analytics,
-        Hawk (mailbox investigation), CloudSploit, Sparrow (CISA), and similar tools.
+        Provides agentless M365 audit-log threat hunting and mailbox-compromise investigation over the
+        unified audit log — surfacing the indicators a SOC would hunt for after a suspected compromise.
 
     .PARAMETER TenantId
         The Azure AD / Entra ID tenant ID.

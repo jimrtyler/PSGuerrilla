@@ -158,7 +158,7 @@ function Get-GuerrillaAttackPathSectionHtml {
 # Attack-Path Cartography: a native in-report SVG node-link map of the escalation routes to Tier-0,
 # laid out left-to-right by longest-path rank. Built purely from the ADPATH chain Path strings already
 # in findings (no extra data plumbing), so it renders self-contained in any report — no external tool.
-# Returns '' when there are no attack-path chains. This is the PingCastle-cartography answer, inline.
+# Returns '' when there are no attack-path chains. A self-contained, in-report attack-path map.
 function Get-GuerrillaCartographyHtml {
     [CmdletBinding()]
     param(
@@ -354,7 +354,7 @@ function Get-GuerrillaIndicatorsOfExposureHtml {
     return $sb.ToString()
 }
 
-# Interactive findings filter — a Maester-style live filter bar (status + severity buttons + text search)
+# Interactive findings filter — a live filter bar (status + severity buttons + text search)
 # plus the client-side script that shows/hides any <tr class="gg-row" data-status data-sev data-text>.
 # Returns the bar + <style> + <script>; the host report tags its finding rows with those attributes.
 function Get-GuerrillaFindingsFilterHtml {

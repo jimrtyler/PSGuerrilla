@@ -6,7 +6,7 @@
     {
       "id": "EIDAUTH-001",
       "name": "Authentication Methods Policy Audit",
-      "description": "The authentication methods policy defines which methods are available to users for sign-in and MFA. A misconfigured policy may allow weak or deprecated methods, increasing the attack surface. This check audits the current policy state against security baselines from Maester and ScubaGear frameworks.",
+      "description": "The authentication methods policy defines which methods are available to users for sign-in and MFA. A misconfigured policy may allow weak or deprecated methods, increasing the attack surface. This check audits the current policy state against recognized Entra ID security baselines.",
       "severity": "Info",
       "subcategory": "Policy Configuration",
       "recommendedValue": "Authentication methods policy reviewed and aligned with organizational security baseline",

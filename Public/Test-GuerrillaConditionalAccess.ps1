@@ -8,8 +8,8 @@ function Test-GuerrillaConditionalAccess {
         CA policies via the Microsoft Graph evaluate API, and returns the enforced outcome.
 
     .DESCRIPTION
-        The free, multi-theater answer to Maester's Test-MtConditionalAccessWhatIf. Builds the same
-        request and POSTs to https://graph.microsoft.com/beta/identity/conditionalAccess/evaluate, then
+        Simulates a sign-in against the tenant's live Conditional Access policies. Builds the request
+        and POSTs to https://graph.microsoft.com/beta/identity/conditionalAccess/evaluate, then
         normalizes the applied policies into a single verdict (Block / MfaRequired / CompliantDeviceRequired
         / PasswordChangeRequired / Grant / NotApplied / Unknown).
 

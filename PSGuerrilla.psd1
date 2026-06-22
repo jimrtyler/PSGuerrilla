@@ -1,6 +1,6 @@
 @{
     RootModule        = 'PSGuerrilla.psm1'
-    ModuleVersion     = '2.29.0'
+    ModuleVersion     = '2.29.1'
     GUID              = 'f7a3b2c1-4d5e-6f78-9a0b-1c2d3e4f5a6b'
     Author            = 'Jim Tyler, Microsoft MVP'
     CompanyName       = 'Jim Tyler'
@@ -84,7 +84,7 @@
             Tags       = @('GoogleWorkspace', 'ActiveDirectory', 'EntraID', 'AzureAD', 'Intune', 'M365', 'Security', 'CompromiseAssessment', 'IncidentResponse', 'ThreatDetection', 'ADSecurity', 'CloudSecurity', 'NTLMRelay', 'TierZero', 'GUI', 'WPF', 'PSGuerrilla')
             LicenseUri = 'https://creativecommons.org/licenses/by/4.0/'
             ProjectUri = 'https://guerrilla.army'
-            ReleaseNotes = 'v2.29.0: Turnkey CI/CD. New Get-GuerrillaCIGate decides whether a build should fail from findings plus a -FailOn severity threshold (Critical/High/Medium/Low/Any/None) - FAIL gates (plus WARN with -WarningsAsFailures), SKIP/Not Assessed never gates. New action.yml turnkey GitHub Action (composite) that installs the module, runs a chosen theater (Infiltration/Reconnaissance/Fortification/Campaign), publishes JUnit results via Export-GuerrillaJUnit, and gates the build; the caller authenticates first. Gating logic unit-tested (verify-ci-gate.ps1 11/11). Recent capability also includes interactive findings filter + Indicators of Exposure in the HTML reports, Security Maturity (CMMI 1-5), Attack-Path Cartography, full 44-control EIDSCA baseline, CISA SCuBA crosswalk, Conditional Access what-if simulation, BloodHound OpenGraph export, and full-domain ACL with transitive attack-path analysis. 517 checks across Active Directory (205), Entra ID / Azure / Intune / M365 (202), and Google Workspace (110); 49 public functions. Read-only. See CHANGELOG.md for full version history.'
+            ReleaseNotes = 'v2.29.1: Documentation cleanup (no functional change) - removed third-party product references from the notes and shipped help, and re-articulated the EIDSCA checks around their documented Microsoft Graph settings. v2.29.0: Turnkey CI/CD. New Get-GuerrillaCIGate decides whether a build should fail from findings plus a -FailOn severity threshold (Critical/High/Medium/Low/Any/None) - FAIL gates (plus WARN with -WarningsAsFailures), SKIP/Not Assessed never gates. New action.yml turnkey GitHub Action (composite) that installs the module, runs a chosen theater (Infiltration/Reconnaissance/Fortification/Campaign), publishes JUnit results via Export-GuerrillaJUnit, and gates the build; the caller authenticates first. Gating logic unit-tested (verify-ci-gate.ps1 11/11). Recent capability also includes interactive findings filter + Indicators of Exposure in the HTML reports, Security Maturity (CMMI 1-5), Attack-Path Cartography, full 44-control EIDSCA baseline, CISA SCuBA crosswalk, Conditional Access what-if simulation, BloodHound OpenGraph export, and full-domain ACL with transitive attack-path analysis. 517 checks across Active Directory (205), Entra ID / Azure / Intune / M365 (202), and Google Workspace (110); 49 public functions. Read-only. See CHANGELOG.md for full version history.'
         }
     }
 }
