@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.25.0] - 2026-06-21
+
+_Conditional Access what-if simulation — the live Graph evaluate API, with pre-built attack scenarios (Maester parity M2)._
+
+### Added
+- **`Test-GuerrillaConditionalAccess`** — the free answer to Maester's `Test-MtConditionalAccessWhatIf`. Simulates a sign-in against the tenant's live CA policies via `POST /beta/identity/conditionalAccess/evaluate` (same request shape as Maester: `signInIdentity` / `signInContext` / `signInConditions`) and **normalizes the applied policies into a single verdict** (Block / MfaRequired / CompliantDeviceRequired / PasswordChangeRequired / Grant / NotApplied / Unknown).
+- **`Invoke-Infiltration -WhatIfUserId <guid>`** runs a **pre-built attack-scenario matrix** (legacy-auth, no-MFA cloud sign-in, high sign-in risk, high user risk, unmanaged device) against that user and grades each PASS/FAIL — *more opinionated than Maester's bring-your-own-test model*. Results land in `ConditionalAccess.WhatIf` and drive **`EIDCA-015`**, which was a placeholder/inference and is now a real, authoritative simulation when a user is supplied.
+
+### Changed
+- `EIDCA-015` now reports **live what-if** results when available; without `-WhatIfUserId` it falls back to the previous policy-config **inference, clearly labeled** as such (not a live simulation).
+
+### Notes
+- The CA evaluate API is **beta**: any empty/unrecognised response normalizes to `Unknown` → the scenario grader returns **SKIP = "Not Assessed"**, never a false PASS. (Same honesty rule; will need re-pinning if the API GAs with a changed shape.)
+- 47 public functions; check counts unchanged (517). Test: `Tests/verify-ca-whatif.ps1` (19/19 — normalizer across response shapes, grader, scenario catalog, and EIDCA-015 live grading incl. no-data→SKIP). Live Graph POST validated separately on a tenant.
+- Maester roadmap: **M1 (EIDSCA) + M2 (CA what-if) done.** Remaining named gap: M6 EXO/email depth (+ SCuBA EXO baseline refresh).
+
 ## [2.24.0] - 2026-06-21
 
 _Full EIDSCA coverage — the 44-control Entra ID Security Config Analyzer baseline, evaluated for real (Maester parity item M1)._

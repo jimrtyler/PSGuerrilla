@@ -560,10 +560,37 @@ function Test-InfiltrationEIDCA015 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    # ── Authoritative path: live CA what-if results (collected when -WhatIfUserId was supplied) ──
+    $whatif = @($AuditData.ConditionalAccess.WhatIf | Where-Object { $_ })
+    if ($whatif.Count -gt 0) {
+        $assessed = @($whatif | Where-Object { $_.Verdict -in @('PASS', 'FAIL') })
+        $failed   = @($whatif | Where-Object { $_.Verdict -eq 'FAIL' })
+        $skipped  = @($whatif | Where-Object { $_.Verdict -eq 'SKIP' })
+        if ($assessed.Count -eq 0) {
+            return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+                -CurrentValue 'Live CA what-if ran but the beta evaluate API returned no usable result — Not Assessed' `
+                -Details @{ Mode = 'LiveWhatIf'; Scenarios = @($whatif) }
+        }
+        $status = if ($failed.Count -gt 0) { 'FAIL' } elseif ($skipped.Count -gt 0) { 'WARN' } else { 'PASS' }
+        $cv = "Live CA what-if: $($assessed.Count - $failed.Count)/$($assessed.Count) attack scenario(s) blocked or MFA-enforced"
+        if ($failed.Count -gt 0)  { $cv += ' — UNPROTECTED: ' + (($failed | ForEach-Object { "$($_.Name) [$($_.Result)]" }) -join '; ') }
+        if ($skipped.Count -gt 0) { $cv += " ($($skipped.Count) not assessed)" }
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status $status `
+            -CurrentValue $cv `
+            -Details @{
+                Mode                 = 'LiveWhatIf'
+                ScenariosProtected   = ($assessed.Count - $failed.Count)
+                ScenariosAssessed    = $assessed.Count
+                UnprotectedScenarios = @($failed | ForEach-Object { $_.Name })
+                Scenarios            = @($whatif)
+            }
+    }
+
+    # ── Fallback: inference from policy definitions (clearly labeled — NOT a live simulation) ──
     $policies = @($AuditData.ConditionalAccess.Policies | Where-Object { $_.state -eq 'enabled' })
     if ($policies.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
-            -CurrentValue 'No enabled policies for simulation'
+            -CurrentValue 'No enabled CA policies, and no -WhatIfUserId supplied for live simulation — Not Assessed'
     }
 
     # Simulate common attack scenarios
@@ -606,8 +633,9 @@ function Test-InfiltrationEIDCA015 {
               else { 'FAIL' }
 
     return New-AuditFinding -CheckDefinition $CheckDefinition -Status $status `
-        -CurrentValue "$protected of $($scenarios.Count) common attack scenarios have CA protection" `
+        -CurrentValue "$protected of $($scenarios.Count) common attack scenarios have CA protection (inferred from policy config; supply -WhatIfUserId for an authoritative live what-if simulation)" `
         -Details @{
+            Mode                 = 'Inferred'
             ScenariosProtected   = $protected
             ScenariosTotal       = $scenarios.Count
             UnprotectedScenarios = @($unprotected | ForEach-Object { $_.Name })

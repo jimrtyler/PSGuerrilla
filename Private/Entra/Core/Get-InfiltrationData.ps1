@@ -13,6 +13,9 @@ function Get-InfiltrationData {
 
         [hashtable]$ModuleAvailability,
 
+        # Representative user object ID for live CA what-if simulation (EIDCA-015). Empty = inference.
+        [string]$WhatIfUserId,
+
         [switch]$Quiet
     )
 
@@ -97,7 +100,7 @@ function Get-InfiltrationData {
         }
         try {
             $data.ConditionalAccess = Get-EntraConditionalAccessData `
-                -AccessToken $AccessToken -Quiet:$Quiet
+                -AccessToken $AccessToken -WhatIfUserId $WhatIfUserId -Quiet:$Quiet
         } catch {
             $data.Errors['ConditionalAccess'] = $_.Exception.Message
             $data.ConditionalAccess = @{ Policies = @(); NamedLocations = @(); Errors = @{} }

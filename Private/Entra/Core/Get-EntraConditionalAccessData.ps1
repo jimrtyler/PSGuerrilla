@@ -7,12 +7,17 @@ function Get-EntraConditionalAccessData {
         [Parameter(Mandatory)]
         [string]$AccessToken,
 
+        # When set (a representative user's object ID), run the live CA what-if attack-scenario matrix
+        # against the tenant via the Graph evaluate API. Left empty, EIDCA-015 falls back to inference.
+        [string]$WhatIfUserId,
+
         [switch]$Quiet
     )
 
     $data = @{
         Policies       = @()
         NamedLocations = @()
+        WhatIf         = @()
         Errors         = @{}
     }
 
@@ -44,6 +49,25 @@ function Get-EntraConditionalAccessData {
 
     if (-not $Quiet) {
         Write-ProgressLine -Phase INFILTRATE -Message "Collected $($data.Policies.Count) CA policies, $($data.NamedLocations.Count) named locations"
+    }
+
+    # ── Live CA what-if attack-scenario simulation (only when a representative user is supplied) ──
+    if ($WhatIfUserId) {
+        if (-not $Quiet) {
+            Write-ProgressLine -Phase INFILTRATE -Message 'Running Conditional Access what-if attack scenarios'
+        }
+        $wf = [System.Collections.Generic.List[object]]::new()
+        foreach ($s in (Get-CAAttackScenario)) {
+            try {
+                $p = @{ UserId = $WhatIfUserId; AccessToken = $AccessToken; IncludeApplications = @('All') } + $s.Params
+                $r = Test-GuerrillaConditionalAccess @p
+                $v = Resolve-CAScenarioVerdict -Result $r.Result -Expect $s.Expect
+                $wf.Add(@{ Key = $s.Key; Name = $s.Name; Severity = $s.Severity; Result = $r.Result; Expect = @($s.Expect); Verdict = $v; AppliedPolicies = @($r.AppliedPolicies) })
+            } catch {
+                $wf.Add(@{ Key = $s.Key; Name = $s.Name; Severity = $s.Severity; Result = 'Unknown'; Expect = @($s.Expect); Verdict = 'SKIP'; AppliedPolicies = @() })
+            }
+        }
+        $data.WhatIf = @($wf)
     }
 
     return $data

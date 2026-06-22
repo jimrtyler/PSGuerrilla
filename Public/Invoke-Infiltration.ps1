@@ -68,6 +68,10 @@ function Invoke-Infiltration {
                      'Federation', 'TenantConfig', 'AzureIAM', 'Intune', 'M365Services', 'Eidsca')]
         [string[]]$Categories = @('All'),
 
+        # Representative user object ID (GUID) for live Conditional Access what-if simulation (EIDCA-015).
+        # When supplied, PSGuerrilla runs the attack-scenario matrix against the Graph evaluate API.
+        [string]$WhatIfUserId,
+
         [string]$TenantId,
 
         [string]$ClientId,
@@ -263,6 +267,7 @@ function Invoke-Infiltration {
         -AccessToken $graphToken `
         -ArmAccessToken $armToken `
         -Categories $Categories `
+        -WhatIfUserId $WhatIfUserId `
         -Quiet:$Quiet
 
     # Report collection errors
