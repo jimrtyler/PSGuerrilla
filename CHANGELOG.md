@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.26.0] - 2026-06-21
+
+_Security config as code — JUnit output so PSGuerrilla drops into CI/CD like Maester (roadmap M4)._
+
+### Added
+- **`Export-GuerrillaJUnit`** — converts any theater's findings (AD / Entra / M365 / Google Workspace) to **JUnit XML**, the format GitHub Actions, Azure DevOps, and GitLab render natively as pass/fail. One `<testsuite>` per category, one `<testcase>` per check: **FAIL → `<failure>`** (typed by severity), **SKIP/ERROR → `<skipped>`** ("Not Assessed", never a silent pass), WARN passes with output (or `-WarningsAsFailures` to gate on it too). Returns `{Tests; Failures; Skipped; Passed}` so a pipeline can `if ($r.Failures) { exit 1 }`.
+
+### Notes
+- This is the tooling half of Maester's CI/CD moat — PSGuerrilla now feeds the same pipelines that render Maester results, across **all four theaters** (not just M365/Entra). Copy-paste GitHub Actions / Azure DevOps / GitLab templates are available; a dedicated GitHub Action is a follow-on.
+- 48 public functions; check counts unchanged (517). Test: `Tests/verify-junit.ps1` (14/14 — valid XML, per-category suites, FAIL/SKIP/WARN mapping, `-WarningsAsFailures`, XML escaping, gating counts).
+- Maester roadmap: **M1 (EIDSCA), M2 (CA what-if), M4 (CI/CD JUnit) done.** Remaining: **M3** (interactive report + Indicators of Exposure — also closes Purple Knight), **M6** (EXO/email depth + SCuBA EXO baseline refresh), M7 (Entra governance).
+
 ## [2.25.0] - 2026-06-21
 
 _Conditional Access what-if simulation — the live Graph evaluate API, with pre-built attack scenarios (Maester parity M2)._
