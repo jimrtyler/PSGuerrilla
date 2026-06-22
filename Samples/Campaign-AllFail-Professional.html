@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PSGuerrilla Campaign Report - 2026-06-22 16:01:28 UTC</title>
+<title>PSGuerrilla Campaign Report - 2026-06-22 18:11:56 UTC</title>
 <style>
   :root { --font-body: 'Segoe UI', 'Helvetica Neue', Arial, system-ui, sans-serif; --bg: #ffffff; --surface: #f8fafc; --surface-alt: #eef2f7; --border: #d8dee9; --text: #1e293b; --text-muted: #64748b; --olive: #0f766e; --amber: #c2620f; --sage: #15803d; --parchment: #0f172a; --gold: #b7791f; --dim: #64748b; --deep-orange: #c2410c; --dark-red: #b91c1c; --critical: #b91c1c; --high: #c2410c; --medium: #b45309; --low: #15803d; --clean: #15803d; --pass: #15803d; --fail: #b91c1c; --warn: #b45309; --skip: #94a3b8; --info: #1d4ed8; }
   .wl-banner { background: var(--dark-red); color: #fff; text-align: center;
@@ -261,7 +261,7 @@
 <div class="wl-header"><div><div class="wl-firm">Northwind Security</div><div class="wl-meta">Prepared by A. Analyst &middot; analyst@northwind.example</div><div class="wl-meta">Prepared for Globex Corporation</div></div></div>
 <h1>&#x2694; Campaign Report</h1>
 <div class="subtitle">
-  Unified Security Posture Assessment &mdash; Generated 2026-06-22 16:01:28 UTC &mdash;
+  Unified Security Posture Assessment &mdash; Generated 2026-06-22 18:11:56 UTC &mdash;
   511 checks across 3 theaters (Google Workspace, Active Directory, Entra ID / M365)<br>
   Scan ID: sample-campaign &mdash; Duration: 5m 0s &mdash;
   PSGuerrilla v2.0.0
@@ -345,6 +345,21 @@
 </style><h2>Attack Paths to Tier-0</h2><p class="ap-note">4 escalation path(s) reaching Tier-0 &mdash; 3 from NON-privileged principals (shown first, highest risk). Each arrow is a control or membership edge an attacker can traverse.</p><ul class="ap-list"><li class="ap-item"><div class="ap-path">SAMPLE\jsmith --[WriteDacl]--&gt; ServiceDesk-Operators  ==&gt;  ServiceDesk-Operators --[GenericAll]--&gt; Tier1-Server-Admins  ==&gt;  Tier1-Server-Admins --[MemberOf]--&gt; Domain Admins  =&gt;  reaches domain admins (Tier-0 group)</div><div class="ap-meta">3 hops &middot; non-privileged source</div></li><li class="ap-item"><div class="ap-path">SAMPLE\HelpDesk --[GenericAll]--&gt; Workstation-Admins  ==&gt;  Workstation-Admins --[MemberOf]--&gt; Domain Admins  =&gt;  reaches domain admins (Tier-0 group)</div><div class="ap-meta">2 hops &middot; non-privileged source</div></li><li class="ap-item"><div class="ap-path">SAMPLE\BackupOperators --[WriteDacl]--&gt; AdminSDHolder  =&gt;  reaches all protected groups via SDProp</div><div class="ap-meta">1 hop &middot; non-privileged source</div></li><li class="ap-item priv"><div class="ap-path">Account Operators --[GenericWrite]--&gt; Backup-Admins  ==&gt;  Backup-Admins --[MemberOf]--&gt; Administrators  =&gt;  reaches administrators (Tier-0 group)</div><div class="ap-meta">2 hops &middot; already-privileged source</div></li></ul><h2>Theater Summary</h2><div class="theater-grid"><div class="theater-card">
   <div class="theater-header">
     <div>
+      <span class="theater-name">Google Workspace</span>
+      <div class="theater-label">Critical Risk &mdash; 104 checks</div>
+    </div>
+    <span class="theater-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="theater-bar-bg"><div class="theater-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="theater-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 104</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+    <span style="color:var(--skip)">Skip: 0</span>
+  </div>
+</div><div class="theater-card">
+  <div class="theater-header">
+    <div>
       <span class="theater-name">Entra ID / M365</span>
       <div class="theater-label">Critical Risk &mdash; 202 checks</div>
     </div>
@@ -372,46 +387,20 @@
     <span style="color:var(--warn)">Warn: 0</span>
     <span style="color:var(--skip)">Skip: 0</span>
   </div>
-</div><div class="theater-card">
-  <div class="theater-header">
-    <div>
-      <span class="theater-name">Google Workspace</span>
-      <div class="theater-label">Critical Risk &mdash; 104 checks</div>
-    </div>
-    <span class="theater-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="theater-bar-bg"><div class="theater-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="theater-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 104</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-    <span style="color:var(--skip)">Skip: 0</span>
-  </div>
 </div></div><h2>Category Scores by Theater</h2><details class="theater-detail" open><summary>Active Directory <span style="color:var(--dim);font-weight:400;font-size:0.85em;text-transform:none">(15 categories)</span></summary><div class="detail-body"><div class="category-grid"><div class="cat-card">
   <div class="cat-header">
+    <span class="cat-name">AD Password &amp; Lockout Policies</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 22</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
     <span class="cat-name">AD Trust Relationships</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 11</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">AD ACL &amp; Delegation</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 16</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">AD Stale &amp; Obsolete Objects</span>
     <span class="cat-score" style="color:var(--dark-red)">0</span>
   </div>
   <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
@@ -433,28 +422,6 @@
   </div>
 </div><div class="cat-card">
   <div class="cat-header">
-    <span class="cat-name">AD Certificate Services</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 19</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">AD Group Policy</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 24</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
     <span class="cat-name">AD Logging &amp; EDR Posture</span>
     <span class="cat-score" style="color:var(--dark-red)">0</span>
   </div>
@@ -466,46 +433,13 @@
   </div>
 </div><div class="cat-card">
   <div class="cat-header">
-    <span class="cat-name">AD Privileged Account Security</span>
+    <span class="cat-name">AD Certificate Services</span>
     <span class="cat-score" style="color:var(--dark-red)">0</span>
   </div>
   <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
   <div class="cat-counts">
     <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 30</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">AD Password &amp; Lockout Policies</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 22</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">AD Kerberos Security</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 11</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">Tier-0 Hygiene &amp; Hybrid Identity Surface</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 7</span>
+    <span style="color:var(--fail)">Fail: 19</span>
     <span style="color:var(--warn)">Warn: 0</span>
   </div>
 </div><div class="cat-card">
@@ -521,13 +455,13 @@
   </div>
 </div><div class="cat-card">
   <div class="cat-header">
-    <span class="cat-name">Attack Paths</span>
+    <span class="cat-name">AD Kerberos Security</span>
     <span class="cat-score" style="color:var(--dark-red)">0</span>
   </div>
   <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
   <div class="cat-counts">
     <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 2</span>
+    <span style="color:var(--fail)">Fail: 11</span>
     <span style="color:var(--warn)">Warn: 0</span>
   </div>
 </div><div class="cat-card">
@@ -552,26 +486,81 @@
     <span style="color:var(--fail)">Fail: 4</span>
     <span style="color:var(--warn)">Warn: 0</span>
   </div>
-</div></div></div></details><details class="theater-detail" open><summary>Entra ID / M365 <span style="color:var(--dim);font-weight:400;font-size:0.85em;text-transform:none">(15 categories)</span></summary><div class="detail-body"><div class="category-grid"><div class="cat-card">
+</div><div class="cat-card">
   <div class="cat-header">
-    <span class="cat-name">Defender for Office 365</span>
+    <span class="cat-name">Tier-0 Hygiene &amp; Hybrid Identity Surface</span>
     <span class="cat-score" style="color:var(--dark-red)">0</span>
   </div>
   <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
   <div class="cat-counts">
     <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 3</span>
+    <span style="color:var(--fail)">Fail: 7</span>
     <span style="color:var(--warn)">Warn: 0</span>
   </div>
 </div><div class="cat-card">
   <div class="cat-header">
-    <span class="cat-name">Entra ID Authentication Methods &amp; MFA</span>
+    <span class="cat-name">AD Group Policy</span>
     <span class="cat-score" style="color:var(--dark-red)">0</span>
   </div>
   <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
   <div class="cat-counts">
     <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 17</span>
+    <span style="color:var(--fail)">Fail: 24</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">AD Privileged Account Security</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 30</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">AD Stale &amp; Obsolete Objects</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 11</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">AD ACL &amp; Delegation</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 16</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">Attack Paths</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 2</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div></div></div></details><details class="theater-detail" open><summary>Entra ID / M365 <span style="color:var(--dim);font-weight:400;font-size:0.85em;text-transform:none">(15 categories)</span></summary><div class="detail-body"><div class="category-grid"><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">Intune / Endpoint Management</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 23</span>
     <span style="color:var(--warn)">Warn: 0</span>
   </div>
 </div><div class="cat-card">
@@ -587,90 +576,13 @@
   </div>
 </div><div class="cat-card">
   <div class="cat-header">
-    <span class="cat-name">Entra ID Conditional Access</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 16</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">Exchange Online Security</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 12</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">Entra ID Tenant Configuration</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 13</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">Intune / Endpoint Management</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 23</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">Unified Audit &amp; Logging</span>
+    <span class="cat-name">Power Platform Security</span>
     <span class="cat-score" style="color:var(--dark-red)">0</span>
   </div>
   <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
   <div class="cat-counts">
     <span style="color:var(--pass)">Pass: 0</span>
     <span style="color:var(--fail)">Fail: 3</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">SharePoint &amp; OneDrive Security</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 5</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">Entra ID Federation &amp; Hybrid Identity</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 12</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">Entra ID Application &amp; Service Principal Security</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 19</span>
     <span style="color:var(--warn)">Warn: 0</span>
   </div>
 </div><div class="cat-card">
@@ -686,7 +598,84 @@
   </div>
 </div><div class="cat-card">
   <div class="cat-header">
-    <span class="cat-name">Power Platform Security</span>
+    <span class="cat-name">Entra ID Tenant Configuration</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 13</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">SharePoint &amp; OneDrive Security</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 5</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">Entra ID Conditional Access</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 16</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">Entra ID Federation &amp; Hybrid Identity</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 12</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">Microsoft Teams Security</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 8</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">Entra ID Authentication Methods &amp; MFA</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 17</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">Exchange Online Security</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 12</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">Unified Audit &amp; Logging</span>
     <span class="cat-score" style="color:var(--dark-red)">0</span>
   </div>
   <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
@@ -708,62 +697,29 @@
   </div>
 </div><div class="cat-card">
   <div class="cat-header">
-    <span class="cat-name">Microsoft Teams Security</span>
+    <span class="cat-name">Defender for Office 365</span>
     <span class="cat-score" style="color:var(--dark-red)">0</span>
   </div>
   <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
   <div class="cat-counts">
     <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 8</span>
+    <span style="color:var(--fail)">Fail: 3</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">Entra ID Application &amp; Service Principal Security</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 19</span>
     <span style="color:var(--warn)">Warn: 0</span>
   </div>
 </div></div></div></details><details class="theater-detail" open><summary>Google Workspace <span style="color:var(--dim);font-weight:400;font-size:0.85em;text-transform:none">(8 categories)</span></summary><div class="detail-body"><div class="category-grid"><div class="cat-card">
   <div class="cat-header">
     <span class="cat-name">Drive Security &amp; Data Protection</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 13</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">Logging, Alerting &amp; Monitoring</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 6</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">OAuth &amp; API Security</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 10</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">Email Security</span>
-    <span class="cat-score" style="color:var(--dark-red)">0</span>
-  </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: 0</span>
-    <span style="color:var(--fail)">Fail: 22</span>
-    <span style="color:var(--warn)">Warn: 0</span>
-  </div>
-</div><div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">Admin &amp; User Management</span>
     <span class="cat-score" style="color:var(--dark-red)">0</span>
   </div>
   <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
@@ -796,6 +752,39 @@
   </div>
 </div><div class="cat-card">
   <div class="cat-header">
+    <span class="cat-name">Email Security</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 22</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">Logging, Alerting &amp; Monitoring</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 6</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">Admin &amp; User Management</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 13</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
     <span class="cat-name">Collaboration &amp; Communication Security</span>
     <span class="cat-score" style="color:var(--dark-red)">0</span>
   </div>
@@ -803,6 +792,17 @@
   <div class="cat-counts">
     <span style="color:var(--pass)">Pass: 0</span>
     <span style="color:var(--fail)">Fail: 12</span>
+    <span style="color:var(--warn)">Warn: 0</span>
+  </div>
+</div><div class="cat-card">
+  <div class="cat-header">
+    <span class="cat-name">OAuth &amp; API Security</span>
+    <span class="cat-score" style="color:var(--dark-red)">0</span>
+  </div>
+  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:0%;background:var(--dark-red)"></div></div>
+  <div class="cat-counts">
+    <span style="color:var(--pass)">Pass: 0</span>
+    <span style="color:var(--fail)">Fail: 10</span>
     <span style="color:var(--warn)">Warn: 0</span>
   </div>
 </div></div></div></details><h2>All Findings</h2><div class="filter-bar" id="filterBar"><div class="filter-group"><span class="filter-label">Theater:</span><button class="filter-btn active" data-filter-type="theater" data-filter-value="all" onclick="toggleFilter(this)">All</button><button class="filter-btn" data-filter-type="theater" data-filter-value="active-directory" onclick="toggleFilter(this)">Active Directory</button><button class="filter-btn" data-filter-type="theater" data-filter-value="entra-id---m365" onclick="toggleFilter(this)">Entra ID / M365</button><button class="filter-btn" data-filter-type="theater" data-filter-value="google-workspace" onclick="toggleFilter(this)">Google Workspace</button></div><div class="filter-group"><span class="filter-label">Status:</span><button class="filter-btn active" data-filter-type="status" data-filter-value="all" onclick="toggleFilter(this)">All</button><button class="filter-btn" data-filter-type="status" data-filter-value="PASS" onclick="toggleFilter(this)">PASS</button><button class="filter-btn" data-filter-type="status" data-filter-value="FAIL" onclick="toggleFilter(this)">FAIL</button><button class="filter-btn" data-filter-type="status" data-filter-value="WARN" onclick="toggleFilter(this)">WARN</button><button class="filter-btn" data-filter-type="status" data-filter-value="SKIP" onclick="toggleFilter(this)">SKIP</button></div><div class="filter-group"><span class="filter-label">Severity:</span><button class="filter-btn active" data-filter-type="severity" data-filter-value="all" onclick="toggleFilter(this)">All</button><button class="filter-btn" data-filter-type="severity" data-filter-value="Critical" onclick="toggleFilter(this)">Critical</button><button class="filter-btn" data-filter-type="severity" data-filter-value="High" onclick="toggleFilter(this)">High</button><button class="filter-btn" data-filter-type="severity" data-filter-value="Medium" onclick="toggleFilter(this)">Medium</button><button class="filter-btn" data-filter-type="severity" data-filter-value="Low" onclick="toggleFilter(this)">Low</button></div><span class="filter-count" id="filterCount">Showing all findings</span></div><table id="findingsTable">
@@ -1400,7 +1400,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SI-2</code> <code>CM-6</code> <code>SA-22</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1210</code> <code>T1078.002</code><br><strong>CIS Benchmark:</strong> <code>18.3.1</code><br><strong>CisAd:</strong> <code>1.2.2</code><br><strong>Anssi:</strong> <code>R8</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SI-2</code> <code>CM-6</code> <code>SA-22</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1210</code> <code>T1078.002</code><br><strong>CIS Benchmark:</strong> <code>18.3.1</code><br><strong>Anssi:</strong> <code>R8</code><br><strong>CisAd:</strong> <code>1.2.2</code></div>
         </div>
       </div>
     </td>
@@ -1437,7 +1437,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SC-8</code> <code>SC-8(1)</code> <code>SC-23</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1557</code><br><strong>CIS Benchmark:</strong> <code>2.3.5.1</code><br><strong>CisAd:</strong> <code>2.1.1</code><br><strong>NsaAsd:</strong> <code>LDAP-1</code><br><strong>Anssi:</strong> <code>R25</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SC-8</code> <code>SC-8(1)</code> <code>SC-23</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1557</code><br><strong>CIS Benchmark:</strong> <code>2.3.5.1</code><br><strong>NsaAsd:</strong> <code>LDAP-1</code><br><strong>Anssi:</strong> <code>R25</code><br><strong>CisAd:</strong> <code>2.1.1</code></div>
         </div>
       </div>
     </td>
@@ -1474,7 +1474,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SC-8</code> <code>SC-8(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1557</code> <code>T1021.002</code><br><strong>CIS Benchmark:</strong> <code>2.3.8.1</code> <code>2.3.8.2</code><br><strong>CisAd:</strong> <code>2.2.1</code><br><strong>NsaAsd:</strong> <code>SMB-1</code><br><strong>Anssi:</strong> <code>R26</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SC-8</code> <code>SC-8(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1557</code> <code>T1021.002</code><br><strong>CIS Benchmark:</strong> <code>2.3.8.1</code> <code>2.3.8.2</code><br><strong>NsaAsd:</strong> <code>SMB-1</code><br><strong>Anssi:</strong> <code>R26</code><br><strong>CisAd:</strong> <code>2.2.1</code></div>
         </div>
       </div>
     </td>
@@ -1511,7 +1511,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(2)</code> <code>SC-8</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1557</code> <code>T1003</code><br><strong>CIS Benchmark:</strong> <code>2.3.8.4</code><br><strong>CisAd:</strong> <code>2.3.1</code><br><strong>NsaAsd:</strong> <code>NTLM-1</code><br><strong>Anssi:</strong> <code>R27</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(2)</code> <code>SC-8</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1557</code> <code>T1003</code><br><strong>CIS Benchmark:</strong> <code>2.3.8.4</code><br><strong>NsaAsd:</strong> <code>NTLM-1</code><br><strong>Anssi:</strong> <code>R27</code><br><strong>CisAd:</strong> <code>2.3.1</code></div>
         </div>
       </div>
     </td>
@@ -1585,7 +1585,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code> <code>SC-12</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1558.003</code><br><strong>CisAd:</strong> <code>7.1.2</code><br><strong>Anssi:</strong> <code>R36</code> <code>R37</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code> <code>SC-12</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1558.003</code><br><strong>Anssi:</strong> <code>R36</code> <code>R37</code><br><strong>CisAd:</strong> <code>7.1.2</code></div>
         </div>
       </div>
     </td>
@@ -1622,7 +1622,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1558.001</code><br><strong>CisAd:</strong> <code>7.3.1</code><br><strong>Anssi:</strong> <code>R35</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1558.001</code><br><strong>Anssi:</strong> <code>R35</code><br><strong>CisAd:</strong> <code>7.3.1</code></div>
         </div>
       </div>
     </td>
@@ -1659,7 +1659,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1558.001</code><br><strong>CisAd:</strong> <code>7.3.2</code><br><strong>Anssi:</strong> <code>R35</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1558.001</code><br><strong>Anssi:</strong> <code>R35</code><br><strong>CisAd:</strong> <code>7.3.2</code></div>
         </div>
       </div>
     </td>
@@ -1918,7 +1918,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-6(5)</code> <code>AC-2(7)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code> <code>T1069.002</code><br><strong>CIS Benchmark:</strong> <code>9.2.1</code><br><strong>CisAd:</strong> <code>4.1.1</code><br><strong>Anssi:</strong> <code>R2</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-6(5)</code> <code>AC-2(7)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code> <code>T1069.002</code><br><strong>CIS Benchmark:</strong> <code>9.2.1</code><br><strong>Anssi:</strong> <code>R2</code><br><strong>CisAd:</strong> <code>4.1.1</code></div>
         </div>
       </div>
     </td>
@@ -1955,7 +1955,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-6(5)</code> <code>AC-2(2)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code> <code>T1069.002</code><br><strong>CIS Benchmark:</strong> <code>9.2.2</code><br><strong>CisAd:</strong> <code>4.1.2</code><br><strong>Anssi:</strong> <code>R2</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-6(5)</code> <code>AC-2(2)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code> <code>T1069.002</code><br><strong>CIS Benchmark:</strong> <code>9.2.2</code><br><strong>Anssi:</strong> <code>R2</code><br><strong>CisAd:</strong> <code>4.1.2</code></div>
         </div>
       </div>
     </td>
@@ -1992,7 +1992,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code> <code>AC-2</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code><br><strong>CIS Benchmark:</strong> <code>1.1.4</code><br><strong>CisAd:</strong> <code>4.3.1</code><br><strong>Anssi:</strong> <code>R36</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code> <code>AC-2</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code><br><strong>CIS Benchmark:</strong> <code>1.1.4</code><br><strong>Anssi:</strong> <code>R36</code><br><strong>CisAd:</strong> <code>4.3.1</code></div>
         </div>
       </div>
     </td>
@@ -2029,7 +2029,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code> <code>AC-2</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code><br><strong>CisAd:</strong> <code>4.3.2</code><br><strong>Anssi:</strong> <code>R36</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code> <code>AC-2</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code><br><strong>Anssi:</strong> <code>R36</code><br><strong>CisAd:</strong> <code>4.3.2</code></div>
         </div>
       </div>
     </td>
@@ -2066,7 +2066,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(2)</code> <code>AC-2</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1558.004</code><br><strong>CisAd:</strong> <code>4.3.3</code><br><strong>Anssi:</strong> <code>R36</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(2)</code> <code>AC-2</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1558.004</code><br><strong>Anssi:</strong> <code>R36</code><br><strong>CisAd:</strong> <code>4.3.3</code></div>
         </div>
       </div>
     </td>
@@ -2103,7 +2103,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code> <code>SC-28</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1003.006</code> <code>T1078.002</code><br><strong>CIS Benchmark:</strong> <code>1.1.1</code><br><strong>CisAd:</strong> <code>4.3.4</code><br><strong>Anssi:</strong> <code>R36</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code> <code>SC-28</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1003.006</code> <code>T1078.002</code><br><strong>CIS Benchmark:</strong> <code>1.1.1</code><br><strong>Anssi:</strong> <code>R36</code><br><strong>CisAd:</strong> <code>4.3.4</code></div>
         </div>
       </div>
     </td>
@@ -2140,7 +2140,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1110.001</code> <code>T1110.003</code> <code>T1078.002</code><br><strong>CisAd:</strong> <code>4.5.1</code><br><strong>Anssi:</strong> <code>R37</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1110.001</code> <code>T1110.003</code> <code>T1078.002</code><br><strong>Anssi:</strong> <code>R37</code><br><strong>CisAd:</strong> <code>4.5.1</code></div>
         </div>
       </div>
     </td>
@@ -2177,7 +2177,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6</code> <code>AC-3</code> <code>AU-6</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1222.001</code> <code>T1078.002</code><br><strong>CisAd:</strong> <code>4.7.1</code><br><strong>Anssi:</strong> <code>R6</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6</code> <code>AC-3</code> <code>AU-6</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1222.001</code> <code>T1078.002</code><br><strong>Anssi:</strong> <code>R6</code><br><strong>CisAd:</strong> <code>4.7.1</code></div>
         </div>
       </div>
     </td>
@@ -2214,7 +2214,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code> <code>SC-12</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1558.001</code> <code>T1550.003</code><br><strong>CIS Benchmark:</strong> <code>18.3.1</code><br><strong>CisAd:</strong> <code>4.8.1</code><br><strong>Anssi:</strong> <code>R39</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code> <code>SC-12</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1558.001</code> <code>T1550.003</code><br><strong>CIS Benchmark:</strong> <code>18.3.1</code><br><strong>Anssi:</strong> <code>R39</code><br><strong>CisAd:</strong> <code>4.8.1</code></div>
         </div>
       </div>
     </td>
@@ -2251,7 +2251,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SC-12</code> <code>SC-13</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1558.001</code> <code>T1550.003</code><br><strong>CisAd:</strong> <code>4.8.2</code><br><strong>Anssi:</strong> <code>R39</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SC-12</code> <code>SC-13</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1558.001</code> <code>T1550.003</code><br><strong>Anssi:</strong> <code>R39</code><br><strong>CisAd:</strong> <code>4.8.2</code></div>
         </div>
       </div>
     </td>
@@ -2288,7 +2288,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-3</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1003.006</code><br><strong>CIS Benchmark:</strong> <code>18.3.1</code><br><strong>CisAd:</strong> <code>4.11.1</code><br><strong>Anssi:</strong> <code>R41</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-3</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1003.006</code><br><strong>CIS Benchmark:</strong> <code>18.3.1</code><br><strong>Anssi:</strong> <code>R41</code><br><strong>CisAd:</strong> <code>4.11.1</code></div>
         </div>
       </div>
     </td>
@@ -2325,7 +2325,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code> <code>IA-2</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code> <code>T1078</code><br><strong>CisAd:</strong> <code>5.5.1</code><br><strong>Anssi:</strong> <code>R36</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code> <code>IA-2</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code> <code>T1078</code><br><strong>Anssi:</strong> <code>R36</code><br><strong>CisAd:</strong> <code>5.5.1</code></div>
         </div>
       </div>
     </td>
@@ -2621,7 +2621,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-4</code> <code>AC-6</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1134.005</code><br><strong>CIS Benchmark:</strong> <code>18.3.1</code><br><strong>CisAd:</strong> <code>3.2.1</code><br><strong>Anssi:</strong> <code>R32</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-4</code> <code>AC-6</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1134.005</code><br><strong>CIS Benchmark:</strong> <code>18.3.1</code><br><strong>Anssi:</strong> <code>R32</code><br><strong>CisAd:</strong> <code>3.2.1</code></div>
         </div>
       </div>
     </td>
@@ -2658,7 +2658,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6</code> <code>AC-6(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1134.005</code><br><strong>CisAd:</strong> <code>3.2.2</code><br><strong>Anssi:</strong> <code>R32</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6</code> <code>AC-6(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1134.005</code><br><strong>Anssi:</strong> <code>R32</code><br><strong>CisAd:</strong> <code>3.2.2</code></div>
         </div>
       </div>
     </td>
@@ -4397,7 +4397,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>CM-6</code> <code>SI-2</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code><br><strong>CIS Benchmark:</strong> <code>18.3.1</code><br><strong>CisAd:</strong> <code>1.1.1</code><br><strong>Anssi:</strong> <code>R1</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>CM-6</code> <code>SI-2</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code><br><strong>CIS Benchmark:</strong> <code>18.3.1</code><br><strong>Anssi:</strong> <code>R1</code><br><strong>CisAd:</strong> <code>1.1.1</code></div>
         </div>
       </div>
     </td>
@@ -4434,7 +4434,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>CM-6</code> <code>SI-2</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code><br><strong>CIS Benchmark:</strong> <code>18.3.1</code><br><strong>CisAd:</strong> <code>1.1.2</code><br><strong>Anssi:</strong> <code>R1</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>CM-6</code> <code>SI-2</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code><br><strong>CIS Benchmark:</strong> <code>18.3.1</code><br><strong>Anssi:</strong> <code>R1</code><br><strong>CisAd:</strong> <code>1.1.2</code></div>
         </div>
       </div>
     </td>
@@ -4471,7 +4471,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>CM-8</code> <code>CM-8(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1018</code> <code>T1078.002</code><br><strong>CIS Benchmark:</strong> <code>1.1</code><br><strong>CisAd:</strong> <code>1.2.1</code><br><strong>Anssi:</strong> <code>R8</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>CM-8</code> <code>CM-8(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1018</code> <code>T1078.002</code><br><strong>CIS Benchmark:</strong> <code>1.1</code><br><strong>Anssi:</strong> <code>R8</code><br><strong>CisAd:</strong> <code>1.2.1</code></div>
         </div>
       </div>
     </td>
@@ -4545,7 +4545,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SC-20</code> <code>SC-21</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1557</code> <code>T1584.002</code><br><strong>CIS Benchmark:</strong> <code>18.5.4</code><br><strong>CisAd:</strong> <code>1.6.1</code><br><strong>Anssi:</strong> <code>R29</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SC-20</code> <code>SC-21</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1557</code> <code>T1584.002</code><br><strong>CIS Benchmark:</strong> <code>18.5.4</code><br><strong>Anssi:</strong> <code>R29</code><br><strong>CisAd:</strong> <code>1.6.1</code></div>
         </div>
       </div>
     </td>
@@ -4582,7 +4582,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SC-8</code> <code>SC-8(1)</code> <code>SC-23</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1557</code><br><strong>CIS Benchmark:</strong> <code>18.3.5</code><br><strong>CisAd:</strong> <code>2.1.2</code><br><strong>NsaAsd:</strong> <code>LDAP-2</code><br><strong>Anssi:</strong> <code>R25</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SC-8</code> <code>SC-8(1)</code> <code>SC-23</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1557</code><br><strong>CIS Benchmark:</strong> <code>18.3.5</code><br><strong>NsaAsd:</strong> <code>LDAP-2</code><br><strong>Anssi:</strong> <code>R25</code><br><strong>CisAd:</strong> <code>2.1.2</code></div>
         </div>
       </div>
     </td>
@@ -4619,7 +4619,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(2)</code> <code>SC-8</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1557</code> <code>T1003</code><br><strong>CIS Benchmark:</strong> <code>2.3.8.4</code><br><strong>CisAd:</strong> <code>2.3.2</code><br><strong>NsaAsd:</strong> <code>NTLM-2</code><br><strong>Anssi:</strong> <code>R27</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(2)</code> <code>SC-8</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1557</code> <code>T1003</code><br><strong>CIS Benchmark:</strong> <code>2.3.8.4</code><br><strong>NsaAsd:</strong> <code>NTLM-2</code><br><strong>Anssi:</strong> <code>R27</code><br><strong>CisAd:</strong> <code>2.3.2</code></div>
         </div>
       </div>
     </td>
@@ -4656,7 +4656,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-3</code> <code>AC-14</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1087.002</code> <code>T1069.002</code><br><strong>CIS Benchmark:</strong> <code>2.3.10.5</code> <code>2.3.10.6</code><br><strong>CisAd:</strong> <code>2.4.1</code><br><strong>Anssi:</strong> <code>R30</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-3</code> <code>AC-14</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1087.002</code> <code>T1069.002</code><br><strong>CIS Benchmark:</strong> <code>2.3.10.5</code> <code>2.3.10.6</code><br><strong>Anssi:</strong> <code>R30</code><br><strong>CisAd:</strong> <code>2.4.1</code></div>
         </div>
       </div>
     </td>
@@ -4693,7 +4693,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>CM-7</code> <code>CM-7(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1187</code> <code>T1210</code><br><strong>CIS Benchmark:</strong> <code>5.2</code><br><strong>CisAd:</strong> <code>1.2.3</code><br><strong>Anssi:</strong> <code>R9</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>CM-7</code> <code>CM-7(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1187</code> <code>T1210</code><br><strong>CIS Benchmark:</strong> <code>5.2</code><br><strong>Anssi:</strong> <code>R9</code><br><strong>CisAd:</strong> <code>1.2.3</code></div>
         </div>
       </div>
     </td>
@@ -5026,7 +5026,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1558.003</code><br><strong>CisAd:</strong> <code>7.1.1</code><br><strong>Anssi:</strong> <code>R36</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1558.003</code><br><strong>Anssi:</strong> <code>R36</code><br><strong>CisAd:</strong> <code>7.1.1</code></div>
         </div>
       </div>
     </td>
@@ -5063,7 +5063,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1558.004</code><br><strong>CisAd:</strong> <code>7.2.1</code><br><strong>Anssi:</strong> <code>R36</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1558.004</code><br><strong>Anssi:</strong> <code>R36</code><br><strong>CisAd:</strong> <code>7.2.1</code></div>
         </div>
       </div>
     </td>
@@ -5211,7 +5211,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SC-12</code> <code>SC-13</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1558</code><br><strong>CisAd:</strong> <code>7.4.1</code><br><strong>Anssi:</strong> <code>R37</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SC-12</code> <code>SC-13</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1558</code><br><strong>Anssi:</strong> <code>R37</code><br><strong>CisAd:</strong> <code>7.4.1</code></div>
         </div>
       </div>
     </td>
@@ -5766,7 +5766,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-6(5)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code> <code>T1069.002</code><br><strong>CIS Benchmark:</strong> <code>9.2.3</code><br><strong>CisAd:</strong> <code>4.1.3</code><br><strong>Anssi:</strong> <code>R2</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-6(5)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code> <code>T1069.002</code><br><strong>CIS Benchmark:</strong> <code>9.2.3</code><br><strong>Anssi:</strong> <code>R2</code><br><strong>CisAd:</strong> <code>4.1.3</code></div>
         </div>
       </div>
     </td>
@@ -5803,7 +5803,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-6(5)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code> <code>T1098</code><br><strong>CIS Benchmark:</strong> <code>9.2.4</code><br><strong>CisAd:</strong> <code>4.1.4</code><br><strong>Anssi:</strong> <code>R3</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-6(5)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code> <code>T1098</code><br><strong>CIS Benchmark:</strong> <code>9.2.4</code><br><strong>Anssi:</strong> <code>R3</code><br><strong>CisAd:</strong> <code>4.1.4</code></div>
         </div>
       </div>
     </td>
@@ -5840,7 +5840,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-6(5)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code> <code>T1543.003</code><br><strong>CisAd:</strong> <code>4.1.5</code><br><strong>Anssi:</strong> <code>R3</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-6(5)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code> <code>T1543.003</code><br><strong>Anssi:</strong> <code>R3</code><br><strong>CisAd:</strong> <code>4.1.5</code></div>
         </div>
       </div>
     </td>
@@ -5877,7 +5877,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-6(5)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1003.003</code> <code>T1078.002</code><br><strong>CisAd:</strong> <code>4.1.6</code><br><strong>Anssi:</strong> <code>R3</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-6(5)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1003.003</code> <code>T1078.002</code><br><strong>Anssi:</strong> <code>R3</code><br><strong>CisAd:</strong> <code>4.1.6</code></div>
         </div>
       </div>
     </td>
@@ -5914,7 +5914,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-6(5)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1543.003</code> <code>T1078.002</code><br><strong>CisAd:</strong> <code>4.1.8</code><br><strong>Anssi:</strong> <code>R3</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-6(5)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1543.003</code> <code>T1078.002</code><br><strong>Anssi:</strong> <code>R3</code><br><strong>CisAd:</strong> <code>4.1.8</code></div>
         </div>
       </div>
     </td>
@@ -5951,7 +5951,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-2</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1069.002</code> <code>T1078.002</code><br><strong>CisAd:</strong> <code>4.2.1</code><br><strong>Anssi:</strong> <code>R4</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-2</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1069.002</code> <code>T1078.002</code><br><strong>Anssi:</strong> <code>R4</code><br><strong>CisAd:</strong> <code>4.2.1</code></div>
         </div>
       </div>
     </td>
@@ -5988,7 +5988,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SC-12</code> <code>SC-13</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1558</code> <code>T1078.002</code><br><strong>CisAd:</strong> <code>4.3.5</code><br><strong>Anssi:</strong> <code>R36</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SC-12</code> <code>SC-13</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1558</code> <code>T1078.002</code><br><strong>Anssi:</strong> <code>R36</code><br><strong>CisAd:</strong> <code>4.3.5</code></div>
         </div>
       </div>
     </td>
@@ -6025,7 +6025,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-2(1)</code> <code>IA-2(2)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code><br><strong>CIS Benchmark:</strong> <code>1.1.6</code><br><strong>CisAd:</strong> <code>4.4.1</code><br><strong>Anssi:</strong> <code>R5</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-2(1)</code> <code>IA-2(2)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code><br><strong>CIS Benchmark:</strong> <code>1.1.6</code><br><strong>Anssi:</strong> <code>R5</code><br><strong>CisAd:</strong> <code>4.4.1</code></div>
         </div>
       </div>
     </td>
@@ -6062,7 +6062,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code><br><strong>CisAd:</strong> <code>4.5.2</code><br><strong>Anssi:</strong> <code>R37</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code><br><strong>Anssi:</strong> <code>R37</code><br><strong>CisAd:</strong> <code>4.5.2</code></div>
         </div>
       </div>
     </td>
@@ -6099,7 +6099,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-2(3)</code> <code>AC-2</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code> <code>T1098</code><br><strong>CisAd:</strong> <code>4.6.2</code><br><strong>Anssi:</strong> <code>R38</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-2(3)</code> <code>AC-2</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code> <code>T1098</code><br><strong>Anssi:</strong> <code>R38</code><br><strong>CisAd:</strong> <code>4.6.2</code></div>
         </div>
       </div>
     </td>
@@ -6136,7 +6136,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-6(5)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code> <code>T1078</code><br><strong>CisAd:</strong> <code>4.9.1</code><br><strong>Anssi:</strong> <code>R40</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-6(5)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code> <code>T1078</code><br><strong>Anssi:</strong> <code>R40</code><br><strong>CisAd:</strong> <code>4.9.1</code></div>
         </div>
       </div>
     </td>
@@ -6210,7 +6210,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-3</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code> <code>T1003</code><br><strong>CIS Benchmark:</strong> <code>2.2.7</code><br><strong>CisAd:</strong> <code>4.10.1</code><br><strong>Anssi:</strong> <code>R7</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-3</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code> <code>T1003</code><br><strong>CIS Benchmark:</strong> <code>2.2.7</code><br><strong>Anssi:</strong> <code>R7</code><br><strong>CisAd:</strong> <code>4.10.1</code></div>
         </div>
       </div>
     </td>
@@ -6247,7 +6247,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-3</code> <code>AC-17</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code> <code>T1021.001</code><br><strong>CIS Benchmark:</strong> <code>2.2.26</code><br><strong>CisAd:</strong> <code>4.10.2</code><br><strong>Anssi:</strong> <code>R7</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>AC-3</code> <code>AC-17</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code> <code>T1021.001</code><br><strong>CIS Benchmark:</strong> <code>2.2.26</code><br><strong>Anssi:</strong> <code>R7</code><br><strong>CisAd:</strong> <code>4.10.2</code></div>
         </div>
       </div>
     </td>
@@ -6284,7 +6284,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6</code> <code>IA-5(2)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1003</code> <code>T1550.003</code> <code>T1078.002</code><br><strong>CIS Benchmark:</strong> <code>18.3.1</code><br><strong>CisAd:</strong> <code>4.12.1</code><br><strong>Anssi:</strong> <code>R5</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6</code> <code>IA-5(2)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1003</code> <code>T1550.003</code> <code>T1078.002</code><br><strong>CIS Benchmark:</strong> <code>18.3.1</code><br><strong>Anssi:</strong> <code>R5</code><br><strong>CisAd:</strong> <code>4.12.1</code></div>
         </div>
       </div>
     </td>
@@ -6321,7 +6321,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6</code> <code>IA-5(2)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1003</code> <code>T1557</code> <code>T1078.002</code><br><strong>CisAd:</strong> <code>4.12.2</code><br><strong>Anssi:</strong> <code>R5</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6</code> <code>IA-5(2)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1003</code> <code>T1557</code> <code>T1078.002</code><br><strong>Anssi:</strong> <code>R5</code><br><strong>CisAd:</strong> <code>4.12.2</code></div>
         </div>
       </div>
     </td>
@@ -6358,7 +6358,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1110.001</code> <code>T1110.003</code><br><strong>CIS Benchmark:</strong> <code>1.1.1</code> <code>1.1.2</code> <code>1.1.3</code> <code>1.1.4</code> <code>1.1.5</code><br><strong>CisAd:</strong> <code>5.1.1</code><br><strong>Anssi:</strong> <code>R34</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1110.001</code> <code>T1110.003</code><br><strong>CIS Benchmark:</strong> <code>1.1.1</code> <code>1.1.2</code> <code>1.1.3</code> <code>1.1.4</code> <code>1.1.5</code><br><strong>Anssi:</strong> <code>R34</code><br><strong>CisAd:</strong> <code>5.1.1</code></div>
         </div>
       </div>
     </td>
@@ -6395,7 +6395,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1110.001</code> <code>T1110.003</code><br><strong>CIS Benchmark:</strong> <code>1.1.4</code><br><strong>CisAd:</strong> <code>5.2.1</code><br><strong>Anssi:</strong> <code>R34</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1110.001</code> <code>T1110.003</code><br><strong>CIS Benchmark:</strong> <code>1.1.4</code><br><strong>Anssi:</strong> <code>R34</code><br><strong>CisAd:</strong> <code>5.2.1</code></div>
         </div>
       </div>
     </td>
@@ -6432,7 +6432,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1110.001</code> <code>T1110.003</code><br><strong>CIS Benchmark:</strong> <code>1.1.5</code><br><strong>CisAd:</strong> <code>5.2.2</code><br><strong>Anssi:</strong> <code>R34</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1110.001</code> <code>T1110.003</code><br><strong>CIS Benchmark:</strong> <code>1.1.5</code><br><strong>Anssi:</strong> <code>R34</code><br><strong>CisAd:</strong> <code>5.2.2</code></div>
         </div>
       </div>
     </td>
@@ -6469,7 +6469,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-7</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1110.001</code> <code>T1110.003</code><br><strong>CIS Benchmark:</strong> <code>1.2.1</code> <code>1.2.2</code> <code>1.2.3</code><br><strong>CisAd:</strong> <code>5.3.1</code><br><strong>Anssi:</strong> <code>R35</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-7</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1110.001</code> <code>T1110.003</code><br><strong>CIS Benchmark:</strong> <code>1.2.1</code> <code>1.2.2</code> <code>1.2.3</code><br><strong>Anssi:</strong> <code>R35</code><br><strong>CisAd:</strong> <code>5.3.1</code></div>
         </div>
       </div>
     </td>
@@ -6506,7 +6506,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code><br><strong>CIS Benchmark:</strong> <code>1.1.4</code><br><strong>CisAd:</strong> <code>5.4.1</code><br><strong>Anssi:</strong> <code>R36</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code><br><strong>CIS Benchmark:</strong> <code>1.1.4</code><br><strong>Anssi:</strong> <code>R36</code><br><strong>CisAd:</strong> <code>5.4.1</code></div>
         </div>
       </div>
     </td>
@@ -6617,7 +6617,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1110.001</code> <code>T1110.003</code> <code>T1078.002</code><br><strong>CisAd:</strong> <code>5.5.5</code><br><strong>Anssi:</strong> <code>R34</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1110.001</code> <code>T1110.003</code> <code>T1078.002</code><br><strong>Anssi:</strong> <code>R34</code><br><strong>CisAd:</strong> <code>5.5.5</code></div>
         </div>
       </div>
     </td>
@@ -6654,7 +6654,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code> <code>AC-6</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.003</code> <code>T1003</code><br><strong>CIS Benchmark:</strong> <code>18.2.1</code><br><strong>CisAd:</strong> <code>5.7.1</code><br><strong>NsaAsd:</strong> <code>LAPS-1</code><br><strong>Anssi:</strong> <code>R42</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code> <code>AC-6</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.003</code> <code>T1003</code><br><strong>CIS Benchmark:</strong> <code>18.2.1</code><br><strong>NsaAsd:</strong> <code>LAPS-1</code><br><strong>Anssi:</strong> <code>R42</code><br><strong>CisAd:</strong> <code>5.7.1</code></div>
         </div>
       </div>
     </td>
@@ -6691,7 +6691,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-7</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1110.001</code> <code>T1110.003</code><br><strong>CIS Benchmark:</strong> <code>1.2.1</code><br><strong>CisAd:</strong> <code>5.3.2</code><br><strong>Anssi:</strong> <code>R35</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-7</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1110.001</code> <code>T1110.003</code><br><strong>CIS Benchmark:</strong> <code>1.2.1</code><br><strong>Anssi:</strong> <code>R35</code><br><strong>CisAd:</strong> <code>5.3.2</code></div>
         </div>
       </div>
     </td>
@@ -6913,7 +6913,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SI-2</code> <code>CM-6</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1210</code><br><strong>CisAd:</strong> <code>9.3.1</code><br><strong>Anssi:</strong> <code>R03</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SI-2</code> <code>CM-6</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1210</code><br><strong>Anssi:</strong> <code>R03</code><br><strong>CisAd:</strong> <code>9.3.1</code></div>
         </div>
       </div>
     </td>
@@ -6950,7 +6950,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SI-2</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1210</code><br><strong>CisAd:</strong> <code>9.3.2</code><br><strong>Anssi:</strong> <code>R03</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>SI-2</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1210</code><br><strong>Anssi:</strong> <code>R03</code><br><strong>CisAd:</strong> <code>9.3.2</code></div>
         </div>
       </div>
     </td>
@@ -7209,7 +7209,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-3</code> <code>AC-4</code> <code>AC-6</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1482</code> <code>T1078.002</code><br><strong>CisAd:</strong> <code>3.2.3</code><br><strong>Anssi:</strong> <code>R33</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-3</code> <code>AC-4</code> <code>AC-6</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1482</code> <code>T1078.002</code><br><strong>Anssi:</strong> <code>R33</code><br><strong>CisAd:</strong> <code>3.2.3</code></div>
         </div>
       </div>
     </td>
@@ -11760,7 +11760,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code> <code>AC-6</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1003</code> <code>T1078.002</code><br><strong>CisAd:</strong> <code>1.2.4</code><br><strong>Anssi:</strong> <code>R10</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code> <code>AC-6</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1003</code> <code>T1078.002</code><br><strong>Anssi:</strong> <code>R10</code><br><strong>CisAd:</strong> <code>1.2.4</code></div>
         </div>
       </div>
     </td>
@@ -12537,7 +12537,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>CM-7</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1547.012</code> <code>T1078.002</code><br><strong>CisAd:</strong> <code>4.1.7</code><br><strong>Anssi:</strong> <code>R3</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-6(1)</code> <code>CM-7</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1547.012</code> <code>T1078.002</code><br><strong>Anssi:</strong> <code>R3</code><br><strong>CisAd:</strong> <code>4.1.7</code></div>
         </div>
       </div>
     </td>
@@ -12648,7 +12648,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code> <code>AC-2</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1110.001</code><br><strong>CisAd:</strong> <code>5.1.2</code><br><strong>Anssi:</strong> <code>R34</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code> <code>AC-2</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1110.001</code><br><strong>Anssi:</strong> <code>R34</code><br><strong>CisAd:</strong> <code>5.1.2</code></div>
         </div>
       </div>
     </td>
@@ -12722,7 +12722,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1110.001</code><br><strong>CIS Benchmark:</strong> <code>1.1.1</code><br><strong>CisAd:</strong> <code>5.2.3</code><br><strong>Anssi:</strong> <code>R34</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1110.001</code><br><strong>CIS Benchmark:</strong> <code>1.1.1</code><br><strong>Anssi:</strong> <code>R34</code><br><strong>CisAd:</strong> <code>5.2.3</code></div>
         </div>
       </div>
     </td>
@@ -12759,7 +12759,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code><br><strong>CIS Benchmark:</strong> <code>1.1.2</code><br><strong>CisAd:</strong> <code>5.2.4</code><br><strong>Anssi:</strong> <code>R34</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.002</code><br><strong>CIS Benchmark:</strong> <code>1.1.2</code><br><strong>Anssi:</strong> <code>R34</code><br><strong>CisAd:</strong> <code>5.2.4</code></div>
         </div>
       </div>
     </td>
@@ -12870,7 +12870,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.003</code><br><strong>CisAd:</strong> <code>5.7.2</code><br><strong>Anssi:</strong> <code>R42</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>IA-5(1)</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1078.003</code><br><strong>Anssi:</strong> <code>R42</code><br><strong>CisAd:</strong> <code>5.7.2</code></div>
         </div>
       </div>
     </td>
@@ -12944,7 +12944,7 @@
         </div>
         <div class="fd-block fd-full">
           <div class="fd-label">Compliance Mappings</div>
-          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-7</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1110.001</code> <code>T1110.003</code><br><strong>CIS Benchmark:</strong> <code>1.2.3</code><br><strong>CisAd:</strong> <code>5.3.3</code><br><strong>Anssi:</strong> <code>R35</code></div>
+          <div class="fd-value"><strong>NIST SP 800-53:</strong> <code>AC-7</code><br><strong>MITRE ATT&amp;CK:</strong> <code>T1110.001</code> <code>T1110.003</code><br><strong>CIS Benchmark:</strong> <code>1.2.3</code><br><strong>Anssi:</strong> <code>R35</code><br><strong>CisAd:</strong> <code>5.3.3</code></div>
         </div>
       </div>
     </td>
@@ -23521,7 +23521,7 @@
 </script><div style="margin-top: 40px; padding-top: 16px; border-top: 2px solid var(--border);
             color: var(--dim); font-size: 0.8em; text-align: center; letter-spacing: 1px;">
   &#x2694; PSGuerrilla Campaign Report &nbsp;|&nbsp;
-  2026-06-22 16:01:28 UTC &nbsp;|&nbsp;
+  2026-06-22 18:11:56 UTC &nbsp;|&nbsp;
   Generated by PSGuerrilla v2.0.0 &nbsp;|&nbsp;
   511 checks across 3 theaters &nbsp;|&nbsp; Score: 0/100 (Critical Risk)
   <br>By Jim Tyler, Microsoft MVP &nbsp;|&nbsp; <a href="https://github.com/jimrtyler" style="color:var(--dim)">GitHub</a> &nbsp;|&nbsp; <a href="https://linkedin.com/in/jamestyler" style="color:var(--dim)">LinkedIn</a> &nbsp;|&nbsp; <a href="https://youtube.com/@jimrtyler" style="color:var(--dim)">YouTube</a>

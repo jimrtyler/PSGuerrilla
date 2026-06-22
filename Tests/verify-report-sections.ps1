@@ -104,6 +104,9 @@ try {
     $html = Get-Content $tmp -Raw
     Add-R 'recon: Security Maturity present'    ($html -match '<h2>Security Maturity</h2>') ''
     Add-R 'recon: Indicators of Exposure present' ($html -match '<h2>Indicators of Exposure</h2>') ''
+    Add-R 'recon: interactive filter bar present' (($html -match 'id="ggFilter"') -and ($html -match 'id="ggSearch"')) ''
+    Add-R 'recon: finding rows tagged for filter' (($html -match 'class="gg-row"') -and ($html -match 'data-status=') -and ($html -match 'data-sev=')) ''
+    Add-R 'recon: filter script present'          ($html -match "querySelectorAll\('tr\.gg-row'\)") ''
     Add-R 'recon: Cartography (SVG) present'    (($html -match '<h2>Attack-Path Cartography</h2>') -and ($html -match '<svg ')) ''
     Add-R 'recon: Attack Paths present'         ($html -match '<h2>Attack Paths to Tier-0</h2>') ''
     Add-R 'recon: full chain rendered'          ($html -match 'MemberOf.*Domain Admins') ''

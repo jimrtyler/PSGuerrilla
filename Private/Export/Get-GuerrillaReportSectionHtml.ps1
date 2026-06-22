@@ -353,3 +353,65 @@ function Get-GuerrillaIndicatorsOfExposureHtml {
     if ($more -gt 0) { [void]$sb.Append("<p class=`"ioe-note`" style=`"color:var(--dim);font-size:0.8em;margin-top:-16px`">+ $more more exposure(s) in the detailed findings below.</p>") }
     return $sb.ToString()
 }
+
+# Interactive findings filter — a Maester-style live filter bar (status + severity buttons + text search)
+# plus the client-side script that shows/hides any <tr class="gg-row" data-status data-sev data-text>.
+# Returns the bar + <style> + <script>; the host report tags its finding rows with those attributes.
+function Get-GuerrillaFindingsFilterHtml {
+    [CmdletBinding()]
+    param([string[]]$Statuses = @('FAIL', 'WARN', 'PASS', 'SKIP'),
+          [string[]]$Severities = @('Critical', 'High', 'Medium', 'Low'))
+
+    $statusBtns = '<button class="gg-btn active" data-f="status" data-v="all">All</button>' +
+        (($Statuses | ForEach-Object { "<button class=`"gg-btn`" data-f=`"status`" data-v=`"$_`">$_</button>" }) -join '')
+    $sevBtns = '<button class="gg-btn active" data-f="sev" data-v="all">All</button>' +
+        (($Severities | ForEach-Object { "<button class=`"gg-btn`" data-f=`"sev`" data-v=`"$_`">$_</button>" }) -join '')
+
+    @"
+<style>
+  .gg-filter { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:16px 0; padding:10px 12px;
+               background:var(--surface); border:1px solid var(--border); border-radius:4px; }
+  .gg-filter .gg-lbl { font-size:0.72em; color:var(--dim); text-transform:uppercase; letter-spacing:1px; margin-right:2px; }
+  .gg-btn { background:transparent; border:1px solid var(--border); border-radius:3px; padding:3px 10px;
+            color:var(--text); cursor:pointer; font-family:inherit; font-size:0.78em; }
+  .gg-btn:hover { background:rgba(168,181,139,0.1); }
+  .gg-btn.active { background:rgba(168,181,139,0.2); border-color:var(--olive); color:var(--parchment); }
+  .gg-search { flex:1 1 180px; min-width:140px; background:var(--bg); border:1px solid var(--border); border-radius:3px;
+               padding:4px 8px; color:var(--text); font-family:inherit; font-size:0.82em; }
+  .gg-empty { color:var(--dim); font-size:0.85em; font-style:italic; margin:8px 0; display:none; }
+  @media print { .gg-filter { display:none; } }
+</style>
+<div class="gg-filter" id="ggFilter">
+  <span class="gg-lbl">Status</span>$statusBtns
+  <span class="gg-lbl" style="margin-left:8px">Severity</span>$sevBtns
+  <input type="text" id="ggSearch" class="gg-search" placeholder="Search findings (id, name, value)...">
+</div>
+<div class="gg-empty" id="ggEmpty">No findings match the current filter.</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var bar = document.getElementById('ggFilter'); if (!bar) return;
+  var state = { status: 'all', sev: 'all', q: '' };
+  function apply() {
+    var q = state.q.toLowerCase(), shown = 0;
+    document.querySelectorAll('tr.gg-row').forEach(function (r) {
+      var okS = state.status === 'all' || (r.getAttribute('data-status') || '').toUpperCase() === state.status.toUpperCase();
+      var okV = state.sev === 'all' || (r.getAttribute('data-sev') || '').toUpperCase() === state.sev.toUpperCase();
+      var okQ = q === '' || (r.getAttribute('data-text') || '').indexOf(q) >= 0;
+      var vis = okS && okV && okQ; r.style.display = vis ? '' : 'none'; if (vis) shown++;
+    });
+    var active = state.status !== 'all' || state.sev !== 'all' || q !== '';
+    if (active) { document.querySelectorAll('details.cat-detail').forEach(function (d) { d.open = true; }); }
+    var e = document.getElementById('ggEmpty'); if (e) { e.style.display = (shown === 0) ? 'block' : 'none'; }
+  }
+  bar.querySelectorAll('button[data-f]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var t = b.getAttribute('data-f'); state[t] = b.getAttribute('data-v');
+      bar.querySelectorAll('button[data-f="' + t + '"]').forEach(function (x) { x.classList.remove('active'); });
+      b.classList.add('active'); apply();
+    });
+  });
+  var s = document.getElementById('ggSearch'); if (s) { s.addEventListener('input', function () { state.q = s.value; apply(); }); }
+});
+</script>
+"@
+}

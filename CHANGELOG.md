@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.28.0] - 2026-06-21
+
+_Interactive findings filter in the AD report — completes the Maester-class report (roadmap M3 done)._
+
+### Added
+- **Interactive findings filter** in the Reconnaissance report — a Maester-style live filter bar (**status + severity buttons + text search**) over both findings tables, matching what the Campaign report already had. New shared helper `Get-GuerrillaFindingsFilterHtml`; finding rows are tagged `gg-row` / `data-status` / `data-sev` / `data-text` and filtered client-side (auto-opens collapsed categories so matches show, with a "no findings match" notice). Print-safe (the bar hides on print).
+
+### Notes
+- This completes **roadmap M3** (interactive report + Indicators of Exposure). Report/presentation only — no engine, check, or scoring changes (517 checks, 48 public functions). Samples regenerated. Test: `Tests/verify-report-sections.ps1` (39/39 — filter bar, tagged rows, and filter script present).
+- **Maester roadmap: M1 (EIDSCA), M2 (CA what-if), M3 (report + IOE + filtering), M4 (CI/CD) done.** Remaining: **M6** (EXO/email depth — needs a live tenant to build with integrity), M7 (Entra governance). **Purple Knight: fully addressed.**
+
 ## [2.27.0] - 2026-06-21
 
 _Indicators of Exposure — a ranked, severity-scored exposure view in every report. Closes Purple Knight's signature edge (roadmap M3)._

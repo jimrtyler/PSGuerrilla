@@ -363,6 +363,9 @@ $($brand.Header)
     $priorityFindings = @($Findings | Where-Object { $_.Status -eq 'FAIL' } |
         Sort-Object @{Expression={@{Critical=0;High=1;Medium=2;Low=3;Info=4}[$_.Severity] ?? 5}},CheckId)
 
+    # ═══ INTERACTIVE FILTER BAR (live status/severity/search over the findings tables below) ═══
+    [void]$html.Append((Get-GuerrillaFindingsFilterHtml))
+
     if ($priorityFindings.Count -gt 0) {
         [void]$html.Append(@"
 <h2>Findings by Priority</h2>
@@ -376,8 +379,9 @@ $($brand.Header)
             $statusClass = if ($isAccepted) { 'accepted' } else { $f.Status.ToLower() }
             $statusLabel = if ($isAccepted) { 'ACCEPTED' } else { $f.Status }
             $remediation = if ($f.RemediationSteps) { $f.RemediationSteps } else { $f.RecommendedValue }
+            $rowText = & $esc (("$($f.CheckId) $($f.CheckName) $($f.Category) $($f.CurrentValue)").ToLower())
             [void]$html.Append(@"
-    <tr>
+    <tr class="gg-row" data-status="$(& $esc $f.Status)" data-sev="$(& $esc $f.Severity)" data-text="$rowText">
       <td><code>$(& $esc $f.CheckId)</code></td>
       <td><span class="badge badge-$sevClass">$(& $esc $f.Severity)</span></td>
       <td><span class="badge badge-$statusClass">$(& $esc $statusLabel)</span></td>
@@ -414,8 +418,9 @@ $($brand.Header)
             $sevClass = $f.Severity.ToLower()
             $statusClass = if ($isAccepted) { 'accepted' } else { $f.Status.ToLower() }
             $statusLabel = if ($isAccepted) { 'ACCEPTED' } else { $f.Status }
+            $rowText = & $esc (("$($f.CheckId) $($f.CheckName) $($f.Category) $($f.CurrentValue)").ToLower())
             [void]$html.Append(@"
-        <tr>
+        <tr class="gg-row" data-status="$(& $esc $f.Status)" data-sev="$(& $esc $f.Severity)" data-text="$rowText">
           <td><code>$(& $esc $f.CheckId)</code></td>
           <td><span class="badge badge-$sevClass">$(& $esc $f.Severity)</span></td>
           <td><span class="badge badge-$statusClass">$(& $esc $statusLabel)</span></td>
