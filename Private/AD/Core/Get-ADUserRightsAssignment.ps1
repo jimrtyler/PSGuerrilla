@@ -46,7 +46,7 @@ function Get-ADUserRightsAssignment {
         # "no one holds the right".
         InteractiveLogon       = $null   # SeInteractiveLogonRight  (local logon)
         RemoteInteractiveLogon = $null   # SeRemoteInteractiveLogonRight (RDP)
-        TemplatesRead          = @()
+        TemplatesRead          = [System.Collections.Generic.List[string]]::new()  # .Add() below; @() is fixed-size and throws
         Errors                 = @{}
     }
 
