@@ -1,0 +1,199 @@
+{
+  "categoryId": "gwsservice",
+  "categoryName": "Workspace Service Security (Sites / Classroom / Gemini)",
+  "categoryDescription": "SCuBA baseline checks for additional Google Workspace services: Google Sites, Google Classroom, and Gemini for Workspace. Settings are read from the Cloud Identity Policy API where exposed; controls the API does not surface are reported as Not Assessed with Admin console verification guidance.",
+  "checks": [
+    {
+      "id": "GWS-SITES-001",
+      "name": "Sites Service Disabled",
+      "description": "The Google Sites service should be disabled for all users to reduce attack surface, consistent with least-privilege. Sites can be enabled selectively per organizational unit or group where there is a documented need.",
+      "severity": "Low",
+      "subcategory": "Google Sites",
+      "recommendedValue": "Sites service OFF for everyone (enable selectively per OU/group only as needed)",
+      "remediationUrl": "https://admin.google.com/ac/appslist/additional",
+      "remediationSteps": "Admin Console > Apps > Google Workspace > Sites > Service status > Set to OFF for everyone. Enable selectively per organizational unit or group only where a documented business need exists.",
+      "compliance": {
+        "scuba": ["GWS.SITES.1.1v1"],
+        "nistSp80053": ["CM-7"],
+        "mitreAttack": ["T1526", "T1530"],
+        "cisBenchmark": []
+      }
+    },
+    {
+      "id": "GWS-CLASS-001",
+      "name": "Classroom Membership - Who Can Join Classes",
+      "description": "Who can join classes in your domain should be restricted to users in your domain only, preventing external accounts from joining internal classes.",
+      "severity": "Medium",
+      "subcategory": "Google Classroom",
+      "recommendedValue": "Who can join classes set to 'Users in your domain only'",
+      "remediationUrl": "https://admin.google.com/ac/appslist/additional",
+      "remediationSteps": "Admin Console > Apps > Additional Google services > Classroom > Class settings > About class membership > Who can join classes in your domain > Set to 'Users in your domain only'.",
+      "compliance": {
+        "scuba": ["GWS.CLASSROOM.1.1v1"],
+        "nistSp80053": ["AC-3", "AC-22"],
+        "mitreAttack": ["T1530"],
+        "cisBenchmark": []
+      }
+    },
+    {
+      "id": "GWS-CLASS-002",
+      "name": "Classroom Membership - Which Classes Users Can Join",
+      "description": "Which classes users in your domain can join should be restricted to classes in your domain only, preventing internal users from joining external classes that could exfiltrate data.",
+      "severity": "Medium",
+      "subcategory": "Google Classroom",
+      "recommendedValue": "Which classes users can join set to 'Classes in your domain only'",
+      "remediationUrl": "https://admin.google.com/ac/appslist/additional",
+      "remediationSteps": "Admin Console > Apps > Additional Google services > Classroom > Class settings > About class membership > Which classes users in your domain can join > Set to 'Classes in your domain only'.",
+      "compliance": {
+        "scuba": ["GWS.CLASSROOM.1.2v1"],
+        "nistSp80053": ["AC-3", "AC-4"],
+        "mitreAttack": ["T1567"],
+        "cisBenchmark": []
+      }
+    },
+    {
+      "id": "GWS-CLASS-003",
+      "name": "Classroom API Data Access Restricted",
+      "description": "Users should not be able to authorize third-party apps to access their Google Classroom data, preventing uncontrolled data access by external integrations.",
+      "severity": "Medium",
+      "subcategory": "Google Classroom",
+      "recommendedValue": "Users cannot authorize apps to access Classroom data (API data access disabled)",
+      "remediationUrl": "https://admin.google.com/ac/appslist/additional",
+      "remediationSteps": "Admin Console > Apps > Additional Google services > Classroom > Data access > Uncheck 'Users can authorize apps to access their Google Classroom data'.",
+      "compliance": {
+        "scuba": ["GWS.CLASSROOM.2.1v1"],
+        "nistSp80053": ["AC-3", "CM-7"],
+        "mitreAttack": ["T1195.002", "T1530"],
+        "cisBenchmark": []
+      }
+    },
+    {
+      "id": "GWS-CLASS-004",
+      "name": "Classroom Roster Import Disabled",
+      "description": "Roster import via third-party integration should be turned off so that class rosters are not synced from external systems without explicit governance.",
+      "severity": "Low",
+      "subcategory": "Google Classroom",
+      "recommendedValue": "Roster import turned OFF",
+      "remediationUrl": "https://admin.google.com/ac/appslist/additional",
+      "remediationSteps": "Admin Console > Apps > Additional Google services > Classroom > Roster import > Select OFF.",
+      "compliance": {
+        "scuba": ["GWS.CLASSROOM.3.1v1"],
+        "nistSp80053": ["CM-7", "AC-4"],
+        "mitreAttack": ["T1195.002"],
+        "cisBenchmark": []
+      }
+    },
+    {
+      "id": "GWS-CLASS-005",
+      "name": "Classroom Student Unenrollment Restricted",
+      "description": "Only teachers should be allowed to unenroll students from classes, preventing students from removing themselves or others and disrupting class membership integrity.",
+      "severity": "Low",
+      "subcategory": "Google Classroom",
+      "recommendedValue": "Student unenrollment restricted to teachers only",
+      "remediationUrl": "https://admin.google.com/ac/appslist/additional",
+      "remediationSteps": "Admin Console > Apps > Additional Google services > Classroom > Student unenrollment > Select 'Teachers only'.",
+      "compliance": {
+        "scuba": ["GWS.CLASSROOM.4.1v1"],
+        "nistSp80053": ["AC-3", "AC-6"],
+        "mitreAttack": ["T1531"],
+        "cisBenchmark": []
+      }
+    },
+    {
+      "id": "GWS-CLASS-006",
+      "name": "Classroom Class Creation Restricted to Verified Teachers",
+      "description": "Class creation should be restricted to verified teachers only, preventing unauthorized users from creating classes and gathering members.",
+      "severity": "Medium",
+      "subcategory": "Google Classroom",
+      "recommendedValue": "Class creation restricted to verified teachers only",
+      "remediationUrl": "https://admin.google.com/ac/appslist/additional",
+      "remediationSteps": "Admin Console > Apps > Additional Google services > Classroom > General settings > Teacher permissions > Select 'Verified teachers only'.",
+      "compliance": {
+        "scuba": ["GWS.CLASSROOM.5.1v1"],
+        "nistSp80053": ["AC-6", "CM-7"],
+        "mitreAttack": ["T1136"],
+        "cisBenchmark": []
+      }
+    },
+    {
+      "id": "GWS-GEMINI-001",
+      "name": "Gemini App Access Restricted to Licensed Users",
+      "description": "Gemini app user access should be set to OFF for everyone without a license, ensuring generative-AI access is governed by license assignment rather than open to all users.",
+      "severity": "Medium",
+      "subcategory": "Gemini for Workspace",
+      "recommendedValue": "Gemini app access OFF for users without a license",
+      "remediationUrl": "https://admin.google.com/ac/appslist/additional",
+      "remediationSteps": "Admin Console > Generative AI > Gemini app > User access > Uncheck 'Allow all users to access the Gemini app, regardless of license'.",
+      "compliance": {
+        "scuba": ["GWS.GEMINI.1.1v1"],
+        "nistSp80053": ["AC-3", "CM-7"],
+        "mitreAttack": ["T1530"],
+        "cisBenchmark": []
+      }
+    },
+    {
+      "id": "GWS-GEMINI-002",
+      "name": "Gemini Alpha Features Disabled",
+      "description": "Gemini Alpha features should be disabled. Pre-release features may not have completed security review and can expose organizational data to unvetted processing.",
+      "severity": "Low",
+      "subcategory": "Gemini for Workspace",
+      "recommendedValue": "Access to Alpha features in Gemini for Workspace turned off",
+      "remediationUrl": "https://admin.google.com/ac/appslist/additional",
+      "remediationSteps": "Admin Console > Generative AI > Gemini for Workspace > Alpha features > Select 'Turn off access to Alpha features in Gemini for Google Workspace'.",
+      "compliance": {
+        "scuba": ["GWS.GEMINI.2.1v1"],
+        "nistSp80053": ["CM-7", "SA-9"],
+        "mitreAttack": ["T1530"],
+        "cisBenchmark": []
+      }
+    },
+    {
+      "id": "GWS-GEMINI-003",
+      "name": "Gemini Conversation History Enabled",
+      "description": "Gemini conversation history should be enabled so that AI interactions are retained for audit and compliance purposes. Disabled history can conceal data handling.",
+      "severity": "Low",
+      "subcategory": "Gemini for Workspace",
+      "recommendedValue": "Gemini conversation history enabled",
+      "remediationUrl": "https://admin.google.com/ac/appslist/additional",
+      "remediationSteps": "Admin Console > Generative AI > Gemini app > Gemini conversation history > Ensure conversation history is turned on.",
+      "compliance": {
+        "scuba": ["GWS.GEMINI.3.1v1"],
+        "nistSp80053": ["AU-11", "AU-3"],
+        "mitreAttack": ["T1070"],
+        "cisBenchmark": []
+      }
+    },
+    {
+      "id": "GWS-GEMINI-004",
+      "name": "Gemini Conversation Retention Minimum 18 Months",
+      "description": "Gemini conversation retention should be set to a minimum of 18 months to support audit, legal-hold, and incident-investigation requirements.",
+      "severity": "Low",
+      "subcategory": "Gemini for Workspace",
+      "recommendedValue": "Conversation retention set to at least 18 months",
+      "remediationUrl": "https://admin.google.com/ac/appslist/additional",
+      "remediationSteps": "Admin Console > Generative AI > Gemini app > Gemini conversation history > Set the retention period to at least 18 months.",
+      "compliance": {
+        "scuba": ["GWS.GEMINI.3.2v1"],
+        "nistSp80053": ["AU-11"],
+        "mitreAttack": ["T1070"],
+        "cisBenchmark": []
+      }
+    },
+    {
+      "id": "GWS-GEMINI-005",
+      "name": "Gemini Conversation Sharing Disabled",
+      "description": "Gemini conversation sharing via link should be set to OFF to prevent AI conversation content, which may include sensitive prompts and outputs, from being shared outside intended recipients.",
+      "severity": "Medium",
+      "subcategory": "Gemini for Workspace",
+      "recommendedValue": "Conversation sharing via link set to OFF",
+      "remediationUrl": "https://admin.google.com/ac/appslist/additional",
+      "remediationSteps": "Admin Console > Generative AI > Gemini app > Sharing > Set 'Allow conversation sharing via link' to OFF.",
+      "compliance": {
+        "scuba": ["GWS.GEMINI.4.1v1"],
+        "nistSp80053": ["AC-3", "AC-4"],
+        "mitreAttack": ["T1567"],
+        "cisBenchmark": []
+      }
+    }
+  ]
+}

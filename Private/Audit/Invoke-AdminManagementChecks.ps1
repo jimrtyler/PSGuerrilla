@@ -476,3 +476,143 @@ function Test-FortificationADMIN013 {
         -CurrentValue $currentValue -OrgUnitPath $OrgUnitPath `
         -Details @{ SuperAdminCount = $count; SuperAdmins = $adminEmails; RecommendedRange = '2-4' }
 }
+
+# ── Assured Controls helper: read a field that the Policy API may return in camelCase
+#    (live JSON) or snake_case (as the docs spell it). Returns @() when absent so the
+#    caller SKIPs honestly rather than inventing a result. ────────────────────────────
+function Get-AssuredControlsFieldValue {
+    [CmdletBinding()]
+    param(
+        $Policies,
+        [Parameter(Mandatory)][string]$Type,
+        [Parameter(Mandatory)][string]$CamelField,
+        [Parameter(Mandatory)][string]$SnakeField
+    )
+    $objs = @(Resolve-GooglePolicyValue -Policies $Policies -Type $Type)
+    if ($objs.Count -eq 0) { return @() }
+    $out = foreach ($o in $objs) {
+        if ($null -eq $o) { continue }
+        $names = $o.PSObject.Properties.Name
+        if ($names -contains $CamelField)      { $o.$CamelField }
+        elseif ($names -contains $SnakeField)  { $o.$SnakeField }
+    }
+    return @($out)
+}
+
+# ── ADMIN-014: Assured Controls - Access Approvals Enabled (GWS.ASSUREDCONTROLS.1.1v1)
+function Test-FortificationADMIN014 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    # Policy API: access_approval.axa_user_scoping { requiresCustomerApproval=bool }.
+    # Secure = approval required everywhere. Grade WEAKEST OU: WARN (SHOULD) if any targeted
+    # policy does not require approval. SKIP when the type/field is absent (Assured Controls
+    # not licensed/configured, or API doesn't surface it) — never PASS on uncollectable data.
+    $pol = $AuditData.CloudIdentityPolicies
+    if (-not $pol) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Cloud Identity Policy API not available (cloud-identity.policies.readonly not delegated, or API disabled)' `
+            -OrgUnitPath $OrgUnitPath
+    }
+    $vals = @(Get-AssuredControlsFieldValue -Policies $pol -Type 'access_approval.axa_user_scoping' `
+        -CamelField 'requiresCustomerApproval' -SnakeField 'requires_customer_approval')
+    if ($vals.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Access Approvals setting not exposed for this tenant (Assured Controls may not be licensed/configured). Not Assessed — verify in Admin Console > Data > Compliance > Access Management / Access Approvals' `
+            -OrgUnitPath $OrgUnitPath `
+            -Details @{ Note = 'GWS.ASSUREDCONTROLS.1.1 — access_approval.axa_user_scoping not returned by the Policy API for this tenant' }
+    }
+    $notRequired = @($vals | Where-Object { $_ -ne $true })
+    if ($notRequired.Count -gt 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
+            -CurrentValue "Access Approvals not required in $($notRequired.Count) of $($vals.Count) targeted policy/policies — SCuBA recommends requiring approval before Google staff access data" `
+            -OrgUnitPath $OrgUnitPath `
+            -Details @{ Note = 'GWS.ASSUREDCONTROLS.1.1 recommends enabling Access Approvals' }
+    }
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+        -CurrentValue "Access Approvals required in all $($vals.Count) targeted policy/policies" `
+        -OrgUnitPath $OrgUnitPath
+}
+
+# ── ADMIN-015: Assured Controls - Support Access Restricted to U.S. Staff
+#    (GWS.ASSUREDCONTROLS.1.2v1) ──────────────────────────────────────────────────────
+function Test-FortificationADMIN015 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    # Policy API: access_management.user_scoping { allowedAudience=enum }. Documented enums:
+    # US_GOOGLE_STAFF / CJIS_IRS_1075_GOOGLE_STAFF (US-restricted, secure), EU_GOOGLE_STAFF
+    # (non-US -> WARN), PREFERENCE_UNSPECIFIED (not configured -> WARN). Grade WEAKEST OU.
+    # Unknown enum -> WARN; absent -> SKIP (never PASS on uncollectable data).
+    $pol = $AuditData.CloudIdentityPolicies
+    if (-not $pol) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Cloud Identity Policy API not available (cloud-identity.policies.readonly not delegated, or API disabled)' `
+            -OrgUnitPath $OrgUnitPath
+    }
+    $vals = @(Get-AssuredControlsFieldValue -Policies $pol -Type 'access_management.user_scoping' `
+        -CamelField 'allowedAudience' -SnakeField 'allowed_audience')
+    if ($vals.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Support-access audience setting not exposed for this tenant (Assured Controls may not be licensed/configured). Not Assessed — verify in Admin Console > Data > Compliance > Access Management' `
+            -OrgUnitPath $OrgUnitPath `
+            -Details @{ Note = 'GWS.ASSUREDCONTROLS.1.2 — access_management.user_scoping not returned by the Policy API for this tenant' }
+    }
+    $auds   = @($vals | ForEach-Object { "$_" })
+    $note   = "Allowed support audience: $((@($auds) | Select-Object -Unique) -join ', ') (across $($auds.Count) targeted policy/policies)"
+    $usOnly = @($auds | Where-Object { $_ -match '(?i)^(US_GOOGLE_STAFF|CJIS_IRS_1075_GOOGLE_STAFF)$' })
+    $nonUs  = @($auds | Where-Object { $_ -match '(?i)^EU_GOOGLE_STAFF$' })
+    $unset  = @($auds | Where-Object { $_ -match '(?i)^(PREFERENCE_UNSPECIFIED)?$' })
+    $known  = @($auds | Where-Object { $_ -match '(?i)^(US_GOOGLE_STAFF|CJIS_IRS_1075_GOOGLE_STAFF|EU_GOOGLE_STAFF|PREFERENCE_UNSPECIFIED)$' })
+
+    if ($known.Count -ne $auds.Count) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
+            -CurrentValue "Unrecognized support-audience value — verify manually that support is restricted to U.S. staff — $note" `
+            -OrgUnitPath $OrgUnitPath
+    }
+    if ($nonUs.Count -gt 0 -or $unset.Count -gt 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
+            -CurrentValue "Support access is not restricted to U.S. Google staff in $((@($nonUs) + @($unset)).Count) of $($auds.Count) targeted policy/policies — $note" `
+            -OrgUnitPath $OrgUnitPath `
+            -Details @{ Note = 'GWS.ASSUREDCONTROLS.1.2 recommends restricting support access to U.S. Google staff' }
+    }
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+        -CurrentValue "Support access restricted to U.S. Google staff in all $($usOnly.Count) targeted policy/policies — $note" `
+        -OrgUnitPath $OrgUnitPath
+}
+
+# ── ADMIN-016: Assured Controls - Multi-Region Data Processing Disabled
+#    (GWS.ASSUREDCONTROLS.2.1v1) ──────────────────────────────────────────────────────
+function Test-FortificationADMIN016 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    # Policy API: data_regions.data_processing_region { limitToStorageRegion=bool }. SCuBA:
+    # processing should be limited to the storage region (multi-region disabled) -> true is
+    # secure. Grade WEAKEST OU: WARN (SHOULD) if any targeted policy does not limit processing.
+    # Absent -> SKIP (Data Regions / Assured Controls not licensed) — never PASS on missing data.
+    $pol = $AuditData.CloudIdentityPolicies
+    if (-not $pol) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Cloud Identity Policy API not available (cloud-identity.policies.readonly not delegated, or API disabled)' `
+            -OrgUnitPath $OrgUnitPath
+    }
+    $vals = @(Get-AssuredControlsFieldValue -Policies $pol -Type 'data_regions.data_processing_region' `
+        -CamelField 'limitToStorageRegion' -SnakeField 'limit_to_storage_region')
+    if ($vals.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Data-processing-region setting not exposed for this tenant (Data Regions / Assured Controls may not be licensed/configured). Not Assessed — verify in Admin Console > Data > Compliance > Data regions' `
+            -OrgUnitPath $OrgUnitPath `
+            -Details @{ Note = 'GWS.ASSUREDCONTROLS.2.1 — data_regions.data_processing_region not returned by the Policy API for this tenant' }
+    }
+    $notLimited = @($vals | Where-Object { $_ -ne $true })
+    if ($notLimited.Count -gt 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
+            -CurrentValue "Data processing is not limited to the storage region in $($notLimited.Count) of $($vals.Count) targeted policy/policies — multi-region processing remains possible" `
+            -OrgUnitPath $OrgUnitPath `
+            -Details @{ Note = 'GWS.ASSUREDCONTROLS.2.1 recommends limiting data processing to the chosen storage region across all products' }
+    }
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+        -CurrentValue "Data processing limited to the storage region in all $($vals.Count) targeted policy/policies" `
+        -OrgUnitPath $OrgUnitPath
+}

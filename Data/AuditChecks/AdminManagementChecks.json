@@ -197,6 +197,54 @@
         "mitreAttack": ["T1078.004"],
         "cisBenchmark": ["4.13"]
       }
+    },
+    {
+      "id": "ADMIN-014",
+      "name": "Assured Controls - Access Approvals Enabled",
+      "description": "Access Approvals should be enabled so that Google support staff must request and obtain organizational approval before accessing covered data, reducing the risk of unauthorized provider access.",
+      "severity": "Medium",
+      "subcategory": "Assured Controls",
+      "recommendedValue": "Access Approvals enabled (Google staff require customer approval before accessing data)",
+      "remediationUrl": "https://admin.google.com/ac/managedsettings",
+      "remediationSteps": "Admin Console > Data > Compliance > Access Management / Access Approvals > Enable the requirement for Google support staff to request approval before accessing organizational data. Requires Assured Controls.",
+      "compliance": {
+        "scuba": ["GWS.ASSUREDCONTROLS.1.1v1"],
+        "nistSp80053": ["AC-3", "AC-6", "AU-9"],
+        "mitreAttack": ["T1199"],
+        "cisBenchmark": []
+      }
+    },
+    {
+      "id": "ADMIN-015",
+      "name": "Assured Controls - Support Access Restricted to U.S. Staff",
+      "description": "Support access should be restricted to Google staff located in the United States to maintain data sovereignty and prevent covered data from being handled by non-U.S. personnel.",
+      "severity": "Medium",
+      "subcategory": "Assured Controls",
+      "recommendedValue": "Support access audience restricted to U.S. Google staff",
+      "remediationUrl": "https://admin.google.com/ac/managedsettings",
+      "remediationSteps": "Admin Console > Data > Compliance > Access Management > Set the allowed support audience to U.S. Google staff only. Requires Assured Controls.",
+      "compliance": {
+        "scuba": ["GWS.ASSUREDCONTROLS.1.2v1"],
+        "nistSp80053": ["AC-3", "SA-9"],
+        "mitreAttack": ["T1199"],
+        "cisBenchmark": []
+      }
+    },
+    {
+      "id": "ADMIN-016",
+      "name": "Assured Controls - Multi-Region Data Processing Disabled",
+      "description": "Data processing across multiple regions should be disabled for all Google Workspace products so that covered data is processed only within its designated storage region, preserving data sovereignty.",
+      "severity": "Medium",
+      "subcategory": "Assured Controls",
+      "recommendedValue": "Data processing limited to the storage region (multi-region processing disabled)",
+      "remediationUrl": "https://admin.google.com/ac/managedsettings",
+      "remediationSteps": "Admin Console > Data > Compliance > Data regions > Enable 'Limit data processing to the chosen storage region' across Calendar, Drive and Docs, Gmail, Chat, Meet, and Gemini. Requires Assured Controls / Data Regions.",
+      "compliance": {
+        "scuba": ["GWS.ASSUREDCONTROLS.2.1v1"],
+        "nistSp80053": ["SC-7", "AC-4"],
+        "mitreAttack": ["T1530"],
+        "cisBenchmark": []
+      }
     }
   ]
 }

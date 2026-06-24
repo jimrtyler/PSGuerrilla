@@ -191,3 +191,222 @@ function Test-ReconADTRADE004 {
         -CurrentValue "Domain has $($rodcs.Count) RODC(s): $summary. Verify each RODC's Password Replication Policy out-of-band: Get-ADDomainControllerPasswordReplicationPolicy -Identity <rodc> -Denied. Domain Admins, Enterprise Admins, Schema Admins, Account Operators, and krbtgt must be in the Denied list (typically via the 'Denied RODC Password Replication Group' builtin)." `
         -Details @{ RodcCount = $rodcs.Count; Rodcs = @($rodcs) }
 }
+
+# ── ADTRADE-005: Seamless SSO (AZUREADSSOACC$) Key Rotation ────────────────
+function Test-ReconADTRADE005 {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][hashtable]$AuditData,
+        [Parameter(Mandatory)][hashtable]$CheckDefinition
+    )
+    $tc = $AuditData.Tradecraft
+    if (-not $tc) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Tradecraft data not collected.'
+    }
+    $sso = $tc.SeamlessSsoAccount
+    if (-not $sso) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'AZUREADSSOACC$ account not present — Entra Seamless SSO is not configured in this domain, so there is no key to rotate.'
+    }
+
+    $pwdLastSet = $sso.PwdLastSet
+    if ($pwdLastSet -isnot [datetime]) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'AZUREADSSOACC$ exists but pwdLastSet could not be read (attribute not collected or never set).' `
+            -Details @{ DistinguishedName = $sso.DistinguishedName }
+    }
+
+    $ageDays = [int]([datetime]::UtcNow - $pwdLastSet).TotalDays
+    $threshold = 90
+    if ($ageDays -le $threshold) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+            -CurrentValue "AZUREADSSOACC`$ Kerberos key was rotated $ageDays day(s) ago (within the $threshold-day target)." `
+            -Details @{ PwdAgeDays = $ageDays; ThresholdDays = $threshold; PwdLastSet = $pwdLastSet }
+    }
+
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'FAIL' `
+        -CurrentValue "AZUREADSSOACC`$ Kerberos key has not been rotated in $ageDays day(s) (target: every $threshold days). A stale key lets an attacker who has captured it forge Silver Tickets for any hybrid user indefinitely. Roll it twice with Update-AzureADSSOForest." `
+        -Details @{ PwdAgeDays = $ageDays; ThresholdDays = $threshold; PwdLastSet = $pwdLastSet; DistinguishedName = $sso.DistinguishedName }
+}
+
+# ── ADTRADE-006: Shadow Credentials on Privileged Principals ───────────────
+function Test-ReconADTRADE006 {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][hashtable]$AuditData,
+        [Parameter(Mandatory)][hashtable]$CheckDefinition
+    )
+    $tc = $AuditData.Tradecraft
+    if (-not $tc) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Tradecraft data not collected.'
+    }
+    if (-not $tc.ShadowCredCollected) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'msDS-KeyCredentialLink enumeration did not complete (read access to the attribute requires DC/privileged rights). Absence of data is not evidence of cleanliness — re-run with sufficient privilege.'
+    }
+    $hits = @($tc.ShadowCredentials)
+    if ($hits.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+            -CurrentValue 'No msDS-KeyCredentialLink (shadow credential) values found on privileged/Tier-0 principals (admins, domain controllers, adminCount=1 objects).' `
+            -Details @{ ScannedScope = 'adminCount=1 + domain controllers' }
+    }
+    $summary = @($hits | Select-Object -First 8 | ForEach-Object { "$($_.SamAccountName) ($($_.KeyCredentialCount) key(s))" }) -join '; '
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'FAIL' `
+        -CurrentValue "$($hits.Count) privileged/Tier-0 principal(s) carry msDS-KeyCredentialLink values: $summary. Each is a potential shadow-credential backdoor (Whisker/pyWhisker) allowing PKINIT logon as that account. Verify every key against a legitimate WHfB/passwordless enrollment and remove unrecognised entries." `
+        -Details @{ HitCount = $hits.Count; Principals = @($hits) }
+}
+
+# ── ADTRADE-007: BadSuccessor dMSA Escalation Surface ──────────────────────
+function Test-ReconADTRADE007 {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][hashtable]$AuditData,
+        [Parameter(Mandatory)][hashtable]$CheckDefinition
+    )
+    $tc = $AuditData.Tradecraft
+    if (-not $tc) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Tradecraft data not collected.'
+    }
+    if ($tc.DmsaClassPresent -eq $false) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Schema does not contain the msDS-DelegatedManagedServiceAccount class — this forest predates Windows Server 2025, so the BadSuccessor dMSA migration abuse is not applicable.'
+    }
+    if ($null -eq $tc.DmsaClassPresent) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Could not determine whether the dMSA class exists (schema partition unreadable). Absence of data is not a PASS — re-run with read access to the schema NC.'
+    }
+    if (-not $tc.DmsaAclCollected) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'dMSA class exists but the OU ACL sweep did not complete (ntSecurityDescriptor read failed). Re-run with rights to read OU DACLs.'
+    }
+    $ous = @($tc.BadSuccessorOus)
+    if ($ous.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+            -CurrentValue 'No OU grants a non-Tier-0 principal the ability to create or write a delegated Managed Service Account (dMSA). BadSuccessor escalation surface not present.' `
+            -Details @{ DmsaClassPresent = $true }
+    }
+    $summary = @($ous | Select-Object -First 6 | ForEach-Object {
+        $aces = @($_.RiskyAces | ForEach-Object { "$($_.Principal) [$($_.Scope)]" }) -join ', '
+        "$($_.Name): $aces"
+    }) -join '; '
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'FAIL' `
+        -CurrentValue "$($ous.Count) OU(s) let a non-Tier-0 principal create/write a dMSA (BadSuccessor). Examples: $summary. Such a principal can create a dMSA, mark it as superseding a privileged account, and inherit that account's Kerberos keys. Remove CreateChild/GenericAll on these OUs from non-admin principals." `
+        -Details @{ OuCount = $ous.Count; OUs = @($ous) }
+}
+
+# ── ADTRADE-008: Enterprise Key Admins / Key Admins Membership ─────────────
+function Test-ReconADTRADE008 {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][hashtable]$AuditData,
+        [Parameter(Mandatory)][hashtable]$CheckDefinition
+    )
+    $tc = $AuditData.Tradecraft
+    if (-not $tc) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Tradecraft data not collected.'
+    }
+    if (-not $tc.KeyAdminGroupsFound) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Neither the Key Admins (RID 526) nor Enterprise Key Admins (RID 527) group could be resolved in this domain. Cannot assess membership.'
+    }
+    $ek = @($tc.EnterpriseKeyAdmins | Where-Object { $_.ObjectClass -ne 'group' })
+    $ka = @($tc.KeyAdmins | Where-Object { $_.ObjectClass -ne 'group' })
+    $total = $ek.Count + $ka.Count
+    if ($total -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+            -CurrentValue 'Key Admins and Enterprise Key Admins groups are empty (recommended). These groups hold domain-wide msDS-KeyCredentialLink write rights.' `
+            -Details @{ KeyAdminsCount = 0; EnterpriseKeyAdminsCount = 0 }
+    }
+    $names = @(@($ek | ForEach-Object { "$($_.SamAccountName) (Enterprise Key Admins)" }) +
+               @($ka | ForEach-Object { "$($_.SamAccountName) (Key Admins)" })) -join ', '
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'FAIL' `
+        -CurrentValue "$total member(s) in Key Admins / Enterprise Key Admins: $names. Members can write msDS-KeyCredentialLink on objects domain-wide, a one-step shadow-credential primitive over any account. These groups should be empty unless WHfB key provisioning explicitly requires them." `
+        -Details @{
+            EnterpriseKeyAdminsCount = $ek.Count
+            KeyAdminsCount           = $ka.Count
+            EnterpriseKeyAdmins      = @($ek | ForEach-Object { @{ SamAccountName = $_.SamAccountName; ObjectClass = $_.ObjectClass } })
+            KeyAdmins                = @($ka | ForEach-Object { @{ SamAccountName = $_.SamAccountName; ObjectClass = $_.ObjectClass } })
+        }
+}
+
+# ── ADTRADE-009: Cert Publishers Membership ────────────────────────────────
+function Test-ReconADTRADE009 {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][hashtable]$AuditData,
+        [Parameter(Mandatory)][hashtable]$CheckDefinition
+    )
+    $tc = $AuditData.Tradecraft
+    if (-not $tc) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Tradecraft data not collected.'
+    }
+    if (-not $tc.CertPublishersFound) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Cert Publishers group (RID 517) could not be resolved in this domain. Cannot assess membership.'
+    }
+    $members = @($tc.CertPublishers | Where-Object { $_.ObjectClass -ne 'group' })
+    # Default membership is the Enterprise CA computer account(s). Member computers are expected;
+    # user/service-account members are the concern.
+    $nonComputer = @($members | Where-Object { $_.ObjectClass -ne 'computer' })
+    if ($members.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+            -CurrentValue 'Cert Publishers group is empty (no AD CS Enterprise CA, or membership is clean).' `
+            -Details @{ MemberCount = 0 }
+    }
+    if ($nonComputer.Count -eq 0) {
+        $names = @($members | ForEach-Object { $_.SamAccountName }) -join ', '
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+            -CurrentValue "Cert Publishers contains only computer account(s) (expected: Enterprise CA hosts): $names." `
+            -Details @{ MemberCount = $members.Count; ComputerOnly = $true }
+    }
+    $names = @($nonComputer | ForEach-Object { "$($_.SamAccountName) [$($_.ObjectClass)]" }) -join ', '
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'FAIL' `
+        -CurrentValue "$($nonComputer.Count) non-computer member(s) in Cert Publishers: $names. Members can publish certificates into the NTAuth store, enabling certificate-based authentication abuse (ESC). Only Enterprise CA computer accounts belong here." `
+        -Details @{
+            MemberCount       = $members.Count
+            NonComputerCount  = $nonComputer.Count
+            NonComputerMembers = @($nonComputer | ForEach-Object { @{ SamAccountName = $_.SamAccountName; ObjectClass = $_.ObjectClass } })
+        }
+}
+
+# ── ADTRADE-010: gMSA Posture & Password Exposure ──────────────────────────
+function Test-ReconADTRADE010 {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][hashtable]$AuditData,
+        [Parameter(Mandatory)][hashtable]$CheckDefinition
+    )
+    $tc = $AuditData.Tradecraft
+    if (-not $tc) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Tradecraft data not collected.'
+    }
+    if (-not $tc.GmsaCollected) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'gMSA enumeration did not complete (LDAP query failed). Cannot assess managed-account posture.'
+    }
+    $gmsas = @($tc.GmsaAccounts)
+    if ($gmsas.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
+            -CurrentValue 'No group Managed Service Accounts (gMSA) found. If service accounts run under static-password user accounts they are exposed to Kerberoasting and manual password rotation — migrate service identities to gMSAs (auto-rotated 240-bit passwords).' `
+            -Details @{ GmsaCount = 0 }
+    }
+    $exposed = @($gmsas | Where-Object { $_.BroadlyRetrievable -or $_.NonTier0Retrievable })
+    if ($exposed.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+            -CurrentValue "$($gmsas.Count) gMSA(s) in use; none expose their managed password to a broad or non-Tier-0 principal via PrincipalsAllowedToRetrieveManagedPassword." `
+            -Details @{ GmsaCount = $gmsas.Count }
+    }
+    $summary = @($exposed | Select-Object -First 6 | ForEach-Object {
+        $why = if ($_.BroadlyRetrievable) { 'broad principal (Everyone/Authenticated Users/Domain Users)' } else { 'non-privileged principal' }
+        "$($_.SamAccountName) -> $why"
+    }) -join '; '
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'FAIL' `
+        -CurrentValue "$($exposed.Count) of $($gmsas.Count) gMSA(s) expose their managed password to a broad/non-privileged principal: $summary. Any such principal can recover the cleartext gMSA password (e.g. GMSAPasswordReader) and impersonate the service. Restrict msDS-GroupMSAMembership to the specific hosts that must run the service." `
+        -Details @{ GmsaCount = $gmsas.Count; ExposedCount = $exposed.Count; Exposed = @($exposed) }
+}

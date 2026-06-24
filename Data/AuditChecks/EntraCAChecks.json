@@ -279,6 +279,38 @@
         "cisM365": [],
         "cisAzure": []
       }
+    },
+    {
+      "id": "EIDCA-017",
+      "name": "High-Risk User Notification to Administrators",
+      "description": "Identity Protection can email administrators when users are flagged as high-risk, enabling proactive investigation and containment of likely account compromise as it occurs. SCuBA recommends that such a notification be sent to administrators when high-risk users are detected. The Identity Protection 'Users at risk detected' notification recipient configuration is not exposed through a stable read-only Microsoft Graph endpoint, so an agentless assessment cannot positively confirm it; this check surfaces the requirement honestly and reports whether the supporting risk-detection telemetry is even available in the tenant rather than asserting compliance it cannot verify.",
+      "severity": "Medium",
+      "subcategory": "Risk-Based Access",
+      "recommendedValue": "Identity Protection configured to email administrators when high-risk users are detected",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/SecurityMenuBlade/~/UsersAtRiskDetectedAlerts",
+      "remediationSteps": "Configure the high-risk user notification, satisfying SCuBA MS.AAD.2.2. In Entra ID go to Protection > Identity Protection > Notifications and set 'Users at risk detected' alerts to email the appropriate security administrators or a monitored security operations distribution list. This control requires Entra ID P2 (Identity Protection). Because the notification recipient list is not readable agentlessly via Microsoft Graph, verify the setting manually in the portal.",
+      "compliance": {
+        "scuba": ["MS.AAD.2.2v1"],
+        "nistSp80053": ["SI-4", "IR-6", "AU-6"],
+        "mitreAttack": ["T1078.004"],
+        "cisM365": []
+      }
+    },
+    {
+      "id": "EIDCA-018",
+      "name": "Managed Device Required for MFA Registration",
+      "description": "Requiring an agency-managed (compliant or Hybrid Entra joined) device for the security-information registration action reduces the risk of an adversary using stolen credentials to enroll their own MFA method and establish persistence. SCuBA recommends that managed devices be required to register MFA. This is implemented as a Conditional Access policy targeting the 'Register security information' user action and requiring a compliant device or Hybrid Entra ID joined device as a grant control. This check inspects enabled Conditional Access policies for that configuration.",
+      "severity": "Medium",
+      "subcategory": "Risk-Based Access",
+      "recommendedValue": "An enabled Conditional Access policy targets the security-information registration user action and requires a compliant or Hybrid Entra ID joined device",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "remediationSteps": "Create a Conditional Access policy to require a managed device for MFA registration, satisfying SCuBA MS.AAD.3.8. Target the user action 'Register security information', scope it to all users (excluding break-glass accounts), and set the grant control to require a compliant device or Hybrid Entra ID joined device. Pilot in report-only mode, ensure a bootstrap path exists for new devices (for example Temporary Access Pass), then enable enforcement.",
+      "compliance": {
+        "scuba": ["MS.AAD.3.8v1"],
+        "nistSp80053": ["IA-2(1)", "IA-5", "AC-19"],
+        "mitreAttack": ["T1556.006"],
+        "cisM365": []
+      }
     }
   ]
 }

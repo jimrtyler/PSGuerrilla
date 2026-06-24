@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.30.0] - 2026-06-23
+
+_+63 checks (580 total) — closing remaining framework-coverage gaps across all three theaters._
+
+### Added
+- **Exchange Online depth (+36)** — `M365EXO-013`…`M365EXO-048` implementing the CISA SCuBA EXO baseline: anti-spam / anti-phishing / malware depth, Safe Links & Safe Attachments, mail-flow and external-forwarding controls, SPF/DKIM/DMARC, connection filtering, mailbox auditing, and audit-log retention. Extended the Exchange collector accordingly (`Get-TransportConfig`, `Get-SharingPolicy`, `Get-HostedConnectionFilterPolicy`, `Get-HostedOutboundSpamFilterPolicy`, `Get-AcceptedDomain`, `Get-AtpPolicyForO365`, `Get-ExternalInOutlook`, DNS mail-security resolution).
+- **Active Directory indicators (+6)** — `ADTRADE-005`…`ADTRADE-010`: Seamless SSO `AZUREADSSOACC` Kerberos key age (Silver-Ticket exposure), shadow credentials (`msDS-KeyCredentialLink`) on privileged objects, delegated-MSA migration escalation (BadSuccessor), Enterprise/Key Admins membership, Cert Publishers membership, and gMSA password-exposure posture.
+- **Google Workspace SCuBA baselines (+15)** — new **Workspace Service Security** category (`GwsService`) covering Google Sites, Classroom, and Gemini, plus Assured Controls under Admin & User Management. Controls the Cloud Identity Policy API does not surface report as Not Assessed with Admin-console verification guidance.
+- **Entra ID SCuBA completion (+5)** — `MS.AAD` controls for Authenticator number-matching context, password-never-expires, group-owner app consent, risky-user notification (manual/Not-Assessed), and managed-device MFA registration.
+- **`EIDFED-013` — Entra Connect sync-client version currency** — flags an outdated Entra Connect (Tier-0 hybrid component) against a minimum-safe baseline. Server-side read (registry / `Get-ADSyncGlobalSettings`) yields a definitive PASS/FAIL; cloud-only runs report Not Assessed with the server-side path. Includes a pure version comparator with unit tests.
+
+### Notes
+- Counts: Active Directory 211, Entra ID / Azure / Intune / M365 244, Google Workspace 125 = **580 checks**; 49 public functions. Read-only.
+- Honesty preserved: every control whose data cannot be collected returns **Not Assessed (SKIP/WARN)** — never a pass.
+
 ## [2.29.1] - 2026-06-21
 
 _Documentation cleanup — no functional change._

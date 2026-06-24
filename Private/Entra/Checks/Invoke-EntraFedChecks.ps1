@@ -532,3 +532,125 @@ function Test-InfiltrationEIDFED012 {
             IdentityPosture  = $identityPosture
         }
 }
+
+# ── EIDFED-013: Entra Connect Sync-Client Version Currency ──────────────
+function Test-InfiltrationEIDFED013 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    # The Entra Connect (formerly Azure AD Connect) build is an attribute of the
+    # on-premises Connect SERVER, not a cloud directory property. PSGuerrilla's Entra
+    # theater is agentless Graph, so we read the version authoritatively only when the
+    # audit is running on/near the Connect host. Detection layers, in order of trust:
+    #   1. Server-side authoritative read (registry / ADSync module) — best.
+    #   2. Cloud best-effort — confirm directory sync is enabled at all.
+    #   3. Honest verdict — PASS/FAIL only with a real version; otherwise WARN/SKIP.
+
+    $minimumSafe = $script:EntraConnectMinimumSafeVersion
+
+    # ── Layer 2 (cloud): is on-premises synchronization enabled at all? ──
+    $syncSettings = $AuditData.Federation.OnPremisesSyncSettings
+    $syncEnabled  = $null -ne $syncSettings
+    $lastSyncDateTime = $null
+    if ($syncEnabled) {
+        $settings = if ($syncSettings.value) { $syncSettings.value } else { @($syncSettings) }
+        $config   = if ($settings -is [array] -and $settings.Count -gt 0) { $settings[0] } else { $settings }
+        $lastSyncDateTime = $config.configuration.lastImportFromAd ?? $config.lastSyncDateTime
+    }
+
+    # ── Layer 1 (authoritative): read the installed build from the Connect host ──
+    $installedVersion = $null
+    $versionSource    = $null
+
+    if ($IsWindows -or ($null -eq $IsWindows)) {
+        # (a) Registry — present on the Connect server only.
+        try {
+            $regPath = 'HKLM:\SOFTWARE\Microsoft\Azure AD Connect'
+            if (Test-Path $regPath) {
+                $reg = Get-ItemProperty -Path $regPath -ErrorAction Stop
+                $regVer = $reg.InstallationVersion ?? $reg.Version ?? $reg.ProductVersion
+                if (-not [string]::IsNullOrWhiteSpace($regVer)) {
+                    $installedVersion = "$regVer"
+                    $versionSource    = "registry ($regPath)"
+                }
+            }
+        } catch {
+            # Not on the Connect server, or key inaccessible — fall through to ADSync.
+        }
+
+        # (b) ADSync module — Get-ADSyncGlobalSettings, only on the Connect host.
+        if (-not $installedVersion -and (Get-Command -Name 'Get-ADSyncGlobalSettings' -ErrorAction SilentlyContinue)) {
+            try {
+                $global = Get-ADSyncGlobalSettings -ErrorAction Stop
+                $adsyncVer = ($global.Parameters | Where-Object { $_.Name -match 'Version' } |
+                    Select-Object -First 1).Value
+                if (-not [string]::IsNullOrWhiteSpace($adsyncVer)) {
+                    $installedVersion = "$adsyncVer"
+                    $versionSource    = 'Get-ADSyncGlobalSettings'
+                }
+            } catch {
+                # ADSync present but unreadable — leave version unresolved.
+            }
+        }
+    }
+
+    # ── Verdict logic ──
+    # If sync is NOT enabled at all → cloud-only tenant, no Entra Connect to assess.
+    if (-not $syncEnabled) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'No on-premises synchronization configured — cloud-only tenant, no Entra Connect to assess' `
+            -Details @{
+                SyncEnabled        = $false
+                MinimumSafeVersion = $minimumSafe
+            }
+    }
+
+    # If we obtained an authoritative version → compare against the baseline (real PASS/FAIL).
+    if (-not [string]::IsNullOrWhiteSpace($installedVersion)) {
+        $cmp = Test-EntraConnectVersionCurrent -InstalledVersion $installedVersion -MinimumSafeVersion $minimumSafe
+
+        if (-not $cmp.IsAssessable) {
+            # We read *something* but it didn't parse as a version — do NOT pass.
+            return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
+                -CurrentValue "Entra Connect version '$installedVersion' (from $versionSource) could not be parsed — verify the Connect build is >= $minimumSafe on the Connect server" `
+                -Details @{
+                    SyncEnabled        = $true
+                    InstalledVersion   = $installedVersion
+                    VersionSource      = $versionSource
+                    MinimumSafeVersion = $minimumSafe
+                    IsAssessable       = $false
+                }
+        }
+
+        $status = if ($cmp.IsCurrent) { 'PASS' } else { 'FAIL' }
+        $currentValue = if ($cmp.IsCurrent) {
+            "Entra Connect $installedVersion is at or above the minimum-safe baseline $minimumSafe (read via $versionSource)"
+        } else {
+            "Entra Connect $installedVersion is BELOW the minimum-safe baseline $minimumSafe — unpatched Tier-0 hybrid component; update immediately (read via $versionSource)"
+        }
+
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status $status `
+            -CurrentValue $currentValue `
+            -Details @{
+                SyncEnabled        = $true
+                InstalledVersion   = $installedVersion
+                VersionSource      = $versionSource
+                MinimumSafeVersion = $minimumSafe
+                IsCurrent          = $cmp.IsCurrent
+                LastSyncDateTime   = $lastSyncDateTime
+            }
+    }
+
+    # Sync is enabled but the version could not be obtained (agentless cloud-only audit) →
+    # Not-Assessed. NEVER PASS without an actual version.
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
+        -CurrentValue "On-premises sync is enabled but the Entra Connect version could not be read from this host. Verify Entra Connect is >= $minimumSafe on the Connect server (registry HKLM\SOFTWARE\Microsoft\Azure AD Connect or Get-ADSyncGlobalSettings)." `
+        -Details @{
+            SyncEnabled        = $true
+            InstalledVersion   = $null
+            VersionSource      = $null
+            MinimumSafeVersion = $minimumSafe
+            LastSyncDateTime   = $lastSyncDateTime
+            Note               = 'Entra Connect build is an on-premises Connect-server attribute and is not exposed through agentless Graph collection. Run the audit on/near the Connect server, or confirm the build manually.'
+        }
+}

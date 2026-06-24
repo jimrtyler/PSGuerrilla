@@ -151,6 +151,20 @@
       "compliance": {
         "nistSp80053": ["AC-2"]
       }
+    },
+    {
+      "id": "EIDFED-013",
+      "name": "Entra Connect Sync-Client Version Currency",
+      "description": "Microsoft Entra Connect (formerly Azure AD Connect) is the sync client that replicates on-premises Active Directory identities into Entra ID and is a Tier-0 hybrid component: a compromise of the Connect server can lead to forged or manipulated cloud identities and tenant-wide impact. Microsoft periodically ships Entra Connect builds that contain undisclosed security fixes accompanied by expedited 'update immediately' guidance. A Connect server running a build below the minimum-safe baseline is an unpatched Tier-0 asset exposed to known but undisclosed vulnerabilities. Because the version is an attribute of the on-premises Connect server rather than a cloud directory property, version currency must be confirmed authoritatively on the Connect host; when it cannot be read it must be surfaced for manual verification rather than assumed compliant.",
+      "severity": "High",
+      "subcategory": "Hybrid Config",
+      "recommendedValue": "Entra Connect updated to the latest available build (at or above the minimum-safe baseline), with auto-upgrade enabled where supported and the Connect server managed as a Tier-0 asset",
+      "remediationSteps": "Identify the installed Entra Connect build on the synchronization server using the registry key HKLM\\SOFTWARE\\Microsoft\\Azure AD Connect or Get-ADSyncGlobalSettings, and compare it against the latest build published by Microsoft. Update Entra Connect to the latest release to apply security fixes, and enable automatic upgrade where the deployment supports it. Treat the Entra Connect server as a Tier-0 asset: restrict administrative access, apply current operating system patches, and enable comprehensive monitoring. Document a recurring process to track Microsoft Entra Connect release notes and apply security builds promptly.",
+      "compliance": {
+        "nistSp80053": ["SI-2", "SI-2(2)"],
+        "mitreAttack": ["T1195.002", "T1078.004"],
+        "anssi": ["R36"]
+      }
     }
   ]
 }

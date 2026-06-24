@@ -371,10 +371,11 @@ $categories = @(
     @{ Name = 'Email Security';                 Function = 'Invoke-EmailSecurityChecks';     ExpectedCount = 22 }
     @{ Name = 'Drive Security';                 Function = 'Invoke-DriveSecurityChecks';     ExpectedCount = 13 }
     @{ Name = 'OAuth Security';                 Function = 'Invoke-OAuthSecurityChecks';     ExpectedCount = 10 }
-    @{ Name = 'Admin Management';               Function = 'Invoke-AdminManagementChecks';   ExpectedCount = 13 }
-    @{ Name = 'Collaboration';                  Function = 'Invoke-CollaborationChecks';     ExpectedCount = 10 }
+    @{ Name = 'Admin Management';               Function = 'Invoke-AdminManagementChecks';   ExpectedCount = 16 }
+    @{ Name = 'Collaboration';                  Function = 'Invoke-CollaborationChecks';     ExpectedCount = 12 }
     @{ Name = 'Device Management';              Function = 'Invoke-DeviceManagementChecks';  ExpectedCount = 11 }
     @{ Name = 'Logging & Alerting';             Function = 'Invoke-LoggingAlertingChecks';   ExpectedCount = 6  }
+    @{ Name = 'Workspace Service (Sites/Classroom/Gemini)'; Function = 'Invoke-GwsServiceChecks'; ExpectedCount = 12 }
 )
 
 

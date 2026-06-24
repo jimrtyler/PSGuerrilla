@@ -235,6 +235,23 @@
         "nistSp80053": ["IA-2(1)"],
         "cisM365": ["5.2.2.1"]
       }
+    },
+    {
+      "id": "EIDAUTH-018",
+      "name": "Microsoft Authenticator Login Context (Application Name and Location)",
+      "description": "When the Microsoft Authenticator authentication method is enabled, displaying login context information (application name and geographic location) in push and passwordless notifications gives the user the situational awareness needed to recognize and reject MFA prompts they did not initiate. Without this context, users are far more likely to approve adversary-initiated push requests during MFA fatigue or real-time phishing attacks. This setting is controlled by the displayAppInformationRequiredState and displayLocationInformationRequiredState feature settings on the MicrosoftAuthenticator method configuration.",
+      "severity": "Medium",
+      "subcategory": "MFA Configuration",
+      "recommendedValue": "If Microsoft Authenticator is enabled, displayAppInformationRequiredState is enabled (application name shown); displayLocationInformationRequiredState is also recommended",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/AdminAuthMethods",
+      "remediationSteps": "Navigate to Entra ID > Protection > Authentication methods > Policies > Microsoft Authenticator. Under the Configure tab, set 'Show application name in push and passwordless notifications' to Enabled for all users, and enable 'Show geographic location in push and passwordless notifications'. This satisfies SCuBA MS.AAD.3.3, which requires Microsoft Authenticator to be configured to show login context when it is enabled.",
+      "compliance": {
+        "scuba": ["MS.AAD.3.3v2"],
+        "nistSp80053": ["IA-2(1)", "IA-2(2)"],
+        "mitreAttack": ["T1621"],
+        "cisM365": ["5.2.3.2"],
+        "eidsca": ["AM06", "AM09"]
+      }
     }
   ]
 }

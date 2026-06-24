@@ -485,3 +485,61 @@ function Test-InfiltrationEIDAUTH017 {
             Note     = 'Per-user MFA status check requires legacy MFA management portal API'
         }
 }
+
+# ── EIDAUTH-018: Microsoft Authenticator Login Context (MS.AAD.3.3) ──────
+function Test-InfiltrationEIDAUTH018 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $configs = $AuditData.AuthMethods.MethodConfigurations
+    if (-not $configs -or $configs.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Authentication method configurations not available — Not Assessed'
+    }
+
+    $authenticator = $configs | Where-Object {
+        $_.id -eq 'MicrosoftAuthenticator' -or $_.'@odata.type' -match 'microsoftAuthenticator'
+    } | Select-Object -First 1
+
+    if (-not $authenticator) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Microsoft Authenticator method configuration not present — Not Assessed'
+    }
+
+    # MS.AAD.3.3 only applies when Authenticator is enabled. If disabled, the control
+    # is satisfied by virtue of the method not being available.
+    if ($authenticator.state -ne 'enabled') {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+            -CurrentValue 'Microsoft Authenticator is not enabled — login context requirement not applicable' `
+            -Details @{ AuthenticatorState = $authenticator.state }
+    }
+
+    $appState = $authenticator.featureSettings.displayAppInformationRequiredState.state
+    $locState = $authenticator.featureSettings.displayLocationInformationRequiredState.state
+
+    # SCuBA MS.AAD.3.3 = show login context (application name). Location is a recommended add-on.
+    $appShown = $appState -eq 'enabled'
+    $locShown = $locState -eq 'enabled'
+
+    $status = if (-not $appShown) { 'FAIL' }
+              elseif (-not $locShown) { 'WARN' }
+              else { 'PASS' }
+
+    $currentValue = if (-not $appShown) {
+        'Microsoft Authenticator is enabled but application name is NOT shown in notifications — fails login-context requirement'
+    } elseif (-not $locShown) {
+        'Application name is shown; geographic location is not enabled (recommended)'
+    } else {
+        'Microsoft Authenticator shows application name and geographic location in notifications'
+    }
+
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status $status `
+        -CurrentValue $currentValue `
+        -Details @{
+            AuthenticatorState              = $authenticator.state
+            DisplayAppInformationState      = $appState ?? 'default'
+            DisplayLocationInformationState = $locState ?? 'default'
+            AppNameShown                    = $appShown
+            LocationShown                   = $locShown
+        }
+}

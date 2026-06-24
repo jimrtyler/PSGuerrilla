@@ -555,3 +555,57 @@ function Test-InfiltrationEIDTNT013 {
             Note                   = 'Additional notification settings (PIM, Identity Protection alerts) should be verified in their respective configurations.'
         }
 }
+
+# ── EIDTNT-014: User Password Expiration Disabled (MS.AAD.6.1) ───────────
+function Test-InfiltrationEIDTNT014 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    # Passwords never expire is signalled per domain by passwordValidityPeriodInDays.
+    # The sentinel value 2147483647 (Int32.MaxValue) means "never expire".
+    $neverExpireValue = 2147483647
+
+    $domains = $AuditData.TenantConfig.Domains
+    if (-not $domains -or $domains.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Domain data not available — password expiration policy Not Assessed'
+    }
+
+    # Only managed (non-federated) domains carry a meaningful password validity period.
+    $managedDomains = @($domains | Where-Object {
+        $_.authenticationType -eq 'Managed' -or -not $_.authenticationType
+    })
+    $assessable = @($managedDomains | Where-Object { $null -ne $_.passwordValidityPeriodInDays })
+
+    if ($assessable.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'No managed domains expose passwordValidityPeriodInDays — password expiration policy Not Assessed' `
+            -Details @{
+                ManagedDomainCount = $managedDomains.Count
+                Note               = 'passwordValidityPeriodInDays was null on all managed domains; cannot assert never-expire.'
+            }
+    }
+
+    $expiringDomains = @($assessable | Where-Object { $_.passwordValidityPeriodInDays -ne $neverExpireValue })
+    $neverExpireDomains = @($assessable | Where-Object { $_.passwordValidityPeriodInDays -eq $neverExpireValue })
+
+    $status = if ($expiringDomains.Count -eq 0) { 'PASS' } else { 'FAIL' }
+
+    $currentValue = if ($expiringDomains.Count -eq 0) {
+        "All $($assessable.Count) managed domain(s) have passwords set to never expire"
+    } else {
+        "$($expiringDomains.Count) of $($assessable.Count) managed domain(s) still enforce finite password expiration"
+    }
+
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status $status `
+        -CurrentValue $currentValue `
+        -Details @{
+            AssessedDomainCount   = $assessable.Count
+            NeverExpireCount      = $neverExpireDomains.Count
+            ExpiringDomainCount   = $expiringDomains.Count
+            ExpiringDomains       = @($expiringDomains | ForEach-Object {
+                @{ Domain = $_.id; PasswordValidityPeriodInDays = $_.passwordValidityPeriodInDays }
+            })
+            NeverExpireDomains    = @($neverExpireDomains | ForEach-Object { $_.id })
+        }
+}

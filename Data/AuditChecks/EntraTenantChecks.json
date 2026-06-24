@@ -177,6 +177,21 @@
       "compliance": {
         "nistSp80053": ["AU-5"]
       }
+    },
+    {
+      "id": "EIDTNT-014",
+      "name": "User Password Expiration Disabled (Passwords Never Expire)",
+      "description": "Mandatory periodic password rotation drives users toward predictable, weaker, and reused passwords and provides little defensive value when MFA and modern credential protections are in place. Aligned with NIST SP 800-63B and OMB M-22-09 guidance, user passwords should be configured to never expire. In Entra ID this is governed per verified domain by the passwordValidityPeriodInDays property; the value 2147483647 indicates passwords are set to never expire. This check inspects every managed domain and flags any domain that still enforces a finite password expiration period.",
+      "severity": "Low",
+      "subcategory": "Password Policy",
+      "recommendedValue": "passwordValidityPeriodInDays set to 2147483647 (never expire) on all managed domains",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/DomainsList.ReactView",
+      "remediationSteps": "Set the password expiration policy so passwords never expire, satisfying SCuBA MS.AAD.6.1. In the Microsoft 365 admin center go to Settings > Org settings > Security & privacy > Password expiration policy and select 'Set passwords to never expire'. Equivalently, for each managed domain set passwordValidityPeriodInDays to 2147483647 (never expire). Ensure compensating controls remain in place: enforced MFA, banned-password protection, and risk-based credential remediation.",
+      "compliance": {
+        "scuba": ["MS.AAD.6.1v1"],
+        "nistSp80053": ["IA-5", "IA-5(1)"],
+        "cisM365": ["1.3.1"]
+      }
     }
   ]
 }

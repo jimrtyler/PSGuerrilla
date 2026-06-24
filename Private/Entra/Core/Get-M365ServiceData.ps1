@@ -43,6 +43,67 @@ function Get-M365ServiceData {
                 $data.Exchange.RemoteDomains = @(Get-RemoteDomain -ErrorAction SilentlyContinue)
                 $data.Exchange.DkimSigningConfig = @(Get-DkimSigningConfig -ErrorAction SilentlyContinue)
                 $data.Exchange.CASMailboxPlans = @(Get-CASMailboxPlan -ErrorAction SilentlyContinue)
+
+                # ── Additional collectors for SCuBA EXO baseline coverage ──
+                # Transport config: SMTP AUTH global default (MS.EXO.5.1)
+                if (Get-Command Get-TransportConfig -ErrorAction SilentlyContinue) {
+                    $data.Exchange.TransportConfig = Get-TransportConfig -ErrorAction SilentlyContinue
+                }
+                # Accepted domains: input set for DNS-based SPF/DMARC validation (MS.EXO.2.x / 4.x)
+                if (Get-Command Get-AcceptedDomain -ErrorAction SilentlyContinue) {
+                    $data.Exchange.AcceptedDomains = @(Get-AcceptedDomain -ErrorAction SilentlyContinue)
+                }
+                # Sharing policies: external calendar/contact sharing (MS.EXO.6.1 / 6.2)
+                if (Get-Command Get-SharingPolicy -ErrorAction SilentlyContinue) {
+                    $data.Exchange.SharingPolicies = @(Get-SharingPolicy -ErrorAction SilentlyContinue)
+                }
+                # Connection filter policy: IP allow list / safe list (MS.EXO.12.1 / 12.2)
+                if (Get-Command Get-HostedConnectionFilterPolicy -ErrorAction SilentlyContinue) {
+                    $data.Exchange.ConnectionFilterPolicies = @(Get-HostedConnectionFilterPolicy -ErrorAction SilentlyContinue)
+                }
+                # Outbound spam filter policy: external auto-forward enforcement (MS.EXO.1.1)
+                if (Get-Command Get-HostedOutboundSpamFilterPolicy -ErrorAction SilentlyContinue) {
+                    $data.Exchange.OutboundSpamPolicies = @(Get-HostedOutboundSpamFilterPolicy -ErrorAction SilentlyContinue)
+                }
+                # ATP policy for O365: Safe Attachments for SPO/OneDrive/Teams (MS.EXO.9.x / 10.x)
+                if (Get-Command Get-AtpPolicyForO365 -ErrorAction SilentlyContinue) {
+                    $data.Exchange.AtpPolicyForO365 = @(Get-AtpPolicyForO365 -ErrorAction SilentlyContinue)
+                }
+                # External-in-Outlook: native external sender tag (MS.EXO.7.1)
+                if (Get-Command Get-ExternalInOutlook -ErrorAction SilentlyContinue) {
+                    $data.Exchange.ExternalInOutlook = @(Get-ExternalInOutlook -ErrorAction SilentlyContinue)
+                }
+                # Protection alert policies: EXO alerting requirements (MS.EXO.16.x)
+                if (Get-Command Get-ProtectionAlert -ErrorAction SilentlyContinue) {
+                    $data.Exchange.ProtectionAlerts = @(Get-ProtectionAlert -ErrorAction SilentlyContinue)
+                }
+                # Unified audit log ingestion status (MS.EXO.17.1)
+                if (Get-Command Get-AdminAuditLogConfig -ErrorAction SilentlyContinue) {
+                    $data.Exchange.AdminAuditLogConfig = Get-AdminAuditLogConfig -ErrorAction SilentlyContinue
+                }
+                # DLP compliance policies for EXO workload (MS.EXO.8.x)
+                if (Get-Command Get-DlpCompliancePolicy -ErrorAction SilentlyContinue) {
+                    $data.Exchange.DlpCompliancePolicies = @(Get-DlpCompliancePolicy -ErrorAction SilentlyContinue)
+                }
+
+                # ── DNS-based email authentication for accepted domains (SPF/DMARC) ──
+                # MS.EXO.2.2 (SPF) and MS.EXO.4.x (DMARC) live in DNS, not EXO config.
+                # Resolve them per accepted domain using the existing DNS helper when present.
+                if ($data.Exchange.AcceptedDomains -and
+                    (Get-Command Resolve-DomainMailSecurity -ErrorAction SilentlyContinue)) {
+                    $mailSec = [System.Collections.Generic.List[object]]::new()
+                    foreach ($dom in @($data.Exchange.AcceptedDomains)) {
+                        $domName = $dom.DomainName
+                        if (-not $domName) { continue }
+                        # Skip the *.onmicrosoft.com routing domain noise where possible; still resolve customs
+                        try {
+                            $mailSec.Add((Resolve-DomainMailSecurity -Domain $domName))
+                        } catch {
+                            $mailSec.Add(@{ Domain = $domName; Error = $_.Exception.Message })
+                        }
+                    }
+                    $data.Exchange.DomainMailSecurity = @($mailSec)
+                }
             } else {
                 $data.Errors['Exchange'] = 'EXO module available but not connected. Run Connect-ExchangeOnline first.'
             }

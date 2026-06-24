@@ -697,3 +697,89 @@ function Test-InfiltrationEIDCA016 {
             Export      = $export
         }
 }
+
+# ── EIDCA-017: High-Risk User Notification to Administrators (MS.AAD.2.2) ─
+function Test-InfiltrationEIDCA017 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    # SCuBA MS.AAD.2.2: a notification SHOULD be sent to admins when high-risk users are
+    # detected. The Identity Protection "Users at risk detected" notification recipient
+    # configuration is NOT exposed via a stable read-only Microsoft Graph endpoint, so an
+    # agentless assessment cannot positively confirm the recipient list. We therefore report
+    # this honestly as Not Assessed (SKIP) rather than assuming PASS, and surface whether the
+    # underlying Identity Protection risk telemetry even exists in the tenant.
+    $riskDetections = $AuditData.RiskDetections ?? $AuditData.IdentityProtection.RiskDetections
+    $riskyUsers = $AuditData.RiskyUsers ?? $AuditData.IdentityProtection.RiskyUsers
+
+    $hasRiskTelemetry = ($riskDetections -and @($riskDetections).Count -gt 0) -or
+                        ($riskyUsers -and @($riskyUsers).Count -gt 0)
+
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+        -CurrentValue 'High-risk user notification recipients are not readable agentlessly via Microsoft Graph — Not Assessed (verify in Identity Protection > Notifications)' `
+        -Details @{
+            AgentlessLimitation = 'The Identity Protection users-at-risk notification recipient list has no stable read-only Graph endpoint.'
+            RiskTelemetryPresent = [bool]$hasRiskTelemetry
+            RequiresLicense      = 'Entra ID P2 (Identity Protection)'
+            ManualVerification   = 'Entra ID > Protection > Identity Protection > Notifications > Users at risk detected.'
+        }
+}
+
+# ── EIDCA-018: Managed Device Required for MFA Registration (MS.AAD.3.8) ──
+function Test-InfiltrationEIDCA018 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $policies = $AuditData.ConditionalAccess.Policies
+    if (-not $policies -or $policies.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'No Conditional Access policy data available — managed-device MFA registration requirement Not Assessed'
+    }
+
+    $enabled = @($policies | Where-Object { $_.state -eq 'enabled' })
+
+    # MS.AAD.3.8: a CA policy targeting the security-information registration user action
+    # must require a managed (compliant or Hybrid Entra joined) device.
+    $registrationActionId = 'registerSecurityInformation'
+    $managedDeviceControls = @('compliantDevice', 'domainJoinedDevice')
+
+    $matching = @($enabled | Where-Object {
+        $userActions = @($_.conditions.applications.includeUserActions)
+        ($userActions -contains $registrationActionId) -and
+        (@($_.grantControls.builtInControls | Where-Object { $_ -in $managedDeviceControls }).Count -gt 0)
+    })
+
+    if ($matching.Count -gt 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+            -CurrentValue "$($matching.Count) enabled CA policy(ies) require a managed device for security-information registration" `
+            -Details @{
+                MatchingPolicyCount = $matching.Count
+                Policies            = @($matching | ForEach-Object {
+                    @{
+                        Id            = $_.id
+                        DisplayName   = $_.displayName
+                        IncludeUsers  = @($_.conditions.users.includeUsers)
+                        GrantControls = @($_.grantControls.builtInControls)
+                    }
+                })
+            }
+    }
+
+    # Distinguish "policy exists for the action but without managed-device control" from "no policy at all".
+    $registrationActionPolicies = @($enabled | Where-Object {
+        @($_.conditions.applications.includeUserActions) -contains $registrationActionId
+    })
+
+    $currentValue = if ($registrationActionPolicies.Count -gt 0) {
+        'A CA policy targets security-information registration but does not require a compliant or Hybrid Entra ID joined device'
+    } else {
+        'No enabled CA policy requires a managed device for MFA / security-information registration'
+    }
+
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'FAIL' `
+        -CurrentValue $currentValue `
+        -Details @{
+            MatchingPolicyCount        = 0
+            RegistrationActionPolicies = $registrationActionPolicies.Count
+        }
+}

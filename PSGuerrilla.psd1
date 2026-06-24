@@ -1,6 +1,6 @@
 @{
     RootModule        = 'PSGuerrilla.psm1'
-    ModuleVersion     = '2.29.1'
+    ModuleVersion     = '2.30.0'
     GUID              = 'f7a3b2c1-4d5e-6f78-9a0b-1c2d3e4f5a6b'
     Author            = 'Jim Tyler, Microsoft MVP'
     CompanyName       = 'Jim Tyler'
@@ -84,7 +84,7 @@
             Tags       = @('GoogleWorkspace', 'ActiveDirectory', 'EntraID', 'AzureAD', 'Intune', 'M365', 'Security', 'CompromiseAssessment', 'IncidentResponse', 'ThreatDetection', 'ADSecurity', 'CloudSecurity', 'NTLMRelay', 'TierZero', 'GUI', 'WPF', 'PSGuerrilla')
             LicenseUri = 'https://creativecommons.org/licenses/by/4.0/'
             ProjectUri = 'https://guerrilla.army'
-            ReleaseNotes = 'v2.29.1: Documentation cleanup (no functional change) - removed third-party product references from the notes and shipped help, and re-articulated the EIDSCA checks around their documented Microsoft Graph settings. v2.29.0: Turnkey CI/CD. New Get-GuerrillaCIGate decides whether a build should fail from findings plus a -FailOn severity threshold (Critical/High/Medium/Low/Any/None) - FAIL gates (plus WARN with -WarningsAsFailures), SKIP/Not Assessed never gates. New action.yml turnkey GitHub Action (composite) that installs the module, runs a chosen theater (Infiltration/Reconnaissance/Fortification/Campaign), publishes JUnit results via Export-GuerrillaJUnit, and gates the build; the caller authenticates first. Gating logic unit-tested (verify-ci-gate.ps1 11/11). Recent capability also includes interactive findings filter + Indicators of Exposure in the HTML reports, Security Maturity (CMMI 1-5), Attack-Path Cartography, full 44-control EIDSCA baseline, CISA SCuBA crosswalk, Conditional Access what-if simulation, BloodHound OpenGraph export, and full-domain ACL with transitive attack-path analysis. 517 checks across Active Directory (205), Entra ID / Azure / Intune / M365 (202), and Google Workspace (110); 49 public functions. Read-only. See CHANGELOG.md for full version history.'
+            ReleaseNotes = 'v2.30.0: +63 checks (580 total). Expanded Exchange Online coverage with 36 additional CISA SCuBA EXO controls - anti-spam/anti-phishing/malware depth, Safe Links and Safe Attachments, mail-flow and external-forwarding controls, SPF/DKIM/DMARC, connection filtering, mailbox auditing, and audit-log retention. Added 6 Active Directory privileged/credential indicators: Seamless SSO (AZUREADSSOACC) Kerberos key age, shadow credentials (msDS-KeyCredentialLink) on privileged objects, delegated MSA migration escalation (BadSuccessor), Enterprise/Key Admins membership, Cert Publishers membership, and gMSA password-exposure posture. Added 4 Google Workspace SCuBA baselines - Sites, Classroom, Gemini, and Assured Controls - and completed the SCuBA Entra ID control set. New EIDFED-013 evaluates Microsoft Entra Connect sync-client version currency against a minimum-safe baseline (the Connect server is Tier-0; a server-side read gives a definitive verdict, cloud-only runs report Not Assessed). Controls whose data cannot be collected report as Not Assessed rather than passing. Read-only. 580 checks across Active Directory (211), Entra ID / Azure / Intune / M365 (244), and Google Workspace (125); 49 public functions. See CHANGELOG.md for full version history.'
         }
     }
 }

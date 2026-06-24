@@ -37,6 +37,10 @@ function Get-FortificationData {
         Collaboration    = @('OrgUnits', 'Groups')
         DeviceManagement = @('MobileDevices', 'ChromeDevices', 'ChromePolicies')
         LoggingAlerting  = @('AlertRules')
+        # Sites/Classroom/Gemini checks read only CloudIdentityPolicies, which is collected
+        # unconditionally below (step 16). 'Customer' is always added so the category still
+        # resolves a data need and the tenant header populates.
+        GwsService       = @('Customer')
         Tradecraft       = @('DomainWideDelegation', 'Users', 'Roles', 'OAuthApps', 'Groups', 'GroupSettings')
     }
 

@@ -8,7 +8,8 @@ function Invoke-Fortification {
         [string]$AdminEmail,
 
         [ValidateSet('All', 'Authentication', 'EmailSecurity', 'DriveSecurity', 'OAuthSecurity',
-                     'AdminManagement', 'Collaboration', 'DeviceManagement', 'LoggingAlerting')]
+                     'AdminManagement', 'Collaboration', 'DeviceManagement', 'LoggingAlerting',
+                     'GwsService')]
         [string[]]$Categories = @('All'),
 
         [switch]$IncludeChildOUs,
@@ -183,6 +184,7 @@ function Invoke-Fortification {
             Collaboration    = 'Invoke-CollaborationChecks'
             DeviceManagement = 'Invoke-DeviceManagementChecks'
             LoggingAlerting  = 'Invoke-LoggingAlertingChecks'
+            GwsService       = 'Invoke-GwsServiceChecks'
             Tradecraft       = 'Invoke-GoogleTradecraftChecks'
         }
 
@@ -424,6 +426,14 @@ function Get-FortificationScopes {
         LoggingAlerting  = @(
             'https://www.googleapis.com/auth/admin.directory.customer.readonly'
             'https://www.googleapis.com/auth/apps.alerts'
+        )
+        # Sites / Classroom / Gemini settings are read from the Cloud Identity Policy API,
+        # which Get-GoogleCloudIdentityPolicies requests under its OWN isolated token
+        # (cloud-identity.policies.readonly). This category only needs the shared-token
+        # customer scope; the policy scope is intentionally not added to the shared set so
+        # tenants that haven't delegated it still authenticate (the checks then SKIP).
+        GwsService       = @(
+            'https://www.googleapis.com/auth/admin.directory.customer.readonly'
         )
     }
 

@@ -1,62 +1,240 @@
 {
   "categoryId": "adtrade",
   "categoryName": "AD Adversary Tradecraft Indicators",
-  "categoryDescription": "Combines high-signal state-actor and red-team TTPs that are detectable from LDAP + SYSVOL without endpoint visibility. The GPP cpassword scan is the single highest-ROI check in this module — it routinely finds cleartext-recoverable admin credentials in environments that were upgraded from pre-2014 GPP. DCShadow indicator surfaces rogue server objects in the configuration partition. BitLocker recovery key staleness flags keys for retired computers that are still queryable.",
+  "categoryDescription": "Combines high-signal state-actor and red-team TTPs that are detectable from LDAP + SYSVOL without endpoint visibility. The GPP cpassword scan is the single highest-ROI check in this module \u2014 it routinely finds cleartext-recoverable admin credentials in environments that were upgraded from pre-2014 GPP. DCShadow indicator surfaces rogue server objects in the configuration partition. BitLocker recovery key staleness flags keys for retired computers that are still queryable.",
   "checks": [
     {
       "id": "ADTRADE-001",
       "name": "Group Policy Preferences cpassword Leftovers in SYSVOL",
-      "description": "From 2008 to May 2014, Group Policy Preferences let admins push scheduled tasks, local user passwords, mapped drives, and services using a 'cpassword' field — encrypted with an AES-256 key Microsoft publicly documented. The fix in MS14-025 disabled the cpassword field in NEW preferences but left existing ones in SYSVOL untouched. Every red-team engagement still finds these. Any authenticated domain user can read SYSVOL, grab the cpassword, and decrypt it offline. If you find anything here, treat every credential exposed as compromised and rotate it.",
+      "description": "From 2008 to May 2014, Group Policy Preferences let admins push scheduled tasks, local user passwords, mapped drives, and services using a 'cpassword' field \u2014 encrypted with an AES-256 key Microsoft publicly documented. The fix in MS14-025 disabled the cpassword field in NEW preferences but left existing ones in SYSVOL untouched. Every red-team engagement still finds these. Any authenticated domain user can read SYSVOL, grab the cpassword, and decrypt it offline. If you find anything here, treat every credential exposed as compromised and rotate it.",
       "severity": "Critical",
       "subcategory": "Legacy Credential Exposure",
       "recommendedValue": "Zero cpassword attributes anywhere under \\\\domain\\SYSVOL\\domain\\Policies\\**\\*.xml.",
       "remediationSteps": "Scan SYSVOL: Get-ChildItem -Path \\\\<domain>\\SYSVOL\\<domain>\\Policies -Recurse -Include *.xml | Select-String 'cpassword'. For each match: (1) rotate the password of the account whose credential is exposed (the username is in the same XML), (2) audit logs for use of that credential since the preference was created, (3) delete the GPP preference once the new credential is in place. Microsoft's KB2962486 has the cleanup guidance.",
       "compliance": {
-        "nistSp80053": ["IA-5", "AC-6"],
-        "mitreAttack": ["T1552.006"],
-        "cisAd": ["10.1.1"]
+        "nistSp80053": [
+          "IA-5",
+          "AC-6"
+        ],
+        "mitreAttack": [
+          "T1552.006"
+        ],
+        "cisAd": [
+          "10.1.1"
+        ]
       }
     },
     {
       "id": "ADTRADE-002",
       "name": "DCShadow Indicator (Rogue Configuration-Partition Servers)",
-      "description": "DCShadow (Vincent LE TOUX / Benjamin Delpy, BlueHat IL 2018) registers an attacker-controlled host as a domain controller by writing nTDSDSA + server objects under CN=Sites,CN=Configuration. The fake DC is then used to inject malicious replication data (SID history, password hashes) without ever being a real DC. NOTE: on long-lived domains an unmatched server object is far more often LINGERING DC METADATA (a DC removed without 'ntdsutil metadata cleanup') than an actual DCShadow attack, so this is rated High rather than Critical — investigate the whenCreated timestamp to distinguish a recently created (suspicious) object from old stale metadata.",
+      "description": "DCShadow (Vincent LE TOUX / Benjamin Delpy, BlueHat IL 2018) registers an attacker-controlled host as a domain controller by writing nTDSDSA + server objects under CN=Sites,CN=Configuration. The fake DC is then used to inject malicious replication data (SID history, password hashes) without ever being a real DC. NOTE: on long-lived domains an unmatched server object is far more often LINGERING DC METADATA (a DC removed without 'ntdsutil metadata cleanup') than an actual DCShadow attack, so this is rated High rather than Critical \u2014 investigate the whenCreated timestamp to distinguish a recently created (suspicious) object from old stale metadata.",
       "severity": "High",
       "subcategory": "Persistence",
       "recommendedValue": "All server objects under CN=Sites,CN=Configuration correspond to real, inventoried domain controllers. No recently created server objects that don't match a known DC.",
-      "remediationSteps": "Enumerate: Get-ADObject -Filter {objectClass -eq 'server'} -SearchBase \"CN=Sites,$((Get-ADRootDSE).configurationNamingContext)\" -Properties whenCreated, dNSHostName | Sort whenCreated. Cross-reference with your DC inventory (Get-ADDomainController -Filter *). Any server object not matching a real DC, especially recently created, demands immediate IR — DCShadow is a domain-takeover-grade primitive. Monitor for 5137 / 5141 events on schema container as a detection-time signal.",
+      "remediationSteps": "Enumerate: Get-ADObject -Filter {objectClass -eq 'server'} -SearchBase \"CN=Sites,$((Get-ADRootDSE).configurationNamingContext)\" -Properties whenCreated, dNSHostName | Sort whenCreated. Cross-reference with your DC inventory (Get-ADDomainController -Filter *). Any server object not matching a real DC, especially recently created, demands immediate IR \u2014 DCShadow is a domain-takeover-grade primitive. Monitor for 5137 / 5141 events on schema container as a detection-time signal.",
       "compliance": {
-        "nistSp80053": ["SI-4", "AU-12"],
-        "mitreAttack": ["T1207"],
-        "cisAd": ["10.2.1"]
+        "nistSp80053": [
+          "SI-4",
+          "AU-12"
+        ],
+        "mitreAttack": [
+          "T1207"
+        ],
+        "cisAd": [
+          "10.2.1"
+        ]
       }
     },
     {
       "id": "ADTRADE-003",
       "name": "Stale BitLocker Recovery Keys",
-      "description": "BitLocker recovery keys are stored in AD as msFVE-RecoveryInformation child objects of the computer that backed them up. When a computer is decommissioned but the AD object is left dangling, the recovery keys remain queryable by anyone with BitLocker recovery rights — typically a wider group than 'Tier-0'. Stale keys mean disposed drives are decryptable if recovered from a refurbisher or trash bin.",
+      "description": "BitLocker recovery keys are stored in AD as msFVE-RecoveryInformation child objects of the computer that backed them up. When a computer is decommissioned but the AD object is left dangling, the recovery keys remain queryable by anyone with BitLocker recovery rights \u2014 typically a wider group than 'Tier-0'. Stale keys mean disposed drives are decryptable if recovered from a refurbisher or trash bin.",
       "severity": "Medium",
       "subcategory": "Data Recovery Exposure",
       "recommendedValue": "All msFVE-RecoveryInformation objects belong to computers active in the last 90 days. No keys orphaned to disabled or recently-modified-then-stale computer accounts.",
       "remediationSteps": "Enumerate recovery information: Get-ADObject -Filter {objectClass -eq 'msFVE-RecoveryInformation'} -Properties whenCreated. For each, walk up to the parent computer object and check its lastLogonTimestamp / Enabled. For computers inactive >90 days: confirm the drive has been wiped or destroyed, then delete the AD computer object (which cascades the recovery info). For computers actively in use but with very old recovery keys: rotate via Backup-BitLockerKeyProtector. Verify that the BitLocker recovery group has tight membership.",
       "compliance": {
-        "nistSp80053": ["AC-6", "MP-6"],
-        "mitreAttack": ["T1552"],
-        "cisAd": ["10.3.1"]
+        "nistSp80053": [
+          "AC-6",
+          "MP-6"
+        ],
+        "mitreAttack": [
+          "T1552"
+        ],
+        "cisAd": [
+          "10.3.1"
+        ]
       }
     },
     {
       "id": "ADTRADE-004",
       "name": "RODC Password Replication Policy Hygiene",
-      "description": "Read-Only Domain Controllers cache passwords for the principals listed in their Password Replication Policy (PRP). If a Tier-0 account (Domain Admin, Enterprise Admin, krbtgt) is reachable by an RODC's PRP — directly or via group nesting — compromising the RODC compromises those accounts. The default 'Denied RODC Password Replication Group' should explicitly contain DA / EA / SA / Schema Admins / krbtgt; some environments customize the policy and accidentally remove those denials.",
+      "description": "Read-Only Domain Controllers cache passwords for the principals listed in their Password Replication Policy (PRP). If a Tier-0 account (Domain Admin, Enterprise Admin, krbtgt) is reachable by an RODC's PRP \u2014 directly or via group nesting \u2014 compromising the RODC compromises those accounts. The default 'Denied RODC Password Replication Group' should explicitly contain DA / EA / SA / Schema Admins / krbtgt; some environments customize the policy and accidentally remove those denials.",
       "severity": "High",
       "subcategory": "RODC Hygiene",
       "recommendedValue": "All RODCs in the domain have a Password Replication Policy where Domain Admins, Enterprise Admins, Schema Admins, krbtgt, and Account Operators are members of the Deny side. No high-privileged accounts are members of the Allow side.",
-      "remediationSteps": "For each RODC: Get-ADDomainController -Filter {IsReadOnly -eq $true} | ForEach-Object { Get-ADDomainControllerPasswordReplicationPolicy -Identity $_ -Allowed; Get-ADDomainControllerPasswordReplicationPolicy -Identity $_ -Denied }. Verify the Denied list contains the 'Denied RODC Password Replication Group' built-in. If your environment has no RODCs this check is N/A — PASS. Microsoft's RODC planning guide has the canonical PRP template.",
+      "remediationSteps": "For each RODC: Get-ADDomainController -Filter {IsReadOnly -eq $true} | ForEach-Object { Get-ADDomainControllerPasswordReplicationPolicy -Identity $_ -Allowed; Get-ADDomainControllerPasswordReplicationPolicy -Identity $_ -Denied }. Verify the Denied list contains the 'Denied RODC Password Replication Group' built-in. If your environment has no RODCs this check is N/A \u2014 PASS. Microsoft's RODC planning guide has the canonical PRP template.",
       "compliance": {
-        "nistSp80053": ["AC-6"],
-        "mitreAttack": ["T1003.001"],
-        "cisAd": ["10.4.1"]
+        "nistSp80053": [
+          "AC-6"
+        ],
+        "mitreAttack": [
+          "T1003.001"
+        ],
+        "cisAd": [
+          "10.4.1"
+        ]
+      }
+    },
+    {
+      "id": "ADTRADE-005",
+      "name": "Entra Seamless SSO Computer Account (AZUREADSSOACC$) Key Rotation",
+      "description": "When Entra (Azure AD) Seamless Single Sign-On is enabled for hybrid identity, AD creates a computer account named AZUREADSSOACC$. Its password is the shared Kerberos key Entra uses to validate SSO tickets. Microsoft documents that this key is NOT rotated automatically \u2014 administrators must roll it. If an attacker extracts the AZUREADSSOACC$ key (it is a normal NT hash readable via DCSync or from a DC), they can forge Kerberos Silver Tickets for the Azure AD service and authenticate as ANY synchronized hybrid user, with no further interaction, for as long as the key remains valid. A key that has not been rotated in over 90 days dramatically widens that window.",
+      "severity": "High",
+      "subcategory": "Hybrid Identity",
+      "recommendedValue": "AZUREADSSOACC$ Kerberos key rotated at least every 90 days (roll it twice per rotation to invalidate the previous key).",
+      "remediationSteps": "Rotate the Seamless SSO key on a machine with the Entra Connect / Azure AD module: Import-Module 'C:\\Program Files\\Microsoft Azure Active Directory Connect\\AzureADSSO.psd1'; New-AzureADSSOAuthenticationContext; Update-AzureADSSOForest. Perform the rotation twice (the account stores current + previous key) and schedule it on a recurring basis. If Seamless SSO is no longer used, disable it and delete the AZUREADSSOACC$ object.",
+      "compliance": {
+        "nistSp80053": [
+          "IA-5",
+          "AC-6"
+        ],
+        "mitreAttack": [
+          "T1558.002",
+          "T1550.003"
+        ],
+        "anssi": [
+          "vuln1_azureadssoacc_pwd_change"
+        ],
+        "cisAd": [
+          "6.1.1"
+        ]
+      }
+    },
+    {
+      "id": "ADTRADE-006",
+      "name": "Shadow Credentials (msDS-KeyCredentialLink) on Privileged Principals",
+      "description": "The msDS-KeyCredentialLink attribute holds public keys used for Windows Hello for Business / passwordless PKINIT logon. An attacker with write access to this attribute on a target can add their OWN key pair (Whisker / pyWhisker) and then request a Kerberos TGT as that account using the matching private key \u2014 a stealthy persistence and impersonation technique known as 'shadow credentials'. Any unexpected key credential on a Tier-0 object (a domain admin, a domain controller, or any adminCount=1 account) should be treated as a potential backdoor until proven to be a legitimate WHfB enrollment.",
+      "severity": "Critical",
+      "subcategory": "Credential Theft",
+      "recommendedValue": "No unrecognised msDS-KeyCredentialLink values on privileged/Tier-0 principals; every key maps to a known WHfB/passwordless enrollment.",
+      "remediationSteps": "For each flagged principal, inspect the key credentials (Get-ADObject -Properties msDS-KeyCredentialLink, or the DSInternals Get-ADKeyCredential cmdlet) and correlate each device key with a legitimate Windows Hello for Business enrollment. Remove any entry you cannot attribute to a sanctioned enrollment. Restrict who can write msDS-KeyCredentialLink (audit Key Admins / Enterprise Key Admins and OU/object DACLs granting that write). Reset the affected accounts if compromise is suspected.",
+      "compliance": {
+        "nistSp80053": [
+          "IA-5",
+          "AC-6",
+          "AU-6"
+        ],
+        "mitreAttack": [
+          "T1556",
+          "T1098"
+        ],
+        "anssi": [
+          "vuln1_permissions_keycredentiallink"
+        ],
+        "cisAd": [
+          "6.2.1"
+        ]
+      }
+    },
+    {
+      "id": "ADTRADE-007",
+      "name": "BadSuccessor dMSA Migration Escalation Surface",
+      "description": "Windows Server 2025 introduced delegated Managed Service Accounts (dMSA, object class msDS-DelegatedManagedServiceAccount) with a migration feature: a dMSA can be marked as superseding an existing account, after which it inherits that account's privileges and Kerberos keys. The 2024-disclosed 'BadSuccessor' technique abuses this: a principal that can merely CREATE a dMSA in an OU (CreateChild on the dMSA class, or broad write/GenericAll over the OU) can create one, point it at a privileged account, and inherit its keys \u2014 escalating to that account without ever holding rights over it directly. This check inventories OUs where a non-Tier-0 principal holds that capability.",
+      "severity": "Critical",
+      "subcategory": "Privilege Escalation",
+      "recommendedValue": "No non-Tier-0 principal can create or write a delegated MSA (msDS-DelegatedManagedServiceAccount) in any OU.",
+      "remediationSteps": "On each flagged OU, remove CreateChild (for the msDS-DelegatedManagedServiceAccount class), GenericAll, WriteDacl, and WriteOwner from non-administrative principals. Audit delegated OU permissions broadly \u2014 the same ACEs that enable BadSuccessor also enable other object-creation abuses. Until patched/mitigated, monitor creation of msDS-DelegatedManagedServiceAccount objects (4662/5137 events). This check SKIPs on forests whose schema predates Server 2025.",
+      "compliance": {
+        "nistSp80053": [
+          "AC-6",
+          "AC-3"
+        ],
+        "mitreAttack": [
+          "T1098",
+          "T1078.002"
+        ],
+        "anssi": [
+          "vuln1_delegation_dmsa"
+        ],
+        "cisAd": [
+          "6.3.1"
+        ]
+      }
+    },
+    {
+      "id": "ADTRADE-008",
+      "name": "Key Admins / Enterprise Key Admins Group Membership",
+      "description": "The Key Admins (domain RID 526) and Enterprise Key Admins (RID 527) groups are granted the right to write the msDS-KeyCredentialLink attribute across the domain/forest. That makes any member a domain-wide shadow-credential primitive: a member can plant key credentials on any account and authenticate as it via PKINIT. These groups ship EMPTY and should stay empty unless a specific Windows Hello for Business key-provisioning workflow demonstrably requires them. Any member is an escalation path that must be justified.",
+      "severity": "High",
+      "subcategory": "Privileged Groups",
+      "recommendedValue": "Key Admins and Enterprise Key Admins groups are empty (no standing members).",
+      "remediationSteps": "Review every member of Key Admins and Enterprise Key Admins. Remove any account that does not have a documented, ongoing need to provision Windows Hello for Business keys. If WHfB key provisioning requires delegated rights, scope them to a dedicated service account with the narrowest possible permissions rather than membership in these domain-wide groups. Treat unexpected members as a potential persistence mechanism.",
+      "compliance": {
+        "nistSp80053": [
+          "AC-6",
+          "AC-2"
+        ],
+        "mitreAttack": [
+          "T1556",
+          "T1098"
+        ],
+        "anssi": [
+          "vuln1_permissions_keycredentiallink"
+        ],
+        "cisAd": [
+          "6.2.2"
+        ]
+      }
+    },
+    {
+      "id": "ADTRADE-009",
+      "name": "Cert Publishers Group Membership",
+      "description": "Members of the Cert Publishers group (domain RID 517) are permitted to publish certificates to the NTAuth store and to user/computer objects. By default the group contains only the Enterprise CA computer account(s). A user or service account placed in this group gains the ability to influence which certificates are trusted for authentication, which is a stepping stone in several AD CS escalation paths (ESC-class attacks) and can enable certificate-based impersonation. Computer-account membership (the CA hosts themselves) is expected; any non-computer member is a finding.",
+      "severity": "High",
+      "subcategory": "Certificate Services",
+      "recommendedValue": "Cert Publishers contains only the Enterprise CA computer account(s) \u2014 no user or service accounts.",
+      "remediationSteps": "Remove any user or service account from the Cert Publishers group; only Enterprise CA computer accounts belong there. Review NTAuth store contents (certutil -viewstore -enterprise NTAuth) for unexpected CA certificates. Harden AD CS broadly: audit certificate template enrollment permissions and the ESC1-ESC8 misconfiguration surface.",
+      "compliance": {
+        "nistSp80053": [
+          "AC-6",
+          "IA-5"
+        ],
+        "mitreAttack": [
+          "T1649",
+          "T1556.004"
+        ],
+        "anssi": [
+          "vuln1_adcs_cert_publishers"
+        ],
+        "cisAd": [
+          "6.4.1"
+        ]
+      }
+    },
+    {
+      "id": "ADTRADE-010",
+      "name": "group Managed Service Account (gMSA) Posture & Password Exposure",
+      "description": "group Managed Service Accounts (gMSA) hold 240-bit passwords that AD generates and rotates automatically, eliminating Kerberoasting of weak service-account passwords and manual rotation toil. Two posture concerns: (1) whether gMSAs are used at all for service identities, and (2) who is authorised to retrieve the managed password, controlled by the msDS-GroupMSAMembership security descriptor (PrincipalsAllowedToRetrieveManagedPassword). If that descriptor grants a broad principal (Everyone, Authenticated Users, Domain Users) or a non-privileged principal, that principal can recover the cleartext gMSA password (e.g. GMSAPasswordReader) and fully impersonate the service.",
+      "severity": "High",
+      "subcategory": "Service Accounts",
+      "recommendedValue": "Service identities run as gMSAs; msDS-GroupMSAMembership is scoped to only the specific hosts that must run the service (no broad or non-privileged principals).",
+      "remediationSteps": "For each gMSA, set PrincipalsAllowedToRetrieveManagedPassword to the exact computer accounts (or a tightly-scoped group) that run the service: Set-ADServiceAccount -Identity <gmsa> -PrincipalsAllowedToRetrieveManagedPassword <hosts>. Remove Everyone / Authenticated Users / Domain Users from that list. Where service accounts still use static user-account passwords, migrate them to gMSAs to gain automatic rotation and Kerberoasting resistance.",
+      "compliance": {
+        "nistSp80053": [
+          "IA-5",
+          "AC-6"
+        ],
+        "mitreAttack": [
+          "T1552",
+          "T1558.003"
+        ],
+        "anssi": [
+          "vuln2_gmsa_principalsallowedtoretrievemanagedpassword"
+        ],
+        "cisAd": [
+          "6.5.1"
+        ]
       }
     }
   ]

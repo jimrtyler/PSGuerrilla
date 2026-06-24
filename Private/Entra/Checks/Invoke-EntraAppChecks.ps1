@@ -886,3 +886,57 @@ function Test-InfiltrationEIDAPP019 {
             Apps             = @($danglingApps | Select-Object -First 50)
         }
 }
+
+# ── EIDAPP-020: Group Owner Consent to Applications Blocked (MS.AAD.5.4) ──
+function Test-InfiltrationEIDAPP020 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    # Group-specific (group owner) consent is governed by the directory (group) settings
+    # 'EnableGroupSpecificConsent' value within the Group.Unified settings template.
+    # These directory settings are collected alongside password protection settings via /groupSettings.
+    $settings = $AuditData.AuthMethods.DirectorySettings
+    if (-not $settings -or $settings.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Directory (group) settings not available — group owner consent state Not Assessed'
+    }
+
+    $groupSetting = $settings | Where-Object {
+        $_.displayName -eq 'Group.Unified' -or
+        $_.templateId -eq '62375ab9-6b52-47ed-826b-58e47e0e304b'
+    } | Select-Object -First 1
+
+    $consentValue = $null
+    if ($groupSetting) {
+        $consentValue = ($groupSetting.values | Where-Object { $_.name -eq 'EnableGroupSpecificConsent' }).value
+    }
+
+    if ($null -eq $consentValue -or $consentValue -eq '') {
+        # No explicit Group.Unified directory setting present. The tenant default for
+        # EnableGroupSpecificConsent is false (group owner consent disabled), but absence of
+        # evidence is not compliance — surface honestly rather than asserting PASS.
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'EnableGroupSpecificConsent not present in directory (group) settings — group owner consent state Not Assessed' `
+            -Details @{
+                GroupSettingPresent = [bool]$groupSetting
+                Note                = 'No explicit Group.Unified directory setting found. Verify group owner consent is disabled in the portal.'
+            }
+    }
+
+    # 'false' = group owners cannot consent to apps (desired). 'true' = they can (finding).
+    $enabled = $consentValue -eq 'true' -or $consentValue -eq $true
+    $status = if ($enabled) { 'FAIL' } else { 'PASS' }
+
+    $currentValue = if ($enabled) {
+        'Group owners CAN consent to applications (EnableGroupSpecificConsent = true) — fails SCuBA MS.AAD.5.4'
+    } else {
+        'Group owners cannot consent to applications (EnableGroupSpecificConsent = false)'
+    }
+
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status $status `
+        -CurrentValue $currentValue `
+        -Details @{
+            EnableGroupSpecificConsent = $consentValue
+            GroupOwnerConsentAllowed   = $enabled
+        }
+}
