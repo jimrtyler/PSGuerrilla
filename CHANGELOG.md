@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.34.0] - 2026-06-25
+
+### Added
+- **Signals tab in the GUI (`Show-Guerrilla`)** — manage alert providers without leaving the window. Add / remove / **test** Microsoft Teams, Slack, generic Webhook, PagerDuty, Pushover, SendGrid, Mailgun, Twilio, Syslog, and Windows Event Log signals; provider secrets are stored in the vault using the same keys and formats the CLI `Send-Signal` path reads (string for webhook-style providers, JSON for email/SMS), so the GUI and CLI stay in sync. The tab also exposes alerting on/off, the minimum threat level, and duplicate-alert suppression (window hours) via `Set-Safehouse`. The per-provider **Test** button sends a synthetic alert through the real `Send-Signal<Type>` path to confirm delivery. New `-StartOn Signals` option and a `Show-AddSignalDialog` helper.
+
 ## [2.33.0] - 2026-06-25
 
 ### Changed

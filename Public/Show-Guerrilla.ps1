@@ -17,6 +17,9 @@ function Show-Guerrilla {
             metadata for documentation.
           * Patrol     — view and manage scheduled-task patrols (continuous
             monitoring).
+          * Signals    — manage alert providers (Teams, Slack, webhook, PagerDuty,
+            Pushover, email, SMS, Syslog, Event Log) and global alerting settings;
+            send a synthetic test alert through any provider.
           * Reports    — browse HTML reports, open in browser, convert to PDF.
           * Settings   — edit runtime config (profile, alert level, output dir).
           * Inspector  — browse and read the source of every scan, check, and helper
@@ -39,8 +42,8 @@ function Show-Guerrilla {
         Alias: RuntimeConfig.
 
     .PARAMETER StartOn
-        Which tab to open on launch. One of: Operations, Safehouse, Patrol, Reports,
-        Settings, Source. Default: Operations.
+        Which tab to open on launch. One of: Operations, Safehouse, Patrol, Signals,
+        Reports, Settings, Source, Branding. Default: Operations.
 
     .PARAMETER KeepConsole
         Keep the host console visible; by default it is hidden while the GUI is open
@@ -65,7 +68,7 @@ function Show-Guerrilla {
         [Alias('RuntimeConfig')]
         [string]$ConfigPath,
 
-        [ValidateSet('Operations', 'Safehouse', 'Patrol', 'Reports', 'Settings', 'Source', 'Branding')]
+        [ValidateSet('Operations', 'Safehouse', 'Patrol', 'Signals', 'Reports', 'Settings', 'Source', 'Branding')]
         [string]$StartOn = 'Operations',
 
         [switch]$KeepConsole
