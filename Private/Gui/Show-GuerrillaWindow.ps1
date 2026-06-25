@@ -1364,36 +1364,50 @@ function Show-GuerrillaWindow {
     & $loadCategoriesForTheater
     & $setActiveTab $StartOn
 
-    # Single-instance guard. A second window shares the same config.json and theater
-    # *-state.json files, so two open instances clobber each other (last-writer-wins).
-    # Refuse the second window rather than silently corrupting state.
-    $createdNew = $false
-    try {
-        $script:GuerrillaGuiMutex = New-Object System.Threading.Mutex($true, 'Global\PSGuerrilla.GuiSingleInstance', [ref]$createdNew)
-    } catch {
-        # Mutex unavailable (rare) — fail open rather than block the GUI entirely.
-        $createdNew = $true
+    # Single-instance guard. Two windows share config.json + theater *-state.json files,
+    # so a second instance would clobber state (last-writer-wins). Refuse the second window —
+    # but self-heal: the old guard used initiallyOwned + createdNew, which reported "already
+    # open" whenever the *named* mutex still existed (a launch that threw or was force-killed,
+    # or a still-alive prior session, left the handle open and never cleared). Now:
+    #   - dispose any stale handle from an earlier launch in THIS session,
+    #   - WaitOne(0) to test real ownership, treating an AbandonedMutex (previous owner exited
+    #     without releasing) as "we own it now" rather than a permanent block.
+    if ($script:GuerrillaGuiMutex) {
+        try { $script:GuerrillaGuiMutex.Dispose() } catch {}
         $script:GuerrillaGuiMutex = $null
     }
-    if (-not $createdNew) {
-        [System.Windows.MessageBox]::Show('PSGuerrilla is already open in another window. Close it first, or switch to that window.', 'Already running', 'OK', 'Information') | Out-Null
-        try { if ($script:GuerrillaGuiMutex) { $script:GuerrillaGuiMutex.Dispose() } } catch {}
+    $haveLock = $false
+    try {
+        $m = New-Object System.Threading.Mutex($false, 'Global\PSGuerrilla.GuiSingleInstance')
+        try { $haveLock = $m.WaitOne(0) }
+        catch [System.Threading.AbandonedMutexException] { $haveLock = $true }  # prior owner died without releasing
+        if ($haveLock) { $script:GuerrillaGuiMutex = $m } else { $m.Dispose() }
+    } catch {
+        # Mutex unavailable (rare) — fail open rather than block the GUI entirely.
+        $haveLock = $true
         $script:GuerrillaGuiMutex = $null
+    }
+    if (-not $haveLock) {
+        [System.Windows.MessageBox]::Show('PSGuerrilla is already open in another window. Close it first, or switch to that window (Alt+Tab).', 'Already running', 'OK', 'Information') | Out-Null
         return
     }
 
-    # Cleanup on window close
+    # Cleanup on window close (stop any running scan). The single-instance lock is released in
+    # the finally below so it is freed even if Closing never fires (window threw before opening).
     $window.Add_Closing({
         if ($session.CurrentAsync) {
             Stop-GuerrillaGuiAsync -State $session.CurrentAsync
         }
+    })
+
+    # Block until the user closes the window, then always release the single-instance lock.
+    try {
+        [void]$window.ShowDialog()
+    } finally {
         if ($script:GuerrillaGuiMutex) {
             try { $script:GuerrillaGuiMutex.ReleaseMutex() } catch {}
             try { $script:GuerrillaGuiMutex.Dispose() } catch {}
             $script:GuerrillaGuiMutex = $null
         }
-    })
-
-    # Block until the user closes the window. ShowDialog returns nothing useful.
-    [void]$window.ShowDialog()
+    }
 }

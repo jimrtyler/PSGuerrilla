@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.32.1] - 2026-06-25
+
+### Fixed
+- **GUI single-instance guard falsely reported "PSGuerrilla is already open in another window."** The old guard used `Mutex(initiallyOwned, …, [ref]$createdNew)` and blocked whenever the named mutex still *existed* — so a launch that closed abnormally or was force-killed (more likely now that the console is hidden) left the handle open and permanently blocked new launches. The guard now self-heals: it disposes a stale handle from the current session, reclaims an abandoned lock from a dead process (`WaitOne(0)` + `AbandonedMutexException`), and always releases the lock on close via a `finally`.
+
 ## [2.32.0] - 2026-06-25
 
 _Operations Console redesign + console-hide._
