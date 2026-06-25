@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.32.2] - 2026-06-25
+
+### Fixed
+- **Single-instance guard is now advisory instead of absolute.** A pre-fix launch whose window got lost behind the hidden console leaves a *live* process holding the OS mutex (not abandoned, so 2.32.1's reclaim doesn't apply) — which permanently blocked new launches with "already open in another window." Now, when the lock is held, you get a Yes/No prompt to open a new window anyway (proceeding without the lock; only the genuine two-live-windows case risks state clobbering, and you're told). 
+- **Window comes to the front on launch** (`Activate` + brief `Topmost` on `ContentRendered`) so it can't open hidden behind other windows — the condition that strands it when the console is also hidden.
+
 ## [2.32.1] - 2026-06-25
 
 ### Fixed

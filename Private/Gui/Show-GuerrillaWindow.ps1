@@ -1388,8 +1388,16 @@ function Show-GuerrillaWindow {
         $script:GuerrillaGuiMutex = $null
     }
     if (-not $haveLock) {
-        [System.Windows.MessageBox]::Show('PSGuerrilla is already open in another window. Close it first, or switch to that window (Alt+Tab).', 'Already running', 'OK', 'Information') | Out-Null
-        return
+        # Advisory, not absolute: the "holder" may be a stranded/zombie process (a prior launch
+        # whose window got lost behind a hidden console) that still holds the OS mutex. Refusing
+        # outright traps the user. Let them open anyway; only the genuine two-live-windows case
+        # risks state clobbering, and they're told.
+        $resp = [System.Windows.MessageBox]::Show(
+            "PSGuerrilla appears to already be open in another window. Two windows share the same config/state files (last save wins).`n`nOpen a new window anyway?`n  Yes = open it now    No = switch to the existing window (Alt+Tab)",
+            'Already running', 'YesNo', 'Warning')
+        if ($resp -ne 'Yes') { return }
+        # Proceeding without the lock — the other process owns it, so we must not release it on close.
+        $script:GuerrillaGuiMutex = $null
     }
 
     # Cleanup on window close (stop any running scan). The single-instance lock is released in
@@ -1398,6 +1406,13 @@ function Show-GuerrillaWindow {
         if ($session.CurrentAsync) {
             Stop-GuerrillaGuiAsync -State $session.CurrentAsync
         }
+    })
+
+    # Bring the window to the front on first render so it can't open hidden behind other windows
+    # (which, with the console hidden, is how a launch gets stranded). A brief Topmost flash +
+    # Activate pulls it forward without keeping it always-on-top.
+    $window.Add_ContentRendered({
+        try { $window.Activate(); $window.Topmost = $true; $window.Topmost = $false } catch {}
     })
 
     # Block until the user closes the window, then always release the single-instance lock.
