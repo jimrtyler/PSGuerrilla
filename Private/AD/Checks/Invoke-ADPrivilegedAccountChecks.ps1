@@ -113,6 +113,10 @@ function Test-ReconADPRIV001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
+
     $members = Get-PrivilegedGroupMembers -AuditData $AuditData -GroupName 'Domain Admins'
     if ($members.Count -eq 0 -and (
         -not $AuditData.PrivilegedAccounts -or
@@ -152,6 +156,10 @@ function Test-ReconADPRIV002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
+
     $members = Get-PrivilegedGroupMembers -AuditData $AuditData -GroupName 'Enterprise Admins'
     if ($members.Count -eq 0 -and (
         -not $AuditData.PrivilegedAccounts -or
@@ -186,6 +194,10 @@ function Test-ReconADPRIV002 {
 function Test-ReconADPRIV003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
 
     $members = Get-PrivilegedGroupMembers -AuditData $AuditData -GroupName 'Schema Admins'
     if ($members.Count -eq 0 -and (
@@ -222,6 +234,10 @@ function Test-ReconADPRIV004 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
+
     $members = Get-PrivilegedGroupMembers -AuditData $AuditData -GroupName 'Account Operators'
     if ($members.Count -eq 0 -and (
         -not $AuditData.PrivilegedAccounts -or
@@ -254,6 +270,10 @@ function Test-ReconADPRIV004 {
 function Test-ReconADPRIV005 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
 
     $members = Get-PrivilegedGroupMembers -AuditData $AuditData -GroupName 'Server Operators'
     if ($members.Count -eq 0 -and (
@@ -288,6 +308,10 @@ function Test-ReconADPRIV006 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
+
     $members = Get-PrivilegedGroupMembers -AuditData $AuditData -GroupName 'Backup Operators'
     if ($members.Count -eq 0 -and (
         -not $AuditData.PrivilegedAccounts -or
@@ -320,6 +344,10 @@ function Test-ReconADPRIV006 {
 function Test-ReconADPRIV007 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
 
     $members = Get-PrivilegedGroupMembers -AuditData $AuditData -GroupName 'Print Operators'
     if ($members.Count -eq 0 -and (
@@ -354,6 +382,10 @@ function Test-ReconADPRIV008 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
+
     $members = Get-PrivilegedGroupMembers -AuditData $AuditData -GroupName 'DnsAdmins'
     if ($members.Count -eq 0 -and (
         -not $AuditData.PrivilegedAccounts -or
@@ -385,6 +417,10 @@ function Test-ReconADPRIV008 {
 function Test-ReconADPRIV009 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
 
     if (-not $AuditData.PrivilegedAccounts -or
         -not $AuditData.PrivilegedAccounts.PrivilegedGroups) {
@@ -431,6 +467,10 @@ function Test-ReconADPRIV010 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
+
     $allPriv = Get-AllPrivilegedMembers -AuditData $AuditData
     if ($allPriv.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -464,6 +504,10 @@ function Test-ReconADPRIV010 {
 function Test-ReconADPRIV011 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
 
     $allPriv = Get-AllPrivilegedMembers -AuditData $AuditData
     if ($allPriv.Count -eq 0) {
@@ -499,6 +543,10 @@ function Test-ReconADPRIV012 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
+
     $allPriv = Get-AllPrivilegedMembers -AuditData $AuditData
     if ($allPriv.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -532,6 +580,10 @@ function Test-ReconADPRIV012 {
 function Test-ReconADPRIV013 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
 
     $allPriv = Get-AllPrivilegedMembers -AuditData $AuditData
     if ($allPriv.Count -eq 0) {
@@ -567,6 +619,10 @@ function Test-ReconADPRIV014 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
+
     $allPriv = Get-AllPrivilegedMembers -AuditData $AuditData
     if ($allPriv.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -600,6 +656,10 @@ function Test-ReconADPRIV014 {
 function Test-ReconADPRIV015 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
 
     $allPriv = Get-AllPrivilegedMembers -AuditData $AuditData
     if ($allPriv.Count -eq 0) {
@@ -658,6 +718,10 @@ function Test-ReconADPRIV016 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PasswordHashQuality' -Subject 'privileged password strength analysis'
+    if ($na) { return $na }
+
     # Check if password analysis data is available (requires DSInternals or similar)
     $privData = $AuditData.PrivilegedAccounts
     $pwdAnalysis = $null
@@ -707,6 +771,10 @@ function Test-ReconADPRIV016 {
 function Test-ReconADPRIV017 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
 
     $allPriv = Get-AllPrivilegedMembers -AuditData $AuditData
     if ($allPriv.Count -eq 0) {
@@ -771,6 +839,10 @@ function Test-ReconADPRIV018 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
+
     $allPriv = Get-AllPrivilegedMembers -AuditData $AuditData
     if ($allPriv.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -806,6 +878,10 @@ function Test-ReconADPRIV018 {
 function Test-ReconADPRIV019 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
 
     if (-not $AuditData.PrivilegedAccounts -or
         -not $AuditData.PrivilegedAccounts.PrivilegedGroups) {
@@ -854,6 +930,10 @@ function Test-ReconADPRIV019 {
 function Test-ReconADPRIV020 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
 
     $adminSDHolder = $null
     if ($AuditData.PrivilegedAccounts -and
@@ -944,6 +1024,10 @@ function Test-ReconADPRIV021 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
+
     $orphans = $null
     if ($AuditData.PrivilegedAccounts -and
         $AuditData.PrivilegedAccounts.ContainsKey('AdminCountOrphans')) {
@@ -984,6 +1068,10 @@ function Test-ReconADPRIV021 {
 function Test-ReconADPRIV022 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
 
     $krbtgt = $null
     if ($AuditData.PrivilegedAccounts -and
@@ -1043,6 +1131,10 @@ function Test-ReconADPRIV022 {
 function Test-ReconADPRIV023 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
 
     $krbtgt = $null
     if ($AuditData.PrivilegedAccounts -and
@@ -1105,6 +1197,10 @@ function Test-ReconADPRIV023 {
 function Test-ReconADPRIV024 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
 
     if (-not $AuditData.PrivilegedAccounts -or
         -not $AuditData.PrivilegedAccounts.PrivilegedGroups) {
@@ -1189,6 +1285,10 @@ function Test-ReconADPRIV024 {
 function Test-ReconADPRIV025 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
 
     if (-not $AuditData.PrivilegedAccounts -or
         -not $AuditData.PrivilegedAccounts.PrivilegedGroups) {
@@ -1326,6 +1426,10 @@ function Test-ReconADPRIV028 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'DCSync rights inputs'
+    if ($na) { return $na }
+
     # DCSync requires two extended rights on the domain root:
     # DS-Replication-Get-Changes       = 1131f6aa-9c07-11d1-f79f-00c04fc2dcd2
     # DS-Replication-Get-Changes-All   = 1131f6ad-9c07-11d1-f79f-00c04fc2dcd2
@@ -1454,6 +1558,10 @@ function Test-ReconADPRIV029 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
+
     $puMembers = $null
     if ($AuditData.PrivilegedAccounts -and
         $AuditData.PrivilegedAccounts.ContainsKey('ProtectedUsersMembers')) {
@@ -1489,6 +1597,10 @@ function Test-ReconADPRIV029 {
 function Test-ReconADPRIV030 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
 
     $puMembers = $null
     if ($AuditData.PrivilegedAccounts -and

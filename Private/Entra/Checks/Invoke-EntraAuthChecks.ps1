@@ -262,6 +262,11 @@ function Test-InfiltrationEIDAUTH009 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.AuthMethods.Errors) `
+        -SourceKey @('AuthMethods', 'AuthMethodsPolicy') -Subject 'authentication method configurations'
+    if ($na) { return $na }
+
     $configs = $AuditData.AuthMethods.MethodConfigurations
     $whfb = $configs | Where-Object { $_.id -eq 'windowsHelloForBusiness' -or $_.'@odata.type' -match 'windowsHelloForBusiness' } | Select-Object -First 1
 
@@ -281,6 +286,11 @@ function Test-InfiltrationEIDAUTH009 {
 function Test-InfiltrationEIDAUTH010 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.AuthMethods.Errors) `
+        -SourceKey @('AuthMethods', 'AuthMethodsPolicy') -Subject 'authentication method configurations'
+    if ($na) { return $na }
 
     $configs = $AuditData.AuthMethods.MethodConfigurations
     $tap = $configs | Where-Object { $_.id -eq 'TemporaryAccessPass' -or $_.'@odata.type' -match 'temporaryAccessPass' } | Select-Object -First 1
@@ -346,6 +356,11 @@ function Test-InfiltrationEIDAUTH013 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.AuthMethods.Errors) `
+        -SourceKey @('AuthMethods', 'DirectorySettings') -Subject 'directory (password protection) settings'
+    if ($na) { return $na }
+
     $settings = $AuditData.AuthMethods.DirectorySettings
     $passwordSettings = $settings | Where-Object {
         $_.displayName -match 'Password Rule Settings' -or
@@ -374,6 +389,11 @@ function Test-InfiltrationEIDAUTH013 {
 function Test-InfiltrationEIDAUTH014 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.AuthMethods.Errors) `
+        -SourceKey @('AuthMethods', 'DirectorySettings') -Subject 'directory (password protection) settings'
+    if ($na) { return $na }
 
     $settings = $AuditData.AuthMethods.DirectorySettings
     $passwordSettings = $settings | Where-Object {

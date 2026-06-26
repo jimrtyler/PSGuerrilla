@@ -57,6 +57,10 @@ function Test-FortificationGTRADE001 {
     # by brute-forcing client-id/scope pairs). So an empty collection means "could not enumerate",
     # NOT "no grants" — never report PASS on emptiness, or the check gives a false all-clear on the
     # exact attack surface it exists for.
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'DomainWideDelegation' -Subject 'domain-wide delegation grants'
+    if ($na) { return $na }
+
     # Filter $null (a missing key makes @($null).Count == 1, which would slip past an empty check).
     $grants = @($AuditData.DomainWideDelegation | Where-Object { $null -ne $_ })
     if ($grants.Count -eq 0) {
@@ -110,6 +114,10 @@ function Test-FortificationGTRADE002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupSettings' -Subject 'group settings'
+    if ($na) { return $na }
+
     $entries = Get-TradecraftGroupSettings -AuditData $AuditData
     if ($null -eq $entries) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -132,6 +140,10 @@ function Test-FortificationGTRADE002 {
 function Test-FortificationGTRADE003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupSettings' -Subject 'group settings'
+    if ($na) { return $na }
 
     $entries = Get-TradecraftGroupSettings -AuditData $AuditData
     if ($null -eq $entries) {
@@ -163,6 +175,10 @@ function Test-FortificationGTRADE004 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'Users' -Subject 'user inventory'
+    if ($na) { return $na }
+
     if (-not $AuditData.Users -or @($AuditData.Users).Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'No user data available' -OrgUnitPath $OrgUnitPath
@@ -184,6 +200,10 @@ function Test-FortificationGTRADE004 {
 function Test-FortificationGTRADE005 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'Roles' -Subject 'admin roles'
+    if ($na) { return $na }
 
     if (-not $AuditData.Roles -or @($AuditData.Roles).Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -226,6 +246,10 @@ function Test-FortificationGTRADE005 {
 function Test-FortificationGTRADE006 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'OAuthApps' -Subject 'OAuth token activity'
+    if ($na) { return $na }
 
     if (-not $AuditData.OAuthApps -or @($AuditData.OAuthApps).Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `

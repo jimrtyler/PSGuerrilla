@@ -86,6 +86,10 @@ function Test-FortificationOAUTH002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'OAuthApps' -Subject 'OAuth token activity'
+    if ($na) { return $na }
+
     if (-not $AuditData.OAuthApps) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
             -CurrentValue 'OAuth token events not available. Collect token activity data from Reports API to enumerate installed apps' `
@@ -122,6 +126,10 @@ function Test-FortificationOAUTH002 {
 function Test-FortificationOAUTH003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'OAuthApps' -Subject 'OAuth token activity'
+    if ($na) { return $na }
 
     if (-not $AuditData.OAuthApps) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
@@ -171,6 +179,10 @@ function Test-FortificationOAUTH003 {
 function Test-FortificationOAUTH004 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'OAuthApps' -Subject 'OAuth token activity'
+    if ($na) { return $na }
 
     if (-not $AuditData.OAuthApps) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
@@ -322,6 +334,10 @@ function Test-FortificationOAUTH008 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'DomainWideDelegation' -Subject 'domain-wide delegation grants'
+    if ($na) { return $na }
+
     if (-not $AuditData.DomainWideDelegation) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
             -CurrentValue 'Domain-wide delegation data not available. Verify in Admin Console > Security > API controls > Domain-wide delegation' `
@@ -380,6 +396,10 @@ function Test-FortificationOAUTH009 {
 function Test-FortificationOAUTH010 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'OAuthApps' -Subject 'OAuth token activity'
+    if ($na) { return $na }
 
     if (-not $AuditData.OAuthApps) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `

@@ -69,7 +69,7 @@ function Get-M365AuditEvents {
             'Disable-TransportRule'
         )
 
-        $auditLogs = Invoke-GraphApi -AccessToken $AccessToken `
+        $auditLogs = Invoke-GraphApi -AccessToken $AccessToken -ReturnNullOnError `
             -Uri '/auditLogs/directoryAudits' `
             -QueryParameters @{
                 '$filter' = "activityDateTime ge $filterDate and loggedByService eq 'Exchange'"
@@ -164,7 +164,7 @@ function Get-M365AuditEvents {
 
         try {
             # Query for mailbox configuration changes that set forwarding
-            $mailboxLogs = Invoke-GraphApi -AccessToken $AccessToken `
+            $mailboxLogs = Invoke-GraphApi -AccessToken $AccessToken -ReturnNullOnError `
                 -Uri '/auditLogs/directoryAudits' `
                 -QueryParameters @{
                     '$filter' = "activityDateTime ge $filterDate and loggedByService eq 'Exchange' and activityDisplayName eq 'Set-Mailbox'"
@@ -210,7 +210,7 @@ function Get-M365AuditEvents {
         if (-not $Quiet) { Write-ProgressLine -Phase SCANNING -Message 'eDiscovery compliance searches' }
 
         try {
-            $complianceLogs = Invoke-GraphApi -AccessToken $AccessToken `
+            $complianceLogs = Invoke-GraphApi -AccessToken $AccessToken -ReturnNullOnError `
                 -Uri '/auditLogs/directoryAudits' `
                 -QueryParameters @{
                     '$filter' = "activityDateTime ge $filterDate and loggedByService eq 'Core Directory'"
@@ -251,7 +251,7 @@ function Get-M365AuditEvents {
         if (-not $Quiet) { Write-ProgressLine -Phase SCANNING -Message 'DLP policy changes' }
 
         try {
-            $dlpLogs = Invoke-GraphApi -AccessToken $AccessToken `
+            $dlpLogs = Invoke-GraphApi -AccessToken $AccessToken -ReturnNullOnError `
                 -Uri '/auditLogs/directoryAudits' `
                 -QueryParameters @{
                     '$filter' = "activityDateTime ge $filterDate"
@@ -292,7 +292,7 @@ function Get-M365AuditEvents {
         if (-not $Quiet) { Write-ProgressLine -Phase SCANNING -Message 'SharePoint external sharing changes' }
 
         try {
-            $spLogs = Invoke-GraphApi -AccessToken $AccessToken `
+            $spLogs = Invoke-GraphApi -AccessToken $AccessToken -ReturnNullOnError `
                 -Uri '/auditLogs/directoryAudits' `
                 -QueryParameters @{
                     '$filter' = "activityDateTime ge $filterDate and loggedByService eq 'SharePoint'"
@@ -350,7 +350,7 @@ function Get-M365AuditEvents {
         if (-not $Quiet) { Write-ProgressLine -Phase SCANNING -Message 'Teams external access changes' }
 
         try {
-            $teamsLogs = Invoke-GraphApi -AccessToken $AccessToken `
+            $teamsLogs = Invoke-GraphApi -AccessToken $AccessToken -ReturnNullOnError `
                 -Uri '/auditLogs/directoryAudits' `
                 -QueryParameters @{
                     '$filter' = "activityDateTime ge $filterDate and loggedByService eq 'Teams'"
@@ -392,7 +392,7 @@ function Get-M365AuditEvents {
 
         try {
             # Fetch audit logs related to Defender/Security policy changes
-            $defenderLogs = Invoke-GraphApi -AccessToken $AccessToken `
+            $defenderLogs = Invoke-GraphApi -AccessToken $AccessToken -ReturnNullOnError `
                 -Uri '/auditLogs/directoryAudits' `
                 -QueryParameters @{
                     '$filter' = "activityDateTime ge $filterDate"
@@ -433,7 +433,7 @@ function Get-M365AuditEvents {
         if (-not $Quiet) { Write-ProgressLine -Phase SCANNING -Message 'Power Automate flow creation' }
 
         try {
-            $powerLogs = Invoke-GraphApi -AccessToken $AccessToken `
+            $powerLogs = Invoke-GraphApi -AccessToken $AccessToken -ReturnNullOnError `
                 -Uri '/auditLogs/directoryAudits' `
                 -QueryParameters @{
                     '$filter' = "activityDateTime ge $filterDate and loggedByService eq 'Power Platform'"
@@ -474,7 +474,7 @@ function Get-M365AuditEvents {
         if (-not $Quiet) { Write-ProgressLine -Phase SCANNING -Message 'Security alerts (Defender)' }
 
         try {
-            $alerts = Invoke-GraphApi -AccessToken $AccessToken `
+            $alerts = Invoke-GraphApi -AccessToken $AccessToken -ReturnNullOnError `
                 -Uri '/security/alerts_v2' `
                 -QueryParameters @{
                     '$filter' = "createdDateTime ge $filterDate"

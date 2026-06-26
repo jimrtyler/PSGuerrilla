@@ -20,7 +20,7 @@ function Get-EntraRiskDetections {
 
     if (-not $Quiet) { Write-Verbose "Fetching risk detections since $startIso" }
 
-    $rawEvents = Invoke-GraphApi -AccessToken $AccessToken `
+    $rawEvents = Invoke-GraphApi -AccessToken $AccessToken -ReturnNullOnError `
         -Uri '/identityProtection/riskDetections' `
         -QueryParameters @{ '$filter' = $filter; '$top' = '999' } `
         -Paginate `

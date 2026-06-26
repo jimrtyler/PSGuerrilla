@@ -120,6 +120,10 @@ function Test-ReconADACL001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'ObjectACLs' -Subject 'object ACLs'
+    if ($na) { return $na }
+
     if (-not $AuditData.ACLs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'ACL data not available'
@@ -171,6 +175,10 @@ function Test-ReconADACL002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'ObjectACLs' -Subject 'object ACLs'
+    if ($na) { return $na }
+
     if (-not $AuditData.ACLs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'ACL data not available'
@@ -203,6 +211,10 @@ function Test-ReconADACL002 {
 function Test-ReconADACL003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'ObjectACLs' -Subject 'object ACLs'
+    if ($na) { return $na }
 
     if (-not $AuditData.ACLs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -237,6 +249,10 @@ function Test-ReconADACL004 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'ObjectACLs' -Subject 'object ACLs'
+    if ($na) { return $na }
+
     if (-not $AuditData.ACLs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'ACL data not available'
@@ -270,6 +286,10 @@ function Test-ReconADACL005 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'ObjectACLs' -Subject 'object ACLs'
+    if ($na) { return $na }
+
     if (-not $AuditData.ACLs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'ACL data not available'
@@ -302,6 +322,10 @@ function Test-ReconADACL005 {
 function Test-ReconADACL006 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'ObjectACLs' -Subject 'object ACLs'
+    if ($na) { return $na }
 
     if (-not $AuditData.ACLs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -348,6 +372,10 @@ function Test-ReconADACL006 {
 function Test-ReconADACL007 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'ObjectACLs' -Subject 'object ACLs'
+    if ($na) { return $na }
 
     if (-not $AuditData.ACLs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -400,6 +428,10 @@ function Test-ReconADACL007 {
 function Test-ReconADACL008 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'ObjectACLs' -Subject 'object ACLs'
+    if ($na) { return $na }
 
     if (-not $AuditData.ACLs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -460,6 +492,10 @@ function Test-ReconADACL009 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'ObjectACLs' -Subject 'object ACLs'
+    if ($na) { return $na }
+
     if (-not $AuditData.ACLs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'ACL data not available'
@@ -485,6 +521,10 @@ function Test-ReconADACL009 {
 function Test-ReconADACL010 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'ObjectACLs' -Subject 'object ACLs'
+    if ($na) { return $na }
 
     if (-not $AuditData.ACLs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -552,6 +592,10 @@ function Test-ReconADACL010 {
 function Test-ReconADACL011 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'ObjectACLs' -Subject 'object ACLs'
+    if ($na) { return $na }
 
     if (-not $AuditData.ACLs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -633,6 +677,10 @@ function Test-ReconADACL012 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'ObjectACLs' -Subject 'object ACLs'
+    if ($na) { return $na }
+
     if (-not $AuditData.ACLs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'ACL data not available'
@@ -692,6 +740,10 @@ function Test-ReconADACL012 {
 function Test-ReconADACL013 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'ObjectACLs' -Subject 'object ACLs'
+    if ($na) { return $na }
 
     if (-not $AuditData.ACLs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -770,6 +822,10 @@ function Test-ReconADACL013 {
 function Test-ReconADACL014 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'ObjectACLs' -Subject 'object ACLs'
+    if ($na) { return $na }
 
     if (-not $AuditData.ACLs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -863,6 +919,10 @@ function Test-ReconADACL015 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'ObjectACLs' -Subject 'object ACLs'
+    if ($na) { return $na }
+
     if (-not $AuditData.ACLs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'ACL data not available'
@@ -938,6 +998,10 @@ function Test-ReconADACL015 {
 function Test-ReconADACL016 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'ObjectACLs' -Subject 'object ACLs'
+    if ($na) { return $na }
 
     if (-not $AuditData.ACLs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `

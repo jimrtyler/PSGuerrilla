@@ -67,6 +67,12 @@ function Test-InfiltrationEIDPIM002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.PIM.Errors) `
+        -SourceKey @('PIM', 'RoleAssignments', 'RoleEligibilitySchedules', 'RoleDefinitions') `
+        -Subject 'privileged role assignments'
+    if ($na) { return $na }
+
     $activeAssignments = $AuditData.PIM.RoleAssignments
     $eligibleAssignments = $AuditData.PIM.RoleEligibilitySchedules
     $roleDefinitions = $AuditData.PIM.RoleDefinitions
@@ -99,6 +105,12 @@ function Test-InfiltrationEIDPIM002 {
 function Test-InfiltrationEIDPIM003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.PIM.Errors) `
+        -SourceKey @('PIM', 'RoleAssignments', 'RoleEligibilitySchedules', 'RoleDefinitions') `
+        -Subject 'privileged role assignments'
+    if ($na) { return $na }
 
     $activeAssignments = $AuditData.PIM.RoleAssignments
     $eligibleAssignments = $AuditData.PIM.RoleEligibilitySchedules
@@ -336,6 +348,12 @@ function Test-InfiltrationEIDPIM010 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.PIM.Errors) `
+        -SourceKey @('PIM', 'RoleAssignmentSchedules', 'RoleEligibilitySchedules') `
+        -Subject 'PIM role schedules'
+    if ($na) { return $na }
+
     $roleAssignmentSchedules = $AuditData.PIM.RoleAssignmentSchedules
     $eligibilitySchedules = $AuditData.PIM.RoleEligibilitySchedules
 
@@ -383,6 +401,11 @@ function Test-InfiltrationEIDPIM011 {
 function Test-InfiltrationEIDPIM012 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.PIM.Errors) `
+        -SourceKey @('PIM', 'GlobalAdmins') -Subject 'Global Administrator accounts'
+    if ($na) { return $na }
 
     $globalAdmins = $AuditData.PIM.GlobalAdmins
     if (-not $globalAdmins -or $globalAdmins.Count -eq 0) {

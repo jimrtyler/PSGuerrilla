@@ -35,6 +35,11 @@ function Test-InfiltrationM365PP001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'PowerPlatform') -Subject 'Power Platform configuration'
+    if ($na) { return $na }
+
     $pp = $AuditData.M365Services.PowerPlatform
     if (-not $pp) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -72,6 +77,11 @@ function Test-InfiltrationM365PP001 {
 function Test-InfiltrationM365PP002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'PowerPlatform') -Subject 'Power Platform configuration'
+    if ($na) { return $na }
 
     $pp = $AuditData.M365Services.PowerPlatform
     if (-not $pp) {
@@ -131,6 +141,11 @@ function Test-InfiltrationM365PP002 {
 function Test-InfiltrationM365PP003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'PowerPlatform') -Subject 'Power Platform configuration'
+    if ($na) { return $na }
 
     $pp = $AuditData.M365Services.PowerPlatform
     if (-not $pp) {

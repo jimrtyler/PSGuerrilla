@@ -35,6 +35,10 @@ function Test-ReconADGPO001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
+
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData -or -not $gpoData.GPOs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -81,6 +85,10 @@ function Test-ReconADGPO002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
+
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData -or -not $gpoData.GPOs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -124,6 +132,10 @@ function Test-ReconADGPO003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
+
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData -or -not $gpoData.GPOs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -160,6 +172,10 @@ function Test-ReconADGPO003 {
 function Test-ReconADGPO004 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
 
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData -or -not $gpoData.GPOs) {
@@ -204,6 +220,10 @@ function Test-ReconADGPO004 {
 function Test-ReconADGPO005 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
 
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData -or -not $gpoData.GPOs) {
@@ -271,6 +291,10 @@ function Test-ReconADGPO006 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
+
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -325,6 +349,10 @@ function Test-ReconADGPO006 {
 function Test-ReconADGPO007 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
 
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData) {
@@ -394,6 +422,10 @@ function Test-ReconADGPO008 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
+
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData -or -not $gpoData.GPOs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -432,6 +464,10 @@ function Test-ReconADGPO008 {
 function Test-ReconADGPO009 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
 
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData) {
@@ -486,6 +522,10 @@ function Test-ReconADGPO009 {
 function Test-ReconADGPO010 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
 
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData) {
@@ -543,6 +583,10 @@ function Test-ReconADGPO011 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
+
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -599,6 +643,10 @@ function Test-ReconADGPO011 {
 function Test-ReconADGPO012 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
 
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData) {
@@ -664,6 +712,10 @@ function Test-ReconADGPO013 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
+
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -727,6 +779,10 @@ function Test-ReconADGPO013 {
 function Test-ReconADGPO014 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
 
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData) {
@@ -811,6 +867,10 @@ function Test-ReconADGPO015 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
+
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -883,6 +943,10 @@ function Test-ReconADGPO016 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
+
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -940,6 +1004,10 @@ function Test-ReconADGPO016 {
 function Test-ReconADGPO017 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
 
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData) {
@@ -1015,6 +1083,10 @@ function Test-ReconADGPO017 {
 function Test-ReconADGPO018 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
 
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData) {
@@ -1095,6 +1167,10 @@ function Test-ReconADGPO019 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
+
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -1166,6 +1242,10 @@ function Test-ReconADGPO020 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
+
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -1236,6 +1316,10 @@ function Test-ReconADGPO020 {
 function Test-ReconADGPO021 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
 
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData) {
@@ -1316,6 +1400,10 @@ function Test-ReconADGPO021 {
 function Test-ReconADGPO022 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
 
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData) {
@@ -1399,6 +1487,10 @@ function Test-ReconADGPO023 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
+
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -1480,6 +1572,10 @@ function Test-ReconADGPO023 {
 function Test-ReconADGPO024 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
 
     $gpoData = $AuditData.GroupPolicies
     if (-not $gpoData) {

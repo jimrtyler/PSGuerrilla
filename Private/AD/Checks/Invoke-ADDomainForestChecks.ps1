@@ -35,6 +35,10 @@ function Test-ReconADDOM001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'DomainInfo' -Subject 'domain information'
+    if ($na) { return $na }
+
     $domain = $AuditData.Domain
     if (-not $domain) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -63,6 +67,10 @@ function Test-ReconADDOM002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'DomainInfo' -Subject 'domain information'
+    if ($na) { return $na }
+
     $domain = $AuditData.Domain
     if (-not $domain) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -90,6 +98,10 @@ function Test-ReconADDOM002 {
 function Test-ReconADDOM003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'DomainInfo' -Subject 'domain information'
+    if ($na) { return $na }
 
     $domain = $AuditData.Domain
     if (-not $domain) {
@@ -123,6 +135,10 @@ function Test-ReconADDOM003 {
 function Test-ReconADDOM004 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'DomainControllers' -Subject 'domain controllers'
+    if ($na) { return $na }
 
     $dcs = @($AuditData.DomainControllers)
     if ($dcs.Count -eq 0 -or ($dcs.Count -eq 1 -and $null -eq $dcs[0])) {
@@ -171,6 +187,10 @@ function Test-ReconADDOM005 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'DomainControllers' -Subject 'domain controllers'
+    if ($na) { return $na }
+
     $dcs = @($AuditData.DomainControllers)
     if ($dcs.Count -eq 0 -or ($dcs.Count -eq 1 -and $null -eq $dcs[0])) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -201,6 +221,10 @@ function Test-ReconADDOM005 {
 function Test-ReconADDOM006 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'DomainInfo' -Subject 'domain information'
+    if ($na) { return $na }
 
     $domain = $AuditData.Domain
     if (-not $domain -or -not $domain.FSMORoles) {
@@ -240,6 +264,10 @@ function Test-ReconADDOM006 {
 function Test-ReconADDOM007 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'DomainInfo' -Subject 'domain information'
+    if ($na) { return $na }
 
     $domain = $AuditData.Domain
     if (-not $domain) {
@@ -293,6 +321,10 @@ function Test-ReconADDOM008 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'DomainInfo' -Subject 'domain information'
+    if ($na) { return $na }
+
     $domain = $AuditData.Domain
     if (-not $domain) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -323,6 +355,10 @@ function Test-ReconADDOM009 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'DomainInfo' -Subject 'domain information'
+    if ($na) { return $na }
+
     $domain = $AuditData.Domain
     if (-not $domain) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -346,6 +382,10 @@ function Test-ReconADDOM009 {
 function Test-ReconADDOM010 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'DomainInfo' -Subject 'domain information'
+    if ($na) { return $na }
 
     $domain = $AuditData.Domain
     if (-not $domain) {
@@ -393,6 +433,10 @@ function Test-ReconADDOM010 {
 function Test-ReconADDOM011 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'DomainInfo' -Subject 'domain information'
+    if ($na) { return $na }
 
     $domain = $AuditData.Domain
     if (-not $domain) {
@@ -444,6 +488,10 @@ function Test-ReconADDOM011 {
 function Test-ReconADDOM012 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'DomainInfo' -Subject 'domain information'
+    if ($na) { return $na }
 
     $domain = $AuditData.Domain
     if (-not $domain) {
@@ -525,6 +573,10 @@ function Test-ReconADDOM013 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
+
     # Attempt to find LDAP signing configuration from GPO SYSVOL content
     $gpoData = $AuditData.GroupPolicies
     $ldapSigningValue = $null
@@ -585,6 +637,10 @@ function Test-ReconADDOM014 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
+
     # Check for LdapEnforceChannelBinding registry setting in GPO data
     $gpoData = $AuditData.GroupPolicies
     $channelBindingValue = $null
@@ -633,6 +689,10 @@ function Test-ReconADDOM014 {
 function Test-ReconADDOM015 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
 
     # Check for SMB signing settings in GPO data
     # Policy: "Microsoft network server: Digitally sign communications (always)"
@@ -689,6 +749,10 @@ function Test-ReconADDOM015 {
 function Test-ReconADDOM016 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
 
     # Check LAN Manager authentication level in GPO data
     # Registry: HKLM\System\CurrentControlSet\Control\Lsa\LmCompatibilityLevel
@@ -754,6 +818,10 @@ function Test-ReconADDOM017 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
+
     # Reuses the same LmCompatibilityLevel data but with stricter thresholds
     $gpoData = $AuditData.GroupPolicies
     $lmLevel = $null
@@ -818,6 +886,10 @@ function Test-ReconADDOM017 {
 function Test-ReconADDOM018 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
 
     # Check RestrictAnonymous / RestrictAnonymousSAM settings in GPO data
     $gpoData = $AuditData.GroupPolicies
@@ -898,6 +970,10 @@ function Test-ReconADDOM019 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'GroupPolicyObjects' -Subject 'Group Policy objects'
+    if ($na) { return $na }
+
     # Check GPO data for Print Spooler service configuration on DCs
     $gpoData = $AuditData.GroupPolicies
     $spoolerDisabled = $null
@@ -956,6 +1032,10 @@ function Test-ReconADDOM019 {
 function Test-ReconADDOM020 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey @('GroupPolicyObjects','DomainControllers') -Subject 'Group Policy objects'
+    if ($na) { return $na }
 
     # DSRM password cannot be verified remotely via LDAP. We can check:
     # 1. DsrmAdminLogonBehavior registry value from GPO data (should be 0)

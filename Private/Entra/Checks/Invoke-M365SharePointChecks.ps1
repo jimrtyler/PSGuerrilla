@@ -35,6 +35,11 @@ function Test-InfiltrationM365SPO001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'SharePoint') -Subject 'SharePoint configuration'
+    if ($na) { return $na }
+
     $sp = $AuditData.M365Services.SharePoint
     if (-not $sp -or $null -eq $sp.SharingCapability) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -72,6 +77,11 @@ function Test-InfiltrationM365SPO002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'SharePoint') -Subject 'SharePoint configuration'
+    if ($na) { return $na }
+
     $sp = $AuditData.M365Services.SharePoint
     if (-not $sp -or $null -eq $sp.ExternalUserExpireInDays) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -104,6 +114,11 @@ function Test-InfiltrationM365SPO002 {
 function Test-InfiltrationM365SPO003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'SharePoint') -Subject 'SharePoint configuration'
+    if ($na) { return $na }
 
     $sp = $AuditData.M365Services.SharePoint
     if (-not $sp -or $null -eq $sp.DefaultSharingLinkType) {
@@ -141,6 +156,11 @@ function Test-InfiltrationM365SPO004 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'SharePoint') -Subject 'SharePoint configuration'
+    if ($na) { return $na }
+
     $sp = $AuditData.M365Services.SharePoint
     if (-not $sp) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -176,6 +196,11 @@ function Test-InfiltrationM365SPO004 {
 function Test-InfiltrationM365SPO005 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'SharePoint') -Subject 'SharePoint configuration'
+    if ($na) { return $na }
 
     $dlpPolicies = $AuditData.M365Services.DlpPolicies
     if (-not $dlpPolicies) {

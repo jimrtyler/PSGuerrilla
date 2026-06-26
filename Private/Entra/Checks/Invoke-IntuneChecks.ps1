@@ -35,6 +35,11 @@ function Test-InfiltrationINTUNE001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Intune.Errors) `
+        -SourceKey @('Intune', 'CompliancePolicies') -Subject 'Intune configuration'
+    if ($na) { return $na }
+
     $intune = $AuditData.Intune
     if (-not $intune) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -79,6 +84,11 @@ function Test-InfiltrationINTUNE002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Intune.Errors) `
+        -SourceKey @('Intune', 'ComplianceSummary') -Subject 'Intune configuration'
+    if ($na) { return $na }
+
     $intune = $AuditData.Intune
     if (-not $intune -or -not $intune.ComplianceSummary) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -118,6 +128,11 @@ function Test-InfiltrationINTUNE002 {
 function Test-InfiltrationINTUNE003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Intune.Errors) `
+        -SourceKey @('Intune', 'ManagedDevices') -Subject 'Intune configuration'
+    if ($na) { return $na }
 
     $intune = $AuditData.Intune
     if (-not $intune -or -not $intune.ManagedDevices) {
@@ -167,6 +182,11 @@ function Test-InfiltrationINTUNE004 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Intune.Errors) `
+        -SourceKey @('Intune', 'DeviceConfigurations') -Subject 'Intune configuration'
+    if ($na) { return $na }
+
     $intune = $AuditData.Intune
     if (-not $intune) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -210,6 +230,11 @@ function Test-InfiltrationINTUNE005 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Intune.Errors) `
+        -SourceKey @('Intune', 'DeviceConfigurations') -Subject 'Intune configuration'
+    if ($na) { return $na }
+
     $intune = $AuditData.Intune
     if (-not $intune -or -not $intune.DeviceConfigurations) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -241,6 +266,11 @@ function Test-InfiltrationINTUNE005 {
 function Test-InfiltrationINTUNE006 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Intune.Errors) `
+        -SourceKey @('Intune', 'DeviceConfigurations') -Subject 'Intune configuration'
+    if ($na) { return $na }
 
     $intune = $AuditData.Intune
     if (-not $intune -or -not $intune.DeviceConfigurations) {
@@ -279,6 +309,11 @@ function Test-InfiltrationINTUNE007 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Intune.Errors) `
+        -SourceKey @('Intune', 'DeviceConfigurations') -Subject 'Intune configuration'
+    if ($na) { return $na }
+
     $intune = $AuditData.Intune
     if (-not $intune -or -not $intune.DeviceConfigurations) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -310,6 +345,11 @@ function Test-InfiltrationINTUNE007 {
 function Test-InfiltrationINTUNE008 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Intune.Errors) `
+        -SourceKey @('Intune', 'DeviceConfigurations') -Subject 'Intune configuration'
+    if ($na) { return $na }
 
     $intune = $AuditData.Intune
     if (-not $intune -or -not $intune.DeviceConfigurations) {
@@ -343,6 +383,11 @@ function Test-InfiltrationINTUNE009 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Intune.Errors) `
+        -SourceKey @('Intune', 'DeviceConfigurations') -Subject 'Intune configuration'
+    if ($na) { return $na }
+
     $intune = $AuditData.Intune
     if (-not $intune -or -not $intune.DeviceConfigurations) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -375,6 +420,11 @@ function Test-InfiltrationINTUNE010 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Intune.Errors) `
+        -SourceKey @('Intune', 'DeviceConfigurations') -Subject 'Intune configuration'
+    if ($na) { return $na }
+
     $intune = $AuditData.Intune
     if (-not $intune -or -not $intune.DeviceConfigurations) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -406,6 +456,11 @@ function Test-InfiltrationINTUNE010 {
 function Test-InfiltrationINTUNE011 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Intune.Errors) `
+        -SourceKey @('Intune', 'AppProtectionPolicies') -Subject 'Intune configuration'
+    if ($na) { return $na }
 
     $intune = $AuditData.Intune
     if (-not $intune) {
@@ -449,6 +504,11 @@ function Test-InfiltrationINTUNE012 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Intune.Errors) `
+        -SourceKey @('Intune', 'AppProtectionPolicies') -Subject 'Intune configuration'
+    if ($na) { return $na }
+
     $intune = $AuditData.Intune
     if (-not $intune) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -484,6 +544,11 @@ function Test-InfiltrationINTUNE012 {
 function Test-InfiltrationINTUNE013 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Intune.Errors) `
+        -SourceKey @('Intune', 'EnrollmentConfigurations') -Subject 'Intune configuration'
+    if ($na) { return $na }
 
     $intune = $AuditData.Intune
     if (-not $intune) {
@@ -531,6 +596,11 @@ function Test-InfiltrationINTUNE014 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Intune.Errors) `
+        -SourceKey @('Intune', 'AutopilotProfiles') -Subject 'Intune configuration'
+    if ($na) { return $na }
+
     $intune = $AuditData.Intune
     if (-not $intune) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -564,6 +634,11 @@ function Test-InfiltrationINTUNE014 {
 function Test-InfiltrationINTUNE015 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Intune.Errors) `
+        -SourceKey @('Intune', 'ManagedDevices') -Subject 'Intune configuration'
+    if ($na) { return $na }
 
     $intune = $AuditData.Intune
     if (-not $intune -or -not $intune.ManagedDevices) {
@@ -602,6 +677,11 @@ function Test-InfiltrationINTUNE016 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Intune.Errors) `
+        -SourceKey @('Intune', 'DeviceConfigurations') -Subject 'Intune configuration'
+    if ($na) { return $na }
+
     $intune = $AuditData.Intune
     if (-not $intune -or -not $intune.DeviceConfigurations) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -633,6 +713,11 @@ function Test-InfiltrationINTUNE016 {
 function Test-InfiltrationINTUNE017 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Intune.Errors) `
+        -SourceKey @('Intune', 'SecurityBaselines') -Subject 'Intune configuration'
+    if ($na) { return $na }
 
     $intune = $AuditData.Intune
     if (-not $intune) {
@@ -666,6 +751,11 @@ function Test-InfiltrationINTUNE017 {
 function Test-InfiltrationINTUNE018 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Intune.Errors) `
+        -SourceKey @('Intune', 'DeviceManagementScripts') -Subject 'Intune configuration'
+    if ($na) { return $na }
 
     $intune = $AuditData.Intune
     if (-not $intune) {
@@ -710,6 +800,11 @@ function Test-InfiltrationINTUNE019 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Intune.Errors) `
+        -SourceKey @('Intune', 'MobileApps') -Subject 'Intune configuration'
+    if ($na) { return $na }
+
     $intune = $AuditData.Intune
     if (-not $intune) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -747,6 +842,11 @@ function Test-InfiltrationINTUNE019 {
 function Test-InfiltrationINTUNE020 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Intune.Errors) `
+        -SourceKey @('Intune', 'DeviceCategories') -Subject 'Intune configuration'
+    if ($na) { return $na }
 
     $intune = $AuditData.Intune
     if (-not $intune) {
@@ -797,6 +897,11 @@ function Test-InfiltrationINTUNE022 {
 function Test-InfiltrationINTUNE023 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Intune.Errors) `
+        -SourceKey @('Intune', 'OperationApprovalPolicies') -Subject 'Intune configuration'
+    if ($na) { return $na }
 
     $intune = $AuditData.Intune
     if (-not $intune) {

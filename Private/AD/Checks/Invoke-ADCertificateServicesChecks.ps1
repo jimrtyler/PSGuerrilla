@@ -113,6 +113,10 @@ function Test-ReconADCS001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'CertificateServices' -Subject 'AD CS configuration'
+    if ($na) { return $na }
+
     $adcs = $AuditData.CertificateServices
     if (-not $adcs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -154,6 +158,10 @@ function Test-ReconADCS001 {
 function Test-ReconADCS002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'CertificateServices' -Subject 'AD CS configuration'
+    if ($na) { return $na }
 
     $adcs = $AuditData.CertificateServices
     if (-not $adcs) {
@@ -221,6 +229,10 @@ function Test-ReconADCS003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'CertificateServices' -Subject 'AD CS configuration'
+    if ($na) { return $na }
+
     $adcs = $AuditData.CertificateServices
     if (-not $adcs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -286,6 +298,10 @@ function Test-ReconADCS004 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'CertificateServices' -Subject 'AD CS configuration'
+    if ($na) { return $na }
+
     $adcs = $AuditData.CertificateServices
     if (-not $adcs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -345,6 +361,10 @@ function Test-ReconADCS004 {
 function Test-ReconADCS005 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'CertificateServices' -Subject 'AD CS configuration'
+    if ($na) { return $na }
 
     $adcs = $AuditData.CertificateServices
     if (-not $adcs) {
@@ -414,6 +434,10 @@ function Test-ReconADCS006 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'CertificateServices' -Subject 'AD CS configuration'
+    if ($na) { return $na }
+
     $adcs = $AuditData.CertificateServices
     if (-not $adcs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -470,6 +494,10 @@ function Test-ReconADCS006 {
 function Test-ReconADCS007 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'CertificateServices' -Subject 'AD CS configuration'
+    if ($na) { return $na }
 
     $adcs = $AuditData.CertificateServices
     if (-not $adcs) {
@@ -539,6 +567,10 @@ function Test-ReconADCS008 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'CertificateServices' -Subject 'AD CS configuration'
+    if ($na) { return $na }
+
     $adcs = $AuditData.CertificateServices
     if (-not $adcs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -595,6 +627,10 @@ function Test-ReconADCS009 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'CertificateServices' -Subject 'AD CS configuration'
+    if ($na) { return $na }
+
     $adcs = $AuditData.CertificateServices
     if (-not $adcs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -646,6 +682,10 @@ function Test-ReconADCS009 {
 function Test-ReconADCS010 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'CertificateServices' -Subject 'AD CS configuration'
+    if ($na) { return $na }
 
     $adcs = $AuditData.CertificateServices
     if (-not $adcs) {
@@ -722,6 +762,10 @@ function Test-ReconADCS011 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'CertificateServices' -Subject 'AD CS configuration'
+    if ($na) { return $na }
+
     $adcs = $AuditData.CertificateServices
     if (-not $adcs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -761,6 +805,10 @@ function Test-ReconADCS011 {
 function Test-ReconADCS012 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey @('CertificateServices','GroupPolicyObjects') -Subject 'AD CS binding enforcement configuration'
+    if ($na) { return $na }
 
     $adcs = $AuditData.CertificateServices
     if (-not $adcs) {
@@ -850,6 +898,10 @@ function Test-ReconADCS013 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'CertificateServices' -Subject 'AD CS configuration'
+    if ($na) { return $na }
+
     $adcs = $AuditData.CertificateServices
     if (-not $adcs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -884,6 +936,10 @@ function Test-ReconADCS013 {
 function Test-ReconADCS014 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'CertificateServices' -Subject 'AD CS configuration'
+    if ($na) { return $na }
 
     $adcs = $AuditData.CertificateServices
     if (-not $adcs) {
@@ -946,6 +1002,10 @@ function Test-ReconADCS014 {
 function Test-ReconADCS015 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'CertificateServices' -Subject 'AD CS configuration'
+    if ($na) { return $na }
 
     $adcs = $AuditData.CertificateServices
     if (-not $adcs) {
@@ -1012,6 +1072,10 @@ function Test-ReconADCS015 {
 function Test-ReconADCS016 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'CertificateServices' -Subject 'AD CS configuration'
+    if ($na) { return $na }
 
     $adcs = $AuditData.CertificateServices
     if (-not $adcs) {
@@ -1087,6 +1151,10 @@ function Test-ReconADCS016 {
 function Test-ReconADCS017 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'CertificateServices' -Subject 'AD CS configuration'
+    if ($na) { return $na }
 
     $adcs = $AuditData.CertificateServices
     if (-not $adcs) {
@@ -1177,6 +1245,10 @@ function Test-ReconADCS018 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'CertificateServices' -Subject 'AD CS configuration'
+    if ($na) { return $na }
+
     $adcs = $AuditData.CertificateServices
     if (-not $adcs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -1229,6 +1301,10 @@ function Test-ReconADCS018 {
 function Test-ReconADCS019 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'CertificateServices' -Subject 'AD CS configuration'
+    if ($na) { return $na }
 
     $adcs = $AuditData.CertificateServices
     if (-not $adcs) {

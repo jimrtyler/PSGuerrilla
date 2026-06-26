@@ -40,6 +40,10 @@ function Test-FortificationLOG001 {
     # Audit log retention is determined by Workspace edition and BigQuery export configuration
     # Enterprise editions retain admin audit logs for 6 months, other logs vary
     # BigQuery export is recommended for long-term retention
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'Customer' -Subject 'tenant information'
+    if ($na) { return $na }
+
     $edition = $AuditData.Tenant.edition ?? $AuditData.Tenant.Edition ?? $null
 
     if ($edition) {
@@ -64,6 +68,10 @@ function Test-FortificationLOG001 {
 function Test-FortificationLOG002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'AlertRules' -Subject 'Alert Center rules'
+    if ($na) { return $na }
 
     if (-not $AuditData.AlertRules) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
@@ -94,6 +102,10 @@ function Test-FortificationLOG002 {
 function Test-FortificationLOG003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'AlertRules' -Subject 'Alert Center rules'
+    if ($na) { return $na }
 
     if (-not $AuditData.AlertRules) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
@@ -229,6 +241,10 @@ function Test-FortificationLOG005 {
 function Test-FortificationLOG006 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'DomainWideDelegation' -Subject 'domain-wide delegation grants'
+    if ($na) { return $na }
 
     # Check domain-wide delegation for Reports API scopes
     if ($AuditData.DomainWideDelegation) {

@@ -107,6 +107,10 @@ function Test-ReconADTIER001 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'TierZeroSignals' -Subject 'Tier-Zero signals'
+    if ($na) { return $na }
     $tz = $AuditData.TierZero
     if (-not $tz) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -150,6 +154,10 @@ function Test-ReconADTIER002 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
     $keywords = @('veeam', 'commvault', 'rubrik', 'cohesity', 'nakivo', 'backupexec', 'vembu', 'acronis', 'unitrends', 'arcserve')
     $members = Get-Tier0HighPrivMembers -AuditData $AuditData
     if ($members.Count -eq 0) {
@@ -170,6 +178,10 @@ function Test-ReconADTIER003 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
     $keywords = @('vmware', 'vcenter', 'esxi', 'vsphere', 'hyperv', 'hyper-v', 'scvmm', 'citrix', 'xenserver', 'xenapp', 'proxmox', 'nutanix')
     $members = Get-Tier0HighPrivMembers -AuditData $AuditData
     if ($members.Count -eq 0) {
@@ -190,6 +202,10 @@ function Test-ReconADTIER004 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
     $keywords = @('sccm', 'mecm', 'configmgr', 'intune', 'jamf', 'kace', 'lansweeper', 'manageengine', 'ivanti', 'bigfix', 'tanium')
     $members = Get-Tier0HighPrivMembers -AuditData $AuditData
     if ($members.Count -eq 0) {
@@ -210,6 +226,10 @@ function Test-ReconADTIER005 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
     $keywords = @('sqlsvc', 'sqlserver', 'mssql', 'sqlagent', 'sqlbrowser', 'mysql', 'postgres', 'oracledb')
     $members = Get-Tier0HighPrivMembers -AuditData $AuditData
     if ($members.Count -eq 0) {
@@ -230,6 +250,10 @@ function Test-ReconADTIER006 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
     $members = Get-Tier0HighPrivMembers -AuditData $AuditData
     # Strip BO from this check — backup operators are not technically tier-0 admins.
     $members = @($members | Where-Object { $_.Group -in @('Domain Admins', 'Enterprise Admins', 'Schema Admins') })
@@ -273,6 +297,10 @@ function Test-ReconADTIER007 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PrivilegedMembers' -Subject 'privileged account inventory'
+    if ($na) { return $na }
     $members = Get-Tier0HighPrivMembers -AuditData $AuditData
     if ($members.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `

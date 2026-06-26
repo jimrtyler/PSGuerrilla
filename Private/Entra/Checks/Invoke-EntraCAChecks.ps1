@@ -35,6 +35,11 @@ function Test-InfiltrationEIDCA001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.ConditionalAccess.Errors) `
+        -SourceKey @('ConditionalAccess', 'Policies') -Subject 'conditional access policies'
+    if ($na) { return $na }
+
     $policies = $AuditData.ConditionalAccess.Policies
     if (-not $policies -or $policies.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
@@ -69,6 +74,11 @@ function Test-InfiltrationEIDCA001 {
 function Test-InfiltrationEIDCA002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.ConditionalAccess.Errors) `
+        -SourceKey @('ConditionalAccess', 'Policies') -Subject 'conditional access policies'
+    if ($na) { return $na }
 
     $policies = @($AuditData.ConditionalAccess.Policies | Where-Object { $_.state -eq 'enabled' })
     if ($policies.Count -eq 0) {
@@ -122,6 +132,11 @@ function Test-InfiltrationEIDCA003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.ConditionalAccess.Errors) `
+        -SourceKey @('ConditionalAccess', 'Policies') -Subject 'conditional access policies'
+    if ($na) { return $na }
+
     $policies = $AuditData.ConditionalAccess.Policies
     $reportOnly = @($policies | Where-Object { $_.state -eq 'enabledForReportingButNotEnforced' })
 
@@ -146,6 +161,11 @@ function Test-InfiltrationEIDCA003 {
 function Test-InfiltrationEIDCA004 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.ConditionalAccess.Errors) `
+        -SourceKey @('ConditionalAccess', 'Policies') -Subject 'conditional access policies'
+    if ($na) { return $na }
 
     $policies = @($AuditData.ConditionalAccess.Policies | Where-Object { $_.state -eq 'enabled' })
     $exclusionGroups = [System.Collections.Generic.Dictionary[string, System.Collections.Generic.List[string]]]::new()
@@ -192,6 +212,11 @@ function Test-InfiltrationEIDCA004 {
 function Test-InfiltrationEIDCA005 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.ConditionalAccess.Errors) `
+        -SourceKey @('ConditionalAccess', 'Policies') -Subject 'conditional access policies'
+    if ($na) { return $na }
 
     # This check requires group membership data which may not be available
     # in the initial data collection. Flag exclusion groups for review.
@@ -269,6 +294,11 @@ function Test-InfiltrationEIDCA007 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.ConditionalAccess.Errors) `
+        -SourceKey @('ConditionalAccess', 'Policies') -Subject 'conditional access policies'
+    if ($na) { return $na }
+
     $policies = @($AuditData.ConditionalAccess.Policies | Where-Object { $_.state -eq 'enabled' })
 
     $mfaPolicies = @($policies | Where-Object {
@@ -320,6 +350,11 @@ function Test-InfiltrationEIDCA008 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.ConditionalAccess.Errors) `
+        -SourceKey @('ConditionalAccess', 'Policies') -Subject 'conditional access policies'
+    if ($na) { return $na }
+
     $policies = @($AuditData.ConditionalAccess.Policies | Where-Object { $_.state -eq 'enabled' })
 
     # Look for policies that block legacy auth
@@ -367,6 +402,11 @@ function Test-InfiltrationEIDCA009 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.ConditionalAccess.Errors) `
+        -SourceKey @('ConditionalAccess', 'Policies') -Subject 'conditional access policies'
+    if ($na) { return $na }
+
     $policies = @($AuditData.ConditionalAccess.Policies | Where-Object { $_.state -eq 'enabled' })
 
     $compliancePolicies = @($policies | Where-Object {
@@ -393,6 +433,11 @@ function Test-InfiltrationEIDCA009 {
 function Test-InfiltrationEIDCA010 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.ConditionalAccess.Errors) `
+        -SourceKey @('ConditionalAccess', 'Policies') -Subject 'conditional access policies'
+    if ($na) { return $na }
 
     $policies = @($AuditData.ConditionalAccess.Policies | Where-Object { $_.state -eq 'enabled' })
 
@@ -422,6 +467,11 @@ function Test-InfiltrationEIDCA010 {
 function Test-InfiltrationEIDCA011 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.ConditionalAccess.Errors) `
+        -SourceKey @('ConditionalAccess', 'NamedLocations') -Subject 'named locations'
+    if ($na) { return $na }
 
     $namedLocations = $AuditData.ConditionalAccess.NamedLocations
     if (-not $namedLocations -or $namedLocations.Count -eq 0) {
@@ -455,6 +505,11 @@ function Test-InfiltrationEIDCA011 {
 function Test-InfiltrationEIDCA012 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.ConditionalAccess.Errors) `
+        -SourceKey @('ConditionalAccess', 'Policies') -Subject 'conditional access policies'
+    if ($na) { return $na }
 
     $policies = @($AuditData.ConditionalAccess.Policies | Where-Object { $_.state -eq 'enabled' })
 
@@ -491,6 +546,11 @@ function Test-InfiltrationEIDCA013 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.ConditionalAccess.Errors) `
+        -SourceKey @('ConditionalAccess', 'Policies') -Subject 'conditional access policies'
+    if ($na) { return $na }
+
     $policies = @($AuditData.ConditionalAccess.Policies | Where-Object { $_.state -eq 'enabled' })
 
     $riskPolicies = @($policies | Where-Object {
@@ -523,6 +583,11 @@ function Test-InfiltrationEIDCA013 {
 function Test-InfiltrationEIDCA014 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.ConditionalAccess.Errors) `
+        -SourceKey @('ConditionalAccess', 'Policies') -Subject 'conditional access policies'
+    if ($na) { return $na }
 
     $policies = @($AuditData.ConditionalAccess.Policies | Where-Object { $_.state -eq 'enabled' })
 

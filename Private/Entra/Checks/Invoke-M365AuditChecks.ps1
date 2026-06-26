@@ -35,6 +35,11 @@ function Test-InfiltrationM365AUDIT001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Audit') -Subject 'audit log configuration'
+    if ($na) { return $na }
+
     $audit = $AuditData.M365Services.AuditConfig
     if (-not $audit) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -67,6 +72,11 @@ function Test-InfiltrationM365AUDIT001 {
 function Test-InfiltrationM365AUDIT002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Audit') -Subject 'audit log configuration'
+    if ($na) { return $na }
 
     $audit = $AuditData.M365Services.AuditConfig
     if (-not $audit) {
@@ -123,6 +133,11 @@ function Test-InfiltrationM365AUDIT002 {
 function Test-InfiltrationM365AUDIT003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Audit') -Subject 'audit log configuration'
+    if ($na) { return $na }
 
     $audit = $AuditData.M365Services.AuditConfig
     if (-not $audit) {

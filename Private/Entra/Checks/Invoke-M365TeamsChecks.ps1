@@ -35,6 +35,11 @@ function Test-InfiltrationM365TEAMS001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'TeamsAdmin', 'TeamsApps') -Subject 'Teams configuration'
+    if ($na) { return $na }
+
     $teams = $AuditData.M365Services.Teams
     if (-not $teams -or -not $teams.ExternalAccessConfig) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -80,6 +85,11 @@ function Test-InfiltrationM365TEAMS001 {
 function Test-InfiltrationM365TEAMS002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'TeamsAdmin', 'TeamsApps') -Subject 'Teams configuration'
+    if ($na) { return $na }
 
     $teams = $AuditData.M365Services.Teams
     if (-not $teams -or -not $teams.GuestConfig) {
@@ -130,6 +140,11 @@ function Test-InfiltrationM365TEAMS003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'TeamsAdmin', 'TeamsApps') -Subject 'Teams configuration'
+    if ($na) { return $na }
+
     $teams = $AuditData.M365Services.Teams
     if (-not $teams -or -not $teams.MeetingPolicies) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -167,6 +182,11 @@ function Test-InfiltrationM365TEAMS003 {
 function Test-InfiltrationM365TEAMS004 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'TeamsAdmin', 'TeamsApps') -Subject 'Teams configuration'
+    if ($na) { return $na }
 
     $teams = $AuditData.M365Services.Teams
     if (-not $teams -or -not $teams.MeetingPolicies) {
@@ -213,6 +233,11 @@ function Test-InfiltrationM365TEAMS005 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'TeamsAdmin', 'TeamsApps') -Subject 'Teams configuration'
+    if ($na) { return $na }
+
     $teams = $AuditData.M365Services.Teams
     if (-not $teams -or -not $teams.MeetingPolicies) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -252,6 +277,11 @@ function Test-InfiltrationM365TEAMS005 {
 function Test-InfiltrationM365TEAMS006 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'TeamsAdmin', 'TeamsApps') -Subject 'Teams configuration'
+    if ($na) { return $na }
 
     $teams = $AuditData.M365Services.Teams
     if (-not $teams -or -not $teams.MessagingPolicies) {
@@ -303,6 +333,11 @@ function Test-InfiltrationM365TEAMS007 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'TeamsAdmin', 'TeamsApps') -Subject 'Teams configuration'
+    if ($na) { return $na }
+
     $teams = $AuditData.M365Services.Teams
     if (-not $teams -or -not $teams.AppPermissionPolicies) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -345,6 +380,11 @@ function Test-InfiltrationM365TEAMS007 {
 function Test-InfiltrationM365TEAMS008 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'TeamsAdmin', 'TeamsApps') -Subject 'Teams configuration'
+    if ($na) { return $na }
 
     $teams = $AuditData.M365Services.Teams
     if (-not $teams -or -not $teams.GuestConfig) {

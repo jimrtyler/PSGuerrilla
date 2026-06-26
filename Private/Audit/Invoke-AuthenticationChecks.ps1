@@ -37,6 +37,10 @@ function Test-FortificationAUTH001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'Users' -Subject 'user inventory'
+    if ($na) { return $na }
+
     $users = @($AuditData.Users | Where-Object { -not $_.suspended })
     if ($users.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -68,6 +72,10 @@ function Test-FortificationAUTH001 {
 function Test-FortificationAUTH002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'Users' -Subject 'user inventory'
+    if ($na) { return $na }
 
     $users = @($AuditData.Users | Where-Object { -not $_.suspended })
     if ($users.Count -eq 0) {
@@ -267,6 +275,10 @@ function Test-FortificationAUTH010 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'Users' -Subject 'user inventory'
+    if ($na) { return $na }
+
     $superAdmins = @($AuditData.Users | Where-Object { $_.isAdmin -eq $true -and -not $_.suspended })
     if ($superAdmins.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -327,6 +339,10 @@ function Test-FortificationAUTH012 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'Users' -Subject 'user inventory'
+    if ($na) { return $na }
+
     $superAdmins = @($AuditData.Users | Where-Object { $_.isAdmin -eq $true -and -not $_.suspended })
     if ($superAdmins.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -358,6 +374,10 @@ function Test-FortificationAUTH012 {
 function Test-FortificationAUTH013 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'Users' -Subject 'user inventory'
+    if ($na) { return $na }
 
     $superAdmins = @($AuditData.Users | Where-Object { $_.isAdmin -eq $true -and -not $_.suspended })
     if ($superAdmins.Count -eq 0) {

@@ -39,6 +39,10 @@ function Test-FortificationDRIVE001 {
 
     # Drive sharing settings are OU-level policies not fully exposed via Directory API
     # Check if OrgUnitPolicies contain Drive sharing configuration
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey @('OrgUnits', 'CloudIdentityPolicies') -Subject 'Drive external-sharing policy'
+    if ($na) { return $na }
+
     $policy = $AuditData.OrgUnitPolicies[$OrgUnitPath]
     if ($policy -and $null -ne $policy.driveExternalSharing) {
         $status = switch ($policy.driveExternalSharing) {
@@ -88,6 +92,10 @@ function Test-FortificationDRIVE002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'OrgUnits' -Subject 'Drive link-sharing policy'
+    if ($na) { return $na }
+
     $policy = $AuditData.OrgUnitPolicies[$OrgUnitPath]
     if ($policy -and $null -ne $policy.defaultLinkSharing) {
         $status = if ($policy.defaultLinkSharing -eq 'RESTRICTED') { 'PASS' }
@@ -108,6 +116,10 @@ function Test-FortificationDRIVE002 {
 function Test-FortificationDRIVE003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'OrgUnits' -Subject 'Drive anyone-with-link policy'
+    if ($na) { return $na }
 
     $policy = $AuditData.OrgUnitPolicies[$OrgUnitPath]
     if ($policy -and $null -ne $policy.anyoneWithLinkEnabled) {
@@ -171,6 +183,10 @@ function Test-FortificationDRIVE006 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'OrgUnits' -Subject 'Shared Drive external-sharing policy'
+    if ($na) { return $na }
+
     $policy = $AuditData.OrgUnitPolicies[$OrgUnitPath]
     if ($policy -and $null -ne $policy.sharedDriveExternalSharing) {
         $status = if ($policy.sharedDriveExternalSharing -eq $false) { 'PASS' } else { 'FAIL' }
@@ -204,6 +220,10 @@ function Test-FortificationDRIVE007 {
 function Test-FortificationDRIVE008 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey @('OrgUnits', 'CloudIdentityPolicies') -Subject 'Drive for Desktop policy'
+    if ($na) { return $na }
 
     $policy = $AuditData.OrgUnitPolicies[$OrgUnitPath]
     if ($policy -and $null -ne $policy.driveForDesktopEnabled) {
@@ -253,6 +273,10 @@ function Test-FortificationDRIVE008 {
 function Test-FortificationDRIVE009 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'OAuthApps' -Subject 'OAuth app inventory'
+    if ($na) { return $na }
 
     # Check OAuthApps for apps with Drive scopes
     if ($AuditData.OAuthApps) {
@@ -355,6 +379,10 @@ function Test-FortificationDRIVE012 {
 function Test-FortificationDRIVE013 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'OrgUnits' -Subject 'Drive offline-access policy'
+    if ($na) { return $na }
 
     $policy = $AuditData.OrgUnitPolicies[$OrgUnitPath]
     if ($policy -and $null -ne $policy.driveOfflineEnabled) {

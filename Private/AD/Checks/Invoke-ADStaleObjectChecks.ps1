@@ -42,6 +42,10 @@ function Test-ReconADSTALE001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'StaleObjects' -Subject 'stale objects'
+    if ($na) { return $na }
+
     $stale = $AuditData.StaleObjects
     if (-not $stale) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -87,6 +91,10 @@ function Test-ReconADSTALE001 {
 function Test-ReconADSTALE002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'StaleObjects' -Subject 'stale objects'
+    if ($na) { return $na }
 
     $stale = $AuditData.StaleObjects
     if (-not $stale) {
@@ -135,6 +143,10 @@ function Test-ReconADSTALE003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'StaleObjects' -Subject 'stale objects'
+    if ($na) { return $na }
+
     $stale = $AuditData.StaleObjects
     if (-not $stale) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -182,6 +194,10 @@ function Test-ReconADSTALE004 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'StaleObjects' -Subject 'stale objects'
+    if ($na) { return $na }
+
     $stale = $AuditData.StaleObjects
     if (-not $stale) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -223,6 +239,10 @@ function Test-ReconADSTALE004 {
 function Test-ReconADSTALE005 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'StaleObjects' -Subject 'stale objects'
+    if ($na) { return $na }
 
     $stale = $AuditData.StaleObjects
     if (-not $stale) {
@@ -274,6 +294,10 @@ function Test-ReconADSTALE006 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'StaleObjects' -Subject 'stale objects'
+    if ($na) { return $na }
+
     $stale = $AuditData.StaleObjects
     if (-not $stale) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -324,6 +348,10 @@ function Test-ReconADSTALE007 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'StaleObjects' -Subject 'stale objects'
+    if ($na) { return $na }
+
     $stale = $AuditData.StaleObjects
     if (-not $stale) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -359,6 +387,10 @@ function Test-ReconADSTALE007 {
 function Test-ReconADSTALE008 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'StaleObjects' -Subject 'stale objects'
+    if ($na) { return $na }
 
     $stale = $AuditData.StaleObjects
     if (-not $stale) {
@@ -406,6 +438,10 @@ function Test-ReconADSTALE009 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'StaleObjects' -Subject 'stale objects'
+    if ($na) { return $na }
+
     $stale = $AuditData.StaleObjects
     if (-not $stale) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -445,6 +481,10 @@ function Test-ReconADSTALE009 {
 function Test-ReconADSTALE010 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'StaleObjects' -Subject 'stale objects'
+    if ($na) { return $na }
 
     $stale = $AuditData.StaleObjects
     if (-not $stale) {
@@ -493,6 +533,10 @@ function Test-ReconADSTALE010 {
 function Test-ReconADSTALE011 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'StaleObjects' -Subject 'stale objects'
+    if ($na) { return $na }
 
     $stale = $AuditData.StaleObjects
     if (-not $stale) {

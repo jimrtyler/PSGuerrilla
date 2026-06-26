@@ -98,6 +98,10 @@ function Test-ReconADNET001 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'NetworkConfig' -Subject 'network policy configuration'
+    if ($na) { return $na }
     $net = $AuditData.Network
     if (-not $net) {
         return New-NetworkSkipFinding -CheckDefinition $CheckDefinition `
@@ -133,6 +137,10 @@ function Test-ReconADNET002 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'NetworkConfig' -Subject 'network policy configuration'
+    if ($na) { return $na }
     $net = $AuditData.Network
     if (-not $net -or -not $net.DefaultDCPolicy) {
         return New-NetworkSkipFinding -CheckDefinition $CheckDefinition `
@@ -162,6 +170,10 @@ function Test-ReconADNET003 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'NetworkConfig' -Subject 'network policy configuration'
+    if ($na) { return $na }
     $net = $AuditData.Network
     if (-not $net -or -not $net.DefaultDomainPolicy) {
         return New-NetworkSkipFinding -CheckDefinition $CheckDefinition `
@@ -191,6 +203,10 @@ function Test-ReconADNET004 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'NetworkConfig' -Subject 'network policy configuration'
+    if ($na) { return $na }
     $net = $AuditData.Network
     if (-not $net -or -not $net.DefaultDomainPolicy) {
         return New-NetworkSkipFinding -CheckDefinition $CheckDefinition `
@@ -226,6 +242,10 @@ function Test-ReconADNET005 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'NetworkConfig' -Subject 'network policy configuration'
+    if ($na) { return $na }
     $net = $AuditData.Network
     if (-not $net -or -not $net.DefaultDomainPolicy) {
         return New-NetworkSkipFinding -CheckDefinition $CheckDefinition `
@@ -269,6 +289,10 @@ function Test-ReconADNET007 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'NetworkConfig' -Subject 'network policy configuration'
+    if ($na) { return $na }
     $net = $AuditData.Network
     if (-not $net -or -not $net.DefaultDomainPolicy) {
         return New-NetworkSkipFinding -CheckDefinition $CheckDefinition `
@@ -299,6 +323,10 @@ function Test-ReconADNET008 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'NetworkConfig' -Subject 'network policy configuration'
+    if ($na) { return $na }
     $net = $AuditData.Network
     if (-not $net -or -not $net.DefaultDomainPolicy) {
         return New-NetworkSkipFinding -CheckDefinition $CheckDefinition `
@@ -322,6 +350,10 @@ function Test-ReconADNET009 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'NetworkConfig' -Subject 'network policy configuration'
+    if ($na) { return $na }
     $net = $AuditData.Network
     if (-not $net -or -not $net.DefaultDCPolicy) {
         return New-NetworkSkipFinding -CheckDefinition $CheckDefinition `
@@ -350,6 +382,10 @@ function Test-ReconADNET010 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'NetworkConfig' -Subject 'network policy configuration'
+    if ($na) { return $na }
     $net = $AuditData.Network
     if (-not $net -or -not $net.DefaultDomainPolicy) {
         return New-NetworkSkipFinding -CheckDefinition $CheckDefinition `

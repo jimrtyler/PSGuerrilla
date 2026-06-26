@@ -35,6 +35,10 @@ function Test-ReconADSCRIPT001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'LogonScripts' -Subject 'logon scripts'
+    if ($na) { return $na }
+
     $scripts = $AuditData.LogonScripts
     if (-not $scripts) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -115,6 +119,10 @@ function Test-ReconADSCRIPT002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'LogonScripts' -Subject 'logon scripts'
+    if ($na) { return $na }
+
     $scripts = $AuditData.LogonScripts
     if (-not $scripts) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -191,6 +199,10 @@ function Test-ReconADSCRIPT003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'LogonScripts' -Subject 'logon scripts'
+    if ($na) { return $na }
+
     $scripts = $AuditData.LogonScripts
     if (-not $scripts) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -240,6 +252,10 @@ function Test-ReconADSCRIPT004 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'LogonScripts' -Subject 'logon scripts'
+    if ($na) { return $na }
+
     $scripts = $AuditData.LogonScripts
     if (-not $scripts) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -288,6 +304,10 @@ function Test-ReconADSCRIPT005 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'LogonScripts' -Subject 'logon scripts'
+    if ($na) { return $na }
+
     $scripts = $AuditData.LogonScripts
     if (-not $scripts) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -334,6 +354,10 @@ function Test-ReconADSCRIPT005 {
 function Test-ReconADSCRIPT006 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'LogonScripts' -Subject 'logon scripts'
+    if ($na) { return $na }
 
     $scripts = $AuditData.LogonScripts
     if (-not $scripts) {
@@ -383,6 +407,10 @@ function Test-ReconADSCRIPT007 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'LogonScripts' -Subject 'logon scripts'
+    if ($na) { return $na }
+
     $scripts = $AuditData.LogonScripts
     if (-not $scripts) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -421,6 +449,10 @@ function Test-ReconADSCRIPT007 {
 function Test-ReconADSCRIPT008 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'LogonScripts' -Subject 'logon scripts'
+    if ($na) { return $na }
 
     $scripts = $AuditData.LogonScripts
     if (-not $scripts) {
@@ -468,6 +500,10 @@ function Test-ReconADSCRIPT008 {
 function Test-ReconADSCRIPT009 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'LogonScripts' -Subject 'logon scripts'
+    if ($na) { return $na }
 
     $scripts = $AuditData.LogonScripts
     if (-not $scripts) {
@@ -551,6 +587,10 @@ function Test-ReconADSCRIPT010 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'LogonScripts' -Subject 'logon scripts'
+    if ($na) { return $na }
+
     $scripts = $AuditData.LogonScripts
     if (-not $scripts) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -610,6 +650,10 @@ function Test-ReconADSCRIPT010 {
 function Test-ReconADSCRIPT011 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'LogonScripts' -Subject 'logon scripts'
+    if ($na) { return $na }
 
     $scripts = $AuditData.LogonScripts
     if (-not $scripts) {

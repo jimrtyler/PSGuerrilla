@@ -52,6 +52,10 @@ function Test-FortificationEMAIL001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKeyPrefix 'DnsRecords:' -Subject 'DNS records'
+    if ($na) { return $na }
+
     if (-not $AuditData.DnsRecords -or $AuditData.DnsRecords.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'No DNS records available for analysis' -OrgUnitPath $OrgUnitPath
@@ -106,6 +110,10 @@ function Test-FortificationEMAIL002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKeyPrefix 'DnsRecords:' -Subject 'DNS records'
+    if ($na) { return $na }
+
     if (-not $AuditData.DnsRecords -or $AuditData.DnsRecords.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'No DNS records available for analysis' -OrgUnitPath $OrgUnitPath
@@ -145,6 +153,10 @@ function Test-FortificationEMAIL002 {
 function Test-FortificationEMAIL003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKeyPrefix 'DnsRecords:' -Subject 'DNS records'
+    if ($na) { return $na }
 
     if (-not $AuditData.DnsRecords -or $AuditData.DnsRecords.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -197,6 +209,10 @@ function Test-FortificationEMAIL003 {
 function Test-FortificationEMAIL004 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKeyPrefix 'DnsRecords:' -Subject 'DNS records'
+    if ($na) { return $na }
 
     if (-not $AuditData.DnsRecords -or $AuditData.DnsRecords.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -282,6 +298,10 @@ function Test-FortificationEMAIL009 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKeyPrefix 'GmailSettings:' -Subject 'per-mailbox Gmail settings'
+    if ($na) { return $na }
+
     if (-not $AuditData.GmailSettings -or $AuditData.GmailSettings.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'No Gmail settings data available' -OrgUnitPath $OrgUnitPath
@@ -326,6 +346,10 @@ function Test-FortificationEMAIL009 {
 function Test-FortificationEMAIL010 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKeyPrefix 'GmailSettings:' -Subject 'per-mailbox Gmail settings'
+    if ($na) { return $na }
 
     if (-not $AuditData.GmailSettings -or $AuditData.GmailSettings.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -378,6 +402,10 @@ function Test-FortificationEMAIL010 {
 function Test-FortificationEMAIL011 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKeyPrefix 'GmailSettings:' -Subject 'per-mailbox Gmail settings'
+    if ($na) { return $na }
 
     if (-not $AuditData.GmailSettings -or $AuditData.GmailSettings.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -718,6 +746,10 @@ function Test-FortificationEMAIL021 {
 function Test-FortificationEMAIL022 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKeyPrefix 'GmailSettings:' -Subject 'per-mailbox Gmail settings'
+    if ($na) { return $na }
 
     if (-not $AuditData.GmailSettings -or $AuditData.GmailSettings.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `

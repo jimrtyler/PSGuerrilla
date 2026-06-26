@@ -35,6 +35,11 @@ function Test-InfiltrationEIDTNT001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.TenantConfig.Errors) `
+        -SourceKey @('TenantConfig', 'Organization') -Subject 'tenant organization settings'
+    if ($na) { return $na }
+
     $org = $AuditData.TenantConfig.Organization
     if (-not $org) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
@@ -252,6 +257,11 @@ function Test-InfiltrationEIDTNT006 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.TenantConfig.Errors) `
+        -SourceKey @('TenantConfig', 'CrossTenantPartners') -Subject 'cross-tenant access partners'
+    if ($na) { return $na }
+
     $partners = $AuditData.TenantConfig.CrossTenantPartners
     if (-not $partners -or $partners.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
@@ -288,6 +298,11 @@ function Test-InfiltrationEIDTNT006 {
 function Test-InfiltrationEIDTNT007 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.TenantConfig.Errors, $AuditData.ConditionalAccess.Errors) `
+        -SourceKey @('TenantConfig', 'SecurityDefaults', 'ConditionalAccess', 'Policies') -Subject 'security defaults and CA policies'
+    if ($na) { return $na }
 
     $securityDefaults = $AuditData.TenantConfig.SecurityDefaults
     if (-not $securityDefaults) {
@@ -335,6 +350,11 @@ function Test-InfiltrationEIDTNT007 {
 function Test-InfiltrationEIDTNT008 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.TenantConfig.Errors) `
+        -SourceKey @('TenantConfig', 'SubscribedSkus') -Subject 'subscribed license SKUs'
+    if ($na) { return $na }
 
     $skus = $AuditData.TenantConfig.SubscribedSkus
     if (-not $skus -or $skus.Count -eq 0) {
@@ -386,6 +406,11 @@ function Test-InfiltrationEIDTNT009 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.TenantConfig.Errors) `
+        -SourceKey @('TenantConfig', 'AdminUnits') -Subject 'administrative units'
+    if ($na) { return $na }
+
     $adminUnits = $AuditData.TenantConfig.AdminUnits
     if (-not $adminUnits -or $adminUnits.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
@@ -418,6 +443,11 @@ function Test-InfiltrationEIDTNT009 {
 function Test-InfiltrationEIDTNT010 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.TenantConfig.Errors) `
+        -SourceKey @('TenantConfig', 'Domains') -Subject 'tenant domains'
+    if ($na) { return $na }
 
     $domains = $AuditData.TenantConfig.Domains
     if (-not $domains -or $domains.Count -eq 0) {

@@ -63,8 +63,11 @@ function Get-ADTrustRelationships {
             -Properties $trustProperties `
             -Scope OneLevel
     } catch {
-        Write-Warning "Failed to enumerate trust relationships: $_"
-        return @()
+        # Fail loud: a failed enumeration must not be returned as "no trusts" — that
+        # would let every trust check score PASS on data we never saw. The caller's
+        # try/catch records this in Errors['TrustRelationships'] so the checks report
+        # Not Assessed instead. (Genuinely zero trusts returns @() further down.)
+        throw "Failed to enumerate trust relationships: $_"
     }
 
     Write-Verbose "Found $($trustResults.Count) trust relationship(s)"

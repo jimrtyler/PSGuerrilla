@@ -106,6 +106,10 @@ function Test-ReconADLOG002 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'NetworkConfig' -Subject 'network policy configuration'
+    if ($na) { return $na }
     $net = $AuditData.Network
     if ($net -and $net.DefaultDomainPolicy) {
         $val = $null
@@ -134,6 +138,10 @@ function Test-ReconADLOG003 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'NetworkConfig' -Subject 'network policy configuration'
+    if ($na) { return $na }
     $net = $AuditData.Network
     if ($net -and $net.DefaultDomainPolicy) {
         $val = $null
@@ -157,6 +165,10 @@ function Test-ReconADLOG004 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'NetworkConfig' -Subject 'network policy configuration'
+    if ($na) { return $na }
     $net = $AuditData.Network
     if ($net -and $net.DefaultDomainPolicy) {
         $entry = $net.DefaultDomainPolicy.Registry['MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit\ProcessCreationIncludeCmdLine_Enabled']

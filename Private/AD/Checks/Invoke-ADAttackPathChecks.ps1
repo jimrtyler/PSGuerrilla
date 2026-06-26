@@ -38,6 +38,10 @@ function Test-ReconADPATH001 {
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey @('PrivilegedMembers','ObjectACLs') -Subject 'attack-path inputs'
+    if ($na) { return $na }
+
     $analysis = Get-ADAttackPath -AuditData $AuditData
 
     if (-not $analysis.DataAvailable) {
@@ -92,6 +96,10 @@ function Test-ReconADPATH002 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey @('PrivilegedMembers','ObjectACLs') -Subject 'attack-path inputs'
+    if ($na) { return $na }
 
     $analysis = Get-ADTransitiveAttackPath -AuditData $AuditData
 

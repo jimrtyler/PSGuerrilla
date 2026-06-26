@@ -61,7 +61,16 @@ function Invoke-GraphApi {
 
         [int]$MaxPages = 0,
 
-        [string]$ConsistencyLevel
+        [string]$ConsistencyLevel,
+
+        # By default a could-not-assess failure (non-license 400, retry-exhausted
+        # 429/503/504, network/unexpected errors) THROWS, so the calling collector's
+        # try/catch records it in its Errors map and dependent checks report
+        # "Not Assessed" instead of silently scoring PASS on missing data. Best-effort
+        # callers (the continuous-monitoring event collectors) pass this switch to keep
+        # the old behavior of returning $null and moving on. 404 (legitimately absent)
+        # and license/capability-gated 400 always return $null regardless.
+        [switch]$ReturnNullOnError
     )
 
     $headers = @{
@@ -136,12 +145,19 @@ function Invoke-GraphApi {
                     # License/feature-gated endpoints (e.g. PIM schedule instances need
                     # Entra ID P2) are an expected capability gap, not an error — surface
                     # them quietly so a tenant without P2 doesn't see alarming red warnings.
+                    # A capability gap is "known absent", so it always returns $null.
                     if ($cleanMsg -match 'AadPremiumLicenseRequired|Premium License|Entra ID P2|ID Governance license') {
                         Write-Verbose "Graph API 400 (license/capability-gated) for $($Uri): $cleanMsg"
-                    } else {
-                        Write-Warning "Graph API 400 for $($Uri): $cleanMsg"
+                        return $null
                     }
-                    return $null
+                    # A generic 400 means we could not assess this source. Fail loud so
+                    # the collector records it — returning $null here would let a
+                    # dependent check score PASS on data it never actually saw.
+                    if ($ReturnNullOnError) {
+                        Write-Warning "Graph API 400 for $($Uri): $cleanMsg"
+                        return $null
+                    }
+                    throw "Graph API 400 for $($Uri): $cleanMsg"
                 } elseif ($statusCode -in @(401, 403)) {
                     $cleanMsg = Get-CleanApiError $_
                     throw "Graph API $statusCode for $($Uri): $cleanMsg — Verify app permissions (Application, not Delegated) and admin consent."
@@ -150,8 +166,16 @@ function Invoke-GraphApi {
                     return $null
                 } else {
                     if ($attempt -eq ($MaxRetries - 1)) {
-                        Write-Warning "Graph API failed after $MaxRetries retries for $($Uri): $(Get-CleanApiError $_)"
-                        return $null
+                        $cleanMsg = Get-CleanApiError $_
+                        # Retries exhausted (throttling, transient 5xx, or network
+                        # errors). This is could-not-assess, not "nothing there" — fail
+                        # loud by default so the collector records it and dependent
+                        # checks report Not Assessed rather than a false PASS.
+                        if ($ReturnNullOnError) {
+                            Write-Warning "Graph API failed after $MaxRetries retries for $($Uri): $cleanMsg"
+                            return $null
+                        }
+                        throw "Graph API failed after $MaxRetries retries for $($Uri): $cleanMsg"
                     }
                     $wait = [Math]::Pow(2, $attempt + 1)
                     Start-Sleep -Seconds $wait

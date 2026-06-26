@@ -20,7 +20,7 @@ function Get-EntraSignInEvents {
 
     if (-not $Quiet) { Write-Verbose "Fetching sign-in events since $startIso" }
 
-    $rawEvents = Invoke-GraphApi -AccessToken $AccessToken `
+    $rawEvents = Invoke-GraphApi -AccessToken $AccessToken -ReturnNullOnError `
         -Uri '/auditLogs/signIns' `
         -QueryParameters @{ '$filter' = $filter; '$top' = '999' } `
         -Paginate `

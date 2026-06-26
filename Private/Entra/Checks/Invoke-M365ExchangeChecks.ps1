@@ -35,6 +35,11 @@ function Test-InfiltrationM365EXO001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.OrganizationConfig) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -61,6 +66,11 @@ function Test-InfiltrationM365EXO001 {
 function Test-InfiltrationM365EXO002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.AntiSpamPolicies) {
@@ -96,6 +106,11 @@ function Test-InfiltrationM365EXO002 {
 function Test-InfiltrationM365EXO003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.AntiPhishPolicies) {
@@ -141,6 +156,11 @@ function Test-InfiltrationM365EXO004 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.MalwarePolicies) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -180,6 +200,11 @@ function Test-InfiltrationM365EXO004 {
 function Test-InfiltrationM365EXO005 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.SafeAttachmentPolicies) {
@@ -221,6 +246,11 @@ function Test-InfiltrationM365EXO006 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.SafeLinksPolicies) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -260,6 +290,11 @@ function Test-InfiltrationM365EXO006 {
 function Test-InfiltrationM365EXO007 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.TransportRules) {
@@ -310,6 +345,11 @@ function Test-InfiltrationM365EXO008 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.RemoteDomains) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -347,6 +387,11 @@ function Test-InfiltrationM365EXO008 {
 function Test-InfiltrationM365EXO009 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.DkimSigningConfig) {
@@ -390,6 +435,11 @@ function Test-InfiltrationM365EXO009 {
 function Test-InfiltrationM365EXO010 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.CASMailboxPlans) {
@@ -437,6 +487,11 @@ function Test-InfiltrationM365EXO011 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -482,6 +537,11 @@ function Test-InfiltrationM365EXO012 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.OrganizationConfig) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -516,6 +576,11 @@ function Test-InfiltrationM365EXO013 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.RemoteDomains -or @($exo.RemoteDomains).Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -543,6 +608,11 @@ function Test-InfiltrationM365EXO014 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     # The approved-sender list is an organizational artifact reflected in SPF.
     # Agentless, we can only confirm SPF records exist; the maintained list
     # itself is a process control we cannot verify -> Not Assessed.
@@ -568,6 +638,11 @@ function Test-InfiltrationM365EXO014 {
 function Test-InfiltrationM365EXO015 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.DomainMailSecurity -or @($exo.DomainMailSecurity).Count -eq 0) {
@@ -600,6 +675,11 @@ function Test-InfiltrationM365EXO016 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.DkimSigningConfig -or @($exo.DkimSigningConfig).Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -627,6 +707,11 @@ function Test-InfiltrationM365EXO016 {
 function Test-InfiltrationM365EXO017 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.DomainMailSecurity -or @($exo.DomainMailSecurity).Count -eq 0) {
@@ -658,6 +743,11 @@ function Test-InfiltrationM365EXO017 {
 function Test-InfiltrationM365EXO018 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.DomainMailSecurity -or @($exo.DomainMailSecurity).Count -eq 0) {
@@ -691,6 +781,11 @@ function Test-InfiltrationM365EXO018 {
 function Test-InfiltrationM365EXO019 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.DomainMailSecurity -or @($exo.DomainMailSecurity).Count -eq 0) {
@@ -726,6 +821,11 @@ function Test-InfiltrationM365EXO020 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.TransportConfig) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -750,6 +850,11 @@ function Test-InfiltrationM365EXO020 {
 function Test-InfiltrationM365EXO021 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or $null -eq $exo.SharingPolicies) {
@@ -791,6 +896,11 @@ function Test-InfiltrationM365EXO022 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or $null -eq $exo.SharingPolicies) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -828,6 +938,11 @@ function Test-InfiltrationM365EXO022 {
 function Test-InfiltrationM365EXO023 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
     $haveTag = $null -ne $exo.ExternalInOutlook
@@ -868,6 +983,11 @@ function Test-InfiltrationM365EXO024 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or $null -eq $exo.DlpCompliancePolicies) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -902,6 +1022,11 @@ function Test-InfiltrationM365EXO025 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or $null -eq $exo.DlpCompliancePolicies) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -930,6 +1055,11 @@ function Test-InfiltrationM365EXO026 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.MalwarePolicies -or @($exo.MalwarePolicies).Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -953,6 +1083,11 @@ function Test-InfiltrationM365EXO026 {
 function Test-InfiltrationM365EXO027 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.MalwarePolicies -or @($exo.MalwarePolicies).Count -eq 0) {
@@ -983,6 +1118,11 @@ function Test-InfiltrationM365EXO027 {
 function Test-InfiltrationM365EXO028 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.MalwarePolicies -or @($exo.MalwarePolicies).Count -eq 0) {
@@ -1030,6 +1170,11 @@ function Test-InfiltrationM365EXO029 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.MalwarePolicies -or @($exo.MalwarePolicies).Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -1049,6 +1194,11 @@ function Test-InfiltrationM365EXO029 {
 function Test-InfiltrationM365EXO030 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.MalwarePolicies -or @($exo.MalwarePolicies).Count -eq 0) {
@@ -1075,6 +1225,11 @@ function Test-InfiltrationM365EXO031 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.MalwarePolicies -or @($exo.MalwarePolicies).Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -1100,6 +1255,11 @@ function Test-InfiltrationM365EXO031 {
 function Test-InfiltrationM365EXO032 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.AntiPhishPolicies -or @($exo.AntiPhishPolicies).Count -eq 0) {
@@ -1128,6 +1288,11 @@ function Test-InfiltrationM365EXO032 {
 function Test-InfiltrationM365EXO033 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.AntiPhishPolicies -or @($exo.AntiPhishPolicies).Count -eq 0) {
@@ -1158,6 +1323,11 @@ function Test-InfiltrationM365EXO034 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.AntiPhishPolicies -or @($exo.AntiPhishPolicies).Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -1181,6 +1351,11 @@ function Test-InfiltrationM365EXO034 {
 function Test-InfiltrationM365EXO035 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.ConnectionFilterPolicies -or @($exo.ConnectionFilterPolicies).Count -eq 0) {
@@ -1206,6 +1381,11 @@ function Test-InfiltrationM365EXO036 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.ConnectionFilterPolicies -or @($exo.ConnectionFilterPolicies).Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -1229,6 +1409,11 @@ function Test-InfiltrationM365EXO036 {
 function Test-InfiltrationM365EXO037 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.OrganizationConfig) {
@@ -1255,6 +1440,11 @@ function Test-InfiltrationM365EXO038 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.AntiSpamPolicies -or @($exo.AntiSpamPolicies).Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -1273,6 +1463,11 @@ function Test-InfiltrationM365EXO038 {
 function Test-InfiltrationM365EXO039 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.AntiSpamPolicies -or @($exo.AntiSpamPolicies).Count -eq 0) {
@@ -1302,6 +1497,11 @@ function Test-InfiltrationM365EXO040 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.AntiSpamPolicies -or @($exo.AntiSpamPolicies).Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -1328,6 +1528,11 @@ function Test-InfiltrationM365EXO041 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.SafeLinksPolicies -or @($exo.SafeLinksPolicies).Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -1351,6 +1556,11 @@ function Test-InfiltrationM365EXO041 {
 function Test-InfiltrationM365EXO042 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.SafeLinksPolicies -or @($exo.SafeLinksPolicies).Count -eq 0) {
@@ -1376,6 +1586,11 @@ function Test-InfiltrationM365EXO043 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or -not $exo.SafeLinksPolicies -or @($exo.SafeLinksPolicies).Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -1400,6 +1615,11 @@ function Test-InfiltrationM365EXO043 {
 function Test-InfiltrationM365EXO044 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or $null -eq $exo.ProtectionAlerts) {
@@ -1448,6 +1668,11 @@ function Test-InfiltrationM365EXO045 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     if (-not $exo -or $null -eq $exo.ProtectionAlerts) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -1482,6 +1707,11 @@ function Test-InfiltrationM365EXO046 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     $exo = $AuditData.M365Services.Exchange
     $cfg = $exo.AdminAuditLogConfig
     if (-not $exo -or -not $cfg) {
@@ -1507,6 +1737,11 @@ function Test-InfiltrationM365EXO047 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
     # Premium audit status (e.g. MailItemsAccessed event availability) is not
     # exposed by Get-AdminAuditLogConfig and depends on E5/G5 licensing, which
     # is not collected in this agentless EXO model -> Not Assessed.
@@ -1521,6 +1756,11 @@ function Test-InfiltrationM365EXO047 {
 function Test-InfiltrationM365EXO048 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
 
     # Audit log retention policies are managed in Purview (Get-UnifiedAuditLogRetentionPolicy)
     # which is not collected in this EXO model. Retention duration therefore cannot be

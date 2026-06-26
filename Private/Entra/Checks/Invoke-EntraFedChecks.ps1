@@ -35,6 +35,11 @@ function Test-InfiltrationEIDFED001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Federation.Errors) `
+        -SourceKey @('Federation', 'Domains') -Subject 'federated domain inventory'
+    if ($na) { return $na }
+
     $domains = $AuditData.Federation.Domains
     if (-not $domains -or $domains.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
@@ -74,6 +79,11 @@ function Test-InfiltrationEIDFED001 {
 function Test-InfiltrationEIDFED002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Federation.Errors) `
+        -SourceKey @('Federation', 'Domains') -Subject 'federation configuration'
+    if ($na) { return $na }
 
     $fedConfigs = $AuditData.Federation.FederationConfigs
     if (-not $fedConfigs -or $fedConfigs.Count -eq 0) {
@@ -155,6 +165,11 @@ function Test-InfiltrationEIDFED003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Federation.Errors) `
+        -SourceKey @('Federation', 'Domains') -Subject 'federation configuration'
+    if ($na) { return $na }
+
     $fedConfigs = $AuditData.Federation.FederationConfigs
     if (-not $fedConfigs -or $fedConfigs.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
@@ -218,6 +233,11 @@ function Test-InfiltrationEIDFED003 {
 function Test-InfiltrationEIDFED004 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Federation.Errors) `
+        -SourceKey @('Federation', 'Domains') -Subject 'federation configuration'
+    if ($na) { return $na }
 
     $fedConfigs = $AuditData.Federation.FederationConfigs
     if (-not $fedConfigs -or $fedConfigs.Count -eq 0) {
@@ -396,6 +416,11 @@ function Test-InfiltrationEIDFED009 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Federation.Errors) `
+        -SourceKey @('Federation', 'Domains') -Subject 'federation configuration'
+    if ($na) { return $na }
+
     $fedConfigs = $AuditData.Federation.FederationConfigs
     if (-not $fedConfigs -or $fedConfigs.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
@@ -452,6 +477,11 @@ function Test-InfiltrationEIDFED009 {
 function Test-InfiltrationEIDFED010 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Federation.Errors) `
+        -SourceKey @('Federation', 'Domains') -Subject 'federation configuration'
+    if ($na) { return $na }
 
     $fedConfigs = $AuditData.Federation.FederationConfigs
     if (-not $fedConfigs -or $fedConfigs.Count -eq 0) {

@@ -37,6 +37,10 @@ function Test-FortificationADMIN001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'Users' -Subject 'user inventory'
+    if ($na) { return $na }
+
     if (-not $AuditData.Users) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'User data not available' -OrgUnitPath $OrgUnitPath
@@ -65,6 +69,10 @@ function Test-FortificationADMIN001 {
 function Test-FortificationADMIN002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey @('Roles', 'RoleAssignments') -Subject 'admin roles and assignments'
+    if ($na) { return $na }
 
     if (-not $AuditData.Roles -or -not $AuditData.RoleAssignments) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
@@ -98,6 +106,10 @@ function Test-FortificationADMIN003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'Roles' -Subject 'admin roles'
+    if ($na) { return $na }
+
     if (-not $AuditData.Roles) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
             -CurrentValue 'Role data not available. Verify custom admin roles in Admin Console > Account > Admin roles' `
@@ -124,6 +136,10 @@ function Test-FortificationADMIN003 {
 function Test-FortificationADMIN004 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'Users' -Subject 'user inventory'
+    if ($na) { return $na }
 
     if (-not $AuditData.Users) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -153,6 +169,10 @@ function Test-FortificationADMIN005 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'Users' -Subject 'user inventory'
+    if ($na) { return $na }
+
     if (-not $AuditData.Users) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'User data not available' -OrgUnitPath $OrgUnitPath
@@ -178,6 +198,10 @@ function Test-FortificationADMIN005 {
 function Test-FortificationADMIN006 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'Users' -Subject 'user inventory'
+    if ($na) { return $na }
 
     if (-not $AuditData.Users) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -219,6 +243,10 @@ function Test-FortificationADMIN006 {
 function Test-FortificationADMIN007 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'OrgUnits' -Subject 'organizational units'
+    if ($na) { return $na }
 
     if (-not $AuditData.Tenant -or -not $AuditData.Tenant.OrgUnits) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
@@ -449,6 +477,10 @@ function Test-FortificationADMIN012 {
 function Test-FortificationADMIN013 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'Users' -Subject 'user inventory'
+    if ($na) { return $na }
 
     if (-not $AuditData.Users) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `

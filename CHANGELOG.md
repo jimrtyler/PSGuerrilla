@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.35.0] - 2026-06-26
+
+### Fixed
+- **Uncollectable controls now report "Not Assessed" instead of PASS.** When a data source fails to collect (Graph throttling/errors, AD enumeration failures), checks across all theaters surface the gap as a SKIP rather than scoring it compliant. `Invoke-GraphApi` fails loud by default so collectors record the failure in their error map (continuous-monitoring collectors opt out via `-ReturnNullOnError`); a shared `Get-NotAssessedFinding` guard fronts the checks, and ~285 check sites consult that error map before passing on empty data. Read-only; no check-count or public-surface change.
+
 ## [2.34.0] - 2026-06-25
 
 ### Added

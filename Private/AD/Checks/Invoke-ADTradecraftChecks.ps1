@@ -37,6 +37,10 @@ function Test-ReconADTRADE001 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'TradecraftSignals' -Subject 'tradecraft signals'
+    if ($na) { return $na }
     $tc = $AuditData.Tradecraft
     if (-not $tc) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -65,6 +69,10 @@ function Test-ReconADTRADE002 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey @('TradecraftSignals','DomainControllers') -Subject 'tradecraft signals'
+    if ($na) { return $na }
     $tc = $AuditData.Tradecraft
     $dcs = $AuditData.DomainControllers
     if (-not $tc) {
@@ -128,6 +136,10 @@ function Test-ReconADTRADE003 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'TradecraftSignals' -Subject 'tradecraft signals'
+    if ($na) { return $na }
     $tc = $AuditData.Tradecraft
     if (-not $tc) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -171,6 +183,10 @@ function Test-ReconADTRADE004 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'TradecraftSignals' -Subject 'tradecraft signals'
+    if ($na) { return $na }
     $tc = $AuditData.Tradecraft
     if (-not $tc) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -199,6 +215,10 @@ function Test-ReconADTRADE005 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'TradecraftSignals' -Subject 'tradecraft signals'
+    if ($na) { return $na }
     $tc = $AuditData.Tradecraft
     if (-not $tc) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -237,6 +257,10 @@ function Test-ReconADTRADE006 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'TradecraftSignals' -Subject 'tradecraft signals'
+    if ($na) { return $na }
     $tc = $AuditData.Tradecraft
     if (-not $tc) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -284,6 +308,10 @@ function Test-ReconADTRADE007 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'TradecraftSignals' -Subject 'tradecraft signals'
+    if ($na) { return $na }
     $tc = $AuditData.Tradecraft
     if (-not $tc) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -323,6 +351,10 @@ function Test-ReconADTRADE008 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'TradecraftSignals' -Subject 'tradecraft signals'
+    if ($na) { return $na }
     $tc = $AuditData.Tradecraft
     if (-not $tc) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -359,6 +391,10 @@ function Test-ReconADTRADE009 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'TradecraftSignals' -Subject 'tradecraft signals'
+    if ($na) { return $na }
     $tc = $AuditData.Tradecraft
     if (-not $tc) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -400,6 +436,10 @@ function Test-ReconADTRADE010 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'TradecraftSignals' -Subject 'tradecraft signals'
+    if ($na) { return $na }
     $tc = $AuditData.Tradecraft
     if (-not $tc) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `

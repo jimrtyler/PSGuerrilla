@@ -38,6 +38,10 @@ function Test-ReconADKERB001 {
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'KerberosConfig' -Subject 'Kerberos configuration'
+    if ($na) { return $na }
+
     $kerb = $AuditData.Kerberos
     if (-not $kerb) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -118,6 +122,10 @@ function Test-ReconADKERB002 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'KerberosConfig' -Subject 'Kerberos configuration'
+    if ($na) { return $na }
 
     $kerb = $AuditData.Kerberos
     if (-not $kerb) {
@@ -257,6 +265,10 @@ function Test-ReconADKERB003 {
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'KerberosConfig' -Subject 'Kerberos configuration'
+    if ($na) { return $na }
+
     $kerb = $AuditData.Kerberos
     if (-not $kerb) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -320,6 +332,10 @@ function Test-ReconADKERB004 {
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'KerberosConfig' -Subject 'Kerberos configuration'
+    if ($na) { return $na }
+
     $kerb = $AuditData.Kerberos
     if (-not $kerb) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -366,6 +382,10 @@ function Test-ReconADKERB005 {
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'KerberosConfig' -Subject 'Kerberos configuration'
+    if ($na) { return $na }
+
     $kerb = $AuditData.Kerberos
     if (-not $kerb) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -410,6 +430,10 @@ function Test-ReconADKERB006 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'KerberosConfig' -Subject 'Kerberos configuration'
+    if ($na) { return $na }
 
     $kerb = $AuditData.Kerberos
     if (-not $kerb) {
@@ -478,6 +502,10 @@ function Test-ReconADKERB007 {
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'KerberosConfig' -Subject 'Kerberos configuration'
+    if ($na) { return $na }
+
     $kerb = $AuditData.Kerberos
     if (-not $kerb) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -529,6 +557,10 @@ function Test-ReconADKERB008 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'KerberosConfig' -Subject 'Kerberos configuration'
+    if ($na) { return $na }
 
     $kerb = $AuditData.Kerberos
     if (-not $kerb) {
@@ -602,6 +634,10 @@ function Test-ReconADKERB009 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'KerberosConfig' -Subject 'Kerberos configuration'
+    if ($na) { return $na }
 
     $kerb = $AuditData.Kerberos
     if (-not $kerb) {
@@ -721,6 +757,10 @@ function Test-ReconADKERB010 {
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'KerberosConfig' -Subject 'Kerberos configuration'
+    if ($na) { return $na }
+
     $kerb = $AuditData.Kerberos
     if (-not $kerb) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -786,6 +826,10 @@ function Test-ReconADKERB011 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'KerberosConfig' -Subject 'Kerberos configuration'
+    if ($na) { return $na }
 
     $kerb = $AuditData.Kerberos
     if (-not $kerb) {

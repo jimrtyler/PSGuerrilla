@@ -35,6 +35,11 @@ function Test-InfiltrationEIDAPP001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Applications.Errors) `
+        -SourceKey @('Applications', 'AppRegistrations', 'ServicePrincipals') -Subject 'application inventory'
+    if ($na) { return $na }
+
     $apps = $AuditData.Applications.AppRegistrations
     $sps = $AuditData.Applications.ServicePrincipals
 
@@ -527,6 +532,11 @@ function Test-InfiltrationEIDAPP011 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Applications.Errors) `
+        -SourceKey @('Applications', 'ConsentGrants') -Subject 'OAuth2 consent grants'
+    if ($na) { return $na }
+
     $consentGrants = $AuditData.Applications.ConsentGrants
     if (-not $consentGrants -or $consentGrants.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
@@ -606,6 +616,11 @@ function Test-InfiltrationEIDAPP012 {
 function Test-InfiltrationEIDAPP013 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.TenantConfig.Errors) `
+        -SourceKey @('TenantConfig', 'AdminConsentRequestPolicy') -Subject 'admin consent request policy'
+    if ($na) { return $na }
 
     $adminConsentPolicy = $AuditData.TenantConfig.AdminConsentRequestPolicy
     if (-not $adminConsentPolicy) {
@@ -694,6 +709,11 @@ function Test-InfiltrationEIDAPP014 {
 function Test-InfiltrationEIDAPP015 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.Applications.Errors) `
+        -SourceKey @('Applications', 'ConsentGrants') -Subject 'OAuth2 permission grants'
+    if ($na) { return $na }
 
     $consentGrants = $AuditData.Applications.ConsentGrants
     if (-not $consentGrants -or $consentGrants.Count -eq 0) {

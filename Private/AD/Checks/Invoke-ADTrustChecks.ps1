@@ -35,6 +35,10 @@ function Test-ReconADTRUST001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'TrustRelationships' -Subject 'trust relationships'
+    if ($na) { return $na }
+
     $trusts = @($AuditData.Trusts)
     if ($trusts.Count -eq 0 -or ($trusts.Count -eq 1 -and $null -eq $trusts[0])) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
@@ -93,6 +97,10 @@ function Test-ReconADTRUST002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'TrustRelationships' -Subject 'trust relationships'
+    if ($na) { return $na }
+
     $trusts = @($AuditData.Trusts | Where-Object { $null -ne $_ })
     if ($trusts.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
@@ -142,6 +150,10 @@ function Test-ReconADTRUST003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'TrustRelationships' -Subject 'trust relationships'
+    if ($na) { return $na }
+
     $trusts = @($AuditData.Trusts | Where-Object { $null -ne $_ })
     if ($trusts.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
@@ -184,6 +196,10 @@ function Test-ReconADTRUST003 {
 function Test-ReconADTRUST004 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'TrustRelationships' -Subject 'trust relationships'
+    if ($na) { return $na }
 
     $trusts = @($AuditData.Trusts | Where-Object { $null -ne $_ })
     if ($trusts.Count -eq 0) {
@@ -239,6 +255,10 @@ function Test-ReconADTRUST005 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'TrustRelationships' -Subject 'trust relationships'
+    if ($na) { return $na }
+
     $trusts = @($AuditData.Trusts | Where-Object { $null -ne $_ })
     if ($trusts.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
@@ -288,6 +308,10 @@ function Test-ReconADTRUST005 {
 function Test-ReconADTRUST006 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'TrustRelationships' -Subject 'trust relationships'
+    if ($na) { return $na }
 
     $trusts = @($AuditData.Trusts | Where-Object { $null -ne $_ })
     if ($trusts.Count -eq 0) {
@@ -340,6 +364,10 @@ function Test-ReconADTRUST007 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'TrustRelationships' -Subject 'trust relationships'
+    if ($na) { return $na }
+
     $trusts = @($AuditData.Trusts | Where-Object { $null -ne $_ })
     if ($trusts.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
@@ -385,6 +413,10 @@ function Test-ReconADTRUST007 {
 function Test-ReconADTRUST008 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'TrustRelationships' -Subject 'trust relationships'
+    if ($na) { return $na }
 
     $trusts = @($AuditData.Trusts | Where-Object { $null -ne $_ })
     if ($trusts.Count -eq 0) {
@@ -437,6 +469,10 @@ function Test-ReconADTRUST008 {
 function Test-ReconADTRUST009 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'TrustRelationships' -Subject 'trust relationships'
+    if ($na) { return $na }
 
     $trusts = @($AuditData.Trusts | Where-Object { $null -ne $_ })
     if ($trusts.Count -eq 0) {
@@ -529,6 +565,10 @@ function Test-ReconADTRUST010 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'TrustRelationships' -Subject 'trust relationships'
+    if ($na) { return $na }
+
     $trusts = @($AuditData.Trusts | Where-Object { $null -ne $_ })
     if ($trusts.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
@@ -613,6 +653,10 @@ function Test-ReconADTRUST010 {
 function Test-ReconADTRUST011 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'TrustRelationships' -Subject 'trust relationships'
+    if ($na) { return $na }
 
     $trusts = @($AuditData.Trusts | Where-Object { $null -ne $_ })
     if ($trusts.Count -eq 0) {

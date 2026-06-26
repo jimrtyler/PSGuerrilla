@@ -35,6 +35,11 @@ function Test-InfiltrationM365DEF001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Defender') -Subject 'Defender for Office configuration'
+    if ($na) { return $na }
+
     $defender = $AuditData.M365Services.Defender
     if (-not $defender -or -not $defender.ProtectionPolicyRules) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -85,6 +90,11 @@ function Test-InfiltrationM365DEF001 {
 function Test-InfiltrationM365DEF002 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Defender') -Subject 'Defender for Office configuration'
+    if ($na) { return $na }
 
     $defender = $AuditData.M365Services.Defender
     if (-not $defender -or -not $defender.ProtectionAlerts) {
@@ -139,6 +149,11 @@ function Test-InfiltrationM365DEF002 {
 function Test-InfiltrationM365DEF003 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Defender') -Subject 'Defender for Office configuration'
+    if ($na) { return $na }
 
     $defender = $AuditData.M365Services.Defender
     if (-not $defender) {

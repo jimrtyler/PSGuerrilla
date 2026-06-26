@@ -37,6 +37,10 @@ function Test-FortificationDEVICE001 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'MobileDevices' -Subject 'mobile device inventory'
+    if ($na) { return $na }
+
     if (-not $AuditData.MobileDevices) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
             -CurrentValue 'Mobile device data not available. Verify in Admin Console > Devices > Mobile devices that MDM policies are enforced' `
@@ -134,6 +138,10 @@ function Test-FortificationDEVICE007 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'ChromePolicies' -Subject 'Chrome browser policies'
+    if ($na) { return $na }
+
     if ($AuditData.ChromePolicies) {
         $policies = $AuditData.ChromePolicies
         $policyCount = if ($policies -is [array]) { $policies.Count }
@@ -157,6 +165,10 @@ function Test-FortificationDEVICE007 {
 function Test-FortificationDEVICE008 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'ChromePolicies' -Subject 'Chrome extension policies'
+    if ($na) { return $na }
 
     # Chrome extension policies are part of Chrome Browser Cloud Management
     if ($AuditData.ChromePolicies) {
@@ -186,6 +198,10 @@ function Test-FortificationDEVICE008 {
 function Test-FortificationDEVICE009 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'ChromeDevices' -Subject 'Chrome OS device inventory'
+    if ($na) { return $na }
 
     if (-not $AuditData.ChromeDevices) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
@@ -229,6 +245,10 @@ function Test-FortificationDEVICE010 {
 function Test-FortificationDEVICE011 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey @('MobileDevices', 'ChromeDevices') -Subject 'device inventory'
+    if ($na) { return $na }
 
     $totalDevices = 0
     $deviceBreakdown = @{}

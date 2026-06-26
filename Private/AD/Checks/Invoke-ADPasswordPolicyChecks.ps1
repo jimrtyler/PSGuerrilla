@@ -38,6 +38,10 @@ function Test-ReconADPWD001 {
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PasswordPolicies' -Subject 'password policies'
+    if ($na) { return $na }
+
     $dp = $AuditData.PasswordPolicies.DefaultPolicy
     if (-not $dp) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -92,6 +96,10 @@ function Test-ReconADPWD002 {
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PasswordPolicies' -Subject 'password policies'
+    if ($na) { return $na }
+
     $fgpps = @($AuditData.PasswordPolicies.FineGrainedPolicies ?? @())
 
     if ($fgpps.Count -eq 0) {
@@ -128,6 +136,10 @@ function Test-ReconADPWD003 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PasswordPolicies' -Subject 'password policies'
+    if ($na) { return $na }
 
     $fgpps = @($AuditData.PasswordPolicies.FineGrainedPolicies ?? @())
     $dp = $AuditData.PasswordPolicies.DefaultPolicy
@@ -188,6 +200,10 @@ function Test-ReconADPWD004 {
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PasswordPolicies' -Subject 'password policies'
+    if ($na) { return $na }
+
     $dp = $AuditData.PasswordPolicies.DefaultPolicy
     if (-not $dp) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -212,6 +228,10 @@ function Test-ReconADPWD005 {
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PasswordPolicies' -Subject 'password policies'
+    if ($na) { return $na }
+
     $dp = $AuditData.PasswordPolicies.DefaultPolicy
     if (-not $dp) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -233,6 +253,10 @@ function Test-ReconADPWD006 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PasswordPolicies' -Subject 'password policies'
+    if ($na) { return $na }
 
     $dp = $AuditData.PasswordPolicies.DefaultPolicy
     if (-not $dp) {
@@ -279,6 +303,10 @@ function Test-ReconADPWD007 {
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PasswordPolicies' -Subject 'password policies'
+    if ($na) { return $na }
+
     $dp = $AuditData.PasswordPolicies.DefaultPolicy
     if (-not $dp) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -302,6 +330,10 @@ function Test-ReconADPWD008 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PasswordPolicies' -Subject 'password policies'
+    if ($na) { return $na }
 
     $dp = $AuditData.PasswordPolicies.DefaultPolicy
     if (-not $dp) {
@@ -338,6 +370,10 @@ function Test-ReconADPWD009 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PasswordPolicies' -Subject 'password policies'
+    if ($na) { return $na }
 
     $users = @($AuditData.PasswordPolicies.UsersPasswordNeverExpires ?? @())
 
@@ -557,6 +593,10 @@ function Test-ReconADPWD015 {
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PasswordPolicies' -Subject 'password policies'
+    if ($na) { return $na }
+
     $users = @($AuditData.PasswordPolicies.UsersPasswordNeverExpires ?? @())
 
     # Also attempt to use a broader user list if available
@@ -633,6 +673,10 @@ function Test-ReconADPWD016 {
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PasswordPolicies' -Subject 'password policies'
+    if ($na) { return $na }
+
     $pp = $AuditData.PasswordPolicies
     $lapsDeployed = [bool]($pp.LAPSDeployed ?? $false)
 
@@ -672,6 +716,10 @@ function Test-ReconADPWD017 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PasswordPolicies' -Subject 'password policies'
+    if ($na) { return $na }
 
     $pp = $AuditData.PasswordPolicies
     $lapsDeployed = [bool]($pp.LAPSDeployed ?? $false)
@@ -713,6 +761,10 @@ function Test-ReconADPWD018 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PasswordPolicies' -Subject 'password policies'
+    if ($na) { return $na }
 
     $pp = $AuditData.PasswordPolicies
     $lapsType = $pp.LAPSType ?? 'None'
@@ -762,6 +814,10 @@ function Test-ReconADPWD020 {
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PasswordPolicies' -Subject 'password policies'
+    if ($na) { return $na }
+
     $bitlockerKeys = [int]($AuditData.PasswordPolicies.BitLockerKeys ?? 0)
 
     return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
@@ -783,6 +839,10 @@ function Test-ReconADPWD021 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PasswordPolicies' -Subject 'password policies'
+    if ($na) { return $na }
 
     $dp = $AuditData.PasswordPolicies.DefaultPolicy
     if (-not $dp) {
@@ -816,6 +876,10 @@ function Test-ReconADPWD022 {
         [Parameter(Mandatory)][hashtable]$AuditData,
         [Parameter(Mandatory)][hashtable]$CheckDefinition
     )
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey 'PasswordPolicies' -Subject 'password policies'
+    if ($na) { return $na }
 
     $dp = $AuditData.PasswordPolicies.DefaultPolicy
     if (-not $dp) {

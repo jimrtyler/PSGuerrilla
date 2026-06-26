@@ -20,7 +20,7 @@ function Get-EntraDirectoryAudits {
 
     if (-not $Quiet) { Write-Verbose "Fetching directory audits since $startIso" }
 
-    $rawEvents = Invoke-GraphApi -AccessToken $AccessToken `
+    $rawEvents = Invoke-GraphApi -AccessToken $AccessToken -ReturnNullOnError `
         -Uri '/auditLogs/directoryAudits' `
         -QueryParameters @{ '$filter' = $filter; '$top' = '999' } `
         -Paginate `

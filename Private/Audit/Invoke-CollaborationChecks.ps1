@@ -142,6 +142,10 @@ function Test-FortificationCOLLAB004 {
     # share data to outside contacts freely; weakest-OU-wins. ENUM GUESS: NO_RESTRICTION/ALL/
     # UNRESTRICTED is fully open (insecure); any other restriction value is "allowed but limited"
     # (WARN). Unknown values WARN — never PASS blindly. (OrgUnitPolicies fallback retained below.)
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey @('CloudIdentityPolicies', 'OrgUnits') -Subject 'Chat external-communication policy'
+    if ($na) { return $na }
+
     $pol = $AuditData.CloudIdentityPolicies
     if ($pol) {
         $vals = @(Resolve-GooglePolicyValue -Policies $pol -Type 'chat.external_chat_restriction')
@@ -264,6 +268,10 @@ function Test-FortificationCOLLAB008 {
     # (READ_ONLY / READ_WRITE / READ_WRITE_MANAGE) share full event details externally -> FAIL;
     # EXTERNAL_FREE_BUSY_ONLY / EXTERNAL_NO_SHARING are limited -> PASS. Older-shape guesses kept as
     # a fallback. Unknown values WARN — never PASS blindly. (OrgUnitPolicies fallback retained.)
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey @('CloudIdentityPolicies', 'OrgUnits') -Subject 'Calendar external-sharing policy'
+    if ($na) { return $na }
+
     $pol = $AuditData.CloudIdentityPolicies
     if ($pol) {
         $vals = @(Resolve-GooglePolicyValue -Policies $pol -Type 'calendar.primary_calendar_max_allowed_external_sharing' -Field 'maxAllowedExternalSharing')
