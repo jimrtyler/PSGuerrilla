@@ -1,0 +1,21 @@
+{
+  "checkId": "ADGPO-002",
+  "theater": "Recon",
+  "scenario": "known-bad",
+  "expectedStatus": "WARN",
+  "description": "An empty GPO exists",
+  "objectShape": false,
+  "auditData": {
+    "GroupPolicies": {
+      "GPOs": [
+        {
+          "IsEmpty": true,
+          "GUID": "g1",
+          "DisplayName": "Stub GPO",
+          "Flags": 0
+        }
+      ]
+    },
+    "Errors": {}
+  }
+}

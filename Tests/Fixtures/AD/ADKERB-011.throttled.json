@@ -1,0 +1,13 @@
+{
+  "checkId": "ADKERB-011",
+  "theater": "Recon",
+  "scenario": "throttled",
+  "expectedStatus": "SKIP",
+  "description": "Kerberos config not collected",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {
+      "KerberosConfig": "AD enumeration failed"
+    }
+  }
+}

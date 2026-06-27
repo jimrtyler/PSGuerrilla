@@ -1,0 +1,11 @@
+{
+  "checkId": "DRIVE-012",
+  "theater": "Fortification",
+  "scenario": "always-warn",
+  "expectedStatus": "WARN",
+  "description": "Drive add-on settings require manual review",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {}
+  }
+}

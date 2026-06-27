@@ -1,0 +1,22 @@
+{
+  "checkId": "EIDPIM-011",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "PIM activation/assignment schedules present",
+  "objectShape": false,
+  "auditData": {
+    "PIM": {
+      "RoleAssignmentSchedules": [
+        {
+          "assignmentType": "Activated"
+        },
+        {
+          "assignmentType": "Assigned"
+        }
+      ],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

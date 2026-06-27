@@ -1,0 +1,20 @@
+{
+  "checkId": "ADGPO-003",
+  "theater": "Recon",
+  "scenario": "known-bad",
+  "expectedStatus": "WARN",
+  "description": "An unlinked GPO exists",
+  "objectShape": false,
+  "auditData": {
+    "GroupPolicies": {
+      "GPOs": [
+        {
+          "GUID": "g1",
+          "DisplayName": "Orphan GPO",
+          "IsLinked": false
+        }
+      ]
+    },
+    "Errors": {}
+  }
+}

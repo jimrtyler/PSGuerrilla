@@ -1,0 +1,16 @@
+{
+  "checkId": "EIDAPP-001",
+  "theater": "Infiltration",
+  "scenario": "no-data",
+  "expectedStatus": "SKIP",
+  "description": "Applications not assessed",
+  "objectShape": false,
+  "auditData": {
+    "Applications": {
+      "Errors": {}
+    },
+    "Errors": {
+      "Applications": "Graph 429"
+    }
+  }
+}

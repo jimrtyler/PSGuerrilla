@@ -1,0 +1,21 @@
+{
+  "checkId": "ADDOM-011",
+  "theater": "Recon",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "All sites have site links",
+  "objectShape": false,
+  "auditData": {
+    "Domain": {
+      "Sites": [
+        {
+          "SiteLinks": [
+            "DEFAULTIPSITELINK"
+          ],
+          "Name": "HQ"
+        }
+      ]
+    },
+    "Errors": {}
+  }
+}

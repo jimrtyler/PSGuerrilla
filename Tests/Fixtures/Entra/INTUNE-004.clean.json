@@ -1,0 +1,22 @@
+{
+  "checkId": "INTUNE-004",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Device configuration profiles present",
+  "objectShape": false,
+  "auditData": {
+    "Intune": {
+      "DeviceConfigurations": [
+        {
+          "displayName": "Win10 Config",
+          "id": "d1",
+          "createdDateTime": "2024-01-01T00:00:00Z",
+          "@odata.type": "#microsoft.graph.windows10GeneralConfiguration"
+        }
+      ],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

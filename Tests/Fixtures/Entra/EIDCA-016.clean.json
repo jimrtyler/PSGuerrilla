@@ -1,0 +1,33 @@
+{
+  "checkId": "EIDCA-016",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Conditional Access policies exported",
+  "objectShape": false,
+  "auditData": {
+    "ConditionalAccess": {
+      "Policies": [
+        {
+          "conditions": {
+            "users": {
+              "includeUsers": [
+                "All"
+              ]
+            }
+          },
+          "displayName": "Require MFA",
+          "id": "p1",
+          "grantControls": {
+            "builtInControls": [
+              "mfa"
+            ]
+          },
+          "state": "enabled"
+        }
+      ],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

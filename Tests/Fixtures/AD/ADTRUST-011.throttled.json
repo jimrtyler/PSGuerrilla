@@ -1,0 +1,13 @@
+{
+  "checkId": "ADTRUST-011",
+  "theater": "Recon",
+  "scenario": "throttled",
+  "expectedStatus": "SKIP",
+  "description": "Trust data not collected",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {
+      "TrustRelationships": "AD enumeration failed"
+    }
+  }
+}

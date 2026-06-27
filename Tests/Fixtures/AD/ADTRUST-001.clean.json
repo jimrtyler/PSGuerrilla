@@ -1,0 +1,26 @@
+{
+  "checkId": "ADTRUST-001",
+  "theater": "Recon",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Trust relationships inventoried",
+  "objectShape": false,
+  "auditData": {
+    "Trusts": [
+      {
+        "TrustType": "External",
+        "SIDFilteringEnabled": true,
+        "TrustDirection": "Bidirectional",
+        "IsTransitive": false,
+        "TrustPartner": "partner.corp.com",
+        "IsAzureAD": false,
+        "ForestTransitive": false,
+        "WhenCreated": "2020-01-15T10:00:00Z",
+        "SelectiveAuthentication": false,
+        "WhenChanged": "2020-01-15T10:00:00Z",
+        "WithinForest": false
+      }
+    ],
+    "Errors": {}
+  }
+}

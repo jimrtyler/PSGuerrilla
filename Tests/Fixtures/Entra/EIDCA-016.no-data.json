@@ -1,0 +1,15 @@
+{
+  "checkId": "EIDCA-016",
+  "theater": "Infiltration",
+  "scenario": "no-data",
+  "expectedStatus": "SKIP",
+  "description": "No policies to export",
+  "objectShape": false,
+  "auditData": {
+    "ConditionalAccess": {
+      "Policies": [],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "checkId": "AUTH-016",
+  "theater": "Fortification",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Advanced Protection self-enrollment enabled",
+  "objectShape": true,
+  "auditData": {
+    "CloudIdentityPolicies": {
+      "ByType": {
+        "security.advanced_protection_program": [
+          {
+            "setting": {
+              "value": {
+                "enableAdvancedProtectionSelfEnrollment": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    "Errors": {}
+  }
+}

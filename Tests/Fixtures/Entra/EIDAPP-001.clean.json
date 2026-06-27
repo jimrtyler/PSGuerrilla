@@ -1,0 +1,28 @@
+{
+  "checkId": "EIDAPP-001",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "App registrations / service principals present",
+  "objectShape": false,
+  "auditData": {
+    "Applications": {
+      "AppRegistrations": [
+        {
+          "appId": "a1",
+          "createdDateTime": "2024-01-01T00:00:00Z",
+          "displayName": "App1",
+          "signInAudience": "AzureADMyOrg"
+        }
+      ],
+      "ServicePrincipals": [
+        {
+          "appId": "a1",
+          "displayName": "App1"
+        }
+      ],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "checkId": "ADPWD-018",
+  "theater": "Recon",
+  "scenario": "throttled",
+  "expectedStatus": "SKIP",
+  "description": "Password policies not collected",
+  "objectShape": false,
+  "auditData": {
+    "PasswordPolicies": {},
+    "Errors": {
+      "PasswordPolicies": "AD enumeration failed"
+    }
+  }
+}

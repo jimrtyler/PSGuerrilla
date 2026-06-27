@@ -1,0 +1,20 @@
+{
+  "checkId": "EIDTNT-014",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Managed domain passwords set to never expire",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "TenantConfig": {
+      "Domains": [
+        {
+          "passwordValidityPeriodInDays": 2147483647,
+          "id": "contoso.com",
+          "authenticationType": "Managed"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "checkId": "EIDTNT-010",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "All domains verified",
+  "objectShape": false,
+  "auditData": {
+    "TenantConfig": {
+      "Domains": [
+        {
+          "isVerified": true,
+          "isDefault": true,
+          "isInitial": false,
+          "id": "contoso.com",
+          "authenticationType": "Managed",
+          "supportedServices": [
+            "Email"
+          ],
+          "isAdminManaged": true
+        }
+      ],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

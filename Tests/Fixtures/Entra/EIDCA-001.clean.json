@@ -1,0 +1,23 @@
+{
+  "checkId": "EIDCA-001",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Conditional Access policies inventoried",
+  "objectShape": false,
+  "auditData": {
+    "ConditionalAccess": {
+      "Policies": [
+        {
+          "displayName": "Require MFA",
+          "id": "p1",
+          "modifiedDateTime": "2024-06-01T00:00:00Z",
+          "state": "enabled",
+          "createdDateTime": "2024-01-01T00:00:00Z"
+        }
+      ],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

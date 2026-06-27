@@ -1,0 +1,24 @@
+{
+  "checkId": "GWS-CLASS-005",
+  "theater": "Fortification",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Only teachers can unenroll students",
+  "objectShape": true,
+  "auditData": {
+    "CloudIdentityPolicies": {
+      "ByType": {
+        "classroom.student_unenrollment": [
+          {
+            "setting": {
+              "value": {
+                "whoCanUnenrollStudents": "TEACHERS_ONLY"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "Errors": {}
+  }
+}

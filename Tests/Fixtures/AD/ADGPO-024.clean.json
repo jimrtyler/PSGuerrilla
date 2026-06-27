@@ -1,0 +1,14 @@
+{
+  "checkId": "ADGPO-024",
+  "theater": "Recon",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "No WMI filters defined",
+  "objectShape": false,
+  "auditData": {
+    "GroupPolicies": {
+      "WMIFilters": []
+    },
+    "Errors": {}
+  }
+}

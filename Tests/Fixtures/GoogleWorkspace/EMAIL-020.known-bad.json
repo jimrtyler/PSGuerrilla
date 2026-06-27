@@ -1,0 +1,24 @@
+{
+  "checkId": "EMAIL-020",
+  "theater": "Fortification",
+  "scenario": "known-bad",
+  "expectedStatus": "WARN",
+  "description": "Confidential mode enabled (exfil vector)",
+  "objectShape": true,
+  "auditData": {
+    "CloudIdentityPolicies": {
+      "ByType": {
+        "gmail.confidential_mode": [
+          {
+            "setting": {
+              "value": {
+                "enableConfidentialMode": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    "Errors": {}
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "checkId": "ADDOM-006",
+  "theater": "Recon",
+  "scenario": "throttled",
+  "expectedStatus": "SKIP",
+  "description": "Domain info not collected",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {
+      "DomainInfo": "AD enumeration failed"
+    }
+  }
+}

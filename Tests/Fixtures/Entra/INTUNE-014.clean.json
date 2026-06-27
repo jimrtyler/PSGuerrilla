@@ -1,0 +1,23 @@
+{
+  "checkId": "INTUNE-014",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Autopilot deployment profiles present",
+  "objectShape": false,
+  "auditData": {
+    "Intune": {
+      "AutopilotProfiles": [
+        {
+          "deviceNameTemplate": "CONTOSO-%SERIAL%",
+          "displayName": "Standard Autopilot",
+          "id": "ap1",
+          "extractHardwareHash": true,
+          "language": "en-US"
+        }
+      ],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

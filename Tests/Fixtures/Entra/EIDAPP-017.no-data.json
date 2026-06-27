@@ -1,0 +1,15 @@
+{
+  "checkId": "EIDAPP-017",
+  "theater": "Infiltration",
+  "scenario": "no-data",
+  "expectedStatus": "SKIP",
+  "description": "No service principal sign-in data",
+  "objectShape": false,
+  "auditData": {
+    "Applications": {
+      "ServicePrincipals": [],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

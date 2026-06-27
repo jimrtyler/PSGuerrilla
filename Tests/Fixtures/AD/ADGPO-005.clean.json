@@ -1,0 +1,23 @@
+{
+  "checkId": "ADGPO-005",
+  "theater": "Recon",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "No duplicate-named GPOs",
+  "objectShape": false,
+  "auditData": {
+    "GroupPolicies": {
+      "GPOs": [
+        {
+          "DisplayName": "Workstation Baseline",
+          "GUID": "g1"
+        },
+        {
+          "DisplayName": "Server Baseline",
+          "GUID": "g2"
+        }
+      ]
+    },
+    "Errors": {}
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "checkId": "ADPWD-020",
+  "theater": "Recon",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "BitLocker recovery keys present (informational)",
+  "objectShape": false,
+  "auditData": {
+    "PasswordPolicies": {
+      "BitLockerKeys": 5
+    },
+    "Errors": {}
+  }
+}

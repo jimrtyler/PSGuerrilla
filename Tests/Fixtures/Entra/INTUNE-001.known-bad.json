@@ -1,0 +1,15 @@
+{
+  "checkId": "INTUNE-001",
+  "theater": "Infiltration",
+  "scenario": "known-bad",
+  "expectedStatus": "FAIL",
+  "description": "No compliance policies configured",
+  "objectShape": false,
+  "auditData": {
+    "Intune": {
+      "CompliancePolicies": [],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

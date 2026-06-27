@@ -1,0 +1,24 @@
+{
+  "checkId": "GWS-SITES-001",
+  "theater": "Fortification",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Sites service disabled",
+  "objectShape": true,
+  "auditData": {
+    "CloudIdentityPolicies": {
+      "ByType": {
+        "sites.service_status": [
+          {
+            "setting": {
+              "value": {
+                "serviceState": "DISABLED"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "Errors": {}
+  }
+}

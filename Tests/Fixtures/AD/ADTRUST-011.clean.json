@@ -1,0 +1,32 @@
+{
+  "checkId": "ADTRUST-011",
+  "theater": "Recon",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Trust topology mapped",
+  "objectShape": false,
+  "auditData": {
+    "Domain": {
+      "DomainName": "contoso.com"
+    },
+    "Connection": {
+      "DomainDN": "DC=contoso,DC=com"
+    },
+    "Trusts": [
+      {
+        "TrustType": "External",
+        "IsTransitive": false,
+        "TrustDirection": "Bidirectional",
+        "WithinForest": false,
+        "TrustPartner": "partner.corp.com",
+        "ForestTransitive": false,
+        "WhenCreated": "2020-01-15T10:00:00Z",
+        "SIDFilteringEnabled": true,
+        "SelectiveAuthentication": false,
+        "WhenChanged": "2020-01-15T10:00:00Z",
+        "IsAzureAD": false
+      }
+    ],
+    "Errors": {}
+  }
+}

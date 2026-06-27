@@ -1,0 +1,19 @@
+{
+  "checkId": "LOG-006",
+  "theater": "Fortification",
+  "scenario": "known-bad",
+  "expectedStatus": "WARN",
+  "description": "A delegation grant has Reports/Audit API access",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "DomainWideDelegation": [
+      {
+        "clientId": "100200300",
+        "scopes": [
+          "https://www.googleapis.com/auth/admin.reports.audit.readonly"
+        ]
+      }
+    ]
+  }
+}

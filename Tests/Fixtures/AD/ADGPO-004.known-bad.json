@@ -1,0 +1,22 @@
+{
+  "checkId": "ADGPO-004",
+  "theater": "Recon",
+  "scenario": "known-bad",
+  "expectedStatus": "WARN",
+  "description": "A GPO has disabled sections but contains settings",
+  "objectShape": false,
+  "auditData": {
+    "GroupPolicies": {
+      "GPOs": [
+        {
+          "IsEmpty": false,
+          "GUID": "g1",
+          "DisplayName": "Half-off GPO",
+          "FlagDescription": "User config disabled",
+          "Flags": 1
+        }
+      ]
+    },
+    "Errors": {}
+  }
+}

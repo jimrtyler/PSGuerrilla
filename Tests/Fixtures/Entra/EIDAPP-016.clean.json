@@ -1,0 +1,30 @@
+{
+  "checkId": "EIDAPP-016",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Managed identities inventoried",
+  "objectShape": false,
+  "auditData": {
+    "Applications": {
+      "ServicePrincipals": [
+        {
+          "accountEnabled": true,
+          "appId": "a1",
+          "id": "sp1",
+          "displayName": "MI1",
+          "servicePrincipalType": "ManagedIdentity"
+        },
+        {
+          "accountEnabled": true,
+          "appId": "a2",
+          "id": "sp2",
+          "displayName": "App",
+          "servicePrincipalType": "Application"
+        }
+      ],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

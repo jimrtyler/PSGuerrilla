@@ -1,0 +1,26 @@
+{
+  "checkId": "ADSCRIPT-003",
+  "theater": "Recon",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Logon scripts inventoried",
+  "objectShape": false,
+  "auditData": {
+    "LogonScripts": {
+      "NetlogonFiles": [
+        {
+          "Extension": ".bat"
+        },
+        {
+          "Extension": ".ps1"
+        }
+      ],
+      "UserScripts": [
+        {
+          "UserCount": 45
+        }
+      ]
+    },
+    "Errors": {}
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "checkId": "ADGPO-002",
+  "theater": "Recon",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "No empty/fully-disabled GPOs",
+  "objectShape": false,
+  "auditData": {
+    "GroupPolicies": {
+      "GPOs": [
+        {
+          "IsEmpty": false,
+          "GUID": "g1",
+          "DisplayName": "WS Baseline",
+          "Flags": 0
+        }
+      ]
+    },
+    "Errors": {}
+  }
+}

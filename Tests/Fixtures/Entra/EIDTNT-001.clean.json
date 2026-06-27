@@ -1,0 +1,26 @@
+{
+  "checkId": "EIDTNT-001",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Tenant organization config present",
+  "objectShape": false,
+  "auditData": {
+    "TenantConfig": {
+      "Organization": {
+        "assignedPlans": [],
+        "id": "t1",
+        "displayName": "Contoso",
+        "createdDateTime": "2018-01-01T00:00:00Z",
+        "countryLetterCode": "US",
+        "verifiedDomains": [
+          {
+            "name": "contoso.com"
+          }
+        ]
+      },
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

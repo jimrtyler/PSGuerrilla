@@ -1,0 +1,20 @@
+{
+  "checkId": "EIDTNT-014",
+  "theater": "Infiltration",
+  "scenario": "known-bad",
+  "expectedStatus": "FAIL",
+  "description": "Managed domain enforces finite password expiry",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "TenantConfig": {
+      "Domains": [
+        {
+          "passwordValidityPeriodInDays": 90,
+          "id": "contoso.com",
+          "authenticationType": "Managed"
+        }
+      ]
+    }
+  }
+}

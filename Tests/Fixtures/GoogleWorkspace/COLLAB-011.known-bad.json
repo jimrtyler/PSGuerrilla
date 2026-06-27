@@ -1,0 +1,24 @@
+{
+  "checkId": "COLLAB-011",
+  "theater": "Fortification",
+  "scenario": "known-bad",
+  "expectedStatus": "WARN",
+  "description": "External participant labeling disabled",
+  "objectShape": true,
+  "auditData": {
+    "CloudIdentityPolicies": {
+      "ByType": {
+        "meet.safety_external_participants": [
+          {
+            "setting": {
+              "value": {
+                "enableExternalLabel": false
+              }
+            }
+          }
+        ]
+      }
+    },
+    "Errors": {}
+  }
+}

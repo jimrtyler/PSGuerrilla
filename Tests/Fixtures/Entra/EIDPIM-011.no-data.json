@@ -1,0 +1,15 @@
+{
+  "checkId": "EIDPIM-011",
+  "theater": "Infiltration",
+  "scenario": "no-data",
+  "expectedStatus": "SKIP",
+  "description": "No assignment schedules to assess",
+  "objectShape": false,
+  "auditData": {
+    "PIM": {
+      "RoleAssignmentSchedules": null,
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

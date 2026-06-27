@@ -1,0 +1,24 @@
+{
+  "checkId": "EMAIL-021",
+  "theater": "Fortification",
+  "scenario": "known-bad",
+  "expectedStatus": "WARN",
+  "description": "User certificate upload allowed",
+  "objectShape": true,
+  "auditData": {
+    "CloudIdentityPolicies": {
+      "ByType": {
+        "gmail.enhanced_smime_encryption": [
+          {
+            "setting": {
+              "value": {
+                "allowUserToUploadCertificates": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    "Errors": {}
+  }
+}

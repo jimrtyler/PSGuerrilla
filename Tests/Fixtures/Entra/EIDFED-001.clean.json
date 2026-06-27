@@ -1,0 +1,26 @@
+{
+  "checkId": "EIDFED-001",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Domains enumerated",
+  "objectShape": false,
+  "auditData": {
+    "Federation": {
+      "Domains": [
+        {
+          "isVerified": true,
+          "isDefault": true,
+          "supportedServices": [
+            "Email"
+          ],
+          "id": "contoso.com",
+          "authenticationType": "Managed",
+          "isAdminManaged": true
+        }
+      ],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

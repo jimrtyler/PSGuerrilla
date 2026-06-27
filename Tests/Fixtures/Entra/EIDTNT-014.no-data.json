@@ -1,0 +1,14 @@
+{
+  "checkId": "EIDTNT-014",
+  "theater": "Infiltration",
+  "scenario": "no-data",
+  "expectedStatus": "SKIP",
+  "description": "No managed domains expose password validity",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "TenantConfig": {
+      "Domains": []
+    }
+  }
+}

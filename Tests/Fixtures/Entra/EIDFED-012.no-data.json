@@ -1,0 +1,18 @@
+{
+  "checkId": "EIDFED-012",
+  "theater": "Infiltration",
+  "scenario": "no-data",
+  "expectedStatus": "SKIP",
+  "description": "User identity-source counts not collected",
+  "objectShape": false,
+  "auditData": {
+    "Federation": {
+      "Users": {
+        "SyncedCount": -1,
+        "CloudOnlyCount": -1
+      },
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

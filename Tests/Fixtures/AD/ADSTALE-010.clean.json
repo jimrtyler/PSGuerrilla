@@ -1,0 +1,14 @@
+{
+  "checkId": "ADSTALE-010",
+  "theater": "Recon",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "No printer objects published",
+  "objectShape": false,
+  "auditData": {
+    "StaleObjects": {
+      "PrinterObjects": []
+    },
+    "Errors": {}
+  }
+}

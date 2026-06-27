@@ -1,0 +1,23 @@
+{
+  "checkId": "ADGPO-005",
+  "theater": "Recon",
+  "scenario": "known-bad",
+  "expectedStatus": "WARN",
+  "description": "A \"- Copy\" duplicate of a base GPO exists",
+  "objectShape": false,
+  "auditData": {
+    "GroupPolicies": {
+      "GPOs": [
+        {
+          "DisplayName": "Policy A",
+          "GUID": "g1"
+        },
+        {
+          "DisplayName": "Policy A - Copy",
+          "GUID": "g2"
+        }
+      ]
+    },
+    "Errors": {}
+  }
+}

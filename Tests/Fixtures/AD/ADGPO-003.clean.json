@@ -1,0 +1,20 @@
+{
+  "checkId": "ADGPO-003",
+  "theater": "Recon",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "All GPOs linked",
+  "objectShape": false,
+  "auditData": {
+    "GroupPolicies": {
+      "GPOs": [
+        {
+          "GUID": "g1",
+          "DisplayName": "WS Baseline",
+          "IsLinked": true
+        }
+      ]
+    },
+    "Errors": {}
+  }
+}

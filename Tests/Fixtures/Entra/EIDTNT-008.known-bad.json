@@ -1,0 +1,15 @@
+{
+  "checkId": "EIDTNT-008",
+  "theater": "Infiltration",
+  "scenario": "known-bad",
+  "expectedStatus": "WARN",
+  "description": "No subscribed SKUs found",
+  "objectShape": false,
+  "auditData": {
+    "TenantConfig": {
+      "SubscribedSkus": [],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

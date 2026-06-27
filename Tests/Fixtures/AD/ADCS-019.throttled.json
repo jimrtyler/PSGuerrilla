@@ -1,0 +1,13 @@
+{
+  "checkId": "ADCS-019",
+  "theater": "Recon",
+  "scenario": "throttled",
+  "expectedStatus": "SKIP",
+  "description": "AD CS data not collected",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {
+      "CertificateServices": "AD CS enumeration failed"
+    }
+  }
+}

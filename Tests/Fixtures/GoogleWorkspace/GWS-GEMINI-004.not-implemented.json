@@ -1,0 +1,11 @@
+{
+  "checkId": "GWS-GEMINI-004",
+  "theater": "Fortification",
+  "scenario": "not-implemented",
+  "expectedStatus": "SKIP",
+  "description": "Gemini conversation-retention period not exposed via API",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {}
+  }
+}

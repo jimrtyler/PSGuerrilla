@@ -1,0 +1,14 @@
+{
+  "checkId": "EIDAUTH-001",
+  "theater": "Infiltration",
+  "scenario": "no-data",
+  "expectedStatus": "SKIP",
+  "description": "Authentication methods policy not available",
+  "objectShape": false,
+  "auditData": {
+    "AuthMethods": {
+      "AuthMethodsPolicy": null
+    },
+    "Errors": {}
+  }
+}

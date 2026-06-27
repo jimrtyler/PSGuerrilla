@@ -1,0 +1,17 @@
+{
+  "checkId": "AZIAM-008",
+  "theater": "Infiltration",
+  "scenario": "no-data",
+  "expectedStatus": "SKIP",
+  "description": "Azure subscriptions not assessed",
+  "objectShape": false,
+  "auditData": {
+    "AzureIAM": {
+      "Subscriptions": [],
+      "Errors": {
+        "Subscriptions": "ARM 401"
+      }
+    },
+    "Errors": {}
+  }
+}

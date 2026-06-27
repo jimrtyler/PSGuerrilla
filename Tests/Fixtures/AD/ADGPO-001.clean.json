@@ -1,0 +1,31 @@
+{
+  "checkId": "ADGPO-001",
+  "theater": "Recon",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "GPOs inventoried",
+  "objectShape": false,
+  "auditData": {
+    "GroupPolicies": {
+      "GPOs": [
+        {
+          "FlagDescription": "Enabled",
+          "GUID": "g1",
+          "IsEmpty": false,
+          "DisplayName": "Default Domain Policy",
+          "Flags": 0,
+          "IsLinked": true
+        },
+        {
+          "FlagDescription": "Enabled",
+          "GUID": "g2",
+          "IsEmpty": false,
+          "DisplayName": "Default Domain Controllers Policy",
+          "Flags": 0,
+          "IsLinked": true
+        }
+      ]
+    },
+    "Errors": {}
+  }
+}

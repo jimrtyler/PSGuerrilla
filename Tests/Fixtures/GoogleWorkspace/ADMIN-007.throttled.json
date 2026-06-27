@@ -1,0 +1,14 @@
+{
+  "checkId": "ADMIN-007",
+  "theater": "Fortification",
+  "scenario": "throttled",
+  "expectedStatus": "SKIP",
+  "description": "OrgUnits not collected",
+  "objectShape": false,
+  "auditData": {
+    "Tenant": {},
+    "Errors": {
+      "OrgUnits": "Directory API error"
+    }
+  }
+}

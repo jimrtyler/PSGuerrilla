@@ -1,0 +1,21 @@
+{
+  "checkId": "EIDCA-015",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "What-If: all scenarios protected",
+  "objectShape": false,
+  "auditData": {
+    "ConditionalAccess": {
+      "WhatIf": [
+        {
+          "Verdict": "PASS",
+          "Name": "Admins blocked from legacy auth",
+          "Result": "blocked"
+        }
+      ],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

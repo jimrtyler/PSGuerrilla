@@ -1,0 +1,30 @@
+{
+  "checkId": "EIDTNT-010",
+  "theater": "Infiltration",
+  "scenario": "known-bad",
+  "expectedStatus": "WARN",
+  "description": "An unverified domain exists",
+  "objectShape": false,
+  "auditData": {
+    "TenantConfig": {
+      "Domains": [
+        {
+          "isInitial": false,
+          "id": "contoso.com",
+          "isVerified": true,
+          "authenticationType": "Managed",
+          "isDefault": true
+        },
+        {
+          "isInitial": false,
+          "id": "pending.com",
+          "isVerified": false,
+          "authenticationType": "Managed",
+          "isDefault": false
+        }
+      ],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

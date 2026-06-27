@@ -1,0 +1,12 @@
+{
+  "checkId": "ADMIN-007",
+  "theater": "Fortification",
+  "scenario": "known-bad",
+  "expectedStatus": "WARN",
+  "description": "OrgUnit data unavailable",
+  "objectShape": false,
+  "auditData": {
+    "Tenant": {},
+    "Errors": {}
+  }
+}

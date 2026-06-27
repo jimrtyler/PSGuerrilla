@@ -1,0 +1,18 @@
+{
+  "checkId": "EIDFED-012",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Cloud-only vs synced user counts available",
+  "objectShape": false,
+  "auditData": {
+    "Federation": {
+      "Users": {
+        "SyncedCount": 45,
+        "CloudOnlyCount": 120
+      },
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

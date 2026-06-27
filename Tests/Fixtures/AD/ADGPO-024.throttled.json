@@ -1,0 +1,14 @@
+{
+  "checkId": "ADGPO-024",
+  "theater": "Recon",
+  "scenario": "throttled",
+  "expectedStatus": "SKIP",
+  "description": "GPOs not collected",
+  "objectShape": false,
+  "auditData": {
+    "GroupPolicies": {},
+    "Errors": {
+      "GroupPolicyObjects": "AD enumeration failed"
+    }
+  }
+}

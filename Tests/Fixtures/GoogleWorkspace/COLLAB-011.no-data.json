@@ -1,0 +1,12 @@
+{
+  "checkId": "COLLAB-011",
+  "theater": "Fortification",
+  "scenario": "no-data",
+  "expectedStatus": "SKIP",
+  "description": "Cloud Identity policy API unavailable",
+  "objectShape": false,
+  "auditData": {
+    "CloudIdentityPolicies": null,
+    "Errors": {}
+  }
+}

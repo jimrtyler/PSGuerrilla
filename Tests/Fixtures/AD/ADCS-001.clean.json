@@ -1,0 +1,29 @@
+{
+  "checkId": "ADCS-001",
+  "theater": "Recon",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Certificate Authorities inventoried",
+  "objectShape": false,
+  "auditData": {
+    "CertificateServices": {
+      "CertificateAuthorities": [
+        {
+          "DN": "CN=MyCA1",
+          "Name": "MyCA1",
+          "Flags": 0,
+          "CertificateTemplates": [
+            {
+              "Name": "Web"
+            },
+            {
+              "Name": "User"
+            }
+          ],
+          "DNSHostName": "ca1.contoso.com"
+        }
+      ]
+    },
+    "Errors": {}
+  }
+}

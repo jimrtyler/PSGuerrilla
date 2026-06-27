@@ -1,0 +1,13 @@
+{
+  "checkId": "LOG-006",
+  "theater": "Fortification",
+  "scenario": "throttled",
+  "expectedStatus": "SKIP",
+  "description": "Domain-wide delegation not collected",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {
+      "DomainWideDelegation": "Directory API error"
+    }
+  }
+}

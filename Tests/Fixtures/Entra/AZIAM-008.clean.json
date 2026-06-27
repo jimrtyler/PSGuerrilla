@@ -1,0 +1,29 @@
+{
+  "checkId": "AZIAM-008",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Management group structure present",
+  "objectShape": false,
+  "auditData": {
+    "AzureIAM": {
+      "ManagementGroups": [
+        {
+          "properties": {
+            "displayName": "Tenant Root Group",
+            "tenantId": "t1"
+          },
+          "id": "mg1",
+          "name": "root"
+        }
+      ],
+      "Subscriptions": [
+        {
+          "id": "s1"
+        }
+      ],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

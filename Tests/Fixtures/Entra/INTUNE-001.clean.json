@@ -1,0 +1,22 @@
+{
+  "checkId": "INTUNE-001",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Compliance policies present",
+  "objectShape": false,
+  "auditData": {
+    "Intune": {
+      "CompliancePolicies": [
+        {
+          "displayName": "Win10 Baseline",
+          "id": "c1",
+          "createdDateTime": "2024-01-01T00:00:00Z",
+          "@odata.type": "#microsoft.graph.windows10CompliancePolicy"
+        }
+      ],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "checkId": "EIDAUTH-003",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "MFA registration details present",
+  "objectShape": false,
+  "auditData": {
+    "AuthMethods": {
+      "UserRegistrationDetails": [
+        {
+          "methodsRegistered": [
+            "microsoftAuthenticatorPush",
+            "fido2"
+          ]
+        },
+        {
+          "methodsRegistered": [
+            "sms"
+          ]
+        }
+      ]
+    },
+    "Errors": {}
+  }
+}

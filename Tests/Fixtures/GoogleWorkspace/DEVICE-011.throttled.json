@@ -1,0 +1,15 @@
+{
+  "checkId": "DEVICE-011",
+  "theater": "Fortification",
+  "scenario": "throttled",
+  "expectedStatus": "SKIP",
+  "description": "Device data not collected",
+  "objectShape": false,
+  "auditData": {
+    "ChromeDevices": [],
+    "Errors": {
+      "MobileDevices": "Directory API 429"
+    },
+    "MobileDevices": []
+  }
+}

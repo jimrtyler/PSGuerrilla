@@ -1,0 +1,16 @@
+{
+  "checkId": "EIDPIM-002",
+  "theater": "Infiltration",
+  "scenario": "no-data",
+  "expectedStatus": "SKIP",
+  "description": "PIM not assessed",
+  "objectShape": false,
+  "auditData": {
+    "PIM": {
+      "Errors": {}
+    },
+    "Errors": {
+      "PIM": "Graph 429"
+    }
+  }
+}

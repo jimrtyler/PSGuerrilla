@@ -1,0 +1,15 @@
+{
+  "checkId": "EIDFED-001",
+  "theater": "Infiltration",
+  "scenario": "known-bad",
+  "expectedStatus": "WARN",
+  "description": "No domains found",
+  "objectShape": false,
+  "auditData": {
+    "Federation": {
+      "Domains": [],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "checkId": "EIDTNT-009",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Administrative units inventoried",
+  "objectShape": false,
+  "auditData": {
+    "TenantConfig": {
+      "AdminUnits": [
+        {
+          "displayName": "West Region",
+          "id": "au1",
+          "isMemberManagementRestricted": false,
+          "visibility": "Public"
+        }
+      ],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "checkId": "EIDTNT-010",
+  "theater": "Infiltration",
+  "scenario": "no-data",
+  "expectedStatus": "SKIP",
+  "description": "Tenant config not assessed",
+  "objectShape": false,
+  "auditData": {
+    "TenantConfig": {
+      "Errors": {}
+    },
+    "Errors": {
+      "TenantConfig": "Graph 429"
+    }
+  }
+}

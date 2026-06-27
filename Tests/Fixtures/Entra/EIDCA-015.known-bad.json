@@ -1,0 +1,21 @@
+{
+  "checkId": "EIDCA-015",
+  "theater": "Infiltration",
+  "scenario": "known-bad",
+  "expectedStatus": "FAIL",
+  "description": "What-If: protection gap found",
+  "objectShape": false,
+  "auditData": {
+    "ConditionalAccess": {
+      "WhatIf": [
+        {
+          "Verdict": "FAIL",
+          "Name": "Legacy auth permitted",
+          "Result": "allowed"
+        }
+      ],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

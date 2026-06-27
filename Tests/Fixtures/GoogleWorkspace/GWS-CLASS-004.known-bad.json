@@ -1,0 +1,24 @@
+{
+  "checkId": "GWS-CLASS-004",
+  "theater": "Fortification",
+  "scenario": "known-bad",
+  "expectedStatus": "WARN",
+  "description": "Classroom roster import enabled",
+  "objectShape": true,
+  "auditData": {
+    "CloudIdentityPolicies": {
+      "ByType": {
+        "classroom.roster_import": [
+          {
+            "setting": {
+              "value": {
+                "rosterImportOption": "ON_CLEVER"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "Errors": {}
+  }
+}

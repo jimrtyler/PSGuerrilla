@@ -1,0 +1,15 @@
+{
+  "checkId": "INTUNE-014",
+  "theater": "Infiltration",
+  "scenario": "known-bad",
+  "expectedStatus": "WARN",
+  "description": "No Autopilot profiles configured",
+  "objectShape": false,
+  "auditData": {
+    "Intune": {
+      "AutopilotProfiles": [],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

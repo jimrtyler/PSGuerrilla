@@ -1,0 +1,14 @@
+{
+  "checkId": "ADSTALE-009",
+  "theater": "Recon",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "No abandoned OUs",
+  "objectShape": false,
+  "auditData": {
+    "StaleObjects": {
+      "AbandonedOUs": []
+    },
+    "Errors": {}
+  }
+}

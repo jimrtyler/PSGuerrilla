@@ -1,0 +1,21 @@
+{
+  "checkId": "INTUNE-020",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Device categories inventoried",
+  "objectShape": false,
+  "auditData": {
+    "Intune": {
+      "DeviceCategories": [
+        {
+          "displayName": "Corporate",
+          "id": "dc1",
+          "description": "Company-owned"
+        }
+      ],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

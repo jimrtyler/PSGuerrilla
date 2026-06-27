@@ -1,0 +1,19 @@
+{
+  "checkId": "LOG-006",
+  "theater": "Fortification",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "No domain-wide delegation grants with Reports access",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "DomainWideDelegation": [
+      {
+        "clientId": "100200300",
+        "scopes": [
+          "https://www.googleapis.com/auth/drive.readonly"
+        ]
+      }
+    ]
+  }
+}

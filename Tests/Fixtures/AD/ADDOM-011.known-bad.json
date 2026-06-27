@@ -1,0 +1,25 @@
+{
+  "checkId": "ADDOM-011",
+  "theater": "Recon",
+  "scenario": "known-bad",
+  "expectedStatus": "WARN",
+  "description": "A site has no site links (isolated)",
+  "objectShape": false,
+  "auditData": {
+    "Domain": {
+      "Sites": [
+        {
+          "SiteLinks": [
+            "DEFAULTIPSITELINK"
+          ],
+          "Name": "HQ"
+        },
+        {
+          "SiteLinks": [],
+          "Name": "Branch"
+        }
+      ]
+    },
+    "Errors": {}
+  }
+}

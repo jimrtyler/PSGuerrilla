@@ -1,0 +1,14 @@
+{
+  "checkId": "ADSTALE-009",
+  "theater": "Recon",
+  "scenario": "throttled",
+  "expectedStatus": "SKIP",
+  "description": "Stale objects not collected",
+  "objectShape": false,
+  "auditData": {
+    "StaleObjects": {},
+    "Errors": {
+      "StaleObjects": "AD enumeration failed"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "checkId": "INTUNE-014",
+  "theater": "Infiltration",
+  "scenario": "throttled",
+  "expectedStatus": "SKIP",
+  "description": "Intune Autopilot profiles not assessed",
+  "objectShape": false,
+  "auditData": {
+    "Intune": {
+      "Errors": {}
+    },
+    "Errors": {
+      "Intune": "Graph 429"
+    }
+  }
+}

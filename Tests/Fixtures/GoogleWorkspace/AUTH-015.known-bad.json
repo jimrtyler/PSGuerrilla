@@ -1,0 +1,24 @@
+{
+  "checkId": "AUTH-015",
+  "theater": "Fortification",
+  "scenario": "known-bad",
+  "expectedStatus": "WARN",
+  "description": "Grace period 14 days (> 7 days)",
+  "objectShape": true,
+  "auditData": {
+    "CloudIdentityPolicies": {
+      "ByType": {
+        "security.two_step_verification_grace_period": [
+          {
+            "setting": {
+              "value": {
+                "enrollmentGracePeriod": "1209600s"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "Errors": {}
+  }
+}

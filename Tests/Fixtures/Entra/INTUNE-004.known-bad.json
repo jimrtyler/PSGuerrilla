@@ -1,0 +1,15 @@
+{
+  "checkId": "INTUNE-004",
+  "theater": "Infiltration",
+  "scenario": "known-bad",
+  "expectedStatus": "WARN",
+  "description": "No device configuration profiles found",
+  "objectShape": false,
+  "auditData": {
+    "Intune": {
+      "DeviceConfigurations": [],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

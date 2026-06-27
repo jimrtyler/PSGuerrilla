@@ -1,0 +1,24 @@
+{
+  "checkId": "ADMIN-009",
+  "theater": "Fortification",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Group membership not externally visible",
+  "objectShape": true,
+  "auditData": {
+    "CloudIdentityPolicies": {
+      "ByType": {
+        "directory.workspace_resource_type_visibility": [
+          {
+            "setting": {
+              "value": {
+                "googleGroups": false
+              }
+            }
+          }
+        ]
+      }
+    },
+    "Errors": {}
+  }
+}

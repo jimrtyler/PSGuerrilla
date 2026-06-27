@@ -1,0 +1,26 @@
+{
+  "checkId": "EIDAUTH-001",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Authentication methods policy present",
+  "objectShape": false,
+  "auditData": {
+    "AuthMethods": {
+      "MethodConfigurations": [
+        {
+          "id": "fido2",
+          "state": "enabled"
+        },
+        {
+          "id": "sms",
+          "state": "disabled"
+        }
+      ],
+      "AuthMethodsPolicy": {
+        "id": "authenticationMethodsPolicy"
+      }
+    },
+    "Errors": {}
+  }
+}

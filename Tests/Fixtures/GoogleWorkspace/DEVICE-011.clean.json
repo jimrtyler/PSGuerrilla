@@ -1,0 +1,17 @@
+{
+  "checkId": "DEVICE-011",
+  "theater": "Fortification",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Device inventory present",
+  "objectShape": false,
+  "auditData": {
+    "ChromeDevices": [],
+    "Errors": {},
+    "MobileDevices": [
+      {
+        "status": "ACTIVE"
+      }
+    ]
+  }
+}

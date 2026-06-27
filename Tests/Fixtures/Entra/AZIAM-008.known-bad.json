@@ -1,0 +1,20 @@
+{
+  "checkId": "AZIAM-008",
+  "theater": "Infiltration",
+  "scenario": "known-bad",
+  "expectedStatus": "WARN",
+  "description": "No management groups configured",
+  "objectShape": false,
+  "auditData": {
+    "AzureIAM": {
+      "ManagementGroups": [],
+      "Subscriptions": [
+        {
+          "id": "s1"
+        }
+      ],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

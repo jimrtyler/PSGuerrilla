@@ -1,0 +1,16 @@
+{
+  "checkId": "INTUNE-004",
+  "theater": "Infiltration",
+  "scenario": "throttled",
+  "expectedStatus": "SKIP",
+  "description": "Intune device configurations not assessed",
+  "objectShape": false,
+  "auditData": {
+    "Intune": {
+      "Errors": {}
+    },
+    "Errors": {
+      "Intune": "Graph 429"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "checkId": "ADDOM-006",
+  "theater": "Recon",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "FSMO roles distributed across DCs",
+  "objectShape": false,
+  "auditData": {
+    "Domain": {
+      "FSMORoles": {
+        "InfrastructureMaster": "dc2.contoso.com",
+        "SchemaMaster": "dc1.contoso.com",
+        "PDCEmulator": "dc1.contoso.com",
+        "RIDMaster": "dc3.contoso.com",
+        "DomainNamingMaster": "dc2.contoso.com"
+      }
+    },
+    "Errors": {}
+  }
+}

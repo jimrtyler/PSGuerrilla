@@ -1,0 +1,13 @@
+{
+  "checkId": "ADSCRIPT-003",
+  "theater": "Recon",
+  "scenario": "throttled",
+  "expectedStatus": "SKIP",
+  "description": "Logon script data not collected",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {
+      "LogonScripts": "AD enumeration failed"
+    }
+  }
+}

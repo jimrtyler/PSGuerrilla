@@ -1,0 +1,14 @@
+{
+  "checkId": "ADPWD-018",
+  "theater": "Recon",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Windows LAPS deployed (informational)",
+  "objectShape": false,
+  "auditData": {
+    "PasswordPolicies": {
+      "LAPSType": "Windows"
+    },
+    "Errors": {}
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "checkId": "ADKERB-011",
+  "theater": "Recon",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "SPNs and delegation inventoried",
+  "objectShape": false,
+  "auditData": {
+    "Kerberos": {
+      "KerberoastableAccounts": [
+        {
+          "SPNs": [
+            "HTTP/web1.contoso.com"
+          ],
+          "SamAccountName": "svc_web"
+        }
+      ],
+      "ConstrainedDelegation": [
+        {
+          "SamAccountName": "svc_proxy",
+          "AllowedToDelegateTo": [
+            "HTTP/intranet.contoso.com"
+          ]
+        }
+      ]
+    },
+    "Errors": {}
+  }
+}

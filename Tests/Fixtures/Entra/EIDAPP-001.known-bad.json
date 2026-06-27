@@ -1,0 +1,16 @@
+{
+  "checkId": "EIDAPP-001",
+  "theater": "Infiltration",
+  "scenario": "known-bad",
+  "expectedStatus": "WARN",
+  "description": "No applications or service principals found",
+  "objectShape": false,
+  "auditData": {
+    "Applications": {
+      "AppRegistrations": [],
+      "ServicePrincipals": [],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

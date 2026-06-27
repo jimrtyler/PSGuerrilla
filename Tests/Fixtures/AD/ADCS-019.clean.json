@@ -1,0 +1,29 @@
+{
+  "checkId": "ADCS-019",
+  "theater": "Recon",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Certificate templates inventoried",
+  "objectShape": false,
+  "auditData": {
+    "CertificateServices": {
+      "CertificateTemplates": [
+        {
+          "SchemaVersion": 2,
+          "AllowsAuthentication": true,
+          "DisplayName": "Web Server",
+          "Name": "Web",
+          "EnrollmentPermissions": [],
+          "EnrolleeSuppliesSubject": false,
+          "IsPublished": true,
+          "ExtendedKeyUsage": [
+            {
+              "Name": "Server Authentication"
+            }
+          ]
+        }
+      ]
+    },
+    "Errors": {}
+  }
+}

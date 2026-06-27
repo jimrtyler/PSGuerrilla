@@ -1,0 +1,33 @@
+{
+  "checkId": "EIDPIM-002",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Privileged role assignments inventoried",
+  "objectShape": false,
+  "auditData": {
+    "PIM": {
+      "RoleAssignments": [
+        {
+          "directoryScopeId": "/",
+          "roleDefinitionId": "r1",
+          "principalId": "u1"
+        }
+      ],
+      "RoleEligibilitySchedules": [
+        {
+          "roleDefinitionId": "r1",
+          "principalId": "u2"
+        }
+      ],
+      "RoleDefinitions": [
+        {
+          "displayName": "Global Administrator",
+          "id": "r1"
+        }
+      ],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

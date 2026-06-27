@@ -1,0 +1,21 @@
+{
+  "checkId": "ADMIN-007",
+  "theater": "Fortification",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "OrgUnit structure available",
+  "objectShape": false,
+  "auditData": {
+    "Tenant": {
+      "OrgUnits": [
+        {
+          "orgUnitPath": "/"
+        },
+        {
+          "orgUnitPath": "/Staff"
+        }
+      ]
+    },
+    "Errors": {}
+  }
+}

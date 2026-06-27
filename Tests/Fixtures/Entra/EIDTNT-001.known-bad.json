@@ -1,0 +1,15 @@
+{
+  "checkId": "EIDTNT-001",
+  "theater": "Infiltration",
+  "scenario": "known-bad",
+  "expectedStatus": "WARN",
+  "description": "Organization data unavailable",
+  "objectShape": false,
+  "auditData": {
+    "TenantConfig": {
+      "Organization": null,
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

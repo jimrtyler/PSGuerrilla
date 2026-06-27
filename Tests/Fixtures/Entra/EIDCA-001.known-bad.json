@@ -1,0 +1,15 @@
+{
+  "checkId": "EIDCA-001",
+  "theater": "Infiltration",
+  "scenario": "known-bad",
+  "expectedStatus": "WARN",
+  "description": "No Conditional Access policies found",
+  "objectShape": false,
+  "auditData": {
+    "ConditionalAccess": {
+      "Policies": [],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

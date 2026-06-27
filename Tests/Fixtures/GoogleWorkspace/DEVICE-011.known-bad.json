@@ -1,0 +1,13 @@
+{
+  "checkId": "DEVICE-011",
+  "theater": "Fortification",
+  "scenario": "known-bad",
+  "expectedStatus": "WARN",
+  "description": "No device inventory found",
+  "objectShape": false,
+  "auditData": {
+    "ChromeDevices": [],
+    "Errors": {},
+    "MobileDevices": []
+  }
+}
