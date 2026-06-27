@@ -375,13 +375,21 @@ function Get-GuerrillaFixtureCases {
             $auditData = ConvertTo-MixedAuditData ($raw | ConvertFrom-Json).auditData
         }
 
+        # EIDSCA controls have no per-ID function; they all run through the data-driven
+        # dispatcher Invoke-EntraEidscaChecks (which calls Resolve-EidscaControl per control).
+        $fn = if ($fx.checkId -like 'EIDSCA-*') {
+            'Invoke-EntraEidscaChecks'
+        } else {
+            "$($theaterPrefix[$family])$($fx.checkId -replace '-','')"
+        }
+
         $cases.Add(@{
             CheckId        = $fx.checkId
             Scenario       = $fx.scenario
             ExpectedStatus = $fx.expectedStatus
             Description    = $fx.description
             Family         = $family
-            FunctionName   = "$($theaterPrefix[$family])$($fx.checkId -replace '-','')"
+            FunctionName   = $fn
             AuditData      = $auditData
             Definition     = $defIndex[$fx.checkId]
             FixtureFile    = $file.Name
@@ -435,6 +443,12 @@ function Invoke-GuerrillaCheckFixture {
         param($AuditData, $Definition, $FunctionName)
         $cmd = Get-Command $FunctionName -ErrorAction SilentlyContinue
         if (-not $cmd) { throw "check function not found: $FunctionName" }
+        # EIDSCA: the dispatcher evaluates the whole catalog and returns one finding per
+        # control; pick the one matching this fixture's control id.
+        if ($FunctionName -eq 'Invoke-EntraEidscaChecks') {
+            $all = & $FunctionName -AuditData $AuditData
+            return @($all | Where-Object { $_.CheckId -eq $Definition.id }) | Select-Object -First 1
+        }
         & $FunctionName -AuditData $AuditData -CheckDefinition $Definition
     } $AuditData $Definition $FunctionName
 }

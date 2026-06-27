@@ -1,0 +1,24 @@
+{
+  "checkId": "EIDSCA-PR05",
+  "theater": "Infiltration",
+  "scenario": "pass",
+  "expectedStatus": "PASS",
+  "description": "EIDSCA-PR05 compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "DirectorySettings": [
+        {
+          "displayName": "fixture",
+          "values": [
+            {
+              "name": "LockoutDurationInSeconds",
+              "value": 60.0
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

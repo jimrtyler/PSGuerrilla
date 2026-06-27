@@ -1,0 +1,16 @@
+{
+  "checkId": "EIDSCA-AP07",
+  "theater": "Infiltration",
+  "scenario": "pass",
+  "expectedStatus": "PASS",
+  "description": "EIDSCA-AP07 compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "AuthorizationPolicy": {
+        "guestUserRoleId": "2af84b1e-32c8-42b7-82bc-daa82404023b"
+      }
+    }
+  }
+}

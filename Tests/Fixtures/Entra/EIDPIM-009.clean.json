@@ -1,0 +1,28 @@
+{
+  "checkId": "EIDPIM-009",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "All privileged accounts have signed in",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "PIM": {
+      "Errors": {},
+      "PrivilegedUsers": [
+        {
+          "onPremisesSyncEnabled": false,
+          "userPrincipalName": "alice@contoso.com",
+          "displayName": "alice@contoso.com",
+          "signInActivity": {
+            "lastSignInDateTime": "2026-06-01T00:00:00Z"
+          },
+          "createdDateTime": "2020-01-01T00:00:00Z",
+          "id": "u1",
+          "accountEnabled": true,
+          "userType": "Member"
+        }
+      ]
+    }
+  }
+}

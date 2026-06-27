@@ -1,0 +1,19 @@
+{
+  "checkId": "EIDSCA-AM01",
+  "theater": "Infiltration",
+  "scenario": "fail",
+  "expectedStatus": "FAIL",
+  "description": "EIDSCA-AM01 non-compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "MethodConfigurations": [
+        {
+          "state": "__eidsca_nomatch__",
+          "id": "MicrosoftAuthenticator"
+        }
+      ]
+    }
+  }
+}

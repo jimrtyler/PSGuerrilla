@@ -1,0 +1,14 @@
+{
+  "checkId": "EIDSCA-AM03",
+  "theater": "Infiltration",
+  "scenario": "no-data",
+  "expectedStatus": "SKIP",
+  "description": "EIDSCA-AM03 not collected",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "MethodConfigurations": []
+    }
+  }
+}

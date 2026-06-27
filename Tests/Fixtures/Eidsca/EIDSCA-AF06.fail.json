@@ -1,0 +1,22 @@
+{
+  "checkId": "EIDSCA-AF06",
+  "theater": "Infiltration",
+  "scenario": "fail",
+  "expectedStatus": "FAIL",
+  "description": "EIDSCA-AF06 non-compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "MethodConfigurations": [
+        {
+          "id": "Fido2",
+          "keyRestrictions": {
+            "enforcementType": "allow",
+            "aaGuids": []
+          }
+        }
+      ]
+    }
+  }
+}

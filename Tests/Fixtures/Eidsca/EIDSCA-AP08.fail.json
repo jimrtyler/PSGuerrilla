@@ -1,0 +1,18 @@
+{
+  "checkId": "EIDSCA-AP08",
+  "theater": "Infiltration",
+  "scenario": "fail",
+  "expectedStatus": "FAIL",
+  "description": "EIDSCA-AP08 non-compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "AuthorizationPolicy": {
+        "permissionGrantPolicyIdsAssignedToDefaultUserRole": [
+          "__eidsca_nomatch__"
+        ]
+      }
+    }
+  }
+}

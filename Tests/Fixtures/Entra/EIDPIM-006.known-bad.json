@@ -1,0 +1,38 @@
+{
+  "checkId": "EIDPIM-006",
+  "theater": "Infiltration",
+  "scenario": "known-bad",
+  "expectedStatus": "FAIL",
+  "description": "A privileged user has no MFA registered",
+  "objectShape": false,
+  "auditData": {
+    "PIM": {
+      "Errors": {},
+      "PrivilegedUsers": [
+        {
+          "onPremisesSyncEnabled": false,
+          "userPrincipalName": "alice@contoso.com",
+          "displayName": "alice@contoso.com",
+          "signInActivity": {
+            "lastSignInDateTime": "2026-06-01T00:00:00Z"
+          },
+          "createdDateTime": "2020-01-01T00:00:00Z",
+          "id": "u1",
+          "accountEnabled": true,
+          "userType": "Member"
+        }
+      ]
+    },
+    "AuthMethods": {
+      "UserRegistrationDetails": [
+        {
+          "methodsRegistered": [],
+          "isMfaRegistered": false,
+          "id": "u1"
+        }
+      ],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

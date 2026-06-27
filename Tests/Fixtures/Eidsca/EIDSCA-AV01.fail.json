@@ -1,0 +1,19 @@
+{
+  "checkId": "EIDSCA-AV01",
+  "theater": "Infiltration",
+  "scenario": "fail",
+  "expectedStatus": "FAIL",
+  "description": "EIDSCA-AV01 non-compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "MethodConfigurations": [
+        {
+          "state": "__eidsca_nomatch__",
+          "id": "Voice"
+        }
+      ]
+    }
+  }
+}

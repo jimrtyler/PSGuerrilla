@@ -1,0 +1,14 @@
+{
+  "checkId": "EIDSCA-AP07",
+  "theater": "Infiltration",
+  "scenario": "no-data",
+  "expectedStatus": "SKIP",
+  "description": "EIDSCA-AP07 not collected",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "AuthorizationPolicy": null
+    }
+  }
+}

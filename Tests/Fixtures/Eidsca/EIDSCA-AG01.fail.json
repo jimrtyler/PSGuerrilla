@@ -1,0 +1,16 @@
+{
+  "checkId": "EIDSCA-AG01",
+  "theater": "Infiltration",
+  "scenario": "fail",
+  "expectedStatus": "FAIL",
+  "description": "EIDSCA-AG01 non-compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "AuthMethodsPolicy": {
+        "policyMigrationState": "__eidsca_not_in_list__"
+      }
+    }
+  }
+}

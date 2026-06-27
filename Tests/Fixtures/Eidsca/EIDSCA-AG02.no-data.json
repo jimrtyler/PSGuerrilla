@@ -1,0 +1,14 @@
+{
+  "checkId": "EIDSCA-AG02",
+  "theater": "Infiltration",
+  "scenario": "no-data",
+  "expectedStatus": "SKIP",
+  "description": "EIDSCA-AG02 not collected",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "AuthMethodsPolicy": null
+    }
+  }
+}

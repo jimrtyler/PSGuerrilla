@@ -1,0 +1,14 @@
+{
+  "checkId": "EIDSCA-ST08",
+  "theater": "Infiltration",
+  "scenario": "no-data",
+  "expectedStatus": "SKIP",
+  "description": "EIDSCA-ST08 not collected",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "DirectorySettings": []
+    }
+  }
+}

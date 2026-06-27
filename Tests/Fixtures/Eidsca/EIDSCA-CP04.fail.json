@@ -1,0 +1,24 @@
+{
+  "checkId": "EIDSCA-CP04",
+  "theater": "Infiltration",
+  "scenario": "fail",
+  "expectedStatus": "FAIL",
+  "description": "EIDSCA-CP04 non-compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "DirectorySettings": [
+        {
+          "displayName": "fixture",
+          "values": [
+            {
+              "name": "EnableAdminConsentRequests",
+              "value": false
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

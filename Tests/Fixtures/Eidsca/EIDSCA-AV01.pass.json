@@ -1,0 +1,19 @@
+{
+  "checkId": "EIDSCA-AV01",
+  "theater": "Infiltration",
+  "scenario": "pass",
+  "expectedStatus": "PASS",
+  "description": "EIDSCA-AV01 compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "MethodConfigurations": [
+        {
+          "state": "disabled",
+          "id": "Voice"
+        }
+      ]
+    }
+  }
+}

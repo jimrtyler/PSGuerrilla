@@ -1,0 +1,40 @@
+{
+  "checkId": "EIDPIM-004",
+  "theater": "Infiltration",
+  "scenario": "known-bad",
+  "expectedStatus": "FAIL",
+  "description": "A guest account holds a privileged role",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "PIM": {
+      "Errors": {},
+      "PrivilegedUsers": [
+        {
+          "onPremisesSyncEnabled": false,
+          "userPrincipalName": "alice@contoso.com",
+          "displayName": "alice@contoso.com",
+          "signInActivity": {
+            "lastSignInDateTime": "2026-06-01T00:00:00Z"
+          },
+          "createdDateTime": "2020-01-01T00:00:00Z",
+          "id": "u1",
+          "accountEnabled": true,
+          "userType": "Member"
+        },
+        {
+          "onPremisesSyncEnabled": false,
+          "userPrincipalName": "guest@partner.com",
+          "displayName": "guest@partner.com",
+          "signInActivity": {
+            "lastSignInDateTime": "2026-06-01T00:00:00Z"
+          },
+          "createdDateTime": "2020-01-01T00:00:00Z",
+          "id": "g1",
+          "accountEnabled": true,
+          "userType": "Guest"
+        }
+      ]
+    }
+  }
+}

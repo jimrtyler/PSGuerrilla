@@ -169,6 +169,12 @@ function Test-InfiltrationEIDPIM004 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.PIM.Errors) `
+        -SourceKey @('PIM', 'PrivilegedUsers') -Subject 'privileged user details'
+    if ($na) { return $na }
+
+    $privilegedUsers = $AuditData.PIM.PrivilegedUsers
     if (-not $privilegedUsers) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'Privileged user details not available'
@@ -193,6 +199,12 @@ function Test-InfiltrationEIDPIM005 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.PIM.Errors) `
+        -SourceKey @('PIM', 'PrivilegedUsers') -Subject 'privileged user details'
+    if ($na) { return $na }
+
+    $privilegedUsers = $AuditData.PIM.PrivilegedUsers
     if (-not $privilegedUsers) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'Privileged user details not available'
@@ -219,6 +231,13 @@ function Test-InfiltrationEIDPIM006 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.PIM.Errors, $AuditData.AuthMethods.Errors) `
+        -SourceKey @('PIM', 'PrivilegedUsers', 'AuthMethods', 'UserRegistrationDetails') `
+        -Subject 'privileged user or MFA registration details'
+    if ($na) { return $na }
+
+    $privilegedUsers = $AuditData.PIM.PrivilegedUsers
     $registrationDetails = $AuditData.AuthMethods.UserRegistrationDetails
     if (-not $privilegedUsers -or -not $registrationDetails) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -252,6 +271,13 @@ function Test-InfiltrationEIDPIM007 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.PIM.Errors, $AuditData.AuthMethods.Errors) `
+        -SourceKey @('PIM', 'PrivilegedUsers', 'AuthMethods', 'UserRegistrationDetails') `
+        -Subject 'privileged user or MFA registration details'
+    if ($na) { return $na }
+
+    $privilegedUsers = $AuditData.PIM.PrivilegedUsers
     $registrationDetails = $AuditData.AuthMethods.UserRegistrationDetails
     if (-not $privilegedUsers -or -not $registrationDetails) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
@@ -295,6 +321,12 @@ function Test-InfiltrationEIDPIM008 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.PIM.Errors) `
+        -SourceKey @('PIM', 'PrivilegedUsers') -Subject 'privileged user details'
+    if ($na) { return $na }
+
+    $privilegedUsers = $AuditData.PIM.PrivilegedUsers
     if (-not $privilegedUsers) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'Privileged user details not available'
@@ -319,6 +351,12 @@ function Test-InfiltrationEIDPIM009 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.PIM.Errors) `
+        -SourceKey @('PIM', 'PrivilegedUsers') -Subject 'privileged user details'
+    if ($na) { return $na }
+
+    $privilegedUsers = $AuditData.PIM.PrivilegedUsers
     if (-not $privilegedUsers) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'Privileged user details not available'
@@ -449,6 +487,12 @@ function Test-InfiltrationEIDPIM013 {
     [CmdletBinding()]
     param([hashtable]$AuditData, [hashtable]$CheckDefinition)
 
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.PIM.Errors) `
+        -SourceKey @('PIM', 'PrivilegedUsers') -Subject 'privileged user details'
+    if ($na) { return $na }
+
+    $privilegedUsers = $AuditData.PIM.PrivilegedUsers
     if (-not $privilegedUsers) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'Privileged user details not available'

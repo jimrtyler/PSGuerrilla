@@ -1,0 +1,24 @@
+{
+  "checkId": "EIDSCA-PR06",
+  "theater": "Infiltration",
+  "scenario": "fail",
+  "expectedStatus": "FAIL",
+  "description": "EIDSCA-PR06 non-compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "DirectorySettings": [
+        {
+          "displayName": "fixture",
+          "values": [
+            {
+              "name": "LockoutThreshold",
+              "value": 15.0
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

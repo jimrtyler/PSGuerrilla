@@ -1,0 +1,21 @@
+{
+  "checkId": "EIDPIM-009",
+  "theater": "Infiltration",
+  "scenario": "throttled",
+  "expectedStatus": "SKIP",
+  "description": "Privileged user details not assessed",
+  "objectShape": false,
+  "auditData": {
+    "PIM": {
+      "Errors": {
+        "PrivilegedUsers": "Graph 429"
+      },
+      "PrivilegedUsers": []
+    },
+    "AuthMethods": {
+      "UserRegistrationDetails": [],
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

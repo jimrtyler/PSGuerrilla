@@ -1,0 +1,24 @@
+{
+  "checkId": "EIDSCA-CP01",
+  "theater": "Infiltration",
+  "scenario": "fail",
+  "expectedStatus": "FAIL",
+  "description": "EIDSCA-CP01 non-compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "DirectorySettings": [
+        {
+          "displayName": "fixture",
+          "values": [
+            {
+              "name": "EnableGroupSpecificConsent",
+              "value": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

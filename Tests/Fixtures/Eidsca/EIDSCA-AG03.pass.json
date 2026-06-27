@@ -1,0 +1,20 @@
+{
+  "checkId": "EIDSCA-AG03",
+  "theater": "Infiltration",
+  "scenario": "pass",
+  "expectedStatus": "PASS",
+  "description": "EIDSCA-AG03 compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "AuthMethodsPolicy": {
+        "reportSuspiciousActivitySettings": {
+          "includeTarget": {
+            "id": "all_users"
+          }
+        }
+      }
+    }
+  }
+}

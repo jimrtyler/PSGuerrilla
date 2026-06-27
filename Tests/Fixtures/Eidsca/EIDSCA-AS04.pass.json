@@ -1,0 +1,21 @@
+{
+  "checkId": "EIDSCA-AS04",
+  "theater": "Infiltration",
+  "scenario": "pass",
+  "expectedStatus": "PASS",
+  "description": "EIDSCA-AS04 compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "MethodConfigurations": [
+        {
+          "id": "Sms",
+          "includeTargets": {
+            "isUsableForSignIn": false
+          }
+        }
+      ]
+    }
+  }
+}

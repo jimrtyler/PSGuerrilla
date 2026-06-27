@@ -1,0 +1,24 @@
+{
+  "checkId": "EIDSCA-PR03",
+  "theater": "Infiltration",
+  "scenario": "pass",
+  "expectedStatus": "PASS",
+  "description": "EIDSCA-PR03 compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "DirectorySettings": [
+        {
+          "displayName": "fixture",
+          "values": [
+            {
+              "name": "EnableBannedPasswordCheck",
+              "value": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

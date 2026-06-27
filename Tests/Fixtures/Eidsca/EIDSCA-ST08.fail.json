@@ -1,0 +1,24 @@
+{
+  "checkId": "EIDSCA-ST08",
+  "theater": "Infiltration",
+  "scenario": "fail",
+  "expectedStatus": "FAIL",
+  "description": "EIDSCA-ST08 non-compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "DirectorySettings": [
+        {
+          "displayName": "fixture",
+          "values": [
+            {
+              "name": "AllowGuestsToBeGroupOwner",
+              "value": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

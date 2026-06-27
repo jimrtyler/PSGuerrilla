@@ -1,0 +1,14 @@
+{
+  "checkId": "EIDSCA-CR04",
+  "theater": "Infiltration",
+  "scenario": "no-data",
+  "expectedStatus": "SKIP",
+  "description": "EIDSCA-CR04 not collected",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "TenantConfig": {
+      "AdminConsentRequestPolicy": null
+    }
+  }
+}

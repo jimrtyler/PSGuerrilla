@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.37.0] - 2026-06-27
+
+### Fixed
+- **7 Entra PIM privileged-account checks now return real verdicts.** EIDPIM-004/005/006/007/008/009/013 referenced an undefined `$privilegedUsers` and threw at runtime (surfacing as ERROR) instead of evaluating. They now read the collected privileged-user set from `$AuditData.PIM.PrivilegedUsers` behind a `Get-NotAssessedFinding` guard, and correctly flag guest accounts in privileged roles (004), on-premises-synced admins (005), privileged users without MFA (006) or with weak-only MFA (007), disabled accounts that still hold privileged roles (008), never-signed-in privileged accounts (009), and adherence to a separate-admin naming convention (013). Each returns Not Assessed when the privileged-user data was not collected.
+
+### Added (tests)
+- Golden-fixture detection-test coverage for **all 44 EIDSCA controls** — driven through the real `Invoke-EntraEidscaChecks` / `Resolve-EidscaControl` path (pass / fail / not-collected per control) — and for the 7 repaired PIM checks. The suite is now 1,583 fixtures across every fixturable check. (Repository/test-only; the EIDSCA harness adds an `Invoke-EntraEidscaChecks` dispatch branch to the fixture runner.)
+
 ## [2.36.0] - 2026-06-27
 
 ### Added

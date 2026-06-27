@@ -1,0 +1,16 @@
+{
+  "checkId": "EIDSCA-AP04",
+  "theater": "Infiltration",
+  "scenario": "pass",
+  "expectedStatus": "PASS",
+  "description": "EIDSCA-AP04 compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "AuthorizationPolicy": {
+        "allowInvitesFrom": "adminsAndGuestInviters"
+      }
+    }
+  }
+}

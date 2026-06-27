@@ -1,0 +1,18 @@
+{
+  "checkId": "EIDSCA-AP10",
+  "theater": "Infiltration",
+  "scenario": "fail",
+  "expectedStatus": "FAIL",
+  "description": "EIDSCA-AP10 non-compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "AuthorizationPolicy": {
+        "defaultUserRolePermissions": {
+          "allowedToCreateApps": true
+        }
+      }
+    }
+  }
+}

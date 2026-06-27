@@ -1,0 +1,46 @@
+{
+  "checkId": "EIDPIM-009",
+  "theater": "Infiltration",
+  "scenario": "known-bad",
+  "expectedStatus": "FAIL",
+  "description": "Three privileged accounts have never signed in",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "PIM": {
+      "Errors": {},
+      "PrivilegedUsers": [
+        {
+          "onPremisesSyncEnabled": false,
+          "userPrincipalName": "a@contoso.com",
+          "displayName": "a@contoso.com",
+          "signInActivity": null,
+          "createdDateTime": "2020-01-01T00:00:00Z",
+          "id": "u1",
+          "accountEnabled": true,
+          "userType": "Member"
+        },
+        {
+          "onPremisesSyncEnabled": false,
+          "userPrincipalName": "b@contoso.com",
+          "displayName": "b@contoso.com",
+          "signInActivity": null,
+          "createdDateTime": "2020-01-01T00:00:00Z",
+          "id": "u2",
+          "accountEnabled": true,
+          "userType": "Member"
+        },
+        {
+          "onPremisesSyncEnabled": false,
+          "userPrincipalName": "c@contoso.com",
+          "displayName": "c@contoso.com",
+          "signInActivity": null,
+          "createdDateTime": "2020-01-01T00:00:00Z",
+          "id": "u3",
+          "accountEnabled": true,
+          "userType": "Member"
+        }
+      ]
+    }
+  }
+}

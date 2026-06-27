@@ -1,0 +1,18 @@
+{
+  "checkId": "EIDSCA-AG02",
+  "theater": "Infiltration",
+  "scenario": "fail",
+  "expectedStatus": "FAIL",
+  "description": "EIDSCA-AG02 non-compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "AuthMethodsPolicy": {
+        "reportSuspiciousActivitySettings": {
+          "state": "__eidsca_nomatch__"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "checkId": "EIDSCA-CR03",
+  "theater": "Infiltration",
+  "scenario": "pass",
+  "expectedStatus": "PASS",
+  "description": "EIDSCA-CR03 compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "TenantConfig": {
+      "AdminConsentRequestPolicy": {
+        "remindersEnabled": true
+      }
+    }
+  }
+}

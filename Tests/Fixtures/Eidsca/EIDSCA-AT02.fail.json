@@ -1,0 +1,19 @@
+{
+  "checkId": "EIDSCA-AT02",
+  "theater": "Infiltration",
+  "scenario": "fail",
+  "expectedStatus": "FAIL",
+  "description": "EIDSCA-AT02 non-compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "MethodConfigurations": [
+        {
+          "id": "TemporaryAccessPass",
+          "isUsableOnce": false
+        }
+      ]
+    }
+  }
+}

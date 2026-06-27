@@ -1,0 +1,19 @@
+{
+  "checkId": "EIDSCA-AF01",
+  "theater": "Infiltration",
+  "scenario": "pass",
+  "expectedStatus": "PASS",
+  "description": "EIDSCA-AF01 compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "MethodConfigurations": [
+        {
+          "state": "enabled",
+          "id": "Fido2"
+        }
+      ]
+    }
+  }
+}

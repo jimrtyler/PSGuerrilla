@@ -1,0 +1,16 @@
+{
+  "checkId": "EIDSCA-AP09",
+  "theater": "Infiltration",
+  "scenario": "fail",
+  "expectedStatus": "FAIL",
+  "description": "EIDSCA-AP09 non-compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "AuthorizationPolicy": {
+        "allowUserConsentForRiskyApps": true
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "checkId": "EIDSCA-CP03",
+  "theater": "Infiltration",
+  "scenario": "pass",
+  "expectedStatus": "PASS",
+  "description": "EIDSCA-CP03 compliant",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "AuthMethods": {
+      "DirectorySettings": [
+        {
+          "displayName": "fixture",
+          "values": [
+            {
+              "name": "BlockUserConsentForRiskyApps",
+              "value": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

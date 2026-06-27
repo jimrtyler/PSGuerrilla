@@ -1,0 +1,40 @@
+{
+  "checkId": "EIDPIM-013",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Privileged accounts follow admin naming convention",
+  "objectShape": false,
+  "auditData": {
+    "Errors": {},
+    "PIM": {
+      "Errors": {},
+      "PrivilegedUsers": [
+        {
+          "onPremisesSyncEnabled": false,
+          "userPrincipalName": "admin-alice@contoso.com",
+          "displayName": "admin-alice@contoso.com",
+          "signInActivity": {
+            "lastSignInDateTime": "2026-06-01T00:00:00Z"
+          },
+          "createdDateTime": "2020-01-01T00:00:00Z",
+          "id": "u1",
+          "accountEnabled": true,
+          "userType": "Member"
+        },
+        {
+          "onPremisesSyncEnabled": false,
+          "userPrincipalName": "adm-bob@contoso.com",
+          "displayName": "adm-bob@contoso.com",
+          "signInActivity": {
+            "lastSignInDateTime": "2026-06-01T00:00:00Z"
+          },
+          "createdDateTime": "2020-01-01T00:00:00Z",
+          "id": "u2",
+          "accountEnabled": true,
+          "userType": "Member"
+        }
+      ]
+    }
+  }
+}
