@@ -1,0 +1,15 @@
+{
+  "checkId": "M365EXO-030",
+  "theater": "Infiltration",
+  "scenario": "throttled",
+  "expectedStatus": "SKIP",
+  "description": "Exchange data not collected — Not Assessed (never a false verdict on missing data)",
+  "auditData": {
+    "M365Services": {
+      "Errors": {}
+    },
+    "Errors": {
+      "M365Services": "EXO connect failed"
+    }
+  }
+}

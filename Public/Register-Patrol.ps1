@@ -165,9 +165,14 @@ function Register-Patrol {
     $existing = Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue
     if ($existing) {
         if ($Force -or $PSCmdlet.ShouldProcess($TaskName, 'Update existing scheduled task')) {
-            Set-ScheduledTask -TaskName $TaskName `
-                -Action $action -Trigger $trigger `
-                -Settings $settings -Principal $principal | Out-Null
+            try {
+                Set-ScheduledTask -TaskName $TaskName `
+                    -Action $action -Trigger $trigger `
+                    -Settings $settings -Principal $principal -ErrorAction Stop | Out-Null
+            } catch {
+                Write-Error "Failed to update scheduled task '$TaskName': $($_.Exception.Message)"
+                return
+            }
             Write-Host "Updated scheduled task: $TaskName"
         } else {
             Write-Warning "Scheduled task '$TaskName' already exists. Use -Force to update."
@@ -175,11 +180,18 @@ function Register-Patrol {
         }
     } else {
         if ($Force -or $PSCmdlet.ShouldProcess($TaskName, 'Create scheduled task')) {
-            Register-ScheduledTask -TaskName $TaskName `
-                -Action $action -Trigger $trigger `
-                -Settings $settings -Principal $principal `
-                -Description $Description | Out-Null
+            try {
+                Register-ScheduledTask -TaskName $TaskName `
+                    -Action $action -Trigger $trigger `
+                    -Settings $settings -Principal $principal `
+                    -Description $Description -ErrorAction Stop | Out-Null
+            } catch {
+                Write-Error "Failed to create scheduled task '$TaskName': $($_.Exception.Message). Registering a task (especially RunAs $RunAs at RunLevel Highest) requires an elevated session — re-run from an elevated prompt."
+                return
+            }
             Write-Host "Created scheduled task: $TaskName"
+        } else {
+            return
         }
     }
 

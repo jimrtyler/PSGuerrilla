@@ -167,7 +167,26 @@ function Send-Signal {
 
         # Select threats to alert on
         $threats = if ($NewOnly -and -not $Force) { $ScanResult.NewThreats } else { $ScanResult.FlaggedUsers }
-        $threats = @($threats | Where-Object { $levelOrder[$_.ThreatLevel] -ge $minOrdinal })
+
+        # Normalize heterogeneous result shapes: monitor results (Watchtower /
+        # Surveillance / Wiretap) expose .Severity, while user-threat results
+        # expose .ThreatLevel. Map Severity -> ThreatLevel so level filtering and
+        # the downstream formatting/subject logic work for every supported type.
+        $threats = @($threats | ForEach-Object {
+            if ($_ -and -not $_.ThreatLevel -and $_.Severity) {
+                $_ | Add-Member -NotePropertyName ThreatLevel -NotePropertyValue ([string]$_.Severity).ToUpper() -Force -PassThru
+            } else {
+                $_
+            }
+        })
+        # ContainsKey guard: indexing a hashtable with a $null key throws
+        # ("array index evaluated to null"), which previously aborted the whole
+        # send when an item had neither ThreatLevel nor Severity.
+        $threats = @($threats | Where-Object {
+            $_.ThreatLevel -and
+            $levelOrder.ContainsKey([string]$_.ThreatLevel) -and
+            $levelOrder[[string]$_.ThreatLevel] -ge $minOrdinal
+        })
 
         if ($threats.Count -eq 0) {
             Write-Verbose "No threats at $minLevel or above to alert on."

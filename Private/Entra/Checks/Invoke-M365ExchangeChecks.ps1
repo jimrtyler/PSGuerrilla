@@ -73,7 +73,7 @@ function Test-InfiltrationM365EXO002 {
     if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
-    if (-not $exo -or -not $exo.AntiSpamPolicies) {
+    if (-not $exo -or $null -eq $exo.AntiSpamPolicies) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'Exchange anti-spam data not available'
     }
@@ -207,7 +207,7 @@ function Test-InfiltrationM365EXO005 {
     if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
-    if (-not $exo -or -not $exo.SafeAttachmentPolicies) {
+    if (-not $exo -or $null -eq $exo.SafeAttachmentPolicies) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'Safe Attachments data not available (requires Defender for Office 365)'
     }
@@ -252,7 +252,7 @@ function Test-InfiltrationM365EXO006 {
     if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
-    if (-not $exo -or -not $exo.SafeLinksPolicies) {
+    if (-not $exo -or $null -eq $exo.SafeLinksPolicies) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'Safe Links data not available (requires Defender for Office 365)'
     }
@@ -297,7 +297,7 @@ function Test-InfiltrationM365EXO007 {
     if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
-    if (-not $exo -or -not $exo.TransportRules) {
+    if (-not $exo -or $null -eq $exo.TransportRules) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'Exchange transport rule data not available'
     }
@@ -1176,17 +1176,23 @@ function Test-InfiltrationM365EXO029 {
     if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
-    if (-not $exo -or -not $exo.MalwarePolicies -or @($exo.MalwarePolicies).Count -eq 0) {
+    if (-not $exo -or $null -eq $exo.MalwarePolicies) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'Malware filter policy data not available — Not Assessed'
     }
 
     $policies = @($exo.MalwarePolicies)
-    # Presence of an anti-malware policy means inbound mail is scanned.
+    # Presence of an anti-malware policy means inbound mail is scanned; zero
+    # policies on a connected tenant means inbound mail is NOT scanned.
     $status = if ($policies.Count -gt 0) { 'PASS' } else { 'FAIL' }
+    $current = if ($policies.Count -gt 0) {
+        "$($policies.Count) anti-malware policies active — inbound mail is scanned for malware"
+    } else {
+        'No anti-malware policies configured — inbound mail is NOT scanned for malware'
+    }
 
     return New-AuditFinding -CheckDefinition $CheckDefinition -Status $status `
-        -CurrentValue "$($policies.Count) anti-malware policies active — inbound mail is scanned for malware" `
+        -CurrentValue $current `
         -Details @{ PolicyCount = $policies.Count }
 }
 
@@ -1201,7 +1207,7 @@ function Test-InfiltrationM365EXO030 {
     if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
-    if (-not $exo -or -not $exo.MalwarePolicies -or @($exo.MalwarePolicies).Count -eq 0) {
+    if (-not $exo -or $null -eq $exo.MalwarePolicies) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'Malware filter policy data not available — Not Assessed'
     }
@@ -1209,11 +1215,17 @@ function Test-InfiltrationM365EXO030 {
     $policies = @($exo.MalwarePolicies)
     # Anti-malware always quarantines positive detections; flag any policy that
     # is explicitly weakened (filter disabled would still quarantine, so this
-    # is informational). Pass when policies exist and admin notifications align.
+    # is informational). Pass when policies exist; zero policies means malware
+    # is not being quarantined.
     $status = if ($policies.Count -gt 0) { 'PASS' } else { 'FAIL' }
+    $current = if ($policies.Count -gt 0) {
+        "$($policies.Count) anti-malware policies — malware-positive messages are quarantined"
+    } else {
+        'No anti-malware policies configured — malware-positive messages are NOT quarantined'
+    }
 
     return New-AuditFinding -CheckDefinition $CheckDefinition -Status $status `
-        -CurrentValue "$($policies.Count) anti-malware policies — malware-positive messages are quarantined" `
+        -CurrentValue $current `
         -Details @{
             PolicyCount = $policies.Count
             Note = 'Exchange Online anti-malware quarantines malware detections by default; verify no custom routing weakens this.'
@@ -1446,16 +1458,21 @@ function Test-InfiltrationM365EXO038 {
     if ($na) { return $na }
 
     $exo = $AuditData.M365Services.Exchange
-    if (-not $exo -or -not $exo.AntiSpamPolicies -or @($exo.AntiSpamPolicies).Count -eq 0) {
+    if (-not $exo -or $null -eq $exo.AntiSpamPolicies) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'Anti-spam (hosted content filter) policy data not available — Not Assessed'
     }
 
     $policies = @($exo.AntiSpamPolicies)
     $status = if ($policies.Count -gt 0) { 'PASS' } else { 'FAIL' }
+    $current = if ($policies.Count -gt 0) {
+        "$($policies.Count) inbound anti-spam policies active"
+    } else {
+        'No inbound anti-spam policies configured'
+    }
 
     return New-AuditFinding -CheckDefinition $CheckDefinition -Status $status `
-        -CurrentValue "$($policies.Count) inbound anti-spam policies active" `
+        -CurrentValue $current `
         -Details @{ PolicyCount = $policies.Count }
 }
 

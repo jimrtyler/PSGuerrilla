@@ -3,28 +3,30 @@
   "theater": "Infiltration",
   "scenario": "known-bad",
   "expectedStatus": "FAIL",
-  "description": "B2B collaboration allowed for all users inbound+outbound (2 issues)",
+  "description": "B2B collaboration allowed for all users inbound+outbound (2 issues), settings under .default (real Graph shape)",
   "auditData": {
     "TenantConfig": {
       "CrossTenantAccess": {
-        "b2bCollaborationOutbound": {
-          "usersAndGroups": {
-            "targets": [
-              {
-                "target": "AllUsers"
-              }
-            ],
-            "accessType": "allowed"
-          }
-        },
-        "b2bCollaborationInbound": {
-          "usersAndGroups": {
-            "targets": [
-              {
-                "target": "AllUsers"
-              }
-            ],
-            "accessType": "allowed"
+        "default": {
+          "b2bCollaborationOutbound": {
+            "usersAndGroups": {
+              "targets": [
+                {
+                  "target": "AllUsers"
+                }
+              ],
+              "accessType": "allowed"
+            }
+          },
+          "b2bCollaborationInbound": {
+            "usersAndGroups": {
+              "targets": [
+                {
+                  "target": "AllUsers"
+                }
+              ],
+              "accessType": "allowed"
+            }
           }
         }
       }

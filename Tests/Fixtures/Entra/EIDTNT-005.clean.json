@@ -3,20 +3,22 @@
   "theater": "Infiltration",
   "scenario": "clean",
   "expectedStatus": "PASS",
-  "description": "B2B collaboration blocked by default",
+  "description": "B2B collaboration blocked by default (settings under .default, the real Graph shape)",
   "auditData": {
     "TenantConfig": {
       "CrossTenantAccess": {
-        "b2bCollaborationOutbound": {
-          "usersAndGroups": {
-            "targets": [],
-            "accessType": "blocked"
-          }
-        },
-        "b2bCollaborationInbound": {
-          "usersAndGroups": {
-            "targets": [],
-            "accessType": "blocked"
+        "default": {
+          "b2bCollaborationOutbound": {
+            "usersAndGroups": {
+              "targets": [],
+              "accessType": "blocked"
+            }
+          },
+          "b2bCollaborationInbound": {
+            "usersAndGroups": {
+              "targets": [],
+              "accessType": "blocked"
+            }
           }
         }
       }

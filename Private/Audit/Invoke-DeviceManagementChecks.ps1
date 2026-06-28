@@ -41,7 +41,7 @@ function Test-FortificationDEVICE001 {
         -SourceKey 'MobileDevices' -Subject 'mobile device inventory'
     if ($na) { return $na }
 
-    if (-not $AuditData.MobileDevices) {
+    if ($null -eq $AuditData.MobileDevices) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
             -CurrentValue 'Mobile device data not available. Verify in Admin Console > Devices > Mobile devices that MDM policies are enforced' `
             -OrgUnitPath $OrgUnitPath

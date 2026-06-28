@@ -73,7 +73,7 @@ function Test-FortificationLOG002 {
         -SourceKey 'AlertRules' -Subject 'Alert Center rules'
     if ($na) { return $na }
 
-    if (-not $AuditData.AlertRules) {
+    if ($null -eq $AuditData.AlertRules) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
             -CurrentValue 'Alert rules data not available. Verify in Admin Console > Security > Alert center that alert rules are configured for security events' `
             -OrgUnitPath $OrgUnitPath

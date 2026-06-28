@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.38.0] - 2026-06-28
+
+### Fixed
+- **Three collector under-fetch defects that produced wrong verdicts on live tenants.** The check logic was correct (offline fixtures passed) but the collector fed it incomplete data, a class the golden-fixture harness structurally cannot catch:
+  - **EIDTNT-005 (cross-tenant access) — false PASS.** `Get-EntraTenantData` fetched the `/policies/crossTenantAccessPolicy` container, which carries no `b2bCollaboration*` settings, so a tenant whose **default** policy allows all inbound + outbound B2B collaboration scored clean. It now also collects `/crossTenantAccessPolicy/default` and exposes it under `.default`, so the permissive default is correctly flagged.
+  - **INTUNE-005 (device configuration profiles) — false FAIL.** `Get-IntuneData` fetched `deviceConfigurations` without `$expand=assignments`, so every profile looked unassigned. It now requests assignments.
+  - **EIDPIM-010 (PIM configuration) — false FAIL.** `Get-EntraPIMData` read `roleEligibilityScheduleInstances` (which can be empty while eligibility is configured); it now reads `roleEligibilitySchedules` (definitions), so standing eligible assignments are detected instead of reporting "PIM not configured".
+- **Empty-collection dead-branch across ~10 checks.** `if (-not $x.Collection)` is `$true` for a present-but-empty array, so a connected tenant with zero of something short-circuited to SKIP/WARN and the meaningful verdict was unreachable. Fixed in M365EXO-002/005/006/007/029/030/038, DEVICE-001, LOG-002, and ADGPO-001: a connected tenant with zero anti-malware/anti-spam policies now FAILs, zero Google alert rules FAILs, zero mobile devices PASSes, etc. Not-Assessed-on-collection-error is preserved (the `Get-NotAssessedFinding` error-map guard still fronts each check).
+- **Two AD checks had no reachable PASS / honest path.** ADGPO-017 (Restricted Groups) now PASSes in the clean state (was always WARN); ADCS-012 (ESC9 binding enforcement) reports Not Assessed when the registry value wasn't collected (was a permanent WARN), keeping PASS reachable when the value is present.
+- **Alerting / patrol reliability.** `Send-Signal` no longer throws "array index evaluated to null" when piped monitor results (Watchtower / Surveillance / Wiretap) that expose `Severity` instead of `ThreatLevel` — `Severity` is normalized to `ThreatLevel` and the level lookup is `ContainsKey`-guarded, so alerts are actually sent. `Format-SignalContent` no longer aborts delivery on **all** channels when a result's `Timestamp` is null. `Register-Patrol` no longer prints "Created scheduled task" after a registration that actually failed (the call is wrapped in try/catch and surfaces an elevation hint).
+
+### Added (tests)
+- **Collector query-contract tests** (`Tests/Unit/Private/Entra/CollectorQueryContract.Tests.ps1`) — mock `Invoke-GraphApi` and assert the exact Graph endpoints/parameters each collector requests (e.g. `/crossTenantAccessPolicy/default`, `$expand=assignments`, `roleEligibilitySchedules`). This catches collector under-fetch, which the golden fixtures cannot, since they feed the check hand-built data and never invoke the collector.
+- Regression fixtures for the corrected verdicts: EIDTNT-005 re-shaped to the real `.default` Graph layout; new `empty`-scenario fixtures (zero-policy ⇒ correct verdict) and `throttled` fixtures (uncollectable ⇒ Not Assessed) for the affected Exchange checks; updated ADGPO-001/017 and LOG-002 fixtures.
+
+Read-only; no check-count or public-surface change. 580 checks; 49 public functions.
+
 ## [2.37.0] - 2026-06-27
 
 ### Fixed

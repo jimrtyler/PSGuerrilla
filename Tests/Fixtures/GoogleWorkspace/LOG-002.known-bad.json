@@ -2,8 +2,8 @@
   "checkId": "LOG-002",
   "theater": "Fortification",
   "scenario": "known-bad",
-  "expectedStatus": "WARN",
-  "description": "No alert rules configured (no reachable FAIL path)",
+  "expectedStatus": "FAIL",
+  "description": "Alert data collected but zero alert rules — security events unmonitored, so FAIL (was wrongly WARN via the -not @() guard)",
   "objectShape": false,
   "auditData": {
     "Errors": {},

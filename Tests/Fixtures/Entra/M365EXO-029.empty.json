@@ -1,9 +1,9 @@
 {
   "checkId": "M365EXO-029",
   "theater": "Infiltration",
-  "scenario": "no-data",
-  "expectedStatus": "SKIP",
-  "description": "No malware filter policy data",
+  "scenario": "empty",
+  "expectedStatus": "FAIL",
+  "description": "Exchange connected but zero anti-malware policies — inbound mail not scanned, so FAIL (was wrongly SKIPped by the Count -eq 0 guard)",
   "auditData": {
     "M365Services": {
       "Exchange": {

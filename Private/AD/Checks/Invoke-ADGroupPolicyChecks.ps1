@@ -40,7 +40,7 @@ function Test-ReconADGPO001 {
     if ($na) { return $na }
 
     $gpoData = $AuditData.GroupPolicies
-    if (-not $gpoData -or -not $gpoData.GPOs) {
+    if (-not $gpoData -or $null -eq $gpoData.GPOs) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
             -CurrentValue 'Group Policy data not available'
     }
@@ -1074,8 +1074,11 @@ function Test-ReconADGPO017 {
             }
     }
 
-    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
-        -CurrentValue 'No Restricted Groups or Group Policy Preferences group membership configurations found. Consider configuring Restricted Groups to enforce local Administrators membership' `
+    # SYSVOL was readable and no GPP group-membership configurations exist — there
+    # is no risky GPP-based local-Administrators change to review. This is the
+    # secure/clean state (Restricted Groups remains a recommended hardening control).
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+        -CurrentValue 'No Group Policy Preferences group-membership configurations found — no GPP-based local Administrators changes to review. Restricted Groups remains a recommended hardening control.' `
         -Details @{ GPOsScanned = $sysvolContent.Count }
 }
 

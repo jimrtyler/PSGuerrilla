@@ -21,6 +21,14 @@ function Format-SignalContent {
     $highCount = @($Threats | Where-Object ThreatLevel -eq 'HIGH').Count
     $medCount  = @($Threats | Where-Object ThreatLevel -eq 'MEDIUM').Count
 
+    # Guard scan-metadata: a null Timestamp would throw on .ToString() and, because
+    # this runs before any provider dispatch, abort delivery on EVERY channel.
+    $scanTime = if ($ScanResult.Timestamp) {
+        try { $ScanResult.Timestamp.ToString('yyyy-MM-dd HH:mm:ss') } catch { 'n/a' }
+    } else { 'n/a' }
+    $usersScanned   = $ScanResult.TotalUsersScanned   ?? 'n/a'
+    $eventsAnalyzed = $ScanResult.TotalEventsAnalyzed ?? 'n/a'
+
     switch ($Format) {
         'Sms' {
             if ($Threats.Count -eq 1) {
@@ -45,8 +53,8 @@ function Format-SignalContent {
             $lines = @()
             $lines += 'PSGuerrilla Field Report Alert'
             $lines += '=' * 50
-            $lines += "Scan Time: $($ScanResult.Timestamp.ToString('yyyy-MM-dd HH:mm:ss')) UTC"
-            $lines += "Users Scanned: $($ScanResult.TotalUsersScanned)"
+            $lines += "Scan Time: $scanTime UTC"
+            $lines += "Users Scanned: $usersScanned"
             $lines += "New Threats: $($Threats.Count)"
             if ($critCount) { $lines += "CRITICAL: $critCount" }
             if ($highCount) { $lines += "HIGH: $highCount" }
@@ -71,7 +79,7 @@ function Format-SignalContent {
             [void]$sb.Append(@"
 <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif; max-width: 700px; margin: 0 auto; background: #0d1117; color: #e6edf3; padding: 24px; border-radius: 8px;">
 <h2 style="margin: 0 0 8px; color: #e6edf3;">PSGuerrilla Field Report Alert</h2>
-<p style="color: #8b949e; margin: 0 0 16px;">Scan: $($ScanResult.Timestamp.ToString('yyyy-MM-dd HH:mm:ss')) UTC | $($ScanResult.TotalUsersScanned) users scanned | $($ScanResult.TotalEventsAnalyzed) events analyzed</p>
+<p style="color: #8b949e; margin: 0 0 16px;">Scan: $scanTime UTC | $usersScanned users scanned | $eventsAnalyzed events analyzed</p>
 <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
 <tr>
 "@)

@@ -1,9 +1,9 @@
 {
   "checkId": "M365EXO-002",
   "theater": "Infiltration",
-  "scenario": "no-data",
-  "expectedStatus": "SKIP",
-  "description": "No anti-spam policy data (empty array guarded to SKIP)",
+  "scenario": "empty",
+  "expectedStatus": "WARN",
+  "description": "Exchange connected but zero anti-spam policies present — warns (was wrongly SKIPped by the -not @() guard)",
   "auditData": {
     "M365Services": {
       "Exchange": {

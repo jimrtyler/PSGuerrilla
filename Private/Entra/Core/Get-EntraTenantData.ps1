@@ -54,9 +54,21 @@ function Get-EntraTenantData {
     }
 
     # ── Cross-Tenant Access Policy ────────────────────────────────────────
+    # The container (/crossTenantAccessPolicy) carries no b2bCollaboration*
+    # settings — those live on the *default* policy. Fetch both and attach the
+    # default under .default so EIDTNT-005 evaluates the real B2B posture
+    # instead of seeing a null default and falsely passing.
     try {
         $data.CrossTenantAccess = Invoke-GraphApi -AccessToken $AccessToken `
             -Uri '/policies/crossTenantAccessPolicy'
+        $ctapDefault = Invoke-GraphApi -AccessToken $AccessToken `
+            -Uri '/policies/crossTenantAccessPolicy/default'
+        if ($data.CrossTenantAccess -and $ctapDefault) {
+            $data.CrossTenantAccess | Add-Member -NotePropertyName default `
+                -NotePropertyValue $ctapDefault -Force
+        } elseif (-not $data.CrossTenantAccess) {
+            $data.CrossTenantAccess = $ctapDefault
+        }
     } catch {
         $data.Errors['CrossTenantAccess'] = $_.Exception.Message
     }

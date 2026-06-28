@@ -51,8 +51,11 @@ function Get-IntuneData {
         Write-ProgressLine -Phase INFILTRATE -Message 'Collecting device configuration profiles'
     }
     try {
+        # $expand=assignments is required — without it every profile has a null
+        # .assignments and INTUNE-005 counts all profiles as unassigned (false FAIL).
         $data.DeviceConfigurations = @(Invoke-GraphApi -AccessToken $AccessToken `
             -Uri '/deviceManagement/deviceConfigurations' `
+            -QueryParameters @{ '$expand' = 'assignments' } `
             -Paginate -Quiet:$Quiet)
     } catch {
         $data.Errors['DeviceConfigurations'] = $_.Exception.Message

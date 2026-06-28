@@ -2,8 +2,8 @@
   "checkId": "ADGPO-017",
   "theater": "Reconnaissance",
   "scenario": "informational",
-  "expectedStatus": "WARN",
-  "description": "Restricted Groups review (no reachable PASS path)",
+  "expectedStatus": "PASS",
+  "description": "SYSVOL readable, no GPP group-membership configurations — secure/clean state now reaches PASS (previously always WARN)",
   "auditData": {
     "Errors": {},
     "GroupPolicies": {

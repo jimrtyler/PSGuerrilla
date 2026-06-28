@@ -51,8 +51,13 @@ function Get-EntraPIMData {
         Write-ProgressLine -Phase INFILTRATE -Message 'Collecting PIM eligible role assignments'
     }
     try {
+        # Query the eligibility *schedules* (definitions), not scheduleInstances:
+        # standing eligible assignments can have 0 active instances while the
+        # definition exists, which made EIDPIM-010 falsely report "PIM not
+        # configured". Definitions expose the same principalId/roleDefinitionId
+        # fields the downstream PIM checks read.
         $data.RoleEligibilitySchedules = @(Invoke-GraphApi -AccessToken $AccessToken `
-            -Uri '/roleManagement/directory/roleEligibilityScheduleInstances' `
+            -Uri '/roleManagement/directory/roleEligibilitySchedules' `
             -Paginate -Quiet:$Quiet)
     } catch {
         $data.Errors['RoleEligibilitySchedules'] = $_.Exception.Message

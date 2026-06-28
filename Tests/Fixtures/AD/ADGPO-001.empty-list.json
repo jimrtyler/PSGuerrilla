@@ -2,8 +2,8 @@
   "checkId": "ADGPO-001",
   "theater": "Recon",
   "scenario": "empty-list",
-  "expectedStatus": "SKIP",
-  "description": "Empty GPO list reported as Not Assessed (dead WARN branch)",
+  "expectedStatus": "WARN",
+  "description": "GPO data collected but zero GPOs in the domain — warns (was wrongly SKIPped by the -not @() guard)",
   "objectShape": false,
   "auditData": {
     "GroupPolicies": {

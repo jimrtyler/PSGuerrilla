@@ -888,8 +888,13 @@ function Test-ReconADCS012 {
             -Details $details
     }
 
-    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
-        -CurrentValue 'StrongCertificateBindingEnforcement could not be verified from GPO data. Check registry value on all DCs to ensure it is set to 2 (full enforcement) to mitigate ESC9 attacks' `
+    # The binding value could not be read and no risky templates corroborate a
+    # finding — this is genuinely unassessed (a registry value on the DCs that
+    # GPO data didn't carry), not a soft WARN. Report Not Assessed so a secure
+    # tenant isn't permanently flagged and PASS stays reachable when the value
+    # is actually collected as 2.
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+        -CurrentValue 'StrongCertificateBindingEnforcement could not be read from collected GPO data — Not Assessed. Provide the DC registry value (HKLM\SYSTEM\CurrentControlSet\Services\Kdc\StrongCertificateBindingEnforcement; should be 2) to assess ESC9/ESC10 exposure' `
         -Details $details
 }
 
