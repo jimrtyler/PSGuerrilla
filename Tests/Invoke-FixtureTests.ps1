@@ -2,7 +2,7 @@
 <#
 .SYNOPSIS
     Run the golden-fixture check suite, print a summary, and optionally publish
-    the results to Supabase for historical tracking.
+    the results to a local SQLite database for historical tracking.
 
 .DESCRIPTION
     Executes every fixture under Tests/Fixtures/ against its real check function
@@ -11,8 +11,12 @@
     its expected Status, so this can gate CI.
 
 .PARAMETER Publish
-    Also POST the run + per-check rows to Supabase. Requires SUPABASE_URL and
-    SUPABASE_KEY (or -ProjectUrl/-ServiceKey). Run Tests/Supabase/schema.sql once first.
+    Also append the run + per-check rows to a local SQLite file (offline; no network).
+    The database is created on first use. Override the location with -DbPath.
+
+.PARAMETER DbPath
+    SQLite file to publish to. Defaults to the migrated local copy under
+    ~/Documents/PSGuerrilla-Data/ (see Tests/Local/Publish-GuerrillaTestResultsSqlite.ps1).
 
 .EXAMPLE
     pwsh Tests/Invoke-FixtureTests.ps1
@@ -23,8 +27,7 @@
 [CmdletBinding()]
 param(
     [switch]$Publish,
-    [string]$ProjectUrl = $env:SUPABASE_URL,
-    [string]$ServiceKey = $env:SUPABASE_KEY
+    [string]$DbPath
 )
 
 $ErrorActionPreference = 'Stop'
@@ -90,8 +93,9 @@ if ($Publish) {
         duration_ms    = [int]$sw.ElapsedMilliseconds
         module_version = "$((Import-PowerShellDataFile (Join-Path $root '..' 'PSGuerrilla.psd1')).ModuleVersion)"
     }
-    & (Join-Path $root 'Supabase' 'Publish-GuerrillaTestResults.ps1') `
-        -Summary $summary -Results $results -ProjectUrl $ProjectUrl -ServiceKey $ServiceKey
+    $publishArgs = @{ Summary = $summary; Results = $results }
+    if ($DbPath) { $publishArgs.DbPath = $DbPath }
+    & (Join-Path $root 'Local' 'Publish-GuerrillaTestResultsSqlite.ps1') @publishArgs
 }
 
 exit ($failed -gt 0 ? 1 : 0)
