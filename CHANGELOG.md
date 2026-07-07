@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.40.1] - 2026-07-07
+
+### Fixed
+- **Gemini audit-log derivation matched the wrong setting literals.** Live-tenant validation showed Google names generative-AI admin-audit settings `gen_ai_*` (which contains neither "gemini" nor "generative") and emits them under `CHANGE_CHROME_OS_USER_SETTING`, not only `*_APPLICATION_SETTING` — so the 2.40.0 scoping in `ConvertTo-GeminiDerivedSettings` matched nothing, and GWS-GEMINI-002/003/004/005 would SKIP even when a setting had been changed. Scoping is broadened to `gen_ai` / `gemini` / `generative` over any `*_SETTING` create/change event; a two-level match (gen-AI scope *then* per-setting sub-pattern) keeps it safe — the observed `gen_ai` wallpaper/image settings map to no target, so no spurious verdicts. Still inference, still labeled as such on every verdict; the exact Workspace-Gemini `SETTING_NAME` literals (and value param) remain pending one live change event to confirm, so the derivation continues to SKIP safely on no match.
+
 ## [2.40.0] - 2026-07-07
 
 ### Added
