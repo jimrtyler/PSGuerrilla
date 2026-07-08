@@ -1,0 +1,28 @@
+{
+  "checkId": "EIDGOV-002",
+  "theater": "Infiltration",
+  "scenario": "warn",
+  "expectedStatus": "WARN",
+  "description": "A policy has no access review",
+  "auditData": {
+    "Errors": {},
+    "Governance": {
+      "Errors": {},
+      "AssignmentPolicies": [
+        {
+          "displayName": "A",
+          "requestApprovalSettings": {
+            "isApprovalRequired": true
+          },
+          "reviewSettings": {
+            "isEnabled": false
+          },
+          "expiration": {
+            "type": "afterDuration"
+          },
+          "allowedTargetScope": "specificDirectoryUsers"
+        }
+      ]
+    }
+  }
+}

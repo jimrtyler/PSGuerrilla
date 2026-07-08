@@ -1,0 +1,19 @@
+{
+  "checkId": "EIDGOV-005",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "No externally-visible catalogs",
+  "auditData": {
+    "Errors": {},
+    "Governance": {
+      "Errors": {},
+      "Catalogs": [
+        {
+          "displayName": "Internal",
+          "isExternallyVisible": false
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "checkId": "EIDGOV-005",
+  "theater": "Infiltration",
+  "scenario": "not-assessed",
+  "expectedStatus": "SKIP",
+  "description": "catalog collection failed",
+  "auditData": {
+    "Errors": {},
+    "Governance": {
+      "Errors": {
+        "Catalogs": "Forbidden (403)"
+      },
+      "Catalogs": []
+    }
+  }
+}

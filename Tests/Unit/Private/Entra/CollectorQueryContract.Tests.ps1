@@ -102,4 +102,26 @@ Describe 'Collector query contracts' {
             }
         }
     }
+
+    Context 'Get-EntraGovernanceData — entitlement management' {
+        BeforeAll {
+            Mock -ModuleName PSGuerrilla Invoke-GraphApi { return @() }
+            InModuleScope PSGuerrilla { Get-EntraGovernanceData -AccessToken 'x' -Quiet } | Out-Null
+        }
+
+        It 'queries assignmentPolicies (the source EIDGOV-001..004 grade)' {
+            Should -Invoke -ModuleName PSGuerrilla -Scope Context Invoke-GraphApi -Times 1 -Exactly -ParameterFilter {
+                $Uri -eq '/identityGovernance/entitlementManagement/assignmentPolicies'
+            }
+        }
+
+        It 'queries catalogs (EIDGOV-005) and access packages' {
+            Should -Invoke -ModuleName PSGuerrilla -Scope Context Invoke-GraphApi -Times 1 -Exactly -ParameterFilter {
+                $Uri -eq '/identityGovernance/entitlementManagement/catalogs'
+            }
+            Should -Invoke -ModuleName PSGuerrilla -Scope Context Invoke-GraphApi -Times 1 -Exactly -ParameterFilter {
+                $Uri -eq '/identityGovernance/entitlementManagement/accessPackages'
+            }
+        }
+    }
 }

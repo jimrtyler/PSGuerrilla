@@ -1,0 +1,87 @@
+{
+  "categoryId": "eidgov",
+  "categoryName": "Entra ID Governance",
+  "categoryDescription": "Entra ID Governance controls: entitlement-management access packages, assignment-policy hygiene (approval, access reviews, time-bound assignments), external eligibility, and catalog visibility. Access packages are a standing grant mechanism that is rarely reviewed after creation.",
+  "checks": [
+    {
+      "id": "EIDGOV-001",
+      "name": "Access-package assignment policies require approval",
+      "description": "Entra ID Governance entitlement-management assignment policies control how users obtain access packages (bundles of group, application, and SharePoint access). A policy whose request-approval setting is disabled grants the bundled access with no human in the loop, turning an access package into self-service standing access. This check inspects every assignment policy and flags those that do not require approval so they can be reviewed. Empty results are treated as 'no entitlement management in use' (nothing to govern) only when collection succeeded; a failed collection is Not Assessed.",
+      "severity": "Medium",
+      "zeroTrustPillar": "Governance",
+      "zeroTrustWeight": 2,
+      "subcategory": "Entitlement Management",
+      "recommendedValue": "Every access-package assignment policy requires approval, or the auto-approved packages grant only low-risk, internally-scoped access that has been deliberately reviewed",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_Azure_ELMAdmin/AccessPackageMenuBlade",
+      "remediationSteps": "In Microsoft Entra admin center > Identity Governance > Entitlement management > Access packages, open each package's policies and enable 'Require approval' for policies that grant sensitive or externally-scoped access. Reserve auto-approval for low-risk, internally-scoped self-service packages, and document that decision. Pair approval with access reviews so standing grants are re-justified.",
+      "compliance": {
+        "nistSp80053": ["AC-2", "AC-2(1)", "AC-6", "PM-10"],
+        "cisM365": ["1.1.1"]
+      }
+    },
+    {
+      "id": "EIDGOV-002",
+      "name": "Access-package assignment policies enforce access reviews",
+      "description": "An access-package assignment policy without access reviews grants access that is never periodically re-justified, accumulating standing privilege over time. Entra ID Governance can attach recurring access reviews to each policy so assignees (or their managers) must reconfirm need. This check flags assignment policies whose access-review setting is not enabled.",
+      "severity": "Medium",
+      "zeroTrustPillar": "Governance",
+      "zeroTrustWeight": 2,
+      "subcategory": "Entitlement Management",
+      "recommendedValue": "Every access-package assignment policy has recurring access reviews enabled",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_Azure_ELMAdmin/AccessPackageMenuBlade",
+      "remediationSteps": "For each access-package assignment policy, enable access reviews under the policy's lifecycle settings: choose a recurrence (for example quarterly), reviewers (self, manager, or a named reviewer), and an auto-remove action for denied or unreviewed assignments so unused access is revoked automatically.",
+      "compliance": {
+        "nistSp80053": ["AC-2(3)", "AC-6(7)", "PM-10"],
+        "cisM365": ["1.1.1"]
+      }
+    },
+    {
+      "id": "EIDGOV-003",
+      "name": "Access-package assignments are time-bound",
+      "description": "An access-package assignment policy configured with no expiration grants perpetual access — the opposite of just-in-time. Time-bounding assignments forces re-request and re-approval, limiting how long any grant survives unreviewed. This check flags assignment policies whose expiration is set to never.",
+      "severity": "Low",
+      "zeroTrustPillar": "Identity",
+      "zeroTrustWeight": 2,
+      "subcategory": "Entitlement Management",
+      "recommendedValue": "Access-package assignment policies expire assignments after a bounded period rather than granting perpetual access",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_Azure_ELMAdmin/AccessPackageMenuBlade",
+      "remediationSteps": "In each assignment policy's lifecycle settings, set an assignment expiration (a number of days or a fixed end date) instead of 'Assignments never expire'. Users re-request through the access-package flow when they still need the access, keeping grants deliberate.",
+      "compliance": {
+        "nistSp80053": ["AC-2", "AC-2(3)"],
+        "cisM365": ["1.1.1"]
+      }
+    },
+    {
+      "id": "EIDGOV-004",
+      "name": "External access-package eligibility is controlled",
+      "description": "Entitlement management can extend access packages to users outside the tenant (guests and users from connected organizations). A policy that both allows external targets and does not require approval lets outside users self-provision internal access — a direct external-exposure path. This check FAILs when a policy allows external eligibility without approval, WARNs when external eligibility is approval-gated, and passes when policies are internally scoped.",
+      "severity": "High",
+      "zeroTrustPillar": "Identity",
+      "zeroTrustWeight": 3,
+      "subcategory": "Entitlement Management",
+      "recommendedValue": "No assignment policy allows external or all-users eligibility without approval; external eligibility is scoped to specific connected organizations and approval-gated",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_Azure_ELMAdmin/AccessPackageMenuBlade",
+      "remediationSteps": "For policies whose allowed-target scope includes external or all users, either narrow the scope to specific connected organizations, or require approval (and preferably access reviews) on the policy. Never leave a broadly-scoped external eligibility policy auto-approved.",
+      "compliance": {
+        "nistSp80053": ["AC-2", "AC-3", "AC-6", "SA-9"],
+        "cisM365": ["1.1.1"]
+      }
+    },
+    {
+      "id": "EIDGOV-005",
+      "name": "Access-package catalog external visibility reviewed",
+      "description": "An entitlement-management catalog marked externally visible can surface its access packages to users outside the tenant in the My Access portal. Externally-visible catalogs are appropriate for deliberate B2B collaboration but are worth confirming, since they widen who can discover and request access. This check flags externally-visible catalogs for review.",
+      "severity": "Low",
+      "zeroTrustPillar": "Governance",
+      "zeroTrustWeight": 1,
+      "subcategory": "Entitlement Management",
+      "recommendedValue": "Externally-visible catalogs are intentional and limited to those needed for B2B collaboration",
+      "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_Azure_ELMAdmin/CatalogMenuBlade",
+      "remediationSteps": "In Identity Governance > Entitlement management > Catalogs, review each catalog with external visibility enabled. Disable external visibility on catalogs that only serve internal access packages, keeping external discoverability limited to catalogs deliberately built for partner or guest collaboration.",
+      "compliance": {
+        "nistSp80053": ["AC-3", "AC-22", "SA-9"],
+        "cisM365": ["1.1.1"]
+      }
+    }
+  ]
+}

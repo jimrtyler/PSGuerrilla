@@ -1,0 +1,14 @@
+{
+  "checkId": "EIDGOV-001",
+  "theater": "Infiltration",
+  "scenario": "not-in-use",
+  "expectedStatus": "PASS",
+  "description": "No policies \u2014 EM not in use",
+  "auditData": {
+    "Errors": {},
+    "Governance": {
+      "Errors": {},
+      "AssignmentPolicies": []
+    }
+  }
+}

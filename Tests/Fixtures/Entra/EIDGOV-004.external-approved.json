@@ -1,0 +1,28 @@
+{
+  "checkId": "EIDGOV-004",
+  "theater": "Infiltration",
+  "scenario": "external-approved",
+  "expectedStatus": "WARN",
+  "description": "External but approval-gated",
+  "auditData": {
+    "Errors": {},
+    "Governance": {
+      "Errors": {},
+      "AssignmentPolicies": [
+        {
+          "displayName": "A",
+          "requestApprovalSettings": {
+            "isApprovalRequired": true
+          },
+          "reviewSettings": {
+            "isEnabled": true
+          },
+          "expiration": {
+            "type": "afterDuration"
+          },
+          "allowedTargetScope": "allConfiguredConnectedOrganizationUsers"
+        }
+      ]
+    }
+  }
+}

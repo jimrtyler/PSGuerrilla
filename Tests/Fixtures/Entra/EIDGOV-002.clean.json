@@ -1,0 +1,28 @@
+{
+  "checkId": "EIDGOV-002",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "All policies have reviews",
+  "auditData": {
+    "Errors": {},
+    "Governance": {
+      "Errors": {},
+      "AssignmentPolicies": [
+        {
+          "displayName": "A",
+          "requestApprovalSettings": {
+            "isApprovalRequired": true
+          },
+          "reviewSettings": {
+            "isEnabled": true
+          },
+          "expiration": {
+            "type": "afterDuration"
+          },
+          "allowedTargetScope": "specificDirectoryUsers"
+        }
+      ]
+    }
+  }
+}

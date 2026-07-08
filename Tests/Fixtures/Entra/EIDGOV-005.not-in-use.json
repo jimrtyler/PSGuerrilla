@@ -1,0 +1,14 @@
+{
+  "checkId": "EIDGOV-005",
+  "theater": "Infiltration",
+  "scenario": "not-in-use",
+  "expectedStatus": "PASS",
+  "description": "No catalogs",
+  "auditData": {
+    "Errors": {},
+    "Governance": {
+      "Errors": {},
+      "Catalogs": []
+    }
+  }
+}

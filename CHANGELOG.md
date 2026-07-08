@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.42.0] - 2026-07-08
+
+### Added
+- **Entra ID Governance — entitlement-management hygiene (new category, 5 checks).** Access packages are a standing-grant mechanism that is rarely reviewed after creation; PSGuerrilla previously did not inspect them at all. A new `Governance` category collects entitlement-management assignment policies and catalogs and grades them: **EIDGOV-001** flags assignment policies that grant access without approval; **EIDGOV-002** flags policies without recurring access reviews; **EIDGOV-003** flags perpetual (never-expiring) assignments; **EIDGOV-004** FAILs when a policy allows external/all-users eligibility without approval (WARNs when approval-gated); **EIDGOV-005** flags externally-visible catalogs for review. A failed collection is Not Assessed; an empty-but-collected result means entitlement management is simply not in use (PASS, nothing to govern). Backed by a collector query-contract test (asserts the three `entitlementManagement` endpoints) and 18 golden fixtures. Field names for entitlement-management sub-settings are best-effort pending live validation on a governance-licensed tenant; absent fields degrade to the safe branch, never a fabricated verdict.
+
 ## [2.41.0] - 2026-07-07
 
 ### Added

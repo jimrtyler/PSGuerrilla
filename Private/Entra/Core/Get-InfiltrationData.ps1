@@ -26,6 +26,7 @@ function Get-InfiltrationData {
         PIM                   = @('PIM', 'AuthMethods')
         Applications          = @('Applications')
         Federation            = @('Federation')
+        Governance            = @('Governance')
         TenantConfig          = @('TenantConfig')
         Eidsca                = @('AuthMethods', 'TenantConfig')
         AzureIAM              = @('AzureIAM')
@@ -61,6 +62,7 @@ function Get-InfiltrationData {
         PIM               = $null
         Applications      = $null
         Federation        = $null
+        Governance        = $null
         TenantConfig      = $null
         AzureIAM          = $null
         Intune            = $null
@@ -170,6 +172,17 @@ function Get-InfiltrationData {
         } catch {
             $data.Errors['Federation'] = $_.Exception.Message
             $data.Federation = @{ Domains = @(); Errors = @{} }
+        }
+    }
+
+    # ── 6b. Entra ID Governance (entitlement management) ─────────────────
+    if (& $needsSource 'Governance') {
+        try {
+            $data.Governance = Get-EntraGovernanceData `
+                -AccessToken $AccessToken -Quiet:$Quiet
+        } catch {
+            $data.Errors['Governance'] = $_.Exception.Message
+            $data.Governance = @{ AccessPackages = @(); Catalogs = @(); AssignmentPolicies = @(); Errors = @{} }
         }
     }
 

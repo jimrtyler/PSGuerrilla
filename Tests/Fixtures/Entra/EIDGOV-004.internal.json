@@ -1,0 +1,28 @@
+{
+  "checkId": "EIDGOV-004",
+  "theater": "Infiltration",
+  "scenario": "internal",
+  "expectedStatus": "PASS",
+  "description": "All internal scope",
+  "auditData": {
+    "Errors": {},
+    "Governance": {
+      "Errors": {},
+      "AssignmentPolicies": [
+        {
+          "displayName": "A",
+          "requestApprovalSettings": {
+            "isApprovalRequired": true
+          },
+          "reviewSettings": {
+            "isEnabled": true
+          },
+          "expiration": {
+            "type": "afterDuration"
+          },
+          "allowedTargetScope": "specificDirectoryUsers"
+        }
+      ]
+    }
+  }
+}

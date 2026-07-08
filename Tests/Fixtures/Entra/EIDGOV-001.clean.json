@@ -1,0 +1,41 @@
+{
+  "checkId": "EIDGOV-001",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "All policies require approval",
+  "auditData": {
+    "Errors": {},
+    "Governance": {
+      "Errors": {},
+      "AssignmentPolicies": [
+        {
+          "displayName": "A",
+          "requestApprovalSettings": {
+            "isApprovalRequired": true
+          },
+          "reviewSettings": {
+            "isEnabled": true
+          },
+          "expiration": {
+            "type": "afterDuration"
+          },
+          "allowedTargetScope": "specificDirectoryUsers"
+        },
+        {
+          "displayName": "B",
+          "requestApprovalSettings": {
+            "isApprovalRequired": true
+          },
+          "reviewSettings": {
+            "isEnabled": true
+          },
+          "expiration": {
+            "type": "afterDuration"
+          },
+          "allowedTargetScope": "specificDirectoryUsers"
+        }
+      ]
+    }
+  }
+}

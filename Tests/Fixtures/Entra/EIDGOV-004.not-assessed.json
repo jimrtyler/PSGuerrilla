@@ -1,0 +1,16 @@
+{
+  "checkId": "EIDGOV-004",
+  "theater": "Infiltration",
+  "scenario": "not-assessed",
+  "expectedStatus": "SKIP",
+  "description": "collection failed",
+  "auditData": {
+    "Errors": {},
+    "Governance": {
+      "Errors": {
+        "AssignmentPolicies": "Forbidden: Identity Governance license required (403)"
+      },
+      "AssignmentPolicies": []
+    }
+  }
+}
