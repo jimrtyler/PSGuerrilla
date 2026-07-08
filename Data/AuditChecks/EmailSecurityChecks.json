@@ -25,6 +25,9 @@
         ],
         "cisBenchmark": [
           "2.1"
+        ],
+        "scuba": [
+          "GWS.GMAIL.3.1v1"
         ]
       }
     },
@@ -50,6 +53,9 @@
         ],
         "cisBenchmark": [
           "2.2"
+        ],
+        "scuba": [
+          "GWS.GMAIL.2.1v1"
         ]
       }
     },
@@ -76,6 +82,10 @@
         ],
         "cisBenchmark": [
           "2.3"
+        ],
+        "scuba": [
+          "GWS.GMAIL.4.1v1",
+          "GWS.GMAIL.4.2v1"
         ]
       }
     },
@@ -151,6 +161,9 @@
         ],
         "cisBenchmark": [
           "2.6"
+        ],
+        "scuba": [
+          "GWS.GMAIL.14.1v1"
         ]
       }
     },

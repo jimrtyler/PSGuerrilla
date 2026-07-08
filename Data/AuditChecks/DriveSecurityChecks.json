@@ -25,6 +25,11 @@
         ],
         "cisBenchmark": [
           "2.1"
+        ],
+        "scuba": [
+          "GWS.DRIVEDOCS.1.1v1",
+          "GWS.DRIVEDOCS.1.2v1",
+          "GWS.DRIVEDOCS.1.6v1"
         ]
       }
     },
@@ -98,6 +103,10 @@
         ],
         "cisBenchmark": [
           "2.4"
+        ],
+        "scuba": [
+          "GWS.DRIVEDOCS.2.1v1",
+          "GWS.DRIVEDOCS.2.2v1"
         ]
       }
     },

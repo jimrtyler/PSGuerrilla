@@ -24,6 +24,9 @@
         ],
         "cisBenchmark": [
           "5.1"
+        ],
+        "scuba": [
+          "GWS.MEET.5.1v1"
         ]
       }
     },
@@ -48,6 +51,9 @@
         ],
         "cisBenchmark": [
           "5.2"
+        ],
+        "scuba": [
+          "GWS.MEET.1.1v1"
         ]
       }
     },
@@ -97,6 +103,9 @@
         ],
         "cisBenchmark": [
           "5.4"
+        ],
+        "scuba": [
+          "GWS.CHAT.4.1v1"
         ]
       }
     },
@@ -121,6 +130,10 @@
         ],
         "cisBenchmark": [
           "5.5"
+        ],
+        "scuba": [
+          "GWS.CHAT.1.1v1",
+          "GWS.CHAT.1.2v1"
         ]
       }
     },
@@ -195,6 +208,10 @@
         ],
         "cisBenchmark": [
           "5.8"
+        ],
+        "scuba": [
+          "GWS.CALENDAR.1.1v1",
+          "GWS.CALENDAR.1.2v1"
         ]
       }
     },
@@ -219,6 +236,9 @@
         ],
         "cisBenchmark": [
           "5.9"
+        ],
+        "scuba": [
+          "GWS.CALENDAR.2.1v1"
         ]
       }
     },
@@ -265,6 +285,9 @@
         ],
         "cisBenchmark": [
           "6.1"
+        ],
+        "scuba": [
+          "GWS.MEET.4.1v1"
         ]
       }
     },
@@ -288,6 +311,9 @@
         ],
         "cisBenchmark": [
           "6.2"
+        ],
+        "scuba": [
+          "GWS.MEET.3.1v1"
         ]
       }
     }
