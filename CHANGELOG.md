@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.44.0] - 2026-07-08
+
+### Added
+- **Two Google Workspace Gmail SCuBA controls.** **EMAIL-023** (GWS.GMAIL.12.1) flags per-user outbound gateways — users routing outbound mail through their own external SMTP servers, a data-exfiltration and spoofing path that bypasses org mail controls — read from the Cloud Identity Policy API. **EMAIL-024** (GWS.GMAIL.16.1) flags a disabled Gmail Security Sandbox (virtual attachment detonation for zero-day malware); its policy field is best-effort pending live confirmation, so it reports **Not Assessed** rather than a fabricated verdict when the setting is not returned. 8 golden fixtures.
+
+### Changed
+- **GWS SCuBA baseline crosswalk.** Tagged the Gmail attachment-protection, link-safety, and spoofing/authentication checks (EMAIL-015/016/017) with the specific GWS.GMAIL.5.x / 6.x / 7.x SCuBA control IDs they satisfy — 14 controls previously covered but untagged. Coverage is now provable by control ID (the check reads the same Cloud Identity setting the control specifies), not merely by concept.
+
 ## [2.43.0] - 2026-07-08
 
 ### Added

@@ -1,0 +1,24 @@
+{
+  "checkId": "EMAIL-024",
+  "theater": "Fortification",
+  "scenario": "no-policy",
+  "expectedStatus": "SKIP",
+  "description": "Sandbox policy not returned (edition-gated/field unconfirmed)",
+  "objectShape": true,
+  "auditData": {
+    "Errors": {},
+    "CloudIdentityPolicies": {
+      "ByType": {
+        "gmail.other": [
+          {
+            "setting": {
+              "value": {
+                "x": true
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

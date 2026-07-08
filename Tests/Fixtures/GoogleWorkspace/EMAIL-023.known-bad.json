@@ -1,0 +1,24 @@
+{
+  "checkId": "EMAIL-023",
+  "theater": "Fortification",
+  "scenario": "known-bad",
+  "expectedStatus": "FAIL",
+  "description": "External SMTP routing allowed",
+  "objectShape": true,
+  "auditData": {
+    "Errors": {},
+    "CloudIdentityPolicies": {
+      "ByType": {
+        "gmail.per_user_outbound_gateway": [
+          {
+            "setting": {
+              "value": {
+                "allowUsersToUseExternalSmtpServers": true
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

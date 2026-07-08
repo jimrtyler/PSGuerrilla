@@ -848,3 +848,63 @@ function Test-FortificationEMAIL022 {
         -OrgUnitPath $OrgUnitPath `
         -Details @{ TotalUsersChecked = $totalUsers }
 }
+
+# ── EMAIL-023: GWS.GMAIL.12.1 — Per-user outbound gateways disabled ────────
+function Test-FortificationEMAIL023 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $pol = $AuditData.CloudIdentityPolicies
+    if (-not $pol) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Cloud Identity Policy API not available (cloud-identity.policies.readonly not delegated, or API disabled)' `
+            -OrgUnitPath $OrgUnitPath
+    }
+    $vals = @(Resolve-GooglePolicyValue -Policies $pol `
+        -Type 'gmail.per_user_outbound_gateway' -Field 'allowUsersToUseExternalSmtpServers')
+    if ($vals.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'No gmail.per_user_outbound_gateway policy returned for this tenant' -OrgUnitPath $OrgUnitPath
+    }
+    # Secure when disabled (false). Weakest-OU-wins: FAIL if any OU allows external SMTP.
+    $enabled = @($vals | Where-Object { $_ -eq $true })
+    if ($enabled.Count -gt 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'FAIL' `
+            -CurrentValue "Per-user outbound gateways (external SMTP routing) enabled in $($enabled.Count) of $($vals.Count) targeted policy/policies — an exfiltration and spoofing path" `
+            -OrgUnitPath $OrgUnitPath
+    }
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+        -CurrentValue "Per-user outbound gateways disabled in all $($vals.Count) targeted policy/policies" `
+        -OrgUnitPath $OrgUnitPath
+}
+
+# ── EMAIL-024: GWS.GMAIL.16.1 — Gmail Security Sandbox enabled ─────────────
+function Test-FortificationEMAIL024 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+
+    $pol = $AuditData.CloudIdentityPolicies
+    if (-not $pol) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Cloud Identity Policy API not available (cloud-identity.policies.readonly not delegated, or API disabled)' `
+            -OrgUnitPath $OrgUnitPath
+    }
+    # Field name best-effort pending live confirmation; an unrecognized type/field
+    # returns no values -> SKIP (Not Assessed), never a fabricated verdict.
+    $vals = @(Resolve-GooglePolicyValue -Policies $pol `
+        -Type 'gmail.security_sandbox' -Field 'enableVirtualExecution')
+    if ($vals.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'No gmail.security_sandbox policy returned for this tenant (setting may be edition-gated or the field name needs live confirmation) — Not Assessed' -OrgUnitPath $OrgUnitPath
+    }
+    # Secure when enabled (true). Weakest-OU-wins: FAIL if any OU has the sandbox off.
+    $disabled = @($vals | Where-Object { $_ -ne $true })
+    if ($disabled.Count -gt 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'FAIL' `
+            -CurrentValue "Security Sandbox (virtual attachment detonation) disabled in $($disabled.Count) of $($vals.Count) targeted policy/policies" `
+            -OrgUnitPath $OrgUnitPath
+    }
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+        -CurrentValue "Security Sandbox enabled in all $($vals.Count) targeted policy/policies" `
+        -OrgUnitPath $OrgUnitPath
+}

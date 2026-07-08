@@ -1,0 +1,11 @@
+{
+  "checkId": "EMAIL-024",
+  "theater": "Fortification",
+  "scenario": "no-data",
+  "expectedStatus": "SKIP",
+  "description": "Cloud Identity API unavailable",
+  "objectShape": true,
+  "auditData": {
+    "Errors": {}
+  }
+}

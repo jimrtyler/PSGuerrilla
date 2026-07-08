@@ -1,0 +1,24 @@
+{
+  "checkId": "EMAIL-024",
+  "theater": "Fortification",
+  "scenario": "known-bad",
+  "expectedStatus": "FAIL",
+  "description": "Sandbox disabled",
+  "objectShape": true,
+  "auditData": {
+    "Errors": {},
+    "CloudIdentityPolicies": {
+      "ByType": {
+        "gmail.security_sandbox": [
+          {
+            "setting": {
+              "value": {
+                "enableVirtualExecution": false
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

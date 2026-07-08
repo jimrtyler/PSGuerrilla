@@ -376,6 +376,12 @@
         ],
         "cisBenchmark": [
           "2.15"
+        ],
+        "scuba": [
+          "GWS.GMAIL.5.1v1",
+          "GWS.GMAIL.5.2v1",
+          "GWS.GMAIL.5.3v1",
+          "GWS.GMAIL.5.4v1"
         ]
       }
     },
@@ -401,6 +407,12 @@
         ],
         "cisBenchmark": [
           "2.16"
+        ],
+        "scuba": [
+          "GWS.GMAIL.6.1v1",
+          "GWS.GMAIL.6.2v1",
+          "GWS.GMAIL.6.3v1",
+          "GWS.GMAIL.6.4v1"
         ]
       }
     },
@@ -427,6 +439,14 @@
         ],
         "cisBenchmark": [
           "2.17"
+        ],
+        "scuba": [
+          "GWS.GMAIL.7.1v1",
+          "GWS.GMAIL.7.2v1",
+          "GWS.GMAIL.7.3v1",
+          "GWS.GMAIL.7.4v1",
+          "GWS.GMAIL.7.5v1",
+          "GWS.GMAIL.7.7v1"
         ]
       }
     },
@@ -555,6 +575,47 @@
         ],
         "cisBenchmark": [
           "2.22"
+        ]
+      }
+    },
+    {
+      "id": "EMAIL-023",
+      "name": "Per-user outbound gateways disabled (GWS.GMAIL.12.1)",
+      "description": "SCuBA GWS.GMAIL.12.1 requires that per-user outbound gateways be disabled. When enabled, users can route outbound mail through their own external SMTP servers, bypassing the organization's mail security controls and creating a data-exfiltration and spoofing path. This check reads the gmail.per_user_outbound_gateway policy from the Cloud Identity Policy API and flags any organizational unit where external SMTP routing is allowed. When the policy is not returned the result is Not Assessed.",
+      "severity": "Medium",
+      "zeroTrustPillar": "Data",
+      "zeroTrustWeight": 2,
+      "subcategory": "Mail Routing",
+      "recommendedValue": "Per-user outbound gateways (external SMTP) disabled for all organizational units",
+      "remediationSteps": "In the Google Admin console under Apps > Google Workspace > Gmail > Routing, ensure per-user outbound gateways are not permitted so users cannot route mail through external SMTP servers. Keep outbound routing centralized through approved gateways only.",
+      "compliance": {
+        "scuba": [
+          "GWS.GMAIL.12.1v1"
+        ],
+        "nistSp80053": [
+          "AC-4",
+          "SC-7",
+          "SI-8"
+        ]
+      }
+    },
+    {
+      "id": "EMAIL-024",
+      "name": "Gmail Security Sandbox enabled (GWS.GMAIL.16.1)",
+      "description": "SCuBA GWS.GMAIL.16.1 recommends enabling the Gmail Security Sandbox, which detonates inbound attachments in a virtual environment to detect zero-day malware that signature scanning misses. This check reads the gmail.security_sandbox policy from the Cloud Identity Policy API and flags organizational units where the sandbox is disabled. The exact policy field is best-effort pending confirmation on a licensed tenant; when the policy is not returned the result is Not Assessed rather than a fabricated verdict.",
+      "severity": "Medium",
+      "zeroTrustPillar": "Applications & Workloads",
+      "zeroTrustWeight": 2,
+      "subcategory": "Advanced Threat Protection",
+      "recommendedValue": "Security Sandbox enabled (virtual attachment detonation) for all organizational units",
+      "remediationSteps": "In the Google Admin console under Apps > Google Workspace > Gmail > Safety > Attachments, enable Security Sandbox so inbound attachments are detonated in a virtual environment before delivery. Note Security Sandbox requires the appropriate Google Workspace edition.",
+      "compliance": {
+        "scuba": [
+          "GWS.GMAIL.16.1v1"
+        ],
+        "nistSp80053": [
+          "SI-3",
+          "SC-44"
         ]
       }
     }

@@ -1,0 +1,24 @@
+{
+  "checkId": "EMAIL-023",
+  "theater": "Fortification",
+  "scenario": "no-policy",
+  "expectedStatus": "SKIP",
+  "description": "Policy type not returned",
+  "objectShape": true,
+  "auditData": {
+    "Errors": {},
+    "CloudIdentityPolicies": {
+      "ByType": {
+        "gmail.other": [
+          {
+            "setting": {
+              "value": {
+                "x": true
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
