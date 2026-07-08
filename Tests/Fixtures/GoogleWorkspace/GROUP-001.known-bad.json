@@ -1,0 +1,24 @@
+{
+  "checkId": "GROUP-001",
+  "theater": "Fortification",
+  "scenario": "known-bad",
+  "expectedStatus": "FAIL",
+  "description": "Anyone can access",
+  "objectShape": true,
+  "auditData": {
+    "Errors": {},
+    "CloudIdentityPolicies": {
+      "ByType": {
+        "groups_for_business.groups_sharing": [
+          {
+            "setting": {
+              "value": {
+                "collaborationCapability": "ANYONE_CAN_ACCESS"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

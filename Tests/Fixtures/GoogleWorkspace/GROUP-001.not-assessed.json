@@ -1,0 +1,13 @@
+{
+  "checkId": "GROUP-001",
+  "theater": "Fortification",
+  "scenario": "not-assessed",
+  "expectedStatus": "SKIP",
+  "description": "Policy API failed",
+  "objectShape": true,
+  "auditData": {
+    "Errors": {
+      "CloudIdentityPolicies": "Policy API 403"
+    }
+  }
+}

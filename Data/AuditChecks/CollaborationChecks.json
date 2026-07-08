@@ -316,6 +316,89 @@
           "GWS.MEET.3.1v1"
         ]
       }
+    },
+    {
+      "id": "GROUP-001",
+      "name": "External access to Google Groups restricted (GWS.GROUPS.1.1)",
+      "description": "SCuBA GWS.GROUPS.1.1 requires that Groups for Business sharing be limited so groups are not accessible to people outside the organization. When the group sharing collaboration capability is not set to domain-users-only, group content — which in a school can include student and staff data — becomes reachable by external parties. This check reads the groups_for_business.groups_sharing policy from the Cloud Identity Policy API and flags any organizational unit whose collaboration capability is not DOMAIN_USERS_ONLY.",
+      "severity": "High",
+      "zeroTrustPillar": "Data",
+      "zeroTrustWeight": 3,
+      "subcategory": "Group Sharing",
+      "recommendedValue": "Groups sharing collaboration capability set to DOMAIN_USERS_ONLY for all organizational units",
+      "remediationSteps": "In the Google Admin console under Apps > Google Workspace > Groups for Business > Sharing settings, set group access to be limited to users in the organization (not 'Anyone on the internet'), so external parties cannot access group content.",
+      "compliance": {
+        "scuba": [
+          "GWS.GROUPS.1.1v1"
+        ],
+        "nistSp80053": [
+          "AC-3",
+          "AC-22",
+          "SC-7"
+        ]
+      }
+    },
+    {
+      "id": "GROUP-002",
+      "name": "Group owners cannot add external members (GWS.GROUPS.1.2)",
+      "description": "SCuBA GWS.GROUPS.1.2 requires that group owners not be permitted to add members from outside the organization. External members gain access to everything shared with the group. This check flags organizational units where owners can allow external members (ownersCanAllowExternalMembers is enabled).",
+      "severity": "Medium",
+      "zeroTrustPillar": "Data",
+      "zeroTrustWeight": 2,
+      "subcategory": "Group Sharing",
+      "recommendedValue": "Group owners cannot allow external members (ownersCanAllowExternalMembers disabled)",
+      "remediationSteps": "In Groups for Business sharing settings, disable the option that lets group owners add members from outside the organization, so external membership requires administrative action.",
+      "compliance": {
+        "scuba": [
+          "GWS.GROUPS.1.2v1"
+        ],
+        "nistSp80053": [
+          "AC-2",
+          "AC-3",
+          "SC-7"
+        ]
+      }
+    },
+    {
+      "id": "GROUP-003",
+      "name": "Groups cannot receive mail from outside the org (GWS.GROUPS.1.3)",
+      "description": "SCuBA GWS.GROUPS.1.3 requires that group owners not be permitted to allow incoming email from outside the organization. Allowing public inbound mail to groups is an inbound phishing and spam vector. This check flags organizational units where owners can allow incoming mail from the public (ownersCanAllowIncomingMailFromPublic is enabled).",
+      "severity": "Medium",
+      "zeroTrustPillar": "Applications & Workloads",
+      "zeroTrustWeight": 2,
+      "subcategory": "Group Sharing",
+      "recommendedValue": "Group owners cannot allow incoming mail from the public (ownersCanAllowIncomingMailFromPublic disabled)",
+      "remediationSteps": "In Groups for Business sharing settings, disable the option that lets group owners accept incoming email from outside the organization, restricting group mail to internal senders unless explicitly configured.",
+      "compliance": {
+        "scuba": [
+          "GWS.GROUPS.1.3v1"
+        ],
+        "nistSp80053": [
+          "SC-7",
+          "SI-8"
+        ]
+      }
+    },
+    {
+      "id": "GROUP-004",
+      "name": "Group creation restricted to administrators (GWS.GROUPS.2.1)",
+      "description": "SCuBA GWS.GROUPS.2.1 recommends restricting who can create Groups for Business to administrators. When any user can create groups, group sprawl outpaces governance and external-sharing defaults may be applied without review. This check flags organizational units where the create-groups access level is not ADMIN_ONLY.",
+      "severity": "Low",
+      "zeroTrustPillar": "Governance",
+      "zeroTrustWeight": 2,
+      "subcategory": "Group Governance",
+      "recommendedValue": "Group creation access level set to ADMIN_ONLY",
+      "remediationSteps": "In Groups for Business settings, set 'who can create groups' to admins only, so new groups are created deliberately and inherit reviewed sharing settings.",
+      "compliance": {
+        "scuba": [
+          "GWS.GROUPS.2.1v1"
+        ],
+        "nistSp80053": [
+          "AC-2",
+          "AC-6",
+          "PM-10"
+        ]
+      }
     }
   ]
 }

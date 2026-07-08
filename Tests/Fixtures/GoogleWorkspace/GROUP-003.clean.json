@@ -1,0 +1,24 @@
+{
+  "checkId": "GROUP-003",
+  "theater": "Fortification",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "No public mail",
+  "objectShape": true,
+  "auditData": {
+    "Errors": {},
+    "CloudIdentityPolicies": {
+      "ByType": {
+        "groups_for_business.groups_sharing": [
+          {
+            "setting": {
+              "value": {
+                "ownersCanAllowIncomingMailFromPublic": false
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

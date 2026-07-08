@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.45.0] - 2026-07-08
+
+### Added
+- **Google Workspace Groups sharing controls (4 checks).** Externally-accessible Google Groups are a direct data-exposure path — in a school, that is student and staff data sitting in group content and archives. **GROUP-001** (GWS.GROUPS.1.1) FAILs when group sharing is not limited to domain users; **GROUP-002** (1.2) FAILs when owners can add external members; **GROUP-003** (1.3) FAILs when groups can receive mail from the public (an inbound phishing vector); **GROUP-004** (2.1) WARNs when group creation is not restricted to administrators. All read the `groups_for_business.groups_sharing` policy from the Cloud Identity Policy API; an absent policy is Not Assessed. This was the one Google Workspace SCuBA baseline area with no coverage at all. 13 golden fixtures.
+
 ## [2.44.0] - 2026-07-08
 
 ### Added

@@ -395,3 +395,86 @@ function Test-FortificationCOLLAB012 {
     return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
         -CurrentValue 'Host management is enabled' -OrgUnitPath $OrgUnitPath
 }
+
+# Shared guard + policy resolver for the Groups checks (GWS.GROUPS.*).
+# All read the single groups_for_business.groups_sharing policy.
+function Get-GroupSharingValues {
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath, [string]$Field)
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition -ErrorMap $AuditData.Errors `
+        -SourceKey @('CloudIdentityPolicies', 'OrgUnits') -Subject 'Groups for Business sharing policy'
+    if ($na) { return @{ Na = $na } }
+    $pol = $AuditData.CloudIdentityPolicies
+    if (-not $pol) {
+        return @{ Na = (New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Cloud Identity Policy API not available (cloud-identity.policies.readonly not delegated, or API disabled)' -OrgUnitPath $OrgUnitPath) }
+    }
+    $vals = @(Resolve-GooglePolicyValue -Policies $pol -Type 'groups_for_business.groups_sharing' -Field $Field)
+    if ($vals.Count -eq 0) {
+        return @{ Na = (New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue "No groups_for_business.groups_sharing policy returned for this tenant" -OrgUnitPath $OrgUnitPath) }
+    }
+    return @{ Vals = $vals }
+}
+
+# ── GROUP-001: GWS.GROUPS.1.1 — External access to Groups restricted ───────
+function Test-FortificationGROUP001 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+    $r = Get-GroupSharingValues -AuditData $AuditData -CheckDefinition $CheckDefinition -OrgUnitPath $OrgUnitPath -Field 'collaborationCapability'
+    if ($r.Na) { return $r.Na }
+    # Secure = DOMAIN_USERS_ONLY. Weakest-OU-wins.
+    $insecure = @($r.Vals | Where-Object { "$_" -ne 'DOMAIN_USERS_ONLY' })
+    if ($insecure.Count -gt 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'FAIL' `
+            -CurrentValue "Group sharing allows external access in $($insecure.Count) of $($r.Vals.Count) targeted policy/policies (not DOMAIN_USERS_ONLY)" `
+            -OrgUnitPath $OrgUnitPath -Details @{ Note = 'External access exposes group content — including student/staff data — to people outside the organization' }
+    }
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+        -CurrentValue "Group sharing is limited to domain users in all $($r.Vals.Count) targeted policy/policies" -OrgUnitPath $OrgUnitPath
+}
+
+# ── GROUP-002: GWS.GROUPS.1.2 — Owners cannot add external members ─────────
+function Test-FortificationGROUP002 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+    $r = Get-GroupSharingValues -AuditData $AuditData -CheckDefinition $CheckDefinition -OrgUnitPath $OrgUnitPath -Field 'ownersCanAllowExternalMembers'
+    if ($r.Na) { return $r.Na }
+    $on = @($r.Vals | Where-Object { $_ -eq $true })
+    if ($on.Count -gt 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'FAIL' `
+            -CurrentValue "Group owners can add external members in $($on.Count) of $($r.Vals.Count) targeted policy/policies" -OrgUnitPath $OrgUnitPath
+    }
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+        -CurrentValue "Group owners cannot add external members in all $($r.Vals.Count) targeted policy/policies" -OrgUnitPath $OrgUnitPath
+}
+
+# ── GROUP-003: GWS.GROUPS.1.3 — No incoming mail from the public ───────────
+function Test-FortificationGROUP003 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+    $r = Get-GroupSharingValues -AuditData $AuditData -CheckDefinition $CheckDefinition -OrgUnitPath $OrgUnitPath -Field 'ownersCanAllowIncomingMailFromPublic'
+    if ($r.Na) { return $r.Na }
+    $on = @($r.Vals | Where-Object { $_ -eq $true })
+    if ($on.Count -gt 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'FAIL' `
+            -CurrentValue "Group owners can allow incoming mail from the public in $($on.Count) of $($r.Vals.Count) targeted policy/policies — an inbound phishing/spam vector" -OrgUnitPath $OrgUnitPath
+    }
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+        -CurrentValue "Groups cannot receive mail from outside the org in all $($r.Vals.Count) targeted policy/policies" -OrgUnitPath $OrgUnitPath
+}
+
+# ── GROUP-004: GWS.GROUPS.2.1 — Group creation restricted to admins ────────
+function Test-FortificationGROUP004 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition, [string]$OrgUnitPath = '/')
+    $r = Get-GroupSharingValues -AuditData $AuditData -CheckDefinition $CheckDefinition -OrgUnitPath $OrgUnitPath -Field 'createGroupsAccessLevel'
+    if ($r.Na) { return $r.Na }
+    # Secure = ADMIN_ONLY. Any looser value (USERS_IN_DOMAIN / ANYONE_CAN_CREATE) is not restricted.
+    $open = @($r.Vals | Where-Object { "$_" -ne 'ADMIN_ONLY' })
+    if ($open.Count -gt 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
+            -CurrentValue "Group creation is not restricted to admins in $($open.Count) of $($r.Vals.Count) targeted policy/policies" -OrgUnitPath $OrgUnitPath
+    }
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
+        -CurrentValue "Group creation is restricted to administrators in all $($r.Vals.Count) targeted policy/policies" -OrgUnitPath $OrgUnitPath
+}
