@@ -1,0 +1,41 @@
+{
+  "checkId": "M365EXO-049",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "All policies block exe/cmd/vbe",
+  "auditData": {
+    "M365Services": {
+      "Exchange": {
+        "MalwarePolicies": [
+          {
+            "Name": "Default",
+            "EnableFileFilter": true,
+            "ZapEnabled": true,
+            "FileTypes": [
+              "exe",
+              "cmd",
+              "vbe",
+              "bat",
+              "scr"
+            ]
+          },
+          {
+            "Name": "Strict",
+            "EnableFileFilter": true,
+            "ZapEnabled": true,
+            "FileTypes": [
+              "exe",
+              "cmd",
+              "vbe",
+              "bat",
+              "scr"
+            ]
+          }
+        ]
+      },
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

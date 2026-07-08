@@ -85,6 +85,12 @@ function Get-M365ServiceData {
                 if (Get-Command Get-DlpCompliancePolicy -ErrorAction SilentlyContinue) {
                     $data.Exchange.DlpCompliancePolicies = @(Get-DlpCompliancePolicy -ErrorAction SilentlyContinue)
                 }
+                # DLP compliance rules carry the sensitive-information-types (MS.EXO.8.4).
+                # Kept separate from policies; M365EXO-050 treats an absent/empty result as
+                # Not Assessed (cannot tell "no DLP" from "not readable"), never a pass.
+                if (Get-Command Get-DlpComplianceRule -ErrorAction SilentlyContinue) {
+                    $data.Exchange.DlpComplianceRules = @(Get-DlpComplianceRule -ErrorAction SilentlyContinue)
+                }
 
                 # ── DNS-based email authentication for accepted domains (SPF/DMARC) ──
                 # MS.EXO.2.2 (SPF) and MS.EXO.4.x (DMARC) live in DNS, not EXO config.

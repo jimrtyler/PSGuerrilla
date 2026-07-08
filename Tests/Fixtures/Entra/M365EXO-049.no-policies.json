@@ -1,0 +1,16 @@
+{
+  "checkId": "M365EXO-049",
+  "theater": "Infiltration",
+  "scenario": "no-policies",
+  "expectedStatus": "WARN",
+  "description": "Empty policy list",
+  "auditData": {
+    "M365Services": {
+      "Exchange": {
+        "MalwarePolicies": []
+      },
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "checkId": "M365EXO-050",
+  "theater": "Infiltration",
+  "scenario": "empty",
+  "expectedStatus": "SKIP",
+  "description": "No DLP rules returned \u2014 ambiguous, Not Assessed",
+  "auditData": {
+    "M365Services": {
+      "Exchange": {
+        "DlpComplianceRules": []
+      },
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

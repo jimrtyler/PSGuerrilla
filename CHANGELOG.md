@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.41.0] - 2026-07-07
+
+### Added
+- **Two SCuBA Exchange Online baseline controls.** **M365EXO-049** (MS.EXO.9.5) confirms the anti-malware Common Attachment Filter blocks executable attachment types (.exe/.cmd/.vbe), the most common malware-delivery payloads, on every anti-malware policy. **M365EXO-050** (MS.EXO.8.4) confirms Data Loss Prevention rules restrict sharing of U.S. Social Security numbers, ITINs, and credit-card numbers via email. Because `Get-DlpComplianceRule` cannot distinguish an unconfigured DLP solution from one that could not be read, absent or empty rule data is reported **Not Assessed** rather than a false FAIL or a pass — a FAIL is only returned when rules are present but demonstrably miss a required type. M365EXO-019 (DMARC aggregate-report contact) is additionally mapped to MS.EXO.4.4, a control it already satisfied. Backed by 10 golden fixtures.
+
 ## [2.40.1] - 2026-07-07
 
 ### Fixed

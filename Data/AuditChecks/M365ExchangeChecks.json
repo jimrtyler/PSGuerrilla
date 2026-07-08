@@ -420,7 +420,8 @@
       "remediationSteps": "Add an rua= tag to each DMARC record pointing to a monitored mailbox or report-processing service so aggregate reports are collected and reviewed. Federal executive-branch departments and agencies must include reports@dmarc.cyber.dhs.gov in the RUA field per BOD 18-01. Ensure the receiving mailbox or service is actively monitored so spoofing trends are acted upon.",
       "compliance": {
         "scuba": [
-          "MS.EXO.4.3v1"
+          "MS.EXO.4.3v1",
+          "MS.EXO.4.4v1"
         ],
         "nistSp80053": [
           "SI-8",
@@ -1085,6 +1086,47 @@
         ],
         "mitreAttack": [
           "T1070"
+        ]
+      }
+    },
+    {
+      "id": "M365EXO-049",
+      "name": "Executable attachment types blocked (MS.EXO.9.5)",
+      "description": "SCuBA MS.EXO.9.5 requires that click-to-run executable file types (for example .exe, .cmd, and .vbe) be blocked at the mail gateway. Microsoft Defender for Office 365 enforces this through the Common Attachment Filter on the anti-malware policy, which rejects messages carrying the listed file types outright regardless of content scanning. Executable attachments are a primary malware-delivery vector; blocking the high-risk types by extension stops the most common payloads before any detonation is required. This check inspects every anti-malware policy and confirms the Common Attachment Filter is enabled and covers at minimum .exe, .cmd, and .vbe.",
+      "severity": "Medium",
+      "zeroTrustPillar": "Applications & Workloads",
+      "zeroTrustWeight": 2,
+      "subcategory": "Advanced Threat Protection",
+      "recommendedValue": "Common Attachment Filter enabled on all anti-malware policies, blocking at minimum .exe, .cmd, and .vbe",
+      "remediationSteps": "In the Microsoft Defender portal under Email & collaboration > Policies & rules > Threat policies > Anti-malware, enable the Common Attachment Filter on each policy and ensure the blocked file-type list includes the click-to-run executables (.exe, .cmd, .vbe and related types). Prefer the Standard or Strict preset security policies, which enable this by default. Confirm the policy applies to all recipients.",
+      "compliance": {
+        "scuba": [
+          "MS.EXO.9.5v1"
+        ],
+        "nistSp80053": [
+          "SI-3",
+          "SC-7"
+        ]
+      }
+    },
+    {
+      "id": "M365EXO-050",
+      "name": "DLP restricts sharing of SSN, ITIN, and credit-card numbers (MS.EXO.8.4)",
+      "description": "SCuBA MS.EXO.8.4 requires that the Data Loss Prevention solution, at a minimum, restrict sharing of credit card numbers, U.S. Individual Taxpayer Identification Numbers (ITIN), and U.S. Social Security Numbers (SSN) via email. This check inspects the DLP compliance rules collected from the tenant and confirms at least one enabled rule references each of those three sensitive information types. It reads DLP rules (not just policies); because Get-DlpComplianceRule cannot distinguish an unconfigured DLP solution from one that could not be read, an absent or empty rule set is reported as Not Assessed rather than a failure or a pass. A FAIL is only returned when rules are present but demonstrably do not cover one of the three required types.",
+      "severity": "High",
+      "zeroTrustPillar": "Data",
+      "zeroTrustWeight": 2,
+      "subcategory": "Data Loss Prevention",
+      "recommendedValue": "At least one enabled DLP rule each for U.S. SSN, U.S. ITIN, and Credit Card Number sensitive information types, scoped to Exchange email",
+      "remediationSteps": "In the Microsoft Purview compliance portal under Data loss prevention > Policies, create or extend a policy scoped to the Exchange email location with rules that detect the Credit Card Number, U.S. Social Security Number (SSN), and U.S. Individual Taxpayer Identification Number (ITIN) sensitive information types, and set the action to block or restrict external sharing. Enable the policy (not test mode) so the rules are enforced.",
+      "compliance": {
+        "scuba": [
+          "MS.EXO.8.4v1"
+        ],
+        "nistSp80053": [
+          "SC-7",
+          "SI-4",
+          "AC-4"
         ]
       }
     }

@@ -1788,3 +1788,104 @@ function Test-InfiltrationM365EXO048 {
             Note = 'Custom audit log retention requires E5/G5 or add-on licensing and Purview inspection; not confirmable agentlessly.'
         }
 }
+
+# ── M365EXO-049: MS.EXO.9.5 — Executable attachment types blocked ──────────
+function Test-InfiltrationM365EXO049 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
+    $exo = $AuditData.M365Services.Exchange
+    if (-not $exo -or $null -eq $exo.MalwarePolicies) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'Anti-malware policy data not available — executable-attachment blocking Not Assessed'
+    }
+
+    $policies = @($exo.MalwarePolicies)
+    if ($policies.Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'WARN' `
+            -CurrentValue 'No anti-malware policies found — cannot confirm executable attachments are blocked'
+    }
+
+    # SCuBA 9.5 minimum: .exe, .cmd, .vbe. FileTypes is the Common Attachment Filter
+    # list; match case-insensitively and tolerate a leading dot.
+    $required = @('exe', 'cmd', 'vbe')
+    $norm = { param($ft) @($ft | ForEach-Object { "$_".TrimStart('.').ToLowerInvariant() }) }
+
+    $compliant = @($policies | Where-Object {
+        $p = $_
+        $blocked = & $norm $p.FileTypes
+        $p.EnableFileFilter -eq $true -and
+        (@($required | Where-Object { $blocked -notcontains $_ }).Count -eq 0)
+    })
+
+    $status = if ($compliant.Count -eq $policies.Count) { 'PASS' } else { 'FAIL' }
+    $cv = if ($status -eq 'PASS') {
+        "All $($policies.Count) anti-malware policies block executable attachments (.exe/.cmd/.vbe) via the Common Attachment Filter"
+    } else {
+        "$($policies.Count - $compliant.Count) of $($policies.Count) anti-malware policies do not block the minimum executable types (.exe/.cmd/.vbe)"
+    }
+
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status $status `
+        -CurrentValue $cv `
+        -Details @{
+            PolicyCount    = $policies.Count
+            CompliantCount = $compliant.Count
+            Required       = $required
+        }
+}
+
+# ── M365EXO-050: MS.EXO.8.4 — DLP restricts SSN / ITIN / credit-card ───────
+function Test-InfiltrationM365EXO050 {
+    [CmdletBinding()]
+    param([hashtable]$AuditData, [hashtable]$CheckDefinition)
+
+    $na = Get-NotAssessedFinding -CheckDefinition $CheckDefinition `
+        -ErrorMap @($AuditData.Errors, $AuditData.M365Services.Errors) `
+        -SourceKey @('M365Services', 'Exchange') -Subject 'Exchange Online configuration'
+    if ($na) { return $na }
+
+    $exo = $AuditData.M365Services.Exchange
+    # DLP rules carry the sensitive-info-types. Get-DlpComplianceRule cannot tell an
+    # unconfigured DLP solution from an unreadable one, so absent OR empty is Not
+    # Assessed — never a false FAIL and never a pass. FAIL only on positive evidence
+    # that present rules miss a required type.
+    if (-not $exo -or $null -eq $exo.DlpComplianceRules -or @($exo.DlpComplianceRules).Count -eq 0) {
+        return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'SKIP' `
+            -CurrentValue 'No DLP rules returned — cannot distinguish "no DLP configured" from "rules not readable" (may require Purview/IPPS permissions). Not Assessed; verify SSN/ITIN/credit-card DLP rules in Microsoft Purview.' `
+            -Details @{ Note = 'Absent/empty DLP-rule data is Not Assessed, never a pass or a fabricated fail.' }
+    }
+
+    # Best-effort match on the standard Microsoft sensitive-information-type names.
+    $enabled = @($exo.DlpComplianceRules | Where-Object { $_.Disabled -ne $true })
+    $allText = (@($enabled | ForEach-Object {
+        @($_.ContentContainsSensitiveInformation | ForEach-Object { "$($_.name)" }) -join '|'
+    }) -join ' | ').ToLowerInvariant()
+
+    $covers = [ordered]@{
+        SSN        = [bool]($allText -match 'social security|ssn')
+        ITIN       = [bool]($allText -match 'individual taxpayer|itin')
+        CreditCard = [bool]($allText -match 'credit card')
+    }
+    $missing = @($covers.Keys | Where-Object { -not $covers[$_] })
+
+    $status = if ($missing.Count -eq 0) { 'PASS' } else { 'FAIL' }
+    $cv = if ($status -eq 'PASS') {
+        'DLP rules restrict all three required sensitive types (SSN, ITIN, credit-card numbers)'
+    } else {
+        "DLP rules present but do not cover: $($missing -join ', ') (MS.EXO.8.4 minimum)"
+    }
+
+    return New-AuditFinding -CheckDefinition $CheckDefinition -Status $status `
+        -CurrentValue $cv `
+        -Details @{
+            EnabledRuleCount = $enabled.Count
+            Covers           = $covers
+            Missing          = @($missing)
+            Note             = 'Sensitive-information-type names matched by pattern; confirm against live DLP rules.'
+        }
+}

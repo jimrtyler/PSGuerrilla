@@ -1,0 +1,16 @@
+{
+  "checkId": "M365EXO-050",
+  "theater": "Infiltration",
+  "scenario": "no-data",
+  "expectedStatus": "SKIP",
+  "description": "DLP rule data absent",
+  "auditData": {
+    "M365Services": {
+      "Exchange": {
+        "MalwarePolicies": []
+      },
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

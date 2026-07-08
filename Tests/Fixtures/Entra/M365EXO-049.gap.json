@@ -1,0 +1,38 @@
+{
+  "checkId": "M365EXO-049",
+  "theater": "Infiltration",
+  "scenario": "gap",
+  "expectedStatus": "FAIL",
+  "description": "A policy omits .vbe",
+  "auditData": {
+    "M365Services": {
+      "Exchange": {
+        "MalwarePolicies": [
+          {
+            "Name": "Default",
+            "EnableFileFilter": true,
+            "ZapEnabled": true,
+            "FileTypes": [
+              "exe",
+              "cmd",
+              "vbe",
+              "bat",
+              "scr"
+            ]
+          },
+          {
+            "Name": "Weak",
+            "EnableFileFilter": true,
+            "ZapEnabled": true,
+            "FileTypes": [
+              "exe",
+              "cmd"
+            ]
+          }
+        ]
+      },
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

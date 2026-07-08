@@ -1,0 +1,32 @@
+{
+  "checkId": "M365EXO-050",
+  "theater": "Infiltration",
+  "scenario": "clean",
+  "expectedStatus": "PASS",
+  "description": "Rules cover SSN/ITIN/CC",
+  "auditData": {
+    "M365Services": {
+      "Exchange": {
+        "DlpComplianceRules": [
+          {
+            "Name": "PII",
+            "Disabled": false,
+            "ContentContainsSensitiveInformation": [
+              {
+                "name": "U.S. Social Security Number (SSN)"
+              },
+              {
+                "name": "U.S. Individual Taxpayer Identification Number (ITIN)"
+              },
+              {
+                "name": "Credit Card Number"
+              }
+            ]
+          }
+        ]
+      },
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

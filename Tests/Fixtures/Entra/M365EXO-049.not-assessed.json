@@ -1,0 +1,18 @@
+{
+  "checkId": "M365EXO-049",
+  "theater": "Infiltration",
+  "scenario": "not-assessed",
+  "expectedStatus": "SKIP",
+  "description": "EXO collection failed",
+  "auditData": {
+    "M365Services": {
+      "Exchange": {
+        "MalwarePolicies": []
+      },
+      "Errors": {
+        "Exchange": "Connect-ExchangeOnline failed: 401"
+      }
+    },
+    "Errors": {}
+  }
+}

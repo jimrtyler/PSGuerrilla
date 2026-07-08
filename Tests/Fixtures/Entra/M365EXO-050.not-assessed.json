@@ -1,0 +1,18 @@
+{
+  "checkId": "M365EXO-050",
+  "theater": "Infiltration",
+  "scenario": "not-assessed",
+  "expectedStatus": "SKIP",
+  "description": "EXO collection failed",
+  "auditData": {
+    "M365Services": {
+      "Exchange": {
+        "DlpComplianceRules": []
+      },
+      "Errors": {
+        "Exchange": "IPPS session unavailable"
+      }
+    },
+    "Errors": {}
+  }
+}

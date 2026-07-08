@@ -1,0 +1,29 @@
+{
+  "checkId": "M365EXO-050",
+  "theater": "Infiltration",
+  "scenario": "partial",
+  "expectedStatus": "FAIL",
+  "description": "Rules present but miss ITIN",
+  "auditData": {
+    "M365Services": {
+      "Exchange": {
+        "DlpComplianceRules": [
+          {
+            "Name": "PII",
+            "Disabled": false,
+            "ContentContainsSensitiveInformation": [
+              {
+                "name": "U.S. Social Security Number (SSN)"
+              },
+              {
+                "name": "Credit Card Number"
+              }
+            ]
+          }
+        ]
+      },
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "checkId": "M365EXO-049",
+  "theater": "Infiltration",
+  "scenario": "filter-off",
+  "expectedStatus": "FAIL",
+  "description": "Common Attachment Filter disabled",
+  "auditData": {
+    "M365Services": {
+      "Exchange": {
+        "MalwarePolicies": [
+          {
+            "Name": "Default",
+            "EnableFileFilter": false,
+            "ZapEnabled": true,
+            "FileTypes": [
+              "exe",
+              "cmd",
+              "vbe"
+            ]
+          }
+        ]
+      },
+      "Errors": {}
+    },
+    "Errors": {}
+  }
+}
