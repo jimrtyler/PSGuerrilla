@@ -91,36 +91,78 @@ foreach ($ex in 'Tests', '.github', '.PSScriptAnalyzerSettings.psd1', 'Publish-R
 $null = Test-ModuleManifest (Join-Path $pkg 'Guerrilla.psd1')
 Ok "staged clean package at $pkg"
 
-# 5) Publish (or report, in dry run).
+# 5) Pack the .nupkg (runs under -DryRun too, so packing is validated without a key).
+$ProgressPreference = 'SilentlyContinue'
+# Pack the .nupkg with .NET's OPC packager (System.IO.Packaging, the same
+# container format NuGet uses) instead of Publish-PSResource, whose pack/cleanup
+# stalls indefinitely on macOS at "Removed N of M files … 0.0 MB/s". This path
+# has no progress/cleanup stage to hang on. Then PUSH with `dotnet nuget push`,
+# which is fast and returns a clear 403 on a bad key.
+Add-Type -AssemblyName System.IO.Packaging
+$man  = Import-PowerShellDataFile (Join-Path $root 'Guerrilla.psd1')
+$ps   = $man.PrivateData.PSData
+$tags = (@('PSModule', 'PSEdition_Core') + @($ps.Tags)) -join ' '
+$xe   = { param($s) [System.Security.SecurityElement]::Escape([string]$s) }
+$nuspec = @"
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Guerrilla</id>
+    <version>$version</version>
+    <authors>$(& $xe $man.Author)</authors>
+    <owners>$(& $xe $man.CompanyName)</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>$(& $xe $ps.LicenseUri)</licenseUrl>
+    <projectUrl>$(& $xe $ps.ProjectUri)</projectUrl>
+    <description>$(& $xe $man.Description)</description>
+    <releaseNotes>$(& $xe $ps.ReleaseNotes)</releaseNotes>
+    <copyright>$(& $xe $man.Copyright)</copyright>
+    <tags>$(& $xe $tags)</tags>
+  </metadata>
+</package>
+"@
+Set-Content -Path (Join-Path $pkg 'Guerrilla.nuspec') -Value $nuspec -Encoding utf8
+$packDir = Join-Path $stage 'out'
+New-Item -ItemType Directory -Path $packDir -Force | Out-Null
+$nupkgPath = Join-Path $packDir "Guerrilla.$version.nupkg"
+if (Test-Path $nupkgPath) { Remove-Item $nupkgPath -Force }
+$opc = [System.IO.Packaging.Package]::Open($nupkgPath, [System.IO.FileMode]::Create)
+try {
+    foreach ($f in Get-ChildItem -Path $pkg -Recurse -File) {
+        $rel = ($f.FullName.Substring($pkg.Length).TrimStart('/', '\')) -replace '\\', '/'
+        $partPath = '/' + ((($rel -split '/') | ForEach-Object { [Uri]::EscapeDataString($_) }) -join '/')
+        $uri  = [System.IO.Packaging.PackUriHelper]::CreatePartUri([Uri]::new($partPath, [UriKind]::Relative))
+        $part = $opc.CreatePart($uri, 'application/octet', [System.IO.Packaging.CompressionOption]::Normal)
+        $dst = $part.GetStream(); $src = [System.IO.File]::OpenRead($f.FullName)
+        try { $src.CopyTo($dst) } finally { $src.Dispose(); $dst.Dispose() }
+        if ($rel -eq 'Guerrilla.nuspec') {
+            $null = $opc.CreateRelationship($uri, [System.IO.Packaging.TargetMode]::Internal, 'http://schemas.microsoft.com/packaging/2010/07/manifest')
+        }
+    }
+    $opc.PackageProperties.Creator     = $man.Author
+    $opc.PackageProperties.Identifier  = 'Guerrilla'
+    $opc.PackageProperties.Version     = $version
+    $opc.PackageProperties.Keywords    = $tags
+    $opc.PackageProperties.Description = $man.Description
+} finally { $opc.Close() }
+$nupkg = Get-Item $nupkgPath
+if (-not $nupkg) { Fail 'packing produced no .nupkg.' }
+Ok "packed $($nupkg.Name) ($([math]::Round($nupkg.Length/1MB,2)) MB)"
+
+# 6) Dry run stops here: packed, gates green, nothing pushed. Otherwise get the key and push.
 if ($DryRun) {
-    Write-Host "DRY RUN — all gates green. WOULD publish Guerrilla $version to $Repository." -ForegroundColor Cyan
+    Write-Host "DRY RUN — all gates green, packed $($nupkg.Name). WOULD push Guerrilla $version to $Repository." -ForegroundColor Cyan
     exit 0
 }
 if ([string]::IsNullOrWhiteSpace($ApiKey)) {
-    # No key in $env:PSGALLERY_KEY / -ApiKey. Prompt for it HERE, in your terminal.
-    # -AsSecureString means it's hidden on screen and never written to shell history,
-    # a file, or any transcript — it lives only in this process until publish, then is gone.
+    # Prompt HERE, in your terminal. -AsSecureString keeps it off screen and out of
+    # history/transcripts; it lives only in this process until the push, then is gone.
     if ([Environment]::UserInteractive -or $Host.UI.RawUI) {
         $sec = Read-Host 'PSGallery API key (hidden; paste here, not into chat)' -AsSecureString
         $ApiKey = [System.Net.NetworkCredential]::new('', $sec).Password
     }
     if ([string]::IsNullOrWhiteSpace($ApiKey)) { Fail 'no ApiKey. Set $env:PSGALLERY_KEY or paste at the prompt — never commit it or put it in chat.' }
 }
-$ProgressPreference = 'SilentlyContinue'
-# Publish in two reliable steps instead of Publish-PSResource's push, which stalls
-# indefinitely on macOS ("Removed N of M files … 0.0 MB/s") when the API key's glob
-# scope doesn't cover the package name (it never surfaces the 403). Step 1 PACKS the
-# module into a local .nupkg (the part PSResourceGet does fine). Step 2 PUSHES that
-# .nupkg with `dotnet nuget push`, which is fast and returns a clear 403 on a bad key.
-$packDir = Join-Path $stage 'nupkg'
-New-Item -ItemType Directory -Path $packDir -Force | Out-Null
-Import-Module Microsoft.PowerShell.PSResourceGet -MinimumVersion 1.1.0 -Force
-Register-PSResourceRepository -Name 'guerrilla-pack' -Uri $packDir -Trusted -Force -ErrorAction SilentlyContinue
-try   { Publish-PSResource -Path $pkg -Repository 'guerrilla-pack' -SkipDependenciesCheck -ErrorAction Stop }
-finally { Unregister-PSResourceRepository -Name 'guerrilla-pack' -ErrorAction SilentlyContinue }
-$nupkg = Get-ChildItem $packDir -Filter '*.nupkg' | Select-Object -First 1
-if (-not $nupkg) { Fail 'packing produced no .nupkg.' }
-Ok "packed $($nupkg.Name)"
 
 $dotnet = if (Get-Command dotnet -ErrorAction SilentlyContinue) { 'dotnet' }
           elseif (Test-Path "$HOME/.dotnet/dotnet") { "$HOME/.dotnet/dotnet" }
