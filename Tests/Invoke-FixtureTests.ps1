@@ -27,7 +27,11 @@
 [CmdletBinding()]
 param(
     [switch]$Publish,
-    [string]$DbPath
+    [string]$DbPath,
+    # Write a machine-readable test-summary.json. This is the single artifact the
+    # website renders every count from, so a public number can never be stale: the
+    # only way it updates is a green run of this suite.
+    [string]$EmitSummary
 )
 
 $ErrorActionPreference = 'Stop'
@@ -76,6 +80,56 @@ if ($failed -gt 0) {
     Write-Host "FAILURES:" -ForegroundColor Red
     $results | Where-Object { -not $_.Passed } |
         ForEach-Object { Write-Host ("  {0} [{1}] expected {2} got {3}" -f $_.CheckId, $_.Scenario, $_.ExpectedStatus, $_.ActualStatus) -ForegroundColor Red }
+}
+
+if ($EmitSummary) {
+    # Universe of checks = the schema-tested definitions, counted here (not stored).
+    $defIds = New-Object System.Collections.Generic.HashSet[string]
+    foreach ($jf in Get-ChildItem (Join-Path $root '..' 'Data' 'AuditChecks' '*.json')) {
+        foreach ($c in (Get-Content $jf.FullName -Raw | ConvertFrom-Json).checks) { [void]$defIds.Add($c.id) }
+    }
+    # Fixtures on disk vs fixtures the run actually executed. Divergence means an
+    # orphaned fixture file or a silently skipped fixture: fail rather than lie.
+    $fixtureFilesOnDisk = @(Get-ChildItem (Join-Path $root 'Fixtures') -Recurse -Filter '*.json' -File).Count
+    if ($fixtureFilesOnDisk -ne $results.Count) {
+        Write-Host ("FATAL: {0} fixture files on disk but {1} executed (orphaned or skipped fixtures)" -f $fixtureFilesOnDisk, $results.Count) -ForegroundColor Red
+        exit 2
+    }
+
+    $perCheck = [ordered]@{}
+    foreach ($g in ($results | Group-Object CheckId | Sort-Object Name)) {
+        $perCheck[$g.Name] = [ordered]@{
+            fixtureCount = $g.Count
+            allPassed    = (@($g.Group | Where-Object { -not $_.Passed }).Count -eq 0)
+            theater      = $g.Group[0].Theater
+            severity     = "$($g.Group[0].Severity)"
+            scenarios    = @($g.Group | Sort-Object Scenario | ForEach-Object {
+                [ordered]@{ scenario = $_.Scenario; expected = $_.ExpectedStatus; actual = $_.ActualStatus; passed = [bool]$_.Passed }
+            })
+        }
+    }
+
+    $artifact = [ordered]@{
+        schemaVersion      = 1
+        suite              = 'golden-fixtures'
+        generatedAt        = (Get-Date).ToUniversalTime().ToString('o')
+        moduleVersion      = "$((Import-PowerShellDataFile (Join-Path $root '..' 'Guerrilla.psd1')).ModuleVersion)"
+        gitSha             = "$(git rev-parse --short HEAD 2>$null)"
+        gitBranch          = "$(git rev-parse --abbrev-ref HEAD 2>$null)"
+        checkDefinitions   = $defIds.Count          # the universe (618)
+        checksTested       = @($results | Select-Object -Unique CheckId).Count
+        fixtureFilesOnDisk = $fixtureFilesOnDisk
+        fixtureCount       = $results.Count          # executed
+        passed             = $passed
+        failed             = $failed
+        durationMs         = [int]$sw.ElapsedMilliseconds
+        perCheck           = $perCheck
+    }
+    $dir = Split-Path -Parent $EmitSummary
+    if ($dir -and -not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
+    $artifact | ConvertTo-Json -Depth 8 | Set-Content -Path $EmitSummary -Encoding utf8
+    Write-Host ("Wrote test-summary.json: {0} definitions, {1} tested, {2} fixtures, {3} failed -> {4}" -f `
+        $artifact.checkDefinitions, $artifact.checksTested, $artifact.fixtureCount, $artifact.failed, $EmitSummary) -ForegroundColor Green
 }
 
 if ($Publish) {

@@ -37,3 +37,6 @@ supabase-*.env
 *.pgpass
 *credentials*
 *.secret
+
+# Golden-fixture run artifact (emitted by the gate; not committed here)
+Tests/test-summary.json

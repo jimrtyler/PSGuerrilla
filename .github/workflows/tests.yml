@@ -2,7 +2,7 @@ name: golden-fixture tests
 
 # Detection-logic gate: runs the cross-platform golden-fixture suite on every push
 # to main and every PR. Intentionally scoped to Tests/Invoke-FixtureTests.ps1 (the
-# 1,590-fixture verdict suite) — NOT the full Tests/Unit, which contains Windows-only
+# golden-fixture verdict suite) — NOT the full Tests/Unit, which contains Windows-only
 # tests (Task Scheduler / Event Log) that would false-red on Linux runners.
 #
 # The runner exits non-zero if any fixture's actual Status != expected, so a red run
@@ -35,9 +35,19 @@ jobs:
         shell: pwsh
         run: |
           Write-Host "PowerShell $($PSVersionTable.PSVersion)"
-          ./Tests/Invoke-FixtureTests.ps1
+          ./Tests/Invoke-FixtureTests.ps1 -EmitSummary Tests/test-summary.json
           # Invoke-FixtureTests.ps1 exits 1 if any check's verdict != expected,
-          # which fails the job and blocks the merge.
+          # which fails the job and blocks the merge. On green it writes
+          # test-summary.json: the derived source of every count the website shows
+          # (checks, fixtures, pass/fail, per-check verdicts, version, SHA).
+
+      - name: Upload test-summary artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-summary
+          path: Tests/test-summary.json
+          if-no-files-found: error
 
       - name: Zero Trust schema + collector-contract tests
         shell: pwsh
