@@ -360,9 +360,6 @@
       "recommendedValue": "A documented, current list of all approved sending sources per domain (Exchange Online include plus any third-party senders), reflected in the published SPF record",
       "remediationSteps": "Inventory every system that legitimately sends email on behalf of each accepted domain, including Exchange Online (spf.protection.outlook.com), marketing platforms, ticketing systems, and on-premises relays. Record this approved sender list as the source of truth and ensure the published SPF record references exactly those sources. Review the list whenever a new sending service is onboarded or retired so the SPF record stays accurate.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.2.1v1"
-        ],
         "nistSp80053": [
           "SI-8"
         ],
@@ -626,9 +623,6 @@
       "recommendedValue": "At least one active DLP policy scoped to the Exchange Online workload",
       "remediationSteps": "Deploy a DLP solution that covers the Exchange Online mail workload and confirm at least one policy is enabled and applied. If using the native Microsoft DLP capability, create a policy in the compliance portal scoped to Exchange email. Validate that the policy is in enforce mode rather than test-only so disclosures are actually blocked.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.8.1v1"
-        ],
         "nistSp80053": [
           "SI-4",
           "SC-7"
@@ -653,9 +647,6 @@
       "recommendedValue": "DLP policy includes sensitive information types covering credit card numbers, TIN, and SSN with a restrict/block action for email",
       "remediationSteps": "Configure the DLP policy that covers Exchange Online to detect the sensitive information types for credit card numbers, Taxpayer Identification Numbers, and Social Security numbers, plus any additional agency-defined PII. Set the rule action to block or restrict outbound mail containing these identifiers. Test with sample data to confirm detection and that user notifications and incident reports are generated.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.8.2v1"
-        ],
         "nistSp80053": [
           "SI-4",
           "SC-7",
@@ -681,9 +672,6 @@
       "recommendedValue": "A malware/anti-malware policy with the common attachment type filter enabled (EnableFileFilter = True)",
       "remediationSteps": "Enable the common attachments filter on the anti-malware policy so inbound mail is filtered by attachment file type. Confirm the policy is applied to all recipients and not limited to a subset. Where a comparable third-party gateway provides this filtering, verify it is enabled and covers the same dangerous file classes.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.9.1v1"
-        ],
         "nistSp80053": [
           "SI-3"
         ],
@@ -710,9 +698,6 @@
       "recommendedValue": "Attachment filtering configured to inspect true file type rather than relying on the file extension alone",
       "remediationSteps": "Ensure the attachment filtering solution inspects the actual file content to determine the true type rather than trusting the file extension. In the native solution this is provided by the common attachment filter's type detection; verify it is enabled. For third-party gateways, confirm true-type or content-based inspection is configured so renamed dangerous files are still caught.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.9.2v1"
-        ],
         "nistSp80053": [
           "SI-3"
         ],
@@ -736,9 +721,6 @@
       "recommendedValue": "Attachment filter block list populated with executable/click-to-run types including at least exe, cmd, vbe, vbs, js, ps1, bat",
       "remediationSteps": "Populate the attachment filter block list with the file types the organization will not accept over email, ensuring click-to-run executables such as exe, cmd, vbe, vbs, js, ps1, and bat are included at minimum. Review the list against current threat trends and the organization's risk tolerance. Verify the list is non-empty and applied to all recipients.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.9.3v1"
-        ],
         "nistSp80053": [
           "SI-3"
         ],
@@ -762,9 +744,6 @@
       "recommendedValue": "At least one active anti-malware policy applied to all recipients",
       "remediationSteps": "Confirm at least one anti-malware policy is active and applied to all recipients so inbound mail is scanned for malware. If using a comparable third-party solution, verify it is enabled and covers all inbound mail. Periodically review detection telemetry to confirm scanning is functioning.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.10.1v1"
-        ],
         "nistSp80053": [
           "SI-3"
         ],
@@ -788,9 +767,6 @@
       "recommendedValue": "Anti-malware policy action quarantines or drops messages identified as malware (no deliver-with-warning action)",
       "remediationSteps": "Configure the anti-malware policy so messages identified as containing malware are quarantined or dropped rather than delivered. Verify no policy is set to deliver malware-positive messages with only a warning. Confirm administrator notifications are enabled so the security team is alerted on detections.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.10.2v1"
-        ],
         "nistSp80053": [
           "SI-3"
         ],
@@ -814,9 +790,6 @@
       "recommendedValue": "Zero-hour auto purge (ZAP) enabled on all anti-malware policies (ZapEnabled = True)",
       "remediationSteps": "Enable zero-hour auto purge (ZAP) on every anti-malware policy so messages later identified as malware are removed from mailboxes after delivery. Confirm ZAP is enabled across all policies, not just the default. Where a comparable third-party solution is used, verify it provides equivalent post-delivery remediation.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.10.3v1"
-        ],
         "nistSp80053": [
           "SI-3"
         ],
@@ -840,9 +813,6 @@
       "recommendedValue": "Anti-phish policy with user and/or domain impersonation protection enabled and applied to high-value targets",
       "remediationSteps": "Enable user and domain impersonation protection in an anti-phish policy and apply it to high-value targets such as executives, finance, and IT, plus organizational and key partner domains. Set the action for impersonated messages to quarantine. Note that impersonation protection requires a Defender for Office 365 plan; if unavailable, evaluate a comparable third-party capability.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.11.1v1"
-        ],
         "nistSp80053": [
           "SI-8"
         ],
@@ -867,9 +837,6 @@
       "recommendedValue": "Anti-phish policy with first-contact safety tips and spoof/impersonation safety tips enabled",
       "remediationSteps": "Enable the safety tip options in the anti-phish policy, including first-contact safety tips and spoof and impersonation safety tips, so users receive in-client warnings. Apply the policy to all users. Where a comparable third-party solution is used, confirm it presents equivalent recipient-facing warnings.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.11.2v1"
-        ],
         "nistSp80053": [
           "SI-8"
         ],
@@ -893,9 +860,6 @@
       "recommendedValue": "Anti-phish policy with mailbox intelligence enabled (EnableMailboxIntelligence = True) and protection action configured",
       "remediationSteps": "Enable mailbox intelligence in the anti-phish policy and configure the mailbox intelligence protection action to handle detected impersonations. Apply the policy to all users. Mailbox intelligence requires a Defender for Office 365 plan; where unavailable, evaluate a comparable AI-based third-party phishing detection capability.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.11.3v1"
-        ],
         "nistSp80053": [
           "SI-8"
         ],
@@ -919,9 +883,6 @@
       "recommendedValue": "Connection filter policy IPAllowList empty for all policies",
       "remediationSteps": "Edit the connection filter policy and remove all entries from the allowed IP address list so no senders bypass spam filtering and authentication checks. If a sender must be allowed to avoid false positives, prefer a narrowly scoped allowed-sender entry over an IP allow list. Verify no custom connection filter policy reintroduces allow-list entries.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.12.1v1"
-        ],
         "nistSp80053": [
           "SC-7",
           "SI-8"
@@ -949,9 +910,6 @@
       "recommendedValue": "Connection filter policy EnableSafeList set to False for all policies",
       "remediationSteps": "Edit the connection filter policy and ensure the safe list option is turned off (EnableSafeList = False) so externally sourced 'known good' senders do not bypass spam and authentication checks. Verify the setting on the default and any custom connection filter policies. A connection filter IP block list may still be used to block known malicious senders.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.12.2v1"
-        ],
         "nistSp80053": [
           "SC-7",
           "SI-8"
@@ -1006,9 +964,6 @@
       "recommendedValue": "At least one active hosted content (anti-spam) filter policy applied to all recipients",
       "remediationSteps": "Confirm at least one inbound anti-spam (hosted content filter) policy is active and applied to all recipients. If using a comparable third-party gateway, verify it is enabled for all inbound mail. Review spam action thresholds to ensure aggressive bulk and spam senders are filtered.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.14.1v1"
-        ],
         "nistSp80053": [
           "SI-8"
         ],
@@ -1032,9 +987,6 @@
       "recommendedValue": "SpamAction and HighConfidenceSpamAction set to MoveToJmf (junk) or Quarantine; never set to deliver to inbox",
       "remediationSteps": "Configure the anti-spam policy so the spam and high confidence spam actions move messages to the junk email folder or quarantine rather than delivering them to the inbox. Verify neither action is set to add a header and deliver. Confirm the policy applies to all recipients so spam routing is consistent.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.14.2v1"
-        ],
         "nistSp80053": [
           "SI-8"
         ],
@@ -1058,9 +1010,6 @@
       "recommendedValue": "AllowedSenderDomains empty on all anti-spam (hosted content filter) policies",
       "remediationSteps": "Review every anti-spam policy and remove all entries from the allowed sender domains list. Where false positives must be addressed, add specific allowed senders rather than whole domains. Confirm no custom anti-spam policy reintroduces an allowed-domain entry, especially for common domains.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.14.3v1"
-        ],
         "nistSp80053": [
           "SI-8"
         ],
@@ -1084,9 +1033,6 @@
       "recommendedValue": "Safe Links (or comparable) policy enabled for email with URL scanning active (EnableSafeLinksForEmail = True)",
       "remediationSteps": "Enable a Safe Links or comparable URL protection policy for email so links are scanned against block lists and known-malicious site lists at time of click. Apply the policy to all users and avoid broad do-not-rewrite URL exceptions. Safe Links requires a Defender for Office 365 plan; where unavailable, evaluate a comparable third-party link protection capability.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.15.1v1"
-        ],
         "nistSp80053": [
           "SI-3"
         ],
@@ -1110,9 +1056,6 @@
       "recommendedValue": "Safe Links (or comparable) policy with real-time URL/file scanning enabled (ScanUrls = True)",
       "remediationSteps": "Enable real-time scanning of URLs and direct-download destinations in the Safe Links or comparable policy so files behind links are scanned for malware at click time. Apply the policy to all users. Verify the option to deliver only after scanning completes is configured where appropriate to maximize protection.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.15.2v1"
-        ],
         "nistSp80053": [
           "SI-3"
         ],
@@ -1136,9 +1079,6 @@
       "recommendedValue": "Safe Links (or comparable) policy with click tracking enabled (DoNotTrackUserClicks = False)",
       "remediationSteps": "Ensure user click tracking is enabled in the Safe Links or comparable policy so that clicks on links in mail are recorded (the do-not-track option should be off). Apply the policy to all users. Confirm click telemetry is available in the relevant reporting surface for incident investigation.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.15.3v1"
-        ],
         "nistSp80053": [
           "AU-2",
           "SI-4"
@@ -1164,7 +1104,7 @@
       "remediationSteps": "Verify each of the seven required alert policies is enabled: suspicious email sending patterns, suspicious connector activity, suspicious email forwarding activity, messages have been delayed, tenant restricted from sending unprovisioned email, tenant restricted from sending email, and a potentially malicious URL click was detected. Enable any that are disabled. Where a comparable third-party alerting solution is used, confirm it covers equivalent conditions.",
       "compliance": {
         "scuba": [
-          "MS.EXO.16.1v1"
+          "MS.DEFENDER.5.1v1"
         ],
         "nistSp80053": [
           "SI-4",
@@ -1192,7 +1132,7 @@
       "remediationSteps": "Configure each enabled alert policy with one or more notification recipients that point to a monitored mailbox or distribution list, or forward alerts into a SIEM. Confirm the destination is actively monitored so alerts are triaged promptly. Where a third-party alerting solution is used, verify its alerts reach the same monitored destination or SIEM.",
       "compliance": {
         "scuba": [
-          "MS.EXO.16.2v1"
+          "MS.DEFENDER.5.2v1"
         ],
         "nistSp80053": [
           "SI-4",
@@ -1220,7 +1160,7 @@
       "remediationSteps": "Verify that unified audit log ingestion is enabled (UnifiedAuditLogIngestionEnabled = True) so user and admin activity is captured in the Microsoft 365 audit log. If disabled, enable it via the audit log configuration. Confirm logging is active by querying for recent events after enabling.",
       "compliance": {
         "scuba": [
-          "MS.EXO.17.1v1"
+          "MS.DEFENDER.6.1v1"
         ],
         "nistSp80053": [
           "AU-2",
@@ -1247,9 +1187,6 @@
       "recommendedValue": "Premium audit event types (e.g., MailItemsAccessed) and audit retention features enabled, subject to E5/G5 or add-on licensing",
       "remediationSteps": "Enable Microsoft Purview Audit (Premium) features so additional event types such as MailItemsAccessed are captured. Confirm the tenant carries the required E5/G5 licensing or compliance add-on; where not licensed, this control cannot be met and should be tracked as not assessed rather than passed. Validate that high-value audit events are being recorded after enabling.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.17.2v1"
-        ],
         "nistSp80053": [
           "AU-2",
           "AU-3",
@@ -1276,7 +1213,7 @@
       "remediationSteps": "Create an audit log retention policy that retains unified audit logs for at least twelve months in active storage as required by OMB M-21-31 Appendix C, with additional cold storage retention as applicable. Confirm the tenant licensing supports custom audit retention (E5/G5 or add-on); where not licensed, track this as not assessed rather than passed. Validate the policy scope covers the relevant Exchange and unified audit log record types.",
       "compliance": {
         "scuba": [
-          "MS.EXO.17.3v1"
+          "MS.DEFENDER.6.3v1"
         ],
         "nistSp80053": [
           "AU-11"
@@ -1301,9 +1238,6 @@
       "recommendedValue": "Common Attachment Filter enabled on all anti-malware policies, blocking at minimum .exe, .cmd, and .vbe",
       "remediationSteps": "In the Microsoft Defender portal under Email & collaboration > Policies & rules > Threat policies > Anti-malware, enable the Common Attachment Filter on each policy and ensure the blocked file-type list includes the click-to-run executables (.exe, .cmd, .vbe and related types). Prefer the Standard or Strict preset security policies, which enable this by default. Confirm the policy applies to all recipients.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.9.5v1"
-        ],
         "nistSp80053": [
           "SI-3",
           "SC-7"
@@ -1325,9 +1259,6 @@
       "recommendedValue": "At least one enabled DLP rule each for U.S. SSN, U.S. ITIN, and Credit Card Number sensitive information types, scoped to Exchange email",
       "remediationSteps": "In the Microsoft Purview compliance portal under Data loss prevention > Policies, create or extend a policy scoped to the Exchange email location with rules that detect the Credit Card Number, U.S. Social Security Number (SSN), and U.S. Individual Taxpayer Identification Number (ITIN) sensitive information types, and set the action to block or restrict external sharing. Enable the policy (not test mode) so the rules are enforced.",
       "compliance": {
-        "scuba": [
-          "MS.EXO.8.4v1"
-        ],
         "nistSp80053": [
           "SC-7",
           "SI-4",

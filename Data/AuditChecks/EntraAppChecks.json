@@ -464,9 +464,6 @@
       "remediationUrl": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/ConsentPoliciesMenuBlade/~/UserSettings",
       "remediationSteps": "Ensure group owners cannot consent to applications, satisfying SCuBA MS.AAD.5.4. Set the directory (group) setting 'EnableGroupSpecificConsent' to false (Group.Unified settings template). Route all application consent for group-owned data through the admin consent workflow so that a reviewer approves access. Where the legacy admin-center toggle is no longer present, confirm the directory setting value directly via the group settings configuration.",
       "compliance": {
-        "scuba": [
-          "MS.AAD.5.4v1"
-        ],
         "nistSp80053": [
           "AC-6",
           "AC-3"
