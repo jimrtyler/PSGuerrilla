@@ -40,7 +40,7 @@ $ErrorActionPreference = 'Stop'
 
 # Import module (quiet to suppress banner)
 $env:PSGUERRILLA_QUIET = '1'
-Import-Module (Join-Path $PSScriptRoot '../Guerrilla.psd1') -Force
+Import-Module (Join-Path $PSScriptRoot '../source/Guerrilla.psd1') -Force
 $env:PSGUERRILLA_QUIET = $null
 
 $samplesDir = $PSScriptRoot
@@ -59,7 +59,7 @@ $demoBranding = if ($Style -eq 'Guerrilla') { $null } else {
         Confidentiality = 'CONFIDENTIAL'
     }
 }
-$dataDir = Join-Path $PSScriptRoot '../Data/AuditChecks'
+$dataDir = Join-Path $PSScriptRoot '../source/Data/AuditChecks'
 
 # --- Helper: generate a realistic "bad" CurrentValue based on check context ---
 function Get-BadCurrentValue {
