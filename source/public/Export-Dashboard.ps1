@@ -10,8 +10,6 @@ function Export-Dashboard {
         platform-specific cards with mini-scores, and a consolidated findings table.
     .PARAMETER Findings
         Array of audit finding objects. If not provided, reads from latest state.
-    .PARAMETER ScanResults
-        Array of scan result objects. If not provided, reads from latest state.
     .PARAMETER OutputPath
         File path for the HTML output. Default: Guerrilla-Dashboard.html
     .PARAMETER OrganizationName
@@ -24,7 +22,6 @@ function Export-Dashboard {
     [CmdletBinding()]
     param(
         [PSCustomObject[]]$Findings,
-        [PSCustomObject[]]$ScanResults,
         [string]$OutputPath,
         [string]$OrganizationName = 'Organization'
     )
@@ -42,18 +39,9 @@ function Export-Dashboard {
         }
     }
 
-    # Load scan results if not provided
-    if (-not $ScanResults -or $ScanResults.Count -eq 0) {
-        if (Test-Path $dataDir) {
-            foreach ($f in (Get-ChildItem -Path $dataDir -Filter '*.state.json' -ErrorAction SilentlyContinue)) {
-                try { $ScanResults += (Get-Content $f.FullName -Raw | ConvertFrom-Json) } catch { }
-            }
-        }
-    }
-
     # Calculate Guerrilla Score
     $scoreResult = $null
-    try { $scoreResult = Get-GuerrillaScoreCalculation -AuditFindings $Findings -ScanResults $ScanResults } catch { }
+    try { $scoreResult = Get-GuerrillaScoreCalculation -AuditFindings $Findings } catch { }
     if (-not $scoreResult) {
         $scoreResult = [PSCustomObject]@{ Score = 0; Label = 'N/A'; Components = $null }
     }
@@ -62,7 +50,6 @@ function Export-Dashboard {
     $null = Export-DashboardHtml `
         -ScoreResult $scoreResult `
         -Findings $Findings `
-        -ScanResults $ScanResults `
         -OutputPath $OutputPath `
         -OrganizationName $OrganizationName
 

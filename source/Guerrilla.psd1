@@ -5,35 +5,12 @@
     Author            = 'Jim Tyler, Microsoft MVP'
     CompanyName       = 'Jim Tyler'
     Copyright         = '(c) 2026 Jim Tyler. All rights reserved.'
-    Description       = 'Agentless, read-only security assessment and continuous monitoring for PowerShell 7 across three platforms: on-premises Active Directory (211 checks across 15 categories including transitive Tier-0 attack-path analysis, certificate-services ESC1-ESC16, NTLM-relay preconditions, telemetry posture, and adversary tradecraft indicators), the Entra ID / Azure / Intune / M365 identity plane (257 checks including a full 44-control EIDSCA baseline, conditional access, PIM, application and OAuth governance, Exchange Online, SharePoint, Teams, Defender, and entitlement-management hygiene), and Google Workspace (158 checks aligned to the CISA SCuBA baselines). 626 checks total, each mapped to NIST 800-53, MITRE ATT&CK, CIS, EIDSCA, and CISA SCuBA where applicable and carrying a CISA Zero Trust pillar and weight, and each verdict validated by a golden-fixture test (1,754 fixtures). Continuous monitoring covers Entra ID sign-in risk, AD baseline drift, and M365 audit logs. Alerting via SendGrid, Mailgun, Twilio SMS, Teams, Slack, generic webhooks, PagerDuty, Pushover, Syslog (CEF/LEEF), and Windows Event Log.'
+    Description       = 'Agentless, read-only, point-in-time security assessment for PowerShell 7 across three platforms: on-premises Active Directory (211 checks across 15 categories including transitive Tier-0 attack-path analysis, certificate-services ESC1-ESC16, NTLM-relay preconditions, telemetry posture, and adversary tradecraft indicators), the Entra ID / Azure / Intune / M365 identity plane (257 checks including a full 44-control EIDSCA baseline, conditional access, PIM, application and OAuth governance, Exchange Online, SharePoint, Teams, Defender, and entitlement-management hygiene), and Google Workspace (158 checks aligned to the CISA SCuBA baselines). 626 checks total, each mapped to NIST 800-53, MITRE ATT&CK, CIS, EIDSCA, and CISA SCuBA where applicable and carrying a CISA Zero Trust pillar and weight, and each verdict validated by a golden-fixture test (1,754 fixtures). Every run is recorded locally and compared against your previous run: the report opens with what changed, including newly failing checks, confirmed remediations, and any check that went dark. Local history on your machine, no accounts, no telemetry.'
     PowerShellVersion = '7.0'
     FunctionsToExport = @(
-        'Invoke-Recon'
-        'Invoke-Surveillance'
-        'Invoke-Watchtower'
-        'Invoke-Wiretap'
-        'Invoke-Lookout'
-        'Get-DeadDrop'
-        'Send-Signal'
-        'Send-SignalSendGrid'
-        'Send-SignalMailgun'
-        'Send-SignalTwilio'
-        'Send-SignalTeams'
-        'Send-SignalSlack'
-        'Send-SignalWebhook'
-        'Send-SignalPagerDuty'
-        'Send-SignalPushover'
-        'Send-SignalSyslog'
-        'Send-SignalEventLog'
-        'Send-SignalDigest'
         'Set-Safehouse'
         'Test-Safehouse'
         'Get-Safehouse'
-        'Register-Patrol'
-        'Unregister-Patrol'
-        'Get-Patrol'
-        'Update-ThreatIntel'
-        'Invoke-ReconDemo'
         'Invoke-GWSAudit'
         'Invoke-ADAudit'
         'Invoke-EntraAudit'
@@ -66,25 +43,15 @@
     CmdletsToExport   = @()
     VariablesToExport  = @()
     AliasesToExport    = @(
-        'Invoke-GoogleRecon'
-        'Get-ReconAlerts'
-        'Send-ReconAlert'
-        'Send-ReconAlertSendGrid'
-        'Send-ReconAlertMailgun'
-        'Send-ReconAlertTwilio'
         'Set-ReconConfig'
         'Get-ReconConfig'
-        'Register-ReconScheduledTask'
-        'Unregister-ReconScheduledTask'
-        'Get-ReconScheduledTask'
-        'Invoke-WorkspaceRecon'
         'Invoke-ADRecon'
         'Invoke-CloudRecon'
     )
     FormatsToProcess   = @('Guerrilla.format.ps1xml')
     PrivateData = @{
         PSData = @{
-            Tags       = @('GoogleWorkspace', 'ActiveDirectory', 'EntraID', 'AzureAD', 'Intune', 'M365', 'Security', 'CompromiseAssessment', 'IncidentResponse', 'ThreatDetection', 'ADSecurity', 'CloudSecurity', 'NTLMRelay', 'TierZero', 'GUI', 'WPF', 'Guerrilla')
+            Tags       = @('GoogleWorkspace', 'ActiveDirectory', 'EntraID', 'AzureAD', 'Intune', 'M365', 'Security', 'SecurityAssessment', 'ADSecurity', 'CloudSecurity', 'NTLMRelay', 'TierZero', 'GUI', 'WPF', 'Guerrilla')
             LicenseUri = 'https://creativecommons.org/licenses/by/4.0/'
             ProjectUri = 'https://guerrilla.army'
             ReleaseNotes = 'Guerrilla (formerly PSGuerrilla). v2.47.0: The platform audits are now named what they are. Invoke-ADAudit (Active Directory), Invoke-EntraAudit (Entra ID / Azure / Intune / M365), and Invoke-GWSAudit (Google Workspace) replace Invoke-Reconnaissance, Invoke-Infiltration, and Invoke-Fortification; the old names keep working as deprecated wrappers that warn once per session and will be removed in the next major version. The GitHub Action platform input takes AD, Entra, GWS, or Campaign, with the old values accepted and mapped. Report headings, the unified dashboard, and the machine-readable test-summary artifact now name platforms Active Directory, Entra ID / M365, and Google Workspace, and the artifact schema is v2 with a platform field per check. Delta state saved by earlier versions is still read via legacy-name fallbacks, so the first post-upgrade run keeps its baseline. No check verdict logic changed. See CHANGELOG.md for earlier releases.'

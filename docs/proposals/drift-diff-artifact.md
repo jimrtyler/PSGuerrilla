@@ -1,17 +1,22 @@
 # Proposal: drift diff artifact for scheduled re-assessment alerting
 
-Status: DESIGN ONLY. Nothing here ships in this pass. The purpose is to fix the
-shape of two artifacts now so the drift work (targeted for a later release) does
-not have to redesign them, and so a third party could consume them without our
-help.
+Status: IMPLEMENTED, with amendments, by the run-comparison feature (run records
+under the per-user data root, a pure diff engine, and a "What changed since last
+run" report section). The behavioral monitoring subsystem this doc once assumed
+as the notifier (Send-Signal, Register-Patrol) was removed; scheduling belongs
+to the operating system (see docs/scheduled-runs.md) and the report is the
+consumer of the diff. The artifact shapes below remain the design reference;
+the implemented run record additionally carries per-check evidence hashes and
+Zero Trust pillar data, and the diff additionally labels checks that are new in
+this run (NEW) or absent from it after an upgrade (RETIRED).
 
 ## The two principles this design adopts
 
 1. **Structured, machine-readable run results are a first-class output.** A run
    emits a plain data artifact, not just console text or an HTML report. Any
-   notifier can consume it: our own `Send-Signal`, a webhook, a SIEM ingest, or
-   a CI step written by someone we will never meet. The output is the contract;
-   the notifier is pluggable.
+   consumer can read it: a webhook relay, a SIEM ingest, or a CI step written by
+   someone we will never meet. The output is the contract; the consumer is
+   pluggable.
 2. **Alert on change, not on state.** A control that has been failing for six
    months must not page anyone. A control that passed last run and fails this run
    must. The unit of alerting is the transition between two runs, not the current
@@ -20,13 +25,13 @@ help.
 ## The one assumption this design refuses
 
 That CI is the scheduler, the state store, and the notifier. That model presumes
-the operator already has a pipeline. Ours often does not, which is the entire
-reason `Register-Patrol` exists: the watcher is a scheduled task (Task Scheduler,
-launchd, cron) that writes run results to a local ledger, and the notifier reads
-the diff between the last two runs. The artifact format below is deliberately
-neutral so that the same files could later be produced and consumed by a GitHub
-Action with no change to their shape. The mechanism is swappable; the artifact is
-the fixed point.
+the operator already has a pipeline. Ours often does not. Guerrilla itself ships
+no scheduler: the operator runs it (by hand or via Task Scheduler, launchd, or
+cron), each completed run is recorded to a local history, and the next run's
+report opens with the diff against the previous one. The artifact format below
+is deliberately neutral so that the same files could later be produced and
+consumed by a GitHub Action with no change to their shape. The mechanism is
+swappable; the artifact is the fixed point.
 
 ## Artifact 1: run-result.json (one per assessment run)
 
@@ -64,9 +69,9 @@ Notes:
   result and a fixture scenario speak the same language.
 - `Not Assessed` is a real, recorded verdict, not an omission. A control that
   became uncollectable is data, not silence. See the absence-of-evidence rule.
-- Run results are written to a local ledger under the per-user data root
-  (`.../Guerrilla/patrol/<runId>.json`). The ledger is the state store the CI
-  model would otherwise assume.
+- Run results are written to a local history under the per-user data root
+  (`.../Guerrilla/RunHistory/`). The history is the state store the CI model
+  would otherwise assume.
 
 ## Artifact 2: drift.json (the diff the notifier reads)
 
@@ -119,13 +124,14 @@ The first run against a tenant has no previous run. It sets `baselineRun: true`
 and emits no change alerts; it only establishes the baseline in the ledger. This
 is the correct behavior: the first run is not a change.
 
-## How the notifier consumes it
+## How a consumer reads it
 
-The notifier reads `drift.json` and applies a minimum-severity and
-which-kinds filter (for example, alert on `newly-failing` and `lost-visibility`
+A consumer reads the drift result and applies a minimum-severity and
+which-kinds filter (for example, surface `newly-failing` and `lost-visibility`
 at High and above). It never needs to understand how the run was scheduled or
-where the ledger lives. `Send-Signal` becomes one such notifier; a GitHub Action
-that posts to a PR could be another, reading the identical `drift.json`.
+where the history lives. The report's comparison section is the first consumer;
+a GitHub Action that posts to a PR could be another, reading the identical
+shape.
 
 ## What this buys, and what it deliberately leaves open
 

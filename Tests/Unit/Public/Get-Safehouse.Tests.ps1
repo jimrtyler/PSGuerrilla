@@ -54,14 +54,17 @@ Describe 'Get-Safehouse' {
             $result.vaultExists | Should -BeOfType [bool]
         }
 
-        It 'masks sensitive config fields by default' {
+        It 'masks sensitive fields in a legacy config that still carries alerting providers' {
+            # Pre-removal configs on disk may still contain alerting provider
+            # secrets; masking must keep working for them.
             $cfgDir2 = Join-Path $TestDrive 'mask-cfg'
             New-Item -Path $cfgDir2 -ItemType Directory -Force | Out-Null
             $cfgPath2 = Join-Path $cfgDir2 'config.json'
             $config2 = New-MockConfig
-            $config2.alerting.providers.sendgrid.apiKey = 'SG.real-secret-key'
-            $config2.alerting.providers.twilio.accountSid = 'AC1234567890'
-            $config2.alerting.providers.twilio.authToken = 'secret-auth-token'
+            $config2.alerting = @{ providers = @{
+                sendgrid = @{ apiKey = 'SG.real-secret-key' }
+                twilio   = @{ accountSid = 'AC1234567890'; authToken = 'secret-auth-token' }
+            } }
             $config2 | ConvertTo-Json -Depth 10 | Set-Content $cfgPath2
 
             $result = Get-Safehouse -ConfigPath $cfgPath2
@@ -71,8 +74,15 @@ Describe 'Get-Safehouse' {
         }
 
         It 'does not mask empty or non-sensitive fields' {
-            $result = Get-Safehouse -ConfigPath $cfgPath
-            # Empty apiKey in mock config stays empty rather than masquerading as a stored secret
+            $cfgDirE = Join-Path $TestDrive 'empty-cfg'
+            New-Item -Path $cfgDirE -ItemType Directory -Force | Out-Null
+            $cfgPathE = Join-Path $cfgDirE 'config.json'
+            $configE = New-MockConfig
+            $configE.alerting = @{ providers = @{ mailgun = @{ apiKey = '' } } }
+            $configE | ConvertTo-Json -Depth 10 | Set-Content $cfgPathE
+
+            $result = Get-Safehouse -ConfigPath $cfgPathE
+            # Empty apiKey stays empty rather than masquerading as a stored secret
             $result.config.alerting.providers.mailgun.apiKey | Should -Be ''
             $result.config.google.adminEmail | Should -Be 'admin@example.com'
         }
@@ -82,7 +92,7 @@ Describe 'Get-Safehouse' {
             New-Item -Path $cfgDir3 -ItemType Directory -Force | Out-Null
             $cfgPath3 = Join-Path $cfgDir3 'config.json'
             $config3 = New-MockConfig
-            $config3.alerting.providers.sendgrid.apiKey = 'SG.visible-key'
+            $config3.alerting = @{ providers = @{ sendgrid = @{ apiKey = 'SG.visible-key' } } }
             $config3 | ConvertTo-Json -Depth 10 | Set-Content $cfgPath3
 
             $result = Get-Safehouse -ConfigPath $cfgPath3 -ShowSecrets

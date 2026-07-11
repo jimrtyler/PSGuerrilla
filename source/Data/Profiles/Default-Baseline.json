@@ -53,8 +53,7 @@
 
   "guerrillaScore": {
     "componentWeights": {
-      "posture": 0.40,
-      "threats": 0.30,
+      "posture": 0.70,
       "coverage": 0.15,
       "trend": 0.15
     },

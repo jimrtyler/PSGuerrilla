@@ -101,74 +101,27 @@ function Read-MissionConfig {
         }
     }
 
-    # Alerting channel credentials
-    if ($config.alerting -and $config.alerting.channels) {
-        foreach ($channel in $config.alerting.channels) {
-            if ($channel.vaultKey) {
-                $desc = switch ($channel.type) {
-                    'teams'     { 'Microsoft Teams webhook URL' }
-                    'slack'     { 'Slack webhook URL' }
-                    'email'     { 'Email configuration (SMTP or API key)' }
-                    'sms'       { 'Twilio credentials' }
-                    'webhook'   { 'Webhook URL' }
-                    'syslog'    { 'Syslog server configuration' }
-                    'pagerduty' { 'PagerDuty routing key' }
-                    'pushover'  { 'Pushover push notification credentials' }
-                    default     { "$($channel.type) credential" }
-                }
-
-                $promptType = switch ($channel.type) {
-                    'teams'     { 'url' }
-                    'slack'     { 'url' }
-                    'email'     { 'emailConfig' }
-                    'sms'       { 'twilioConfig' }
-                    'webhook'   { 'url' }
-                    'syslog'    { 'syslogConfig' }
-                    'pagerduty' { 'secret' }
-                    'pushover'  { 'pushoverConfig' }
-                    default     { 'secret' }
-                }
-
-                $credentialRequirements.Add(@{
-                    vaultKey    = $channel.vaultKey
-                    type        = 'webhook'
-                    environment = 'alerting'
-                    description = $desc
-                    promptType  = $promptType
-                })
-            }
-        }
-    }
-
-    # Build enabled environments list
+    # Build enabled environments list. Older website-generated configs may carry
+    # alerting/monitoring/missionMode sections from the retired monitoring
+    # subsystem; they parse fine and are ignored.
     $enabledEnvironments = @{}
     if ($config.environments) {
         foreach ($envKey in $config.environments.Keys) {
             $env = $config.environments[$envKey]
             if ($env.enabled) {
                 $enabledEnvironments[$envKey] = @{
-                    audit      = if ($env.audit) { $env.audit } else { @{ enabled = $true } }
-                    monitoring = if ($env.monitoring) { $env.monitoring } else { $null }
+                    audit = if ($env.audit) { $env.audit } else { @{ enabled = $true } }
                 }
             }
         }
     }
 
-    # Extract mission mode (defaults to both if not specified for backwards compatibility)
-    $missionMode = @{ reporting = $true; monitoring = $true }
-    if ($config.missionMode) {
-        if ($null -ne $config.missionMode.reporting) { $missionMode.reporting = $config.missionMode.reporting }
-        if ($null -ne $config.missionMode.monitoring) { $missionMode.monitoring = $config.missionMode.monitoring }
-    }
-
     return @{
         Version                = $config.version
         Config                 = $config
-        MissionMode            = $missionMode
         EnabledEnvironments    = $enabledEnvironments
         CredentialRequirements = @($credentialRequirements)
         Reporting              = if ($config.reporting) { $config.reporting } else { $null }
-        Alerting               = if ($config.alerting) { $config.alerting } else { $null }
         CredentialStrategy     = if ($config.credentials) { $config.credentials.strategy } else { 'secretManagement' }
         VaultName              = if ($config.credentials -and $config.credentials.vaultName) { $config.credentials.vaultName } else { 'Guerrilla' }
     }

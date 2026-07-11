@@ -6,15 +6,15 @@ function Show-GuerrillaWindow {
     .SYNOPSIS
         Internal builder for the Show-Guerrilla WPF window.
     .DESCRIPTION
-        Defines the window XAML, parses it, wires up event handlers for all five
-        tabs, and blocks until the user closes the window. Public entry point is
+        Defines the window XAML, parses it, wires up event handlers for each
+        tab, and blocks until the user closes the window. Public entry point is
         Show-Guerrilla in Public\.
     #>
     [CmdletBinding()]
     param(
         [string]$VaultName  = 'Guerrilla',
         [string]$ConfigPath,
-        [ValidateSet('Operations', 'Safehouse', 'Patrol', 'Signals', 'Reports', 'Settings', 'Source', 'Branding')]
+        [ValidateSet('Operations', 'Safehouse', 'Reports', 'Settings', 'Source', 'Branding')]
         [string]$StartOn    = 'Operations',
         [Parameter(Mandatory)]
         [string]$ModulePath
@@ -273,8 +273,6 @@ function Show-GuerrillaWindow {
         <StackPanel x:Name="navPanel">
           <Button x:Name="nav_Operations" Content="Operations"  Style="{StaticResource NavButton}"/>
           <Button x:Name="nav_Safehouse"  Content="Safehouse"   Style="{StaticResource NavButton}"/>
-          <Button x:Name="nav_Patrol"     Content="Patrol"      Style="{StaticResource NavButton}"/>
-          <Button x:Name="nav_Signals"    Content="Signals"     Style="{StaticResource NavButton}"/>
           <Button x:Name="nav_Reports"    Content="Reports"     Style="{StaticResource NavButton}"/>
           <Button x:Name="nav_Settings"   Content="Settings"    Style="{StaticResource NavButton}"/>
           <Button x:Name="nav_Source"     Content="Inspector"   Style="{StaticResource NavButton}"/>
@@ -416,94 +414,6 @@ function Show-GuerrillaWindow {
         </StackPanel>
       </Grid>
 
-      <!-- ─── PATROL PANEL ─── -->
-      <Grid x:Name="panel_Patrol" Visibility="Collapsed">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="*"/>
-          <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="Patrol" FontSize="22" FontWeight="Bold" Foreground="#1F2933" Margin="0,0,0,4"/>
-        <TextBlock Grid.Row="1" Text="Scheduled scans that run continuously and dispatch alerts on new findings." Foreground="#94A3B8" Margin="0,0,0,16"/>
-        <DataGrid x:Name="pt_Grid" Grid.Row="2">
-          <DataGrid.Columns>
-            <DataGridTextColumn Header="Task Name"  Binding="{Binding TaskName}"  Width="*"/>
-            <DataGridTextColumn Header="State"      Binding="{Binding State}"     Width="100"/>
-            <DataGridTextColumn Header="Last Run"   Binding="{Binding LastRunTime}" Width="160"/>
-            <DataGridTextColumn Header="Next Run"   Binding="{Binding NextRunTime}" Width="160"/>
-            <DataGridTextColumn Header="Result"     Binding="{Binding LastTaskResult}" Width="90"/>
-          </DataGrid.Columns>
-        </DataGrid>
-        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,12,0,0">
-          <Button x:Name="pt_Register"   Content="Register New"   Style="{StaticResource PrimaryButton}" Margin="0,0,8,0"/>
-          <Button x:Name="pt_Unregister" Content="Unregister"     Style="{StaticResource SecondaryButton}" Margin="0,0,8,0"/>
-          <Button x:Name="pt_Refresh"    Content="Refresh"        Style="{StaticResource SecondaryButton}"/>
-        </StackPanel>
-      </Grid>
-
-      <!-- ─── SIGNALS PANEL ─── -->
-      <Grid x:Name="panel_Signals" Visibility="Collapsed">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="*"/>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="Signals" FontSize="22" FontWeight="Bold" Foreground="#1F2933" Margin="0,0,0,4"/>
-        <TextBlock Grid.Row="1" Text="Alert providers that Send-Signal dispatches to when a scan finds new threats. Secrets are stored in the safehouse vault; the CLI reads the same configuration." Foreground="#94A3B8" Margin="0,0,0,16" TextWrapping="Wrap"/>
-
-        <!-- Global alerting settings -->
-        <Border Grid.Row="2" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Background="#FFFFFF" Padding="14" Margin="0,0,0,12">
-          <StackPanel>
-            <TextBlock Text="Global settings" Foreground="#2563EB" FontWeight="Bold" Margin="0,0,0,8"/>
-            <Grid>
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-              </Grid.ColumnDefinitions>
-              <CheckBox  Grid.Column="0" x:Name="sig_Enabled" Content="Alerting enabled" VerticalAlignment="Center" Margin="0,0,24,0"/>
-              <TextBlock Grid.Column="1" Text="Minimum level:" Foreground="#64748B" VerticalAlignment="Center" Margin="0,0,8,0"/>
-              <ComboBox  Grid.Column="2" x:Name="sig_MinLevel" Width="120" VerticalAlignment="Center" Margin="0,0,24,0">
-                <ComboBoxItem Content="ALL"/>
-                <ComboBoxItem Content="LOW"/>
-                <ComboBoxItem Content="MEDIUM"/>
-                <ComboBoxItem Content="HIGH" IsSelected="True"/>
-                <ComboBoxItem Content="CRITICAL"/>
-              </ComboBox>
-              <CheckBox  Grid.Column="3" x:Name="sig_Suppress" Content="Suppress duplicate alerts" VerticalAlignment="Center" Margin="0,0,12,0"/>
-              <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock Text="Window (hrs):" Foreground="#64748B" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                <TextBox x:Name="sig_SuppressHours" Width="60" Text="24"/>
-                <Button x:Name="sig_SaveSettings" Content="Save settings" Style="{StaticResource PrimaryButton}" Margin="16,0,0,0"/>
-              </StackPanel>
-            </Grid>
-          </StackPanel>
-        </Border>
-
-        <DataGrid x:Name="sig_Grid" Grid.Row="3">
-          <DataGrid.Columns>
-            <DataGridTextColumn Header="Type"               Binding="{Binding Type}"           Width="160"/>
-            <DataGridTextColumn Header="Severity threshold" Binding="{Binding Threshold}"      Width="160"/>
-            <DataGridTextColumn Header="Secret present"     Binding="{Binding SecretPresent}"  Width="130"/>
-            <DataGridTextColumn Header="Enabled"            Binding="{Binding Enabled}"        Width="100"/>
-          </DataGrid.Columns>
-        </DataGrid>
-
-        <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,12,0,0">
-          <Button x:Name="sig_Add"     Content="Add Provider"   Style="{StaticResource PrimaryButton}" Margin="0,0,8,0"/>
-          <Button x:Name="sig_Remove"  Content="Remove Selected" Style="{StaticResource SecondaryButton}" Margin="0,0,8,0"/>
-          <Button x:Name="sig_Test"    Content="Test Selected"  Style="{StaticResource SecondaryButton}" Margin="0,0,8,0"/>
-          <Button x:Name="sig_Refresh" Content="Refresh"        Style="{StaticResource SecondaryButton}"/>
-        </StackPanel>
-        <TextBlock Grid.Row="5" x:Name="sig_StatusLine" Foreground="#16A34A" Margin="0,12,0,0" TextWrapping="Wrap"/>
-      </Grid>
-
       <!-- ─── REPORTS PANEL ─── -->
       <Grid x:Name="panel_Reports" Visibility="Collapsed">
         <Grid.RowDefinitions>
@@ -557,13 +467,6 @@ function Show-GuerrillaWindow {
             <ComboBox  Grid.Row="0" Grid.Column="1" x:Name="st_Profile" Margin="0,8">
               <ComboBoxItem Content="Default" IsSelected="True"/>
               <ComboBoxItem Content="K12"/>
-            </ComboBox>
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Minimum alert level" Foreground="#64748B" VerticalAlignment="Center" Margin="0,8"/>
-            <ComboBox  Grid.Row="1" Grid.Column="1" x:Name="st_AlertLevel" Margin="0,8">
-              <ComboBoxItem Content="CRITICAL"/>
-              <ComboBoxItem Content="HIGH" IsSelected="True"/>
-              <ComboBoxItem Content="MEDIUM"/>
-              <ComboBoxItem Content="LOW"/>
             </ComboBox>
             <TextBlock Grid.Row="2" Grid.Column="0" Text="Output directory" Foreground="#64748B" VerticalAlignment="Center" Margin="0,8"/>
             <Grid Grid.Row="2" Grid.Column="1" Margin="0,8">
@@ -720,7 +623,7 @@ function Show-GuerrillaWindow {
     # ── Helpers ───────────────────────────────────────────────────────────
     $setActiveTab = {
         param([string]$Tab)
-        foreach ($t in @('Operations', 'Safehouse', 'Patrol', 'Signals', 'Reports', 'Settings', 'Source', 'Branding')) {
+        foreach ($t in @('Operations', 'Safehouse', 'Reports', 'Settings', 'Source', 'Branding')) {
             $panel = $session.Controls["panel_$t"]
             $navBtn = $session.Controls["nav_$t"]
             if ($t -eq $Tab) {
@@ -735,8 +638,6 @@ function Show-GuerrillaWindow {
         # Lazy-load each tab's data on first visit.
         switch ($Tab) {
             'Safehouse' { & $refreshSafehouseGrid }
-            'Patrol'    { & $refreshPatrolGrid }
-            'Signals'   { & $refreshSignals }
             'Reports'   { & $refreshReportsGrid }
             'Settings'  { & $loadSettings }
             'Source'    { & $refreshSourceList }
@@ -1101,316 +1002,6 @@ function Show-GuerrillaWindow {
         }
     })
 
-    # ── Patrol tab handlers ───────────────────────────────────────────────
-    $refreshPatrolGrid = {
-        try {
-            $patrols = @(Get-Patrol -ErrorAction SilentlyContinue)
-            $rows = foreach ($p in $patrols) {
-                [PSCustomObject]@{
-                    TaskName       = $p.TaskName
-                    State          = "$($p.State)"
-                    LastRunTime    = if ($p.LastRunTime) { ([datetime]$p.LastRunTime).ToString('yyyy-MM-dd HH:mm') } else { 'Never' }
-                    NextRunTime    = if ($p.NextRunTime) { ([datetime]$p.NextRunTime).ToString('yyyy-MM-dd HH:mm') } else { 'N/A' }
-                    LastTaskResult = if ($null -ne $p.LastTaskResult) { "$($p.LastTaskResult)" } else { '-' }
-                }
-            }
-            $session.Controls['pt_Grid'].ItemsSource = @($rows)
-        } catch {
-            $session.Controls['pt_Grid'].ItemsSource = @()
-        }
-    }
-
-    $session.Controls['pt_Refresh'].Add_Click({ & $refreshPatrolGrid })
-
-    $session.Controls['pt_Register'].Add_Click({
-        $msg = "Patrol registration runs a scheduled task that re-scans periodically.`r`n`r`n" +
-               "To register from a PowerShell prompt:`r`n`r`n" +
-               "    Register-Patrol -ConfigFile .\guerrilla-config.json ``r`n" +
-               "        -Platforms AD, Workspace ``r`n" +
-               "        -IntervalMinutes 60 -SendAlerts`r`n`r`n" +
-               "GUI-driven registration is on the roadmap."
-        [System.Windows.MessageBox]::Show($msg, 'Register Patrol', 'OK', 'Information') | Out-Null
-    })
-
-    $session.Controls['pt_Unregister'].Add_Click({
-        $row = $session.Controls['pt_Grid'].SelectedItem
-        if (-not $row) { return }
-        $ans = [System.Windows.MessageBox]::Show("Unregister scheduled task '$($row.TaskName)'?", 'Confirm', 'YesNo', 'Warning')
-        if ($ans -eq 'Yes') {
-            try {
-                Unregister-Patrol -TaskName $row.TaskName -Force -ErrorAction Stop
-                & $refreshPatrolGrid
-            } catch {
-                [System.Windows.MessageBox]::Show("Unregister failed: $_", 'Error', 'OK', 'Error') | Out-Null
-            }
-        }
-    })
-
-    # ── Signals tab handlers ──────────────────────────────────────────────
-    # The Signals tab is a GUI front-end over the exact same storage the CLI uses:
-    #   * provider secrets live in the safehouse vault under the canonical keys from
-    #     Get-SignalProviderCatalog (single string, or compact JSON for
-    #     pushover/sendgrid/mailgun/twilio) — read back by Send-Signal's channel resolver,
-    #   * provider registration + global alerting settings live in config.alerting in
-    #     config.json — written via Set-Safehouse (settings) and a direct config merge
-    #     (per-provider blocks, matching Invoke-CredentialMigration's shape).
-
-    # Read config.alerting as a hashtable (or an empty scaffold).
-    $readAlertingConfig = {
-        $cfg = $null
-        if ($session.ConfigPath -and (Test-Path $session.ConfigPath)) {
-            try { $cfg = Get-Content -Path $session.ConfigPath -Raw | ConvertFrom-Json -AsHashtable } catch { $cfg = $null }
-        }
-        if (-not $cfg) { $cfg = @{} }
-        if (-not $cfg.alerting) { $cfg.alerting = @{ enabled = $true; minimumThreatLevel = 'HIGH'; suppression = @{ enabled = $false; windowHours = 24 }; providers = @{} } }
-        if (-not $cfg.alerting.providers) { $cfg.alerting.providers = @{} }
-        if (-not $cfg.alerting.suppression) { $cfg.alerting.suppression = @{ enabled = $false; windowHours = 24 } }
-        return $cfg
-    }
-
-    $writeConfig = {
-        param($Config)
-        $dir = Split-Path $session.ConfigPath -Parent
-        if ($dir -and -not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
-        $Config | ConvertTo-Json -Depth 12 | Set-Content -Path $session.ConfigPath -Encoding UTF8
-    }
-
-    $refreshSignals = {
-        $cfg = & $readAlertingConfig
-
-        # Global settings widgets
-        $session.Controls['sig_Enabled'].IsChecked = [bool]$cfg.alerting.enabled
-        $minLevel = if ($cfg.alerting.minimumThreatLevel) { "$($cfg.alerting.minimumThreatLevel)" } else { 'HIGH' }
-        foreach ($item in $session.Controls['sig_MinLevel'].Items) {
-            if ("$($item.Content)" -eq $minLevel) { $item.IsSelected = $true; break }
-        }
-        $session.Controls['sig_Suppress'].IsChecked = [bool]$cfg.alerting.suppression.enabled
-        $session.Controls['sig_SuppressHours'].Text = "$($cfg.alerting.suppression.windowHours ?? 24)"
-
-        # Provider grid — one row per configured provider, cross-checking the vault.
-        $catalog = Get-SignalProviderCatalog
-        $rows = @()
-        foreach ($pType in $cfg.alerting.providers.Keys) {
-            $prov = $cfg.alerting.providers[$pType]
-            $spec = $catalog | Where-Object Type -eq $pType | Select-Object -First 1
-            $secretPresent = 'N/A'
-            if ($spec -and $spec.VaultKey) {
-                $secretPresent = 'No'
-                try {
-                    $v = Get-GuerrillaCredential -VaultKey $spec.VaultKey -VaultName $session.VaultName -ErrorAction Stop
-                    if ($v) { $secretPresent = 'Yes' }
-                } catch { $secretPresent = 'No' }
-            }
-            $rows += [PSCustomObject]@{
-                Type          = $pType
-                Threshold     = if ($prov.minimumThreatLevel) { "$($prov.minimumThreatLevel)" } else { '(inherit)' }
-                SecretPresent = $secretPresent
-                Enabled       = if ($prov.enabled) { 'Yes' } else { 'No' }
-                VaultKey      = if ($spec) { $spec.VaultKey } else { $null }
-            }
-        }
-        $session.Controls['sig_Grid'].ItemsSource = @($rows)
-        $session.Controls['sig_StatusLine'].Foreground = $brushes.Sage
-        $session.Controls['sig_StatusLine'].Text = ''
-    }
-
-    $session.Controls['sig_Refresh'].Add_Click({ & $refreshSignals })
-
-    $session.Controls['sig_SaveSettings'].Add_Click({
-        try {
-            $hours = 24
-            [void][int]::TryParse($session.Controls['sig_SuppressHours'].Text.Trim(), [ref]$hours)
-            if ($hours -lt 1) { $hours = 1 } elseif ($hours -gt 720) { $hours = 720 }
-            $params = @{
-                ConfigPath             = $session.ConfigPath
-                EnableAlerting         = [bool]$session.Controls['sig_Enabled'].IsChecked
-                MinimumAlertLevel      = "$($session.Controls['sig_MinLevel'].SelectedItem.Content)"
-                EnableSuppression      = [bool]$session.Controls['sig_Suppress'].IsChecked
-                SuppressionWindowHours = $hours
-            }
-            # MinimumAlertLevel's ValidateSet has no 'ALL'; map it to the lowest real level.
-            if ($params.MinimumAlertLevel -eq 'ALL') { $params.MinimumAlertLevel = 'LOW' }
-            Set-Safehouse @params -ErrorAction Stop | Out-Null
-            $session.Controls['sig_StatusLine'].Foreground = $brushes.Sage
-            $session.Controls['sig_StatusLine'].Text = "Settings saved at $([datetime]::Now.ToString('HH:mm:ss'))."
-        } catch {
-            $session.Controls['sig_StatusLine'].Foreground = $brushes.Red
-            $session.Controls['sig_StatusLine'].Text = "Save failed: $_"
-        }
-    })
-
-    $session.Controls['sig_Add'].Add_Click({
-        try {
-            $entry = Show-AddSignalDialog -Owner $session.Window
-            if (-not $entry) { return }   # cancelled
-
-            # Store the secret in the vault (single string, or JSON for email/sms/pushover),
-            # exactly as Send-Signal's resolver expects to read it back.
-            if ($entry.VaultKey -and $entry.Secret) {
-                if (-not (Get-SecretVault -Name $session.VaultName -ErrorAction SilentlyContinue)) {
-                    Initialize-GuerrillaVault -VaultName $session.VaultName | Out-Null
-                }
-                Set-GuerrillaCredential -VaultKey $entry.VaultKey -Value $entry.Secret -VaultName $session.VaultName
-            }
-
-            # Register the provider block in config.alerting.providers.<type>.
-            $cfg = & $readAlertingConfig
-            $cfg.alerting.providers[$entry.Type] = $entry.ProviderConfig
-            & $writeConfig $cfg
-
-            & $refreshSignals
-            $session.Controls['sig_StatusLine'].Foreground = $brushes.Sage
-            $session.Controls['sig_StatusLine'].Text = "Provider '$($entry.Type)' added. Use 'Test Selected' to verify it."
-        } catch {
-            [System.Windows.MessageBox]::Show("Could not add provider: $_", 'Error', 'OK', 'Error') | Out-Null
-        }
-    })
-
-    $session.Controls['sig_Remove'].Add_Click({
-        $row = $session.Controls['sig_Grid'].SelectedItem
-        if (-not $row) {
-            [System.Windows.MessageBox]::Show('Select a provider row first, then click Remove Selected.', 'No selection', 'OK', 'Information') | Out-Null
-            return
-        }
-        $ans = [System.Windows.MessageBox]::Show("Remove provider '$($row.Type)' from the alerting config?", 'Confirm', 'YesNo', 'Warning')
-        if ($ans -ne 'Yes') { return }
-        try {
-            $cfg = & $readAlertingConfig
-            if ($cfg.alerting.providers.ContainsKey($row.Type)) { $cfg.alerting.providers.Remove($row.Type) }
-            & $writeConfig $cfg
-
-            # Offer to also drop the vault secret.
-            if ($row.VaultKey -and $row.SecretPresent -eq 'Yes') {
-                $delSecret = [System.Windows.MessageBox]::Show("Also remove the stored secret '$($row.VaultKey)' from the vault?", 'Remove secret', 'YesNo', 'Question')
-                if ($delSecret -eq 'Yes') {
-                    try { Remove-Secret -Name $row.VaultKey -Vault $session.VaultName -ErrorAction Stop } catch { }
-                }
-            }
-            & $refreshSignals
-        } catch {
-            [System.Windows.MessageBox]::Show("Remove failed: $_", 'Error', 'OK', 'Error') | Out-Null
-        }
-    })
-
-    $session.Controls['sig_Test'].Add_Click({
-        $row = $session.Controls['sig_Grid'].SelectedItem
-        if (-not $row) {
-            [System.Windows.MessageBox]::Show('Select a provider row first, then click Test Selected.', 'No selection', 'OK', 'Information') | Out-Null
-            return
-        }
-        $btn = $session.Controls['sig_Test']
-        $btn.IsEnabled = $false
-        $btn.Content = 'Testing…'
-        $session.Controls['sig_StatusLine'].Foreground = $brushes.Gray
-        $session.Controls['sig_StatusLine'].Text = "Sending a synthetic test alert through '$($row.Type)'…"
-
-        $providerType = $row.Type
-
-        $testComplete = {
-            param($result)
-            $btn.IsEnabled = $true
-            $btn.Content = 'Test Selected'
-            if ($result -and $result.Success) {
-                $session.Controls['sig_StatusLine'].Foreground = $brushes.Sage
-                $session.Controls['sig_StatusLine'].Text = "Test alert sent via '$providerType': $($result.Message)"
-            } else {
-                $msg = if ($result) { "$($result.Message)" } else { 'no result returned' }
-                $session.Controls['sig_StatusLine'].Foreground = $brushes.Red
-                $session.Controls['sig_StatusLine'].Text = "Test via '$providerType' did not succeed: $msg"
-            }
-        }.GetNewClosure()
-
-        $testError = {
-            param($err)
-            $btn.IsEnabled = $true
-            $btn.Content = 'Test Selected'
-            $session.Controls['sig_StatusLine'].Foreground = $brushes.Red
-            $session.Controls['sig_StatusLine'].Text = "Test via '$providerType' failed: $err"
-        }.GetNewClosure()
-
-        # Run the real send path off the UI thread (network I/O may block). The action
-        # resolves the secret from the vault and dispatches a synthetic CRITICAL threat
-        # through the actual per-provider Send-Signal<Type> cmdlet — the same call
-        # Send-Signal makes — so it genuinely validates the provider end-to-end.
-        $action = {
-            param([string]$Type, [string]$VaultName, [string]$ConfigPath)
-
-            $threat = [PSCustomObject]@{
-                ThreatLevel = 'CRITICAL'
-                Email       = 'test-alert@psguerrilla.local'
-                Entity      = 'test-alert@psguerrilla.local'
-                Description = 'Guerrilla synthetic test alert (no real finding).'
-                RiskScore   = 100
-                Reasons     = @('This is a test signal triggered from the Signals tab.')
-            }
-            $subject = '[Guerrilla] Test alert'
-            $textBody = "Guerrilla test alert.`nIf you received this, the '$Type' provider is wired up correctly."
-            $htmlBody = "<p>Guerrilla test alert.</p><p>If you received this, the <b>$Type</b> provider is wired up correctly.</p>"
-
-            # Resolve provider settings the same way Send-Signal does: non-secret bits from
-            # config.alerting.providers.<type>, the secret from the vault.
-            $cfg = $null
-            if ($ConfigPath -and (Test-Path $ConfigPath)) {
-                $cfg = Get-Content -Path $ConfigPath -Raw | ConvertFrom-Json -AsHashtable
-            }
-            $prov = if ($cfg -and $cfg.alerting -and $cfg.alerting.providers) { $cfg.alerting.providers[$Type] } else { $null }
-
-            $catalog = Get-SignalProviderCatalog
-            $spec = $catalog | Where-Object Type -eq $Type | Select-Object -First 1
-            $secret = $null
-            if ($spec -and $spec.VaultKey) {
-                $secret = Get-GuerrillaCredential -VaultKey $spec.VaultKey -VaultName $VaultName
-            }
-
-            switch ($Type) {
-                'teams'     { Send-SignalTeams     -WebhookUrl $secret -Subject $subject -Threats @($threat) }
-                'slack'     { Send-SignalSlack     -WebhookUrl $secret -Subject $subject -Threats @($threat) -TextBody $textBody }
-                'webhook'   {
-                    $scan = [PSCustomObject]@{ PSTypeName = 'Guerrilla.ScanResult'; FlaggedUsers = @($threat); NewThreats = @($threat) }
-                    $headers = @{}
-                    if ($prov -and $prov.headers) { foreach ($k in $prov.headers.Keys) { $headers[$k] = $prov.headers[$k] } }
-                    Send-SignalWebhook -WebhookUrl $secret -Threats @($threat) -ScanResult $scan -Headers $headers -AuthToken ($prov.authToken ?? '')
-                }
-                'pagerduty' { Send-SignalPagerDuty -RoutingKey $secret -Subject $subject -Threats @($threat) }
-                'pushover'  {
-                    $po = $secret | ConvertFrom-Json -AsHashtable
-                    Send-SignalPushover -ApiToken $po.apiToken -UserKey $po.userKey -Message $textBody -Title $subject -Priority 2
-                }
-                'sendgrid'  {
-                    $sg = $secret | ConvertFrom-Json -AsHashtable
-                    Send-SignalSendGrid -ApiKey $sg.apiKey -FromEmail $sg.fromEmail -ToEmails @($sg.toEmails) -Subject $subject -HtmlBody $htmlBody -TextBody $textBody
-                }
-                'mailgun'   {
-                    $mg = $secret | ConvertFrom-Json -AsHashtable
-                    $domain = $mg.domain
-                    if (-not $domain -and $mg.fromEmail -match '@(.+)$') { $domain = $Matches[1] }
-                    Send-SignalMailgun -ApiKey $mg.apiKey -Domain $domain -FromEmail $mg.fromEmail -ToEmails @($mg.toEmails) -Subject $subject -HtmlBody $htmlBody -TextBody $textBody
-                }
-                'twilio'    {
-                    $tw = $secret | ConvertFrom-Json -AsHashtable
-                    @(Send-SignalTwilio -AccountSid $tw.accountSid -AuthToken $tw.authToken -FromNumber $tw.fromNumber -ToNumbers @($tw.toNumbers) -MessageBody $textBody)[0]
-                }
-                'syslog'    {
-                    $server = if ($prov) { $prov.server } else { $null }
-                    if (-not $server) { throw 'Syslog server is not configured.' }
-                    Send-SignalSyslog -Server $server -Port ($prov.port ?? 514) -Protocol ($prov.protocol ?? 'UDP') -Format ($prov.format ?? 'CEF') -Threats @($threat) -Subject $subject -Facility ($prov.facility ?? 1)
-                }
-                'eventlog'  {
-                    Send-SignalEventLog -Threats @($threat) -Subject $subject -Source (($prov.source) ?? 'Guerrilla') -LogName (($prov.logName) ?? 'Application')
-                }
-                default     { throw "Unknown provider type '$Type'." }
-            }
-        }
-
-        Invoke-GuerrillaGuiAsync `
-            -ModulePath $session.ModulePath `
-            -Action     $action `
-            -Arguments  @($providerType, $session.VaultName, $session.ConfigPath) `
-            -Dispatcher $session.Window.Dispatcher `
-            -OnComplete $testComplete `
-            -OnError    $testError
-    })
-
     # ── Reports tab handlers ──────────────────────────────────────────────
     $session.Controls['rp_DirHint'].Text = "From $($session.ReportsDir). Newest first."
 
@@ -1427,10 +1018,6 @@ function Show-GuerrillaWindow {
                 '^[Ff]ortification'   { 'Workspace' }
                 '^[Ii]nfiltration'    { 'Cloud' }
                 '^[Cc]ampaign'        { 'All Platforms' }
-                '^[Ss]urveillance'    { 'Entra monitoring' }
-                '^[Ww]atchtower'      { 'AD monitoring' }
-                '^[Ww]iretap'         { 'M365 monitoring' }
-                '^field_report'       { 'Workspace (Recon)' }
                 'Executive'           { 'Summary' }
                 'Technical'           { 'Technical' }
                 'Playbook|Remediation' { 'Remediation' }
@@ -1488,11 +1075,6 @@ function Show-GuerrillaWindow {
                         if ("$($item.Content)" -eq $cfg.profile) { $item.IsSelected = $true; break }
                     }
                 }
-                if ($cfg.alerting -and $cfg.alerting.minimumThreatLevel) {
-                    foreach ($item in $session.Controls['st_AlertLevel'].Items) {
-                        if ("$($item.Content)" -eq $cfg.alerting.minimumThreatLevel) { $item.IsSelected = $true; break }
-                    }
-                }
                 if ($cfg.output -and $cfg.output.directory) {
                     $session.Controls['st_OutputDir'].Text = $cfg.output.directory
                 }
@@ -1512,9 +1094,8 @@ function Show-GuerrillaWindow {
     $session.Controls['st_Apply'].Add_Click({
         try {
             $params = @{
-                ConfigPath        = $session.ConfigPath
-                Profile           = "$($session.Controls['st_Profile'].SelectedItem.Content)"
-                MinimumAlertLevel = "$($session.Controls['st_AlertLevel'].SelectedItem.Content)"
+                ConfigPath = $session.ConfigPath
+                Profile    = "$($session.Controls['st_Profile'].SelectedItem.Content)"
             }
             if ($session.Controls['st_OutputDir'].Text) {
                 $params.OutputDirectory = $session.Controls['st_OutputDir'].Text
@@ -1538,7 +1119,6 @@ function Show-GuerrillaWindow {
         if ($p -match '^Private/AD/'     -or $Name -match '^(Test-AD|Test-TIER|Invoke-AD|Invoke-TierZero)') { return 'Active Directory' }
         if ($p -match '^Private/Audit/'  -or $Name -match '^(Test-(EMAIL|DRIVE|ADMIN|AUTH|COLLAB|GROUP|OAUTH|DEVICE|LOG|GTRADE|GWS)|Invoke-Gws|Invoke-Google)') { return 'Google Workspace' }
         if ($p -match '^Private/Entra/'  -or $Name -match '^(Test-(EID|M365|INTUNE|AZIAM|AIAGENT)|Invoke-Entra|Invoke-M365|Invoke-Azure|Invoke-Intune)') { return 'Entra / Azure / M365' }
-        if ($p -match 'Monitor')         { return 'Monitoring' }
         if ($p -match '^Private/Export/') { return 'Reporting & Export' }
         if ($p -match '^Private/Gui/')   { return 'GUI' }
         if ($p -match '^Public/')        { return 'Public cmdlets' }
@@ -1678,7 +1258,7 @@ function Show-GuerrillaWindow {
     $session.Controls['br_Revert'].Add_Click({ & $loadBranding })
 
     # ── Nav button wiring ─────────────────────────────────────────────────
-    foreach ($t in @('Operations','Safehouse','Patrol','Signals','Reports','Settings','Source','Branding')) {
+    foreach ($t in @('Operations','Safehouse','Reports','Settings','Source','Branding')) {
         $btn = $session.Controls["nav_$t"]
         $tab = $t  # capture
         $btn.Add_Click({ & $setActiveTab $tab }.GetNewClosure())

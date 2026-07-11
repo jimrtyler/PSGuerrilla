@@ -11,8 +11,6 @@ function Export-ExecutiveSummary {
         compliance gaps, and top recommended actions — all in plain language.
     .PARAMETER Findings
         Array of audit finding objects. If not provided, reads from latest state.
-    .PARAMETER ScanResults
-        Array of scan result objects. If not provided, reads from latest state.
     .PARAMETER OutputPath
         File path for the HTML output. Default: Guerrilla-Executive-Summary.html
     .PARAMETER OrganizationName
@@ -25,7 +23,6 @@ function Export-ExecutiveSummary {
     [CmdletBinding()]
     param(
         [PSCustomObject[]]$Findings,
-        [PSCustomObject[]]$ScanResults,
         [string]$OutputPath,
         [string]$OrganizationName = 'Organization',
         [string]$ProfileName
@@ -44,21 +41,12 @@ function Export-ExecutiveSummary {
         }
     }
 
-    # Load scan results if not provided
-    if (-not $ScanResults -or $ScanResults.Count -eq 0) {
-        if (Test-Path $dataDir) {
-            foreach ($f in (Get-ChildItem -Path $dataDir -Filter '*.state.json' -ErrorAction SilentlyContinue)) {
-                try { $ScanResults += (Get-Content $f.FullName -Raw | ConvertFrom-Json) } catch { }
-            }
-        }
-    }
-
     $esc = { param([string]$s) [System.Web.HttpUtility]::HtmlEncode($s) }
     $timestamp = [datetime]::UtcNow.ToString('yyyy-MM-dd HH:mm:ss')
 
     # Calculate score
     $scoreResult = $null
-    try { $scoreResult = Get-GuerrillaScoreCalculation -AuditFindings $Findings -ScanResults $ScanResults } catch { }
+    try { $scoreResult = Get-GuerrillaScoreCalculation -AuditFindings $Findings } catch { }
     $score = $scoreResult.Score ?? 'N/A'
     $label = $scoreResult.Label ?? ''
 
@@ -102,16 +90,6 @@ $blockerHtml
     $highFails = @($Findings | Where-Object { $_.Status -eq 'FAIL' -and $_.Severity -eq 'High' }).Count
     $passCount = @($Findings | Where-Object Status -eq 'PASS').Count
     $passRate = if ($totalFindings -gt 0) { [Math]::Round(100 * $passCount / $totalFindings, 0) } else { 0 }
-
-    # Threat summary
-    $totalThreats = 0
-    $criticalThreats = 0
-    $highThreats = 0
-    foreach ($result in ($ScanResults ?? @())) {
-        $totalThreats += ($result.CriticalCount ?? 0) + ($result.HighCount ?? 0) + ($result.MediumCount ?? 0) + ($result.LowCount ?? 0)
-        $criticalThreats += ($result.CriticalCount ?? 0)
-        $highThreats += ($result.HighCount ?? 0)
-    }
 
     # Compliance
     $complianceGaps = @()
@@ -215,7 +193,6 @@ h2 { color:var(--olive); margin-top:25px; font-size:1.2em; }
 <div class="stat"><div class="val" style="color:var(--deep-orange);">$criticalFails</div><div class="lbl">Critical Issues</div></div>
 <div class="stat"><div class="val" style="color:var(--amber);">$highFails</div><div class="lbl">High Issues</div></div>
 $maturityStat
-$(if ($totalThreats -gt 0) { "<div class='stat'><div class='val' style='color:var(--dark-red);'>$totalThreats</div><div class='lbl'>Active Threats</div></div>" })
 </div>
 
 $maturitySection

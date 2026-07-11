@@ -193,7 +193,7 @@ Tests/
 
 - Public cmdlets use the platform vocabulary (`Invoke-ADAudit`,
   `Invoke-EntraAudit`, `Invoke-GWSAudit`, `Invoke-Campaign`,
-  `Set-Safehouse`, `Register-Patrol`, `Send-Signal`).
+  `Set-Safehouse`).
 - Check functions are named `Test-<Platform><CheckId>` and are dispatched
   automatically; no registration step.
 - Findings are built with `New-AuditFinding`; do not construct result objects by

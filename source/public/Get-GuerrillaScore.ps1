@@ -6,8 +6,8 @@ function Get-GuerrillaScore {
     .SYNOPSIS
         Returns the composite Guerrilla Security Score (0-100) with breakdown.
     .DESCRIPTION
-        Computes a single 0-100 security score from audit findings, threat scan results,
-        platform coverage, and trend data. Uses the active baseline profile (Default or K12)
+        Computes a single 0-100 security score from audit findings, platform
+        coverage, and trend data. Uses the active baseline profile (Default or K12)
         for component weights and thresholds.
 
         Score tiers:
@@ -17,9 +17,6 @@ function Get-GuerrillaScore {
     .PARAMETER AuditFindings
         Array of audit finding objects from the AD, Entra, and GWS audits.
         If not provided, reads the latest state file.
-    .PARAMETER ScanResults
-        Array of scan result objects from Surveillance/Watchtower platforms.
-        If not provided, reads the latest state files.
     .PARAMETER ProfileName
         Baseline profile to use: Default or K12. If not specified, uses the profile
         configured in Set-Safehouse, falling back to Default.
@@ -38,7 +35,6 @@ function Get-GuerrillaScore {
     [CmdletBinding()]
     param(
         [PSCustomObject[]]$AuditFindings,
-        [PSCustomObject[]]$ScanResults,
 
         [ValidateSet('Default', 'K12')]
         [string]$ProfileName,
@@ -92,24 +88,6 @@ function Get-GuerrillaScore {
         }
     }
 
-    if (-not $ScanResults) {
-        $stateFiles = @()
-        if (Test-Path $dataDir) {
-            $stateFiles = @(Get-ChildItem -Path $dataDir -Filter '*.state.json' -ErrorAction SilentlyContinue)
-        }
-        if ($stateFiles.Count -gt 0) {
-            $ScanResults = @()
-            foreach ($f in $stateFiles) {
-                try {
-                    $data = Get-Content -Path $f.FullName -Raw | ConvertFrom-Json
-                    $ScanResults += $data
-                } catch {
-                    Write-Verbose "Failed to load state from $($f.Name): $_"
-                }
-            }
-        }
-    }
-
     # Load previous score for trend
     $previousScore = -1
     $scoreHistoryPath = Join-Path $dataDir 'guerrilla-score-history.json'
@@ -125,7 +103,6 @@ function Get-GuerrillaScore {
     # Calculate composite score
     $scoreResult = Get-GuerrillaScoreCalculation `
         -AuditFindings $AuditFindings `
-        -ScanResults $ScanResults `
         -PreviousScore $previousScore `
         -Profile $profile
 

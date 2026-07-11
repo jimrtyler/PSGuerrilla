@@ -25,10 +25,6 @@ function Write-GuerrillaBanner {
     $version = try {
         (Import-PowerShellDataFile (Join-Path $script:ModuleRoot 'Guerrilla.psd1') -ErrorAction Stop).ModuleVersion
     } catch { 'unknown' }
-    $awsCount = $script:ParsedAwsNetworks.Count
-    $cloudCount = $script:ParsedCloudNetworks.Count
-    $attackerCount = $script:AttackerIpSet.Count
-    $countryCount = $script:SuspiciousCountries.codes.Count
 
     $configStatus = if (Test-Path $script:ConfigPath) { 'loaded' } else { 'not configured' }
 
@@ -43,11 +39,10 @@ function Write-GuerrillaBanner {
     $spectreTag = if ($script:HasSpectre) { ' | Spectre: active' } else { '' }
     $infoLine1 = "v$version  |  Config: $configStatus$spectreTag"
     $infoLine2 = "By Jim Tyler, Microsoft MVP"
-    $infoLine3 = "Intel: $awsCount AWS + $cloudCount cloud ranges | $attackerCount attacker IPs | $countryCount countries"
 
     if ($script:HasSpectre) {
         Write-Host ''
-        Write-SpectrePanel -Content ($bannerLines + @('', "  $infoLine1", "  $infoLine2", "  $infoLine3")) `
+        Write-SpectrePanel -Content ($bannerLines + @('', "  $infoLine1", "  $infoLine2")) `
             -BorderColor 'Olive' -ContentColor 'Parchment' -Width 66
         Write-Host ''
     } else {
@@ -64,14 +59,6 @@ function Write-GuerrillaBanner {
         Write-GuerrillaText "  By " -Color Dim -NoNewline
         Write-GuerrillaText "Jim Tyler" -Color Gold -NoNewline
         Write-GuerrillaText ", Microsoft MVP" -Color Dim
-        Write-GuerrillaText "  Intel: " -Color Dim -NoNewline
-        Write-GuerrillaText "$awsCount AWS" -Color Gold -NoNewline
-        Write-GuerrillaText " + " -Color Dim -NoNewline
-        Write-GuerrillaText "$cloudCount cloud" -Color Gold -NoNewline
-        Write-GuerrillaText " ranges | " -Color Dim -NoNewline
-        Write-GuerrillaText "$attackerCount attacker IPs" -Color Amber -NoNewline
-        Write-GuerrillaText " | " -Color Dim -NoNewline
-        Write-GuerrillaText "$countryCount countries" -Color Gold
         Write-Host ''
     }
 }

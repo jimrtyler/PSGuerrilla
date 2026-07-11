@@ -6,15 +6,17 @@ function Get-GuerrillaScoreCalculation {
     .SYNOPSIS
         Computes the composite Guerrilla Security Score (0-100).
     .DESCRIPTION
-        Calculates a weighted composite score from four components:
-          - Posture (40%): Audit posture scores from AD + Cloud findings
-          - Threats (30%): Inverse normalized threat count, weighted by severity
-          - Coverage (15%): Percentage of platforms actively monitored
-          - Trend (15%): Score delta from previous scan (improving = bonus)
+        Calculates a weighted composite score from three components:
+          - Posture (70%): Audit posture scores from AD, Entra, and GWS findings
+          - Coverage (15%): Percentage of the three assessment platforms with findings
+          - Trend (15%): Score delta from previous run (improving = bonus)
+
+        The retired Threats component scored monitoring detections; with the
+        monitoring subsystem removed, keeping it would have silently awarded
+        full credit for threats never assessed. Nothing in this score reflects
+        data that was not collected.
     .PARAMETER AuditFindings
         Array of audit finding objects (from the AD, Entra, and GWS audits).
-    .PARAMETER ScanResults
-        Array of scan result objects from all platforms.
     .PARAMETER PreviousScore
         Previous Guerrilla Score for trend calculation. If not provided, trend is neutral.
     .PARAMETER Profile
@@ -23,16 +25,16 @@ function Get-GuerrillaScoreCalculation {
     [CmdletBinding()]
     param(
         [PSCustomObject[]]$AuditFindings,
-        [PSCustomObject[]]$ScanResults,
         [double]$PreviousScore = -1,
         [hashtable]$Profile
     )
 
-    # Component weights from profile or defaults
-    $weights = if ($Profile.guerrillaScore.componentWeights) {
-        $Profile.guerrillaScore.componentWeights
-    } else {
-        @{ posture = 0.40; threats = 0.30; coverage = 0.15; trend = 0.15 }
+    # Component weights from profile or defaults. Ignore any profile that still
+    # carries the retired threats weight so old config cannot dilute the score.
+    $weights = @{ posture = 0.70; coverage = 0.15; trend = 0.15 }
+    $pw = $Profile.guerrillaScore.componentWeights
+    if ($pw -and $pw.posture -and $pw.coverage -and $pw.trend -and -not $pw.threats) {
+        $weights = $pw
     }
 
     # --- Component 1: Posture Score (0-100) ---
@@ -42,57 +44,30 @@ function Get-GuerrillaScoreCalculation {
         $postureScore = [Math]::Max(0, [Math]::Min(100, $postureResult.OverallScore))
     }
 
-    # --- Component 2: Threat Score (0-100, inverse normalized) ---
-    $threatScore = 100
-    $threatSeverityWeights = @{
-        'CRITICAL' = 20
-        'HIGH'     = 10
-        'MEDIUM'   = 4
-        'LOW'      = 1
-    }
-    $maxThreatBudget = 200  # Weighted threat count that maps to score 0
-
-    if ($ScanResults -and $ScanResults.Count -gt 0) {
-        $weightedThreatCount = 0.0
-        foreach ($result in $ScanResults) {
-            $weightedThreatCount += ($result.CriticalCount ?? 0) * $threatSeverityWeights['CRITICAL']
-            $weightedThreatCount += ($result.HighCount ?? 0) * $threatSeverityWeights['HIGH']
-            $weightedThreatCount += ($result.MediumCount ?? 0) * $threatSeverityWeights['MEDIUM']
-            $weightedThreatCount += ($result.LowCount ?? 0) * $threatSeverityWeights['LOW']
-        }
-        $threatScore = [Math]::Max(0, [Math]::Round(100 * (1 - ($weightedThreatCount / $maxThreatBudget)), 0))
-    }
-
-    # --- Component 3: Coverage Score (0-100) ---
-    $allPlatforms = @('Active Directory', 'Cloud', 'Surveillance', 'Watchtower')
+    # --- Component 2: Coverage Score (0-100) over the three assessment platforms ---
+    # Prefix note: GWS's ADMIN-* collides with a bare ^AD match, so the AD
+    # pattern enumerates the real AD families instead.
     $activePlatforms = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
-
     if ($AuditFindings -and $AuditFindings.Count -gt 0) {
-        $hasAD = @($AuditFindings | Where-Object { $_.CheckId -match '^AD' }).Count -gt 0
-        $hasCloud = @($AuditFindings | Where-Object { $_.CheckId -match '^(AUTH|ADMIN|EMAIL|COLLAB|DRIVE|OAUTH|DEVICE|LOG|EID|M365|AZIAM|INTUNE)' }).Count -gt 0
-        if ($hasAD) { $activePlatforms.Add('Active Directory') | Out-Null }
-        if ($hasCloud) { $activePlatforms.Add('Cloud') | Out-Null }
-    }
-
-    if ($ScanResults -and $ScanResults.Count -gt 0) {
-        foreach ($result in $ScanResults) {
-            $platform = $result.Platform ?? $result.PSObject.TypeNames[0]
-            if ($platform -match 'Surveillance') { $activePlatforms.Add('Surveillance') | Out-Null }
-            if ($platform -match 'Watchtower') { $activePlatforms.Add('Watchtower') | Out-Null }
-            if ($platform -match 'Wiretap') { $activePlatforms.Add('Wiretap') | Out-Null }
+        $platformPatterns = @{
+            'Active Directory' = '^AD(ACL|CS|DOM|GPO|KERB|LOG|NET|PATH|PRIV|PWD|SCRIPT|STALE|TIER|TRADE|TRUST)-'
+            'Entra ID / M365'  = '^(EID|EIDSCA|M365|AZIAM|INTUNE|AIAGENT)'
+            'Google Workspace' = '^(AUTH|ADMIN|COLLAB|DEVICE|DRIVE|EMAIL|GROUP|GTRADE|GWS|LOG|OAUTH)-'
+        }
+        foreach ($name in $platformPatterns.Keys) {
+            if (@($AuditFindings | Where-Object { $_.CheckId -match $platformPatterns[$name] }).Count -gt 0) {
+                $activePlatforms.Add($name) | Out-Null
+            }
         }
     }
+    $coverageScore = [int][Math]::Round(100 * ($activePlatforms.Count / 3), 0)
 
-    $coverageScore = if ($allPlatforms.Count -gt 0) {
-        [int][Math]::Round(100 * ($activePlatforms.Count / $allPlatforms.Count), 0)
-    } else { 0 }
-
-    # --- Component 4: Trend Score (0-100) ---
+    # --- Component 3: Trend Score (0-100) ---
     $trendScore = 50  # Neutral default
     if ($PreviousScore -ge 0) {
         $currentRaw = [Math]::Round(
-            ($postureScore * $weights.posture + $threatScore * $weights.threats + $coverageScore * $weights.coverage) /
-            ($weights.posture + $weights.threats + $weights.coverage), 0
+            ($postureScore * $weights.posture + $coverageScore * $weights.coverage) /
+            ($weights.posture + $weights.coverage), 0
         )
         $delta = $currentRaw - $PreviousScore
         # Map delta to 0-100: +20 or more = 100, -20 or less = 0, linear between
@@ -102,7 +77,6 @@ function Get-GuerrillaScoreCalculation {
     # --- Composite Score ---
     $compositeScore = [int][Math]::Round(
         ($postureScore * $weights.posture) +
-        ($threatScore * $weights.threats) +
         ($coverageScore * $weights.coverage) +
         ($trendScore * $weights.trend),
         0
@@ -118,7 +92,6 @@ function Get-GuerrillaScoreCalculation {
         LabelColor    = $label.Color
         Components    = [PSCustomObject]@{
             Posture  = [PSCustomObject]@{ Score = $postureScore;  Weight = $weights.posture;  Weighted = [int][Math]::Round($postureScore * $weights.posture, 0) }
-            Threats  = [PSCustomObject]@{ Score = $threatScore;   Weight = $weights.threats;  Weighted = [int][Math]::Round($threatScore * $weights.threats, 0) }
             Coverage = [PSCustomObject]@{ Score = $coverageScore; Weight = $weights.coverage; Weighted = [int][Math]::Round($coverageScore * $weights.coverage, 0) }
             Trend    = [PSCustomObject]@{ Score = $trendScore;    Weight = $weights.trend;    Weighted = [int][Math]::Round($trendScore * $weights.trend, 0) }
         }

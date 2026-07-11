@@ -2,6 +2,15 @@
 
 > **Project rename.** This module was published as `PSGuerrilla` through version 2.46.1 and is now `Guerrilla`, effective **v2.46.3** (2026-07-08). The repository and the PowerShell Gallery package are both `Guerrilla`; the old `PSGuerrilla` package remains on the Gallery frozen at its last version. Existing installs migrate automatically (per-user data and safehouse credentials carry forward transparently, see v2.46.3 below). Changelog entries for versions published as `PSGuerrilla` are left exactly as they were at the time; history is not rewritten.
 
+## [Unreleased]
+
+### Removed
+- **The behavioral monitoring subsystem is removed.** Guerrilla is a point-in-time assessment tool with a best-in-class report; it is not a monitoring platform and does not run in the background. Removed: the four monitors (`Invoke-Surveillance`, `Invoke-Watchtower`, `Invoke-Wiretap`, `Invoke-Lookout`), `Send-Signal` and its eleven provider variants, the Patrol scheduler (`Register-Patrol`, `Unregister-Patrol`, `Get-Patrol`), the Google Workspace behavioral compromise scan (`Invoke-Recon`, `Invoke-ReconDemo`, `Get-DeadDrop`), `Update-ThreatIntel` and the threat-intel data files, the GUI Patrol and Signals tabs, the detection-tuning and alerting parameters of `Set-Safehouse`, and every internal, test, alias, and format view that served them. The exported surface drops from 67 commands to 34. The ideas worth keeping (audit-log evidence for controls with no configuration API, config-declared vs. actually-happened reconciliation, visibility loss as a finding) are recorded in `docs/proposals/effective-state-and-audit-log-inference.md`.
+- **The Guerrilla Score is honest about what it no longer measures.** The retired Threats component scored monitoring detections; with monitoring gone it would have silently awarded 30 percent of the composite for threats never assessed. The composite is now Posture (70 percent), Coverage (15 percent, across the three assessment platforms), and Trend (15 percent). Coverage also no longer misclassifies Google Workspace `ADMIN-*` checks as Active Directory.
+
+### Added
+- **Gates must prove they can fail.** `Tests/Invoke-GatePoisonSelfTests.ps1` injects a failure through each release gate's literal invocation shape and requires a non-zero exit, for gate A (fixture suite, via a new `-PoisonSelfTest` switch that refuses to emit artifacts), gate B (collector contracts), and gate D (full unit suite); gate C already self-tests in-file. Wired into `Publish-Release.ps1` and CI. Gate B now aborts instead of warn-and-skip when its test file is missing.
+
 ## [2.47.0] - 2026-07-11
 
 ### Changed

@@ -92,7 +92,7 @@ Import-Module ./Guerrilla/Guerrilla.psd1
 
 ### Step 2: Open the Operations Console
 
-`Show-Guerrilla` is the driver's seat. It opens a five-tab WPF window that runs the whole platform: Operations (run scans), Safehouse (manage credentials), Patrol (continuous monitoring), Reports (browse and convert to PDF), and Settings (runtime config). Configure everything locally, in the module, from here.
+`Show-Guerrilla` is the driver's seat. It opens a WPF window that runs the whole platform: Operations (run scans), Safehouse (manage credentials), Reports (browse and convert to PDF), and Settings (runtime config). Configure everything locally, in the module, from here.
 
 ```powershell
 Show-Guerrilla
@@ -118,7 +118,6 @@ Set-Safehouse
    - **Google Workspace**: paste your service account JSON key plus admin email.
    - **Entra ID / M365**: Tenant ID, Client ID, Client Secret (with GUID validation).
    - **Active Directory**: uses your current Kerberos session by default, so no credential is stored and no prompt is shown.
-   - **Alerting providers**: webhook URLs and API keys for any alert channels you configure.
 4. **Confirmation** displays a summary of stored credentials and your next command.
 
 When you run `Set-Safehouse` without arguments, the first question is which platforms to set up. Pick only the ones you have. An Entra-only shop is never marched through Google Workspace prompts, and AD never asks for a stored credential.
@@ -175,18 +174,9 @@ Export-RemediationScripts
 Export-ReportPdf -HtmlPath './Guerrilla-Technical-Report.html'
 ```
 
-### Step 7: Set up continuous monitoring (optional)
+### Step 7: Run it on a cadence (optional)
 
-```powershell
-# Register a scheduled task that scans every 60 minutes and sends alerts
-Register-Patrol -Platforms Workspace, Entra, AD -IntervalMinutes 60 -SendAlerts
-
-# View patrol status
-Get-Patrol
-
-# Remove a patrol
-Unregister-Patrol -TaskName 'Guerrilla-Patrol'
-```
+Guerrilla does not run in the background. You run it, and every run is recorded locally and compared against your previous run: the report opens with what changed, including newly failing checks, confirmed remediations, and any check that went dark. To assess on a schedule, use your operating system's scheduler; see [docs/scheduled-runs.md](./docs/scheduled-runs.md) for Task Scheduler (Windows) and cron (macOS/Linux) examples.
 
 ---
 
@@ -292,19 +282,9 @@ Guerrilla uses your current Kerberos session by default, so no stored credential
 | `Invoke-ADAudit` | `Invoke-ADRecon` | Active Directory security audit (211 checks) |
 | `Invoke-EntraAudit` | `Invoke-CloudRecon` | Entra ID, Azure, Intune, and M365 audit (257 checks) |
 | `Invoke-GWSAudit` | (none) | Google Workspace security configuration audit (158 checks) |
-| `Invoke-Recon` | `Invoke-WorkspaceRecon` | Google Workspace compromise assessment with 23 behavioral detection signals |
 | `Invoke-Campaign` | (none) | Unified audit across all three platforms in a single run |
 
-> `Invoke-Recon` (Workspace user behavior) and `Invoke-ADAudit` (AD configuration audit) look nearly identical but cover different platforms. The platform-named aliases exist to make the intent clear at the call site.
-
-### Continuous monitoring
-
-| Function | Description |
-|----------|-------------|
-| `Invoke-Surveillance` | Entra ID sign-in risk and directory change monitoring via Graph |
-| `Invoke-Watchtower` | Active Directory baseline monitoring with drift detection |
-| `Invoke-Wiretap` | M365 audit log monitoring (Exchange, SharePoint, Teams, Defender, Power Platform) |
-| `Invoke-Lookout` | Google Workspace posture monitoring with configuration-drift detection |
+Every run is recorded to a local, per-user history on your machine (no accounts, no telemetry), and the report opens with what changed since your last run.
 
 ### Credential and configuration
 
@@ -313,25 +293,6 @@ Guerrilla uses your current Kerberos session by default, so no stored credential
 | `Set-Safehouse` | Manage the encrypted vault, credentials, rotation, and module configuration |
 | `Get-Safehouse` | View vault status, stored credentials, and current configuration |
 | `Show-Guerrilla` | Open the WPF Operations Console (Windows only) |
-
-### Alerting
-
-Dispatch alerts through 10 providers. Each has a dedicated function, or use `Send-Signal` to route automatically.
-
-| Function | Provider |
-|----------|----------|
-| `Send-Signal` | Auto-route to configured provider(s) |
-| `Send-SignalSendGrid` | SendGrid email |
-| `Send-SignalMailgun` | Mailgun email |
-| `Send-SignalTwilio` | Twilio SMS |
-| `Send-SignalTeams` | Microsoft Teams (Adaptive Cards) |
-| `Send-SignalSlack` | Slack (Block Kit) |
-| `Send-SignalWebhook` | Generic webhook / SIEM ingestion |
-| `Send-SignalPagerDuty` | PagerDuty with severity mapping |
-| `Send-SignalPushover` | Pushover mobile push |
-| `Send-SignalSyslog` | Syslog in CEF or LEEF format |
-| `Send-SignalEventLog` | Windows Event Log |
-| `Send-SignalDigest` | Aggregated daily or weekly digest |
 
 ### Scoring and analysis
 
@@ -357,30 +318,21 @@ Dispatch alerts through 10 providers. Each has a dedicated function, or use `Sen
 | `Export-ReportPdf` | Convert HTML reports to PDF via Edge or Chrome headless |
 | `Export-BloodHoundData` | Export AD attack-path data for BloodHound ingestion |
 
-### Scheduling
-
-| Function | Description |
-|----------|-------------|
-| `Register-Patrol` | Create scheduled scan tasks with interval and alert dispatch |
-| `Unregister-Patrol` | Remove scheduled tasks |
-| `Get-Patrol` | View task status, last run, next run |
-
 ---
 
 ## Security score tiers
 
-The Guerrilla Score is a weighted composite of four components:
+The Guerrilla Score is a weighted composite of three components:
 
 | Component | Weight | What it measures |
 |-----------|--------|------------------|
-| Posture | 40% | Audit findings weighted by severity |
-| Threats | 30% | Active threat detections from monitoring |
-| Coverage | 15% | Percentage of platforms actively scanned |
-| Trend | 15% | Score change from the previous scan |
+| Posture | 70% | Audit findings weighted by severity |
+| Coverage | 15% | Percentage of the three platforms assessed |
+| Trend | 15% | Score change from the previous run |
 
 | Score | Tier | Meaning |
 |-------|------|---------|
-| 90 to 100 | FORTRESS | Excellent posture, maintain monitoring |
+| 90 to 100 | FORTRESS | Excellent posture, keep assessing on a cadence |
 | 75 to 89 | DEFENDED POSITION | Strong foundation, address remaining gaps |
 | 60 to 74 | CONTESTED GROUND | Needs improvement, prioritize action |
 | 40 to 59 | EXPOSED FLANK | Significant gaps, immediate attention |
@@ -432,11 +384,10 @@ removed in the next major version.
 |-------|-------------|---------|
 | `Invoke-ADRecon` | `Invoke-ADAudit` | Active Directory configuration audit |
 | `Invoke-CloudRecon` | `Invoke-EntraAudit` | Entra ID / Azure / Intune / M365 audit |
-| `Invoke-WorkspaceRecon` | `Invoke-Recon` | Google Workspace user-behavior assessment |
 
 ### Migrating from an earlier install
 
-If you previously installed the module under its former name, Guerrilla migrates your data automatically and transparently on first load. The per-user data directory (reports, config, patrol state) is carried forward one time, and safehouse credential resolution falls back to the legacy vault when the new `Guerrilla` vault has no value. No manual re-registration is required. See the [CHANGELOG](./CHANGELOG.md) for the version this took effect.
+If you previously installed the module under its former name, Guerrilla migrates your data automatically and transparently on first load. The per-user data directory (reports and config) is carried forward one time, and safehouse credential resolution falls back to the legacy vault when the new `Guerrilla` vault has no value. No manual re-registration is required. See the [CHANGELOG](./CHANGELOG.md) for the version this took effect.
 
 ### Non-interactive imports
 

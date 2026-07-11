@@ -49,9 +49,6 @@ function Set-Safehouse {
     .PARAMETER Profile
         Set the scoring profile (Default or K12).
 
-    .PARAMETER MinimumAlertLevel
-        Set the minimum threat level for alerts.
-
     .PARAMETER ConfigPath
         Path to the Guerrilla runtime config file (config.json). Used with non-credential settings.
 
@@ -123,85 +120,6 @@ function Set-Safehouse {
         [Parameter(ParameterSetName = 'ConfigSettings')]
         [ValidateSet('Default', 'K12')]
         [string]$Profile,
-
-        [Parameter(ParameterSetName = 'ConfigSettings')]
-        [ValidateSet('CRITICAL', 'HIGH', 'MEDIUM', 'LOW')]
-        [string]$MinimumAlertLevel,
-
-        [Parameter(ParameterSetName = 'ConfigSettings')]
-        [bool]$EnableAlerting,
-
-        [Parameter(ParameterSetName = 'ConfigSettings')]
-        [bool]$EnableSuppression,
-
-        [Parameter(ParameterSetName = 'ConfigSettings')]
-        [ValidateRange(1, 720)]
-        [int]$SuppressionWindowHours,
-
-        [Parameter(ParameterSetName = 'ConfigSettings')]
-        [ValidateRange(0, 23)]
-        [int]$BusinessHoursStart,
-
-        [Parameter(ParameterSetName = 'ConfigSettings')]
-        [ValidateRange(0, 23)]
-        [int]$BusinessHoursEnd,
-
-        [Parameter(ParameterSetName = 'ConfigSettings')]
-        [string]$BusinessHoursTimezone,
-
-        [Parameter(ParameterSetName = 'ConfigSettings')]
-        [string[]]$BusinessDays,
-
-        [Parameter(ParameterSetName = 'ConfigSettings')]
-        [ValidateRange(100, 5000)]
-        [int]$ImpossibleTravelSpeedKmh,
-
-        [Parameter(ParameterSetName = 'ConfigSettings')]
-        [ValidateRange(1, 60)]
-        [int]$ConcurrentSessionWindowMinutes,
-
-        [Parameter(ParameterSetName = 'ConfigSettings')]
-        [ValidateRange(2, 100)]
-        [int]$BruteForceFailureThreshold,
-
-        [Parameter(ParameterSetName = 'ConfigSettings')]
-        [ValidateRange(1, 60)]
-        [int]$BruteForceWindowMinutes,
-
-        [Parameter(ParameterSetName = 'ConfigSettings')]
-        [ValidateRange(0, 7)]
-        [int]$AutoUpdateIntelDays,
-
-        [Parameter(ParameterSetName = 'ConfigSettings')]
-        [ValidateRange(10, 1000)]
-        [int]$BulkDownloadThreshold,
-
-        [Parameter(ParameterSetName = 'ConfigSettings')]
-        [ValidateRange(1, 120)]
-        [int]$BulkDownloadWindowMinutes,
-
-        [Parameter(ParameterSetName = 'ConfigSettings')]
-        [ValidateRange(10, 1000)]
-        [int]$M365BulkFileThreshold,
-
-        [Parameter(ParameterSetName = 'ConfigSettings')]
-        [ValidateRange(1, 120)]
-        [int]$M365BulkFileWindowMinutes,
-
-        [Parameter(ParameterSetName = 'ConfigSettings')]
-        [string[]]$TrustedCountries,
-
-        [Parameter(ParameterSetName = 'ConfigSettings')]
-        [string[]]$KnownCompromisedUsers,
-
-        [Parameter(ParameterSetName = 'ConfigSettings')]
-        [string[]]$AdditionalAttackerIps,
-
-        [Parameter(ParameterSetName = 'ConfigSettings')]
-        [string[]]$AdditionalCloudCidrs,
-
-        [Parameter(ParameterSetName = 'ConfigSettings')]
-        [string[]]$AdditionalSuspiciousCountries,
 
         [Parameter(ParameterSetName = 'ConfigSettings')]
         [ValidateSet('en-US')]
@@ -352,33 +270,7 @@ function Set-Safehouse {
                         generateHtml = $true
                         generateJson = $true
                     }
-                    alerting = @{
-                        enabled            = $true
-                        minimumThreatLevel = 'HIGH'
-                        suppression        = @{ enabled = $false; windowHours = 24 }
-                    }
                     ad = @{ server = '' }
-                    detection = @{
-                        knownCompromisedUsers          = @()
-                        additionalAttackerIps         = @()
-                        additionalCloudCidrs          = @()
-                        additionalSuspiciousCountries = @()
-                        businessHoursStart            = 7
-                        businessHoursEnd              = 19
-                        businessHoursTimezone         = 'UTC'
-                        businessDays                  = @('Monday','Tuesday','Wednesday','Thursday','Friday')
-                        impossibleTravelSpeedKmh      = 900
-                        concurrentSessionWindowMinutes = 5
-                        bruteForceFailureThreshold    = 5
-                        bruteForceWindowMinutes       = 10
-                        autoUpdateIntelDays           = 7
-                        bulkDownloadThreshold         = 50
-                        bulkDownloadWindowMinutes     = 10
-                        m365BulkFileThreshold         = 100
-                        m365BulkFileWindowMinutes     = 30
-                        trustedCountries              = @('US', 'CA', 'GB')
-                    }
-                    scheduling = @{ taskName = 'Guerrilla-Patrol'; intervalMinutes = 60 }
                 }
             }
 
@@ -387,38 +279,10 @@ function Set-Safehouse {
             } else {
                 if ($OutputDirectory) { $config.output.directory = $OutputDirectory }
                 if ($Profile) { $config.profile = $Profile }
-                if ($MinimumAlertLevel) { $config.alerting.minimumThreatLevel = $MinimumAlertLevel }
-                if ($PSBoundParameters.ContainsKey('EnableAlerting')) { $config.alerting.enabled = $EnableAlerting }
-                if ($PSBoundParameters.ContainsKey('EnableSuppression')) {
-                    if (-not $config.alerting.suppression) { $config.alerting.suppression = @{ enabled = $false; windowHours = 24 } }
-                    $config.alerting.suppression.enabled = $EnableSuppression
-                }
-                if ($PSBoundParameters.ContainsKey('SuppressionWindowHours')) {
-                    if (-not $config.alerting.suppression) { $config.alerting.suppression = @{ enabled = $false; windowHours = 24 } }
-                    $config.alerting.suppression.windowHours = $SuppressionWindowHours
-                }
                 if ($ADServer) {
                     if (-not $config.ad) { $config.ad = @{ server = '' } }
                     $config.ad.server = $ADServer
                 }
-                if ($PSBoundParameters.ContainsKey('BusinessHoursStart'))    { $config.detection.businessHoursStart = $BusinessHoursStart }
-                if ($PSBoundParameters.ContainsKey('BusinessHoursEnd'))      { $config.detection.businessHoursEnd = $BusinessHoursEnd }
-                if ($BusinessHoursTimezone)       { $config.detection.businessHoursTimezone = $BusinessHoursTimezone }
-                if ($BusinessDays)                { $config.detection.businessDays = $BusinessDays }
-                if ($PSBoundParameters.ContainsKey('ImpossibleTravelSpeedKmh'))       { $config.detection.impossibleTravelSpeedKmh = $ImpossibleTravelSpeedKmh }
-                if ($PSBoundParameters.ContainsKey('ConcurrentSessionWindowMinutes')) { $config.detection.concurrentSessionWindowMinutes = $ConcurrentSessionWindowMinutes }
-                if ($PSBoundParameters.ContainsKey('BruteForceFailureThreshold'))     { $config.detection.bruteForceFailureThreshold = $BruteForceFailureThreshold }
-                if ($PSBoundParameters.ContainsKey('BruteForceWindowMinutes'))        { $config.detection.bruteForceWindowMinutes = $BruteForceWindowMinutes }
-                if ($PSBoundParameters.ContainsKey('AutoUpdateIntelDays'))            { $config.detection.autoUpdateIntelDays = $AutoUpdateIntelDays }
-                if ($PSBoundParameters.ContainsKey('BulkDownloadThreshold'))         { $config.detection.bulkDownloadThreshold = $BulkDownloadThreshold }
-                if ($PSBoundParameters.ContainsKey('BulkDownloadWindowMinutes'))     { $config.detection.bulkDownloadWindowMinutes = $BulkDownloadWindowMinutes }
-                if ($PSBoundParameters.ContainsKey('M365BulkFileThreshold'))         { $config.detection.m365BulkFileThreshold = $M365BulkFileThreshold }
-                if ($PSBoundParameters.ContainsKey('M365BulkFileWindowMinutes'))     { $config.detection.m365BulkFileWindowMinutes = $M365BulkFileWindowMinutes }
-                if ($TrustedCountries)            { $config.detection.trustedCountries = $TrustedCountries }
-                if ($KnownCompromisedUsers)        { $config.detection.knownCompromisedUsers = $KnownCompromisedUsers }
-                if ($AdditionalAttackerIps)        { $config.detection.additionalAttackerIps = $AdditionalAttackerIps }
-                if ($AdditionalCloudCidrs)         { $config.detection.additionalCloudCidrs = $AdditionalCloudCidrs }
-                if ($AdditionalSuspiciousCountries) { $config.detection.additionalSuspiciousCountries = $AdditionalSuspiciousCountries }
                 if ($ReportLanguage) { $config.reportLanguage = $ReportLanguage }
             }
 
@@ -941,7 +805,7 @@ function Invoke-CredentialMigration {
         $migrated++
 
         # Also persist the delegated-admin email to the vault so vault-only scans
-        # (GUI / scheduled patrols with no -ConfigFile) can resolve it. Without this,
+        # (GUI / scheduled scans with no -ConfigFile) can resolve it. Without this,
         # config-file setup followed by a vault-only Invoke-GWSAudit fails with
         # "AdminEmail is required." The interactive path stores this key too (above).
         if ($Config.google.adminEmail) {
@@ -1047,9 +911,9 @@ function Invoke-CredentialMigration {
             $provs.pagerduty.routingKey = ''
             $migrated++
         }
-        # Pushover — bundled JSON (apiToken/userKey), matching Send-Signal's 'pushover'
-        # resolver and the interactive 'pushoverConfig' shape. Canonical key:
-        # GUERRILLA_PUSHOVER_KEY. (Older builds wrote a numbered GUERRILLA_PUSHOVER_1.)
+        # Pushover — bundled JSON (apiToken/userKey), matching the interactive
+        # 'pushoverConfig' shape. Canonical key: GUERRILLA_PUSHOVER_KEY.
+        # (Older builds wrote a numbered GUERRILLA_PUSHOVER_1.)
         if ($provs.pushover -and ($provs.pushover.apiToken -or $provs.pushover.appToken)) {
             $poCred = @{
                 apiToken = ($provs.pushover.apiToken ?? $provs.pushover.appToken)
@@ -1065,8 +929,8 @@ function Invoke-CredentialMigration {
             $migrated++
             Write-Host "  ${green}✓ Migrated: Pushover credentials${reset}"
         }
-        # Twilio / SMS — bundled JSON, matching Send-Signal's 'sms' resolver and the
-        # interactive 'twilioConfig' shape. Canonical key: GUERRILLA_TWILIO_KEY.
+        # Twilio / SMS — bundled JSON, matching the interactive 'twilioConfig' shape.
+        # Canonical key: GUERRILLA_TWILIO_KEY.
         if ($provs.twilio -and $provs.twilio.authToken) {
             $twCred = @{
                 accountSid = $provs.twilio.accountSid

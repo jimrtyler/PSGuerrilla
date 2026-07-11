@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════════════════════
-#  GUERRILLA — Security Assessment & Continuous Monitoring
+#  GUERRILLA — Security Assessment
 # ═══════════════════════════════════════════════════════════════════════════════
 #  Written by Jim Tyler, Microsoft MVP
 #  Author of "PowerShell for Systems Engineers"
@@ -32,28 +32,28 @@ Describe 'Set-Safehouse' {
             $result.Status | Should -Be 'Saved'
         }
 
-        It 'creates default config structure' {
+        It 'creates default config structure without retired monitoring sections' {
             $cfgPath = Join-Path $TestDrive 'default-cfg/config.json'
-            Set-Safehouse -MinimumAlertLevel HIGH -ConfigPath $cfgPath
+            Set-Safehouse -Profile Default -ConfigPath $cfgPath
             $config = Get-Content $cfgPath -Raw | ConvertFrom-Json -AsHashtable
             $config.output | Should -Not -BeNullOrEmpty
-            $config.alerting | Should -Not -BeNullOrEmpty
-            $config.detection | Should -Not -BeNullOrEmpty
-            $config.scheduling | Should -Not -BeNullOrEmpty
+            # The monitoring subsystem is removed; a fresh config must not
+            # scaffold its sections.
+            $config.Keys | Should -Not -Contain 'alerting'
+            $config.Keys | Should -Not -Contain 'detection'
+            $config.Keys | Should -Not -Contain 'scheduling'
         }
 
         It 'sets Guerrilla defaults in new config' {
             $cfgPath = Join-Path $TestDrive 'guerrilla-defaults/config.json'
-            Set-Safehouse -MinimumAlertLevel HIGH -ConfigPath $cfgPath
+            Set-Safehouse -Profile Default -ConfigPath $cfgPath
             $config = Get-Content $cfgPath -Raw | ConvertFrom-Json -AsHashtable
             $config.output.directory | Should -Match 'Guerrilla'
-            $config.scheduling.taskName | Should -Be 'Guerrilla-Patrol'
-            $config.detection.businessHoursStart | Should -Be 7
         }
 
         It 'respects -WhatIf and does not write the config file' {
             $cfgPath = Join-Path $TestDrive 'whatif-cfg/config.json'
-            Set-Safehouse -MinimumAlertLevel HIGH -ConfigPath $cfgPath -WhatIf
+            Set-Safehouse -Profile Default -ConfigPath $cfgPath -WhatIf
             Test-Path $cfgPath | Should -BeFalse
         }
     }
@@ -62,28 +62,20 @@ Describe 'Set-Safehouse' {
         It 'merges parameters into existing config' {
             $cfgPath = Join-Path $TestDrive 'merge-cfg/config.json'
             Set-Safehouse -OutputDirectory 'C:\Custom\Reports' -ConfigPath $cfgPath
-            Set-Safehouse -MinimumAlertLevel CRITICAL -ConfigPath $cfgPath
+            Set-Safehouse -Profile K12 -ConfigPath $cfgPath
 
             $config = Get-Content $cfgPath -Raw | ConvertFrom-Json -AsHashtable
             $config.output.directory | Should -Be 'C:\Custom\Reports'
-            $config.alerting.minimumThreatLevel | Should -Be 'CRITICAL'
+            $config.profile | Should -Be 'K12'
         }
 
-        It 'updates alerting toggles' {
-            $cfgPath = Join-Path $TestDrive 'alert-toggle/config.json'
-            Set-Safehouse -EnableAlerting $false -EnableSuppression $true -SuppressionWindowHours 12 -ConfigPath $cfgPath
-            $config = Get-Content $cfgPath -Raw | ConvertFrom-Json -AsHashtable
-            $config.alerting.enabled | Should -BeFalse
-            $config.alerting.suppression.enabled | Should -BeTrue
-            $config.alerting.suppression.windowHours | Should -Be 12
-        }
-
-        It 'updates detection settings' {
-            $cfgPath = Join-Path $TestDrive 'detect-cfg/config.json'
-            Set-Safehouse -KnownCompromisedUsers @('user1@t.com', 'user2@t.com') -ConfigPath $cfgPath
-            $config = Get-Content $cfgPath -Raw | ConvertFrom-Json -AsHashtable
-            $config.detection.knownCompromisedUsers | Should -Contain 'user1@t.com'
-            $config.detection.knownCompromisedUsers | Should -Contain 'user2@t.com'
+        It 'no longer exposes the retired monitoring parameters' {
+            $cmd = Get-Command Set-Safehouse
+            foreach ($gone in @('MinimumAlertLevel', 'EnableAlerting', 'EnableSuppression',
+                                'KnownCompromisedUsers', 'ImpossibleTravelSpeedKmh',
+                                'BruteForceFailureThreshold', 'BusinessHoursStart')) {
+                $cmd.Parameters.Keys | Should -Not -Contain $gone
+            }
         }
     }
 

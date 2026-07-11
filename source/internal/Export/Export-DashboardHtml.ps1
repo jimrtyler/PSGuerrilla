@@ -10,7 +10,8 @@ function Export-DashboardHtml {
     .PARAMETER Findings
         Array of audit finding objects.
     .PARAMETER ScanResults
-        Array of scan result objects.
+        Accepted for caller compatibility; not rendered. The dashboard shows
+        assessment results only.
     .PARAMETER OutputPath
         File path for the HTML output.
     .PARAMETER OrganizationName
@@ -54,21 +55,6 @@ function Export-DashboardHtml {
     $platforms = @{
         'Active Directory' = @{ Findings = @($Findings | Where-Object { ($_.CheckId ?? '') -match '^AD' }); Color = '#6b9b6b'; Icon = '&#x1F3F0;' }
         'Cloud'            = @{ Findings = @($Findings | Where-Object { ($_.CheckId ?? '') -match '^(AUTH|ADMIN|EMAIL|COLLAB|DRIVE|OAUTH|DEVICE|LOG|EID|M365|AZIAM|INTUNE)' }); Color = '#a8b58b'; Icon = '&#x1F50D;' }
-        'Surveillance'   = @{ Findings = @(); Color = '#c9a84c'; Icon = '&#x1F441;' }
-        'Watchtower'     = @{ Findings = @(); Color = '#d4883a'; Icon = '&#x1F3EF;' }
-    }
-
-    # Threat counts from scan results
-    $totalThreats = 0
-    foreach ($result in ($ScanResults ?? @())) {
-        $totalThreats += ($result.CriticalCount ?? 0) + ($result.HighCount ?? 0) + ($result.MediumCount ?? 0) + ($result.LowCount ?? 0)
-        $platform = $result.Platform ?? $result.PSObject.TypeNames[0] ?? ''
-        if ($platform -match 'Surveillance') {
-            $platforms['Surveillance'].ThreatCount = ($result.CriticalCount ?? 0) + ($result.HighCount ?? 0) + ($result.MediumCount ?? 0)
-        }
-        if ($platform -match 'Watchtower') {
-            $platforms['Watchtower'].ChangeCount = ($result.ChangeCount ?? 0)
-        }
     }
 
     # Components breakdown
@@ -113,22 +99,18 @@ function Export-DashboardHtml {
 
     # Platform cards
     $platformCardsHtml = ''
-    foreach ($tName in @('Active Directory', 'Cloud', 'Surveillance', 'Watchtower')) {
+    foreach ($tName in @('Active Directory', 'Cloud')) {
         $t = $platforms[$tName]
         $tFail = @($t.Findings | Where-Object Status -eq 'FAIL').Count
         $tTotal = $t.Findings.Count
         $tScore = if ($tTotal -gt 0) { [Math]::Round(100 * ($tTotal - $tFail) / $tTotal, 0) } else { 'N/A' }
-        $isActive = $tTotal -gt 0 -or $t.ThreatCount -gt 0 -or $t.ChangeCount -gt 0
+        $isActive = $tTotal -gt 0
 
         $platformCardsHtml += @"
 <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:15px;border-left:4px solid $(if ($isActive) { $t.Color } else { 'var(--dim)' });">
 <div style="font-size:1.1em;font-weight:bold;color:$(if ($isActive) { $t.Color } else { 'var(--dim)' });">$($t.Icon) $tName</div>
 $(if ($tTotal -gt 0) {
 "<div style='margin-top:8px;'>Score: <strong>$tScore%</strong> | Checks: $tTotal | Failures: <span style='color:var(--deep-orange)'>$tFail</span></div>"
-} elseif ($t.ThreatCount) {
-"<div style='margin-top:8px;'>Threats: <strong>$($t.ThreatCount)</strong></div>"
-} elseif ($t.ChangeCount) {
-"<div style='margin-top:8px;'>Changes: <strong>$($t.ChangeCount)</strong></div>"
 } else {
 "<div style='margin-top:8px;color:var(--dim);'>Not scanned</div>"
 })
@@ -188,7 +170,6 @@ $componentHtml
 <div class="stat"><div class="val" style="color:var(--sage);">$passRate%</div><div class="lbl">Pass Rate</div></div>
 <div class="stat"><div class="val" style="color:var(--deep-orange);">$failCount</div><div class="lbl">Failures</div></div>
 <div class="stat"><div class="val" style="color:var(--gold);">$warnCount</div><div class="lbl">Warnings</div></div>
-$(if ($totalThreats -gt 0) { "<div class='stat'><div class='val' style='color:var(--dark-red);'>$totalThreats</div><div class='lbl'>Threats</div></div>" })
 </div>
 
 <h2>Platform Overview</h2>

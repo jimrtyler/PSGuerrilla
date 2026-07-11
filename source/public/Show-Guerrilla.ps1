@@ -5,7 +5,7 @@ function Show-Guerrilla {
     <#
     .SYNOPSIS
         Opens the Guerrilla operations GUI — a WPF window for managing credentials,
-        running scans, viewing reports, and configuring continuous monitoring.
+        running scans, and viewing reports.
 
     .DESCRIPTION
         Show-Guerrilla wraps the most common operational paths in a single tabbed
@@ -15,11 +15,6 @@ function Show-Guerrilla {
             and automatic report open on completion.
           * Safehouse  — list, remove, rotate, and test stored credentials. Export
             metadata for documentation.
-          * Patrol     — view and manage scheduled-task patrols (continuous
-            monitoring).
-          * Signals    — manage alert providers (Teams, Slack, webhook, PagerDuty,
-            Pushover, email, SMS, Syslog, Event Log) and global alerting settings;
-            send a synthetic test alert through any provider.
           * Reports    — browse HTML reports, open in browser, convert to PDF.
           * Settings   — edit runtime config (profile, alert level, output dir).
           * Inspector  — browse and read the source of every scan, check, and helper
@@ -28,9 +23,9 @@ function Show-Guerrilla {
             confidentiality). The Guerrilla / Jim Tyler footer attribution is kept.
 
         The GUI is a wrapper around the existing public cmdlets — every action it
-        takes is the equivalent of running Set-Safehouse / Invoke-ADAudit /
-        Register-Patrol / etc. from a prompt. The CLI continues to work and stays
-        the source of truth for anything the GUI doesn't yet cover.
+        takes is the equivalent of running Set-Safehouse / Invoke-ADAudit / etc.
+        from a prompt. The CLI continues to work and stays the source of truth
+        for anything the GUI doesn't yet cover.
 
         Windows only. The CLI cmdlets remain cross-platform.
 
@@ -42,8 +37,8 @@ function Show-Guerrilla {
         Alias: RuntimeConfig.
 
     .PARAMETER StartOn
-        Which tab to open on launch. One of: Operations, Safehouse, Patrol, Signals,
-        Reports, Settings, Source, Branding. Default: Operations.
+        Which tab to open on launch. One of: Operations, Safehouse, Reports,
+        Settings, Source, Branding. Default: Operations.
 
     .PARAMETER KeepConsole
         Keep the host console visible; by default it is hidden while the GUI is open
@@ -68,7 +63,7 @@ function Show-Guerrilla {
         [Alias('RuntimeConfig')]
         [string]$ConfigPath,
 
-        [ValidateSet('Operations', 'Safehouse', 'Patrol', 'Signals', 'Reports', 'Settings', 'Source', 'Branding')]
+        [ValidateSet('Operations', 'Safehouse', 'Reports', 'Settings', 'Source', 'Branding')]
         [string]$StartOn = 'Operations',
 
         [switch]$KeepConsole
@@ -77,7 +72,7 @@ function Show-Guerrilla {
     # Windows-only guard. WPF doesn't exist on macOS/Linux — point users at the CLI.
     $onWindows = if (Test-Path variable:IsWindows) { $IsWindows } else { $true }
     if (-not $onWindows) {
-        throw 'Show-Guerrilla requires Windows (WPF). On macOS/Linux, use the CLI cmdlets: Set-Safehouse, Invoke-ADAudit, Invoke-GWSAudit, Invoke-EntraAudit, Invoke-Campaign, Register-Patrol.'
+        throw 'Show-Guerrilla requires Windows (WPF). On macOS/Linux, use the CLI cmdlets: Set-Safehouse, Invoke-ADAudit, Invoke-GWSAudit, Invoke-EntraAudit, Invoke-Campaign.'
     }
 
     # WPF needs a single-threaded apartment; without this guard ShowDialog fails
