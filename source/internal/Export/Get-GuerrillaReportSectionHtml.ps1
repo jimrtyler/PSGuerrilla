@@ -468,3 +468,133 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 "@
 }
+
+function Get-GuerrillaComparisonSectionHtml {
+    <#
+    .SYNOPSIS
+        Shared "What changed since last run" section for every summary report.
+    .DESCRIPTION
+        Renders a Guerrilla.RunDiff (Compare-GuerrillaRun output) as the
+        report's lead section: the three first-class transitions in order
+        (newly failing, lost visibility, newly passing), then regressions in
+        place, restorations, and NEW/RETIRED labels; the previous run's date
+        and module version; the overall score delta, per-pillar deltas, and
+        the Not Assessed count delta at the same prominence as the score
+        delta. A first recorded run gets an honest line instead of fabricated
+        change. $null (comparison not run) renders nothing.
+    #>
+    [CmdletBinding()]
+    param(
+        [AllowNull()]$RunDiff,
+        [Parameter(Mandatory)][scriptblock]$Esc
+    )
+
+    if ($null -eq $RunDiff) { return '' }
+
+    $style = @"
+<style>
+  .cmp-section { border: 1px solid var(--border); border-left: 4px solid var(--gold); border-radius: 6px; padding: 14px 18px; margin: 16px 0; }
+  .cmp-section h2 { margin-top: 0; }
+  .cmp-meta { opacity: .8; font-size: .92em; margin: 2px 0 10px 0; }
+  .cmp-deltas { display: flex; flex-wrap: wrap; gap: 18px; margin: 10px 0 14px 0; }
+  .cmp-delta { min-width: 130px; }
+  .cmp-delta .val { font-size: 1.5em; font-weight: 700; }
+  .cmp-delta .lbl { font-size: .85em; opacity: .75; }
+  .cmp-up { color: var(--pass); } .cmp-down { color: var(--fail); } .cmp-flat { opacity: .6; }
+  .cmp-class { margin: 10px 0; }
+  .cmp-class ul { margin: 4px 0 8px 20px; font-size: .92em; }
+  .cmp-pillars { font-size: .9em; margin-top: 8px; }
+</style>
+"@
+
+    $html = [System.Text.StringBuilder]::new(8192)
+    [void]$html.Append($style)
+    [void]$html.Append('<div class="cmp-section"><h2>What Changed Since Last Run</h2>')
+
+    if ($RunDiff.BaselineRun) {
+        [void]$html.Append(@"
+<p>This is the first recorded run at this scope. Run history begins with this
+version's unified comparison engine, so earlier delta files are not read;
+comparison begins with your next assessment, when this run becomes the
+baseline.</p>
+</div>
+"@)
+        return $html.ToString()
+    }
+
+    $prevDate = "$($RunDiff.Previous.GeneratedAt)"
+    if ($prevDate.Length -ge 19) { $prevDate = $prevDate.Substring(0, 19).Replace('T', ' ') + ' UTC' }
+    [void]$html.Append("<p class='cmp-meta'>Previous run: $(& $Esc $prevDate), module version $(& $Esc "$($RunDiff.Previous.ModuleVersion)")")
+    if ($RunDiff.VersionSkew) {
+        [void]$html.Append(" (this run: $(& $Esc "$($RunDiff.Current.ModuleVersion)"); check catalogs differ, so NEW and RETIRED entries below are expected)")
+    }
+    [void]$html.Append('</p>')
+
+    # Score delta and Not Assessed delta at equal prominence.
+    $fmtDelta = {
+        param($delta, $goodWhenNegative)
+        if ($null -eq $delta) { return "<span class='cmp-flat'>n/a</span>" }
+        $d = [int]$delta
+        if ($d -eq 0) { return "<span class='cmp-flat'>&#9654; 0</span>" }
+        $isGood = if ($goodWhenNegative) { $d -lt 0 } else { $d -gt 0 }
+        $cls = if ($isGood) { 'cmp-up' } else { 'cmp-down' }
+        $arrow = if ($d -gt 0) { '&#9650;' } else { '&#9660;' }
+        $sign = if ($d -gt 0) { '+' } else { '' }
+        return "<span class='$cls'>$arrow $sign$d</span>"
+    }
+    [void]$html.Append('<div class="cmp-deltas">')
+    [void]$html.Append("<div class='cmp-delta'><div class='val'>$(& $fmtDelta $RunDiff.ScoreDelta $false)</div><div class='lbl'>Score (now $($RunDiff.Current.OverallScore), was $($RunDiff.Previous.OverallScore))</div></div>")
+    [void]$html.Append("<div class='cmp-delta'><div class='val'>$(& $fmtDelta $RunDiff.NotAssessedDelta $true)</div><div class='lbl'>Not Assessed count</div></div>")
+    [void]$html.Append('</div>')
+
+    $pillarRows = @($RunDiff.PillarDeltas | Where-Object { $null -ne $_.Delta -and $_.Delta -ne 0 })
+    if ($pillarRows.Count -gt 0) {
+        [void]$html.Append('<div class="cmp-pillars"><strong>Zero Trust pillars that moved:</strong> ')
+        $parts = foreach ($p in $pillarRows) {
+            "$(& $Esc $p.Pillar) $(& $fmtDelta $p.Delta $false)"
+        }
+        [void]$html.Append(($parts -join ' &nbsp;&middot;&nbsp; '))
+        [void]$html.Append('</div>')
+    }
+
+    $renderClass = {
+        param($title, $entries, $color, $showFromTo)
+        if (@($entries).Count -eq 0) { return '' }
+        $sb = [System.Text.StringBuilder]::new()
+        [void]$sb.Append("<div class='cmp-class'><p style='color:$color;font-weight:600;margin:0'>$title`: $(@($entries).Count)</p><ul>")
+        foreach ($e in (@($entries) | Select-Object -First 15)) {
+            $ou = if ($e.OrgUnitPath) { " <span style='opacity:.6'>[$(& $Esc $e.OrgUnitPath)]</span>" } else { '' }
+            $sev = if ($e.Severity) { "<span class='badge badge-$("$($e.Severity)".ToLower())'>$(& $Esc $e.Severity)</span> " } else { '' }
+            $fromTo = if ($showFromTo -and $e.From -and $e.To) { " <span style='opacity:.6'>($(& $Esc $e.From) &rarr; $(& $Esc $e.To))</span>" }
+                      elseif ($showFromTo -and $e.To) { " <span style='opacity:.6'>(now $(& $Esc $e.To))</span>" }
+                      elseif ($showFromTo -and $e.From) { " <span style='opacity:.6'>(was $(& $Esc $e.From))</span>" }
+                      else { '' }
+            [void]$sb.Append("<li>$sev$(& $Esc $e.CheckId)$ou$fromTo</li>")
+        }
+        if (@($entries).Count -gt 15) { [void]$sb.Append("<li style='opacity:.6'>and $(@($entries).Count - 15) more</li>") }
+        [void]$sb.Append('</ul></div>')
+        return $sb.ToString()
+    }
+
+    # The three first-class transitions, newly-failing first; a check that went
+    # dark is lost visibility with its own prominence, never "no change".
+    [void]$html.Append((& $renderClass 'Newly failing' $RunDiff.NewlyFailing 'var(--fail)' $true))
+    [void]$html.Append((& $renderClass 'Lost visibility (assessed before, Not Assessed now)' $RunDiff.LostVisibility 'var(--gold)' $true))
+    [void]$html.Append((& $renderClass 'Newly passing (remediation confirmed)' $RunDiff.NewlyPassing 'var(--pass)' $true))
+    [void]$html.Append((& $renderClass 'Regressed to warning' $RunDiff.Regressed 'var(--medium)' $true))
+    [void]$html.Append((& $renderClass 'Improved to warning (not yet passing)' $RunDiff.Improved 'var(--medium)' $true))
+    [void]$html.Append((& $renderClass 'Visibility restored' $RunDiff.RestoredVisibility 'var(--parchment)' $true))
+    [void]$html.Append((& $renderClass 'New checks in this run (not a transition)' $RunDiff.NewChecks 'var(--parchment)' $true))
+    [void]$html.Append((& $renderClass 'Retired checks (present before, absent now; not a transition)' $RunDiff.RetiredChecks 'var(--dim, gray)' $true))
+
+    $changed = @($RunDiff.NewlyFailing).Count + @($RunDiff.LostVisibility).Count + @($RunDiff.NewlyPassing).Count +
+        @($RunDiff.Regressed).Count + @($RunDiff.Improved).Count + @($RunDiff.RestoredVisibility).Count
+    if ($changed -eq 0) {
+        [void]$html.Append("<p>No verdict changed since the previous run. $($RunDiff.UnchangedCount) checks are unchanged.</p>")
+    } else {
+        [void]$html.Append("<p class='cmp-meta'>$($RunDiff.UnchangedCount) checks unchanged.</p>")
+    }
+
+    [void]$html.Append('</div>')
+    return $html.ToString()
+}

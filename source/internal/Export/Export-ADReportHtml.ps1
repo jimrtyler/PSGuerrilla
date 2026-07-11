@@ -17,7 +17,7 @@ function Export-ADReportHtml {
         [hashtable]$CategoryScores,
 
         [string]$DomainName = '',
-        [hashtable]$Delta,
+        [AllowNull()]$RunDiff,
 
         [Parameter(Mandatory)]
         [string]$FilePath,
@@ -246,6 +246,9 @@ $($brand.Header)
 </div>
 "@)
 
+    # ═══ WHAT CHANGED SINCE LAST RUN — shared section, before findings ═══
+    [void]$html.Append((Get-GuerrillaComparisonSectionHtml -RunDiff $RunDiff -Esc $esc))
+
     # ═══ EXECUTIVE SUMMARY ═══
     $verdict = switch ($true) {
         ($OverallScore -ge 90) { 'The Active Directory environment demonstrates strong security posture with minimal findings.'; break }
@@ -304,42 +307,6 @@ $($brand.Header)
 "@)
     }
     [void]$html.Append('</div>')
-
-    # ═══ DELTA SECTION ═══
-    if ($Delta) {
-        $arrow = if ($Delta.ScoreChange -gt 0) { "<span class='delta-arrow-up'>&#9650; +$($Delta.ScoreChange)</span>" }
-                 elseif ($Delta.ScoreChange -lt 0) { "<span class='delta-arrow-down'>&#9660; $($Delta.ScoreChange)</span>" }
-                 else { "<span style='color:var(--dim)'>&#9654; No change</span>" }
-        $prevDate = if ($Delta.PreviousScanTimestamp) {
-            $ts = $Delta.PreviousScanTimestamp
-            if ($ts -is [datetime]) {
-                $ts.ToString('yyyy-MM-ddTHH:mm:ss')
-            } else {
-                $s = "$ts"
-                if ($s.Length -ge 19) { $s.Substring(0, 19) } else { $s }
-            }
-        } else { 'Unknown' }
-        [void]$html.Append(@"
-<div class="delta-section">
-  <h3>Change Since Previous Scan</h3>
-  <p>Previous scan: $prevDate &mdash; Score change: $arrow (was $($Delta.PreviousScore))</p>
-"@)
-        if ($Delta.NewFailures.Count -gt 0) {
-            [void]$html.Append("<p style='color:var(--fail)'>New failures: $($Delta.NewFailures.Count)</p><ul style='margin:4px 0 8px 20px;font-size:0.9em'>")
-            foreach ($nf in $Delta.NewFailures | Select-Object -First 10) {
-                [void]$html.Append("<li><span class='badge badge-$($nf.Severity.ToLower())'>$($nf.Severity)</span> $(& $esc $nf.CheckId) - $(& $esc $nf.CheckName)</li>")
-            }
-            [void]$html.Append('</ul>')
-        }
-        if ($Delta.Resolved.Count -gt 0) {
-            [void]$html.Append("<p style='color:var(--pass)'>Resolved: $($Delta.Resolved.Count)</p><ul style='margin:4px 0 8px 20px;font-size:0.9em'>")
-            foreach ($r in $Delta.Resolved | Select-Object -First 10) {
-                [void]$html.Append("<li>$(& $esc $r.CheckId) - $(& $esc $r.CheckName)</li>")
-            }
-            [void]$html.Append('</ul>')
-        }
-        [void]$html.Append('</div>')
-    }
 
     # ═══ CATEGORY SCORES ═══
     [void]$html.Append('<h2>Category Breakdown</h2><div class="category-grid">')

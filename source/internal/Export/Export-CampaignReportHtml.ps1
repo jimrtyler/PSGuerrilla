@@ -401,6 +401,11 @@ $($brand.Header)
 "@)
 
     # =================================================================
+    # WHAT CHANGED SINCE LAST RUN (shared section, before findings)
+    # =================================================================
+    [void]$html.Append((Get-GuerrillaComparisonSectionHtml -RunDiff $Result.RunComparison -Esc $esc))
+
+    # =================================================================
     # STAT CARDS
     # =================================================================
     [void]$html.Append(@"

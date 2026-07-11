@@ -243,29 +243,61 @@ function Get-ScoreLabel {
 # Get module reference for calling private export functions
 $mod = Get-Module Guerrilla
 
+# --- Helper: a deterministic sample run diff for the comparison section ---
+# The sample report should demo "What Changed Since Last Run" the way a second
+# real run renders it. Everything in a sample is synthetic by definition; this
+# builds the current run record from the sample findings, derives a previous
+# run from it with a fixed set of verdict flips, and diffs the two through the
+# REAL engine (no store I/O, nothing persisted).
+function New-SampleRunDiff {
+    param([PSCustomObject[]]$Findings, [string[]]$Platforms, [string]$Target, [int]$Score)
+    & $mod {
+        param($Findings, $Platforms, $Target, $Score)
+        $current = New-GuerrillaRunRecord -Findings $Findings -Platforms $Platforms `
+            -TargetId @($Target) -ScanId 'sample-current' -OverallScore $Score
+        # JSON round-trip clone, then mutate: the previous run passed a few of
+        # the now-failing checks, could not assess two, and lacked the newest check.
+        $previous = $current | ConvertTo-Json -Depth 8 | ConvertFrom-Json
+        $previous.runId = 'sample-previous'
+        $previous.generatedAt = ([datetime]$current.generatedAt).AddDays(-7).ToString('o')
+        $previous.overallScore = [Math]::Min(100, $Score + 9)
+        $checks = @($previous.checks)
+        for ($i = 0; $i -lt 5 -and $i -lt $checks.Count; $i++) { $checks[$i].verdict = 'PASS' }
+        for ($i = 5; $i -lt 7 -and $i -lt $checks.Count; $i++) { $checks[$i].verdict = 'Not Assessed' }
+        if ($checks.Count -gt 8) { $checks = @($checks | Select-Object -SkipLast 1) }  # newest check is NEW this run
+        $previous.checks = $checks
+        $previous.summary.notAssessed = 2
+        Compare-GuerrillaRun -Previous $previous -Current $current
+    } $Findings $Platforms $Target $Score
+}
+
 # ============================================================================
 # REPORT 1: GWS (Google Workspace)
 # ============================================================================
 Write-Host 'Generating GWS report (Google Workspace)...' -ForegroundColor Cyan
 
-$gwsFiles = @(
-    'AuthenticationChecks.json'
-    'EmailSecurityChecks.json'
-    'DriveSecurityChecks.json'
-    'OAuthSecurityChecks.json'
-    'AdminManagementChecks.json'
-    'CollaborationChecks.json'
-    'DeviceManagementChecks.json'
-    'LoggingAlertingChecks.json'
-)
+# Discover the GWS check files by exclusion (everything that is not AD or
+# Entra/M365/Azure), so newly added GWS families can never silently drop out
+# of the sample the way the old hardcoded list dropped GwsService and
+# GoogleTradecraft (undercounted GWS by 18 checks).
+$allCheckFiles = @(Get-ChildItem -Path $dataDir -Filter '*.json' | Select-Object -ExpandProperty Name)
+$adPartition    = @($allCheckFiles | Where-Object { $_ -cmatch '^(AD[A-Z]|TierZero)' })
+$entraPartition = @($allCheckFiles | Where-Object { $_ -cmatch '^(Entra|Eidsca|AzureIAM|Intune|M365)' })
+$gwsPartition   = @($allCheckFiles | Where-Object { $_ -notin $adPartition -and $_ -notin $entraPartition })
+if (($adPartition.Count + $entraPartition.Count + $gwsPartition.Count) -ne $allCheckFiles.Count) {
+    throw 'Sample generator: platform partition does not cover every check file exactly once.'
+}
+$gwsFiles = $gwsPartition
 
 $gwsFindings = New-AllFailFindings -CheckFiles $gwsFiles
 $gwsScore = Get-PostureScore -Findings $gwsFindings
 $gwsLabel = Get-ScoreLabel -Score $gwsScore.OverallScore
 $gwsPath = Join-Path $samplesDir "GWS-AllFail$styleSuffix.html"
 
+$gwsRunDiff = New-SampleRunDiff -Findings $gwsFindings -Platforms @('GWS') -Target 'sample.org' -Score $gwsScore.OverallScore
+
 & $mod {
-    param($Findings, $OverallScore, $ScoreLabel, $CategoryScores, $TenantDomain, $FilePath, $Style, $Branding)
+    param($Findings, $OverallScore, $ScoreLabel, $CategoryScores, $TenantDomain, $FilePath, $Style, $Branding, $RunDiff)
     Export-GWSReportHtml `
         -Findings $Findings `
         -OverallScore $OverallScore `
@@ -274,8 +306,9 @@ $gwsPath = Join-Path $samplesDir "GWS-AllFail$styleSuffix.html"
         -TenantDomain $TenantDomain `
         -FilePath $FilePath `
         -Style $Style `
-        -Branding $Branding
-} $gwsFindings $gwsScore.OverallScore $gwsLabel $gwsScore.CategoryScores 'sample.org' $gwsPath $Style $demoBranding
+        -Branding $Branding `
+        -RunDiff $RunDiff
+} $gwsFindings $gwsScore.OverallScore $gwsLabel $gwsScore.CategoryScores 'sample.org' $gwsPath $Style $demoBranding $gwsRunDiff
 
 Write-Host "  -> $gwsPath ($($gwsFindings.Count) checks, score: $($gwsScore.OverallScore))" -ForegroundColor Green
 
@@ -335,8 +368,10 @@ $sampleBhAudit = @{
 }
 & $mod { param($a, $p) Export-BloodHoundData -AuditData $a -OutputPath $p | Out-Null } $sampleBhAudit $bhSamplePath
 
+$adRunDiff = New-SampleRunDiff -Findings $adFindings -Platforms @('AD') -Target 'SAMPLE.LOCAL' -Score $adScore.OverallScore
+
 & $mod {
-    param($Findings, $OverallScore, $ScoreLabel, $CategoryScores, $DomainName, $FilePath, $Style, $Branding, $BloodHoundPath)
+    param($Findings, $OverallScore, $ScoreLabel, $CategoryScores, $DomainName, $FilePath, $Style, $Branding, $BloodHoundPath, $RunDiff)
     Export-ADReportHtml `
         -Findings $Findings `
         -OverallScore $OverallScore `
@@ -346,8 +381,9 @@ $sampleBhAudit = @{
         -FilePath $FilePath `
         -Style $Style `
         -Branding $Branding `
-        -BloodHoundPath $BloodHoundPath
-} $adFindings $adScore.OverallScore $adLabel $adScore.CategoryScores 'SAMPLE.LOCAL' $adPath $Style $demoBranding $bhSamplePath
+        -BloodHoundPath $BloodHoundPath `
+        -RunDiff $RunDiff
+} $adFindings $adScore.OverallScore $adLabel $adScore.CategoryScores 'SAMPLE.LOCAL' $adPath $Style $demoBranding $bhSamplePath $adRunDiff
 
 Write-Host "  -> $adPath ($($adFindings.Count) checks, score: $($adScore.OverallScore))" -ForegroundColor Green
 
@@ -356,23 +392,8 @@ Write-Host "  -> $adPath ($($adFindings.Count) checks, score: $($adScore.Overall
 # ============================================================================
 Write-Host 'Generating Entra report (Entra ID / M365)...' -ForegroundColor Cyan
 
-$entraFiles = @(
-    'EntraAuthChecks.json'
-    'EntraCAChecks.json'
-    'EntraPIMChecks.json'
-    'EntraAppChecks.json'
-    'EntraFedChecks.json'
-    'EntraTenantChecks.json'
-    'EidscaChecks.json'
-    'AzureIAMChecks.json'
-    'IntuneChecks.json'
-    'M365ExchangeChecks.json'
-    'M365SharePointChecks.json'
-    'M365TeamsChecks.json'
-    'M365DefenderChecks.json'
-    'M365AuditChecks.json'
-    'M365PowerPlatformChecks.json'
-)
+# Discovered above alongside the GWS partition; same never-undercount rule.
+$entraFiles = $entraPartition
 
 $entraFindings = New-AllFailFindings -CheckFiles $entraFiles
 $entraScore = Get-PostureScore -Findings $entraFindings
@@ -386,10 +407,12 @@ $entraResult = [PSCustomObject]@{
     Score      = $entraScore
 }
 
+$entraRunDiff = New-SampleRunDiff -Findings $entraFindings -Platforms @('Entra') -Target '00000000-0000-0000-0000-000000000000' -Score $entraScore.OverallScore
+
 & $mod {
-    param($Result, $OutputPath, $Style, $Branding)
-    Export-EntraReportHtml -Result $Result -OutputPath $OutputPath -Style $Style -Branding $Branding
-} $entraResult $entraPath $Style $demoBranding
+    param($Result, $OutputPath, $Style, $Branding, $RunDiff)
+    Export-EntraReportHtml -Result $Result -OutputPath $OutputPath -Style $Style -Branding $Branding -RunDiff $RunDiff
+} $entraResult $entraPath $Style $demoBranding $entraRunDiff
 
 Write-Host "  -> $entraPath ($($entraFindings.Count) checks, score: $($entraScore.OverallScore))" -ForegroundColor Green
 
@@ -430,6 +453,7 @@ $campaignResult = [PSCustomObject]@{
     ScanStart     = [datetime]::UtcNow
     Duration      = [timespan]::FromMinutes(5)
     ScanId        = 'sample-campaign'
+    RunComparison = (New-SampleRunDiff -Findings $campaignFindings -Platforms @('AD', 'Entra', 'GWS') -Target 'sample.org' -Score $campaignScore.OverallScore)
 }
 
 & $mod {

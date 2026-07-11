@@ -52,7 +52,7 @@ function Invoke-Campaign {
         (Windows: $env:APPDATA; macOS: ~/Library/Application Support; Linux: $XDG_CONFIG_HOME or ~/.config)
 
     .PARAMETER NoDelta
-        Skip delta comparison with previous scan.
+        Skip the run-over-run comparison and do not record this run in the local run history.
 
     .PARAMETER Quiet
         Suppress console output.
@@ -408,6 +408,35 @@ function Invoke-Campaign {
             }
         }
 
+        # --- Run-over-run comparison against the local run history ---
+        # The campaign records its own combined series (platform set = all
+        # platforms run) alongside the per-platform series the sub-audits keep.
+        $runRecord = $null
+        $runDiff = $null
+        if (-not $NoDelta -and -not $TestMode) {
+            if (-not $Quiet) { Write-ProgressLine -Phase CAMPAIGN -Message 'Comparing against previous run' }
+            try {
+                $platformKeyMap = @{ 'Active Directory' = 'AD'; 'Microsoft Cloud' = 'Entra'; 'Google Workspace' = 'GWS' }
+                $recordPlatforms = @()
+                $targetIds = @()
+                foreach ($key in $platformResults.Keys) {
+                    $sub = $platformResults[$key]
+                    if ($sub -is [hashtable] -and $sub.Error) { continue }
+                    $recordPlatforms += ($platformKeyMap[$key] ?? $key)
+                    $id = $sub.DomainName ?? $sub.TenantId ?? $sub.TenantDomain
+                    if ($id) { $targetIds += "$id" }
+                }
+                if ($recordPlatforms.Count -gt 0 -and $targetIds.Count -gt 0) {
+                    $runRecord = New-GuerrillaRunRecord -Findings @($allFindings) -Platforms $recordPlatforms `
+                        -TargetId $targetIds -ScanId $scanId -OverallScore $overallScore
+                    $previousRun = Get-GuerrillaPreviousRun -Platforms $recordPlatforms -TargetHash $runRecord.scope.targetHash
+                    $runDiff = Compare-GuerrillaRun -Previous $previousRun -Current $runRecord
+                }
+            } catch {
+                Write-Warning "Run comparison unavailable: $_"
+            }
+        }
+
         # --- Console report ---
         if (-not $Quiet) {
             Write-CampaignReport `
@@ -434,6 +463,7 @@ function Invoke-Campaign {
             PlatformScores  = $platformScores
             CategoryScores = $unifiedScore.CategoryScores
             Findings       = @($allFindings)
+            RunComparison  = $runDiff
             PlatformResults = $platformResults
         }
 
@@ -478,6 +508,15 @@ function Invoke-Campaign {
             if (-not $Quiet) { Write-ProgressLine -Phase REPORTING -Message 'JSON report' -Detail $jsonPath }
         } catch {
             Write-Warning "JSON report generation failed: $_"
+        }
+
+        # --- Record this completed run: it becomes the next run's baseline ---
+        if ($runRecord) {
+            try {
+                $null = Save-GuerrillaRunRecord -Record $runRecord
+            } catch {
+                Write-Warning "Run history not updated: $_"
+            }
         }
 
         if (-not $Quiet) {

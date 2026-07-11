@@ -1,11 +1,22 @@
 {
   "metadata": {
-    "source_kind": "Guerrilla",
+    "version": 1,
     "generated_by": "Guerrilla",
-    "version": 1
+    "source_kind": "Guerrilla"
   },
   "graph": {
     "nodes": [
+      {
+        "id": "S-1-5-21-99-1-1-512",
+        "kinds": [
+          "Group",
+          "Base"
+        ],
+        "properties": {
+          "objectid": "S-1-5-21-99-1-1-512",
+          "name": "DOMAIN ADMINS"
+        }
+      },
       {
         "id": "S-1-5-21-99-1-1-1147",
         "kinds": [
@@ -13,8 +24,8 @@
           "Base"
         ],
         "properties": {
-          "name": "HELPDESK",
-          "objectid": "S-1-5-21-99-1-1-1147"
+          "objectid": "S-1-5-21-99-1-1-1147",
+          "name": "HELPDESK"
         }
       },
       {
@@ -28,36 +39,25 @@
         }
       },
       {
-        "id": "S-1-5-21-99-1-1-1149",
-        "kinds": [
-          "Base",
-          "Base"
-        ],
-        "properties": {
-          "name": "BACKUPOPERATORS",
-          "objectid": "S-1-5-21-99-1-1-1149"
-        }
-      },
-      {
         "id": "S-1-5-21-99-1-1-1200",
         "kinds": [
           "Group",
           "Base"
         ],
         "properties": {
-          "name": "WORKSTATION-ADMINS",
-          "objectid": "S-1-5-21-99-1-1-1200"
+          "objectid": "S-1-5-21-99-1-1-1200",
+          "name": "WORKSTATION-ADMINS"
         }
       },
       {
-        "id": "S-1-5-21-99-1-1-512",
+        "id": "S-1-5-21-99-1-1-1149",
         "kinds": [
-          "Group",
+          "Base",
           "Base"
         ],
         "properties": {
-          "name": "DOMAIN ADMINS",
-          "objectid": "S-1-5-21-99-1-1-512"
+          "objectid": "S-1-5-21-99-1-1-1149",
+          "name": "BACKUPOPERATORS"
         }
       }
     ],

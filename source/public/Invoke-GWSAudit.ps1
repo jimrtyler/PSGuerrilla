@@ -220,25 +220,21 @@ function Invoke-GWSAudit {
         $overallScore = $scoreResult.OverallScore
         $scoreLabel = Get-AuditScoreLabel -Score $overallScore
 
-        # --- Delta comparison ---
-        $delta = $null
-        if (-not $NoDelta) {
-            $stateDir = Split-Path $cfgPath -Parent
-            $statePath = Join-Path $stateDir 'gws-audit-state.json'
-            if (-not (Test-Path $statePath)) {
-                # Pre-rename installs saved delta state under the old name; read it so
-                # the first post-upgrade run still gets a delta instead of a re-baseline.
-                $legacyStatePath = Join-Path $stateDir 'fortification-state.json'
-                if (Test-Path $legacyStatePath) { $statePath = $legacyStatePath }
-            }
-            if (Test-Path $statePath) {
-                if (-not $Quiet) { Write-ProgressLine -Phase GWS -Message 'Comparing against previous scan' }
-                try {
-                    $previousState = Get-Content -Path $statePath -Raw | ConvertFrom-Json -AsHashtable
-                    $delta = Compare-AuditState -CurrentFindings @($allFindings) -PreviousState $previousState
-                } catch {
-                    Write-Verbose "Delta comparison failed: $_"
-                }
+        # --- Run-over-run comparison against the local run history ---
+        # Built now, persisted only after reports are written: a crashed run
+        # never becomes a baseline.
+        $runRecord = $null
+        $runDiff = $null
+        $tenantDomain = $auditData.Tenant.Domain ?? $admin.Split('@')[-1]
+        if (-not $NoDelta -and -not $TestMode) {
+            if (-not $Quiet) { Write-ProgressLine -Phase GWS -Message 'Comparing against previous run' }
+            try {
+                $runRecord = New-GuerrillaRunRecord -Findings @($allFindings) -Platforms @('GWS') `
+                    -TargetId @($tenantDomain) -ScanId $scanId -OverallScore $overallScore
+                $previousRun = Get-GuerrillaPreviousRun -Platforms @('GWS') -TargetHash $runRecord.scope.targetHash
+                $runDiff = Compare-GuerrillaRun -Previous $previousRun -Current $runRecord
+            } catch {
+                Write-Warning "Run comparison unavailable: $_"
             }
         }
 
@@ -300,8 +296,8 @@ function Invoke-GWSAudit {
                     -OverallScore $overallScore `
                     -ScoreLabel $scoreLabel `
                     -CategoryScores $scoreResult.CategoryScores `
-                    -TenantDomain ($auditData.Tenant.Domain ?? $admin.Split('@')[-1]) `
-                    -Delta $delta `
+                    -TenantDomain $tenantDomain `
+                    -RunDiff $runDiff `
                     -FilePath $htmlPath `
                     -Style $ReportStyle `
                     -Branding $reportBranding
@@ -314,39 +310,21 @@ function Invoke-GWSAudit {
                     -OverallScore $overallScore `
                     -ScoreLabel $scoreLabel `
                     -CategoryScores $scoreResult.CategoryScores `
-                    -TenantDomain ($auditData.Tenant.Domain ?? $admin.Split('@')[-1]) `
+                    -TenantDomain $tenantDomain `
                     -ScanId $scanId `
-                    -Delta $delta `
+                    -RunDiff $runDiff `
                     -FilePath $jsonPath
                 if (-not $Quiet) { Write-ProgressLine -Phase REPORTING -Message 'JSON report' -Detail $jsonPath }
             }
         }
 
-        # --- Save state for future delta ---
-        if (-not $NoDelta) {
-            $stateDir = Split-Path $cfgPath -Parent
-            if (-not (Test-Path $stateDir)) {
-                New-Item -Path $stateDir -ItemType Directory -Force | Out-Null
+        # --- Record this completed run: it becomes the next run's baseline ---
+        if ($runRecord) {
+            try {
+                $null = Save-GuerrillaRunRecord -Record $runRecord
+            } catch {
+                Write-Warning "Run history not updated: $_"
             }
-            $statePath = Join-Path $stateDir 'gws-audit-state.json'
-            $newState = @{
-                schemaVersion     = 1
-                lastScanTimestamp = [datetime]::UtcNow.ToString('o')
-                lastScanId        = $scanId
-                overallScore      = $overallScore
-                findings          = @($allFindings | ForEach-Object {
-                    @{
-                        checkId      = $_.CheckId
-                        status       = $_.Status
-                        currentValue = $_.CurrentValue
-                        orgUnitPath  = $_.OrgUnitPath
-                        severity     = $_.Severity
-                        category     = $_.Category
-                    }
-                })
-                categoryScores    = $scoreResult.CategoryScores
-            }
-            $newState | ConvertTo-Json -Depth 5 | Set-Content -Path $statePath -Encoding UTF8
         }
 
         # --- Emit result object ---
@@ -354,7 +332,7 @@ function Invoke-GWSAudit {
             PSTypeName     = 'Guerrilla.AuditResult'
             ScanId         = $scanId
             Timestamp      = $scanStart
-            TenantDomain   = $auditData.Tenant.Domain ?? $admin.Split('@')[-1]
+            TenantDomain   = $tenantDomain
             OverallScore   = $overallScore
             ScoreLabel     = $scoreLabel
             CategoryScores = $scoreResult.CategoryScores
@@ -368,7 +346,7 @@ function Invoke-GWSAudit {
             MediumCount    = $medCount
             LowCount       = $lowCount
             Findings       = @($allFindings)
-            Delta          = $delta
+            RunComparison  = $runDiff
             HtmlReportPath = $htmlPath
             CsvReportPath  = $csvPath
             JsonReportPath = $jsonPath

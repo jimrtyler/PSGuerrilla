@@ -18,7 +18,7 @@ function Export-ADReportJson {
 
         [string]$DomainName = '',
         [string]$ScanId = '',
-        [hashtable]$Delta,
+        [AllowNull()]$RunDiff,
 
         [Parameter(Mandatory)]
         [string]$FilePath
@@ -33,7 +33,7 @@ function Export-ADReportJson {
             domain       = $DomainName
             generator    = 'Guerrilla'
             reportType   = 'AD Audit'
-            version      = '2.0.0'
+            version      = "$($ExecutionContext.SessionState.Module.Version ?? '0.0.0')"
         }
         summary = @{
             overallScore   = $OverallScore
@@ -75,8 +75,8 @@ function Export-ADReportJson {
         })
     }
 
-    if ($Delta) {
-        $report['delta'] = $Delta
+    if ($RunDiff) {
+        $report['runComparison'] = $RunDiff
     }
 
     $report | ConvertTo-Json -Depth 10 | Set-Content -Path $FilePath -Encoding UTF8

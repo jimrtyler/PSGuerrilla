@@ -17,7 +17,7 @@ function Export-GWSReportHtml {
         [hashtable]$CategoryScores,
 
         [string]$TenantDomain = '',
-        [hashtable]$Delta,
+        [AllowNull()]$RunDiff,
 
         [Parameter(Mandatory)]
         [string]$FilePath,
@@ -310,6 +310,9 @@ $($brand.Header)
 "@)
 
     # ═══════════════════════════════════════════════════════════════
+    # WHAT CHANGED SINCE LAST RUN (shared section, before findings)
+    [void]$html.Append((Get-GuerrillaComparisonSectionHtml -RunDiff $RunDiff -Esc $esc))
+
     # EXECUTIVE SUMMARY
     # ═══════════════════════════════════════════════════════════════
     $summaryVerdict = if ($critCount -gt 0) {
@@ -548,64 +551,6 @@ $($brand.Header)
 "@)
         }
         [void]$html.Append('</table>')
-    }
-
-    # ═══════════════════════════════════════════════════════════════
-    # DELTA REPORT
-    # ═══════════════════════════════════════════════════════════════
-    if ($Delta) {
-        [void]$html.Append('<h2>Delta Report &mdash; Changes Since Last Scan</h2>')
-        [void]$html.Append('<div class="delta-section">')
-        [void]$html.Append('<h3>Score Change</h3>')
-
-        $scoreChange = if ($null -ne $Delta.ScoreChange) { $Delta.ScoreChange } else { 0 }
-        $arrowClass = if ($scoreChange -gt 0) { 'delta-arrow-up' }
-                      elseif ($scoreChange -lt 0) { 'delta-arrow-down' }
-                      else { 'delta-arrow-same' }
-        $arrowChar = if ($scoreChange -gt 0) { "&#9650; +$scoreChange" }
-                     elseif ($scoreChange -lt 0) { "&#9660; $scoreChange" }
-                     else { '&#9654; No change' }
-        $prevScore = if ($null -ne $Delta.PreviousScore) { $Delta.PreviousScore } else { '?' }
-
-        [void]$html.Append("<p><strong>Previous Score:</strong> $prevScore &rarr; <strong>Current Score:</strong> $OverallScore <span class=`"$arrowClass`">$arrowChar</span></p>")
-
-        # New failures
-        if ($Delta.NewFailures -and $Delta.NewFailures.Count -gt 0) {
-            [void]$html.Append("<h4 style=`"color:var(--fail)`">New Failures ($($Delta.NewFailures.Count))</h4>")
-            [void]$html.Append('<table><tr><th>Check ID</th><th>Check Name</th><th>Severity</th><th>Category</th></tr>')
-            foreach ($nf in $Delta.NewFailures) {
-                $nfSev = if ($nf.severity) { $nf.severity } elseif ($nf.Severity) { $nf.Severity } else { '' }
-                $nfSevClass = $nfSev.ToLower()
-                $nfId   = if ($nf.checkId) { $nf.checkId } elseif ($nf.CheckId) { $nf.CheckId } else { '' }
-                $nfName = if ($nf.checkName) { $nf.checkName } elseif ($nf.CheckName) { $nf.CheckName } else { '' }
-                $nfCat  = if ($nf.category) { $nf.category } elseif ($nf.Category) { $nf.Category } else { '' }
-
-                [void]$html.Append("<tr><td><code>$(& $esc $nfId)</code></td><td>$(& $esc $nfName)</td><td><span class=`"badge badge-$nfSevClass`">$(& $esc $nfSev)</span></td><td>$(& $esc $nfCat)</td></tr>")
-            }
-            [void]$html.Append('</table>')
-        }
-
-        # Resolved items
-        if ($Delta.Resolved -and $Delta.Resolved.Count -gt 0) {
-            [void]$html.Append("<h4 style=`"color:var(--pass)`">Resolved ($($Delta.Resolved.Count))</h4>")
-            [void]$html.Append('<table><tr><th>Check ID</th><th>Check Name</th><th>Severity</th><th>Category</th></tr>')
-            foreach ($res in $Delta.Resolved) {
-                $resSev = if ($res.severity) { $res.severity } elseif ($res.Severity) { $res.Severity } else { '' }
-                $resSevClass = $resSev.ToLower()
-                $resId   = if ($res.checkId) { $res.checkId } elseif ($res.CheckId) { $res.CheckId } else { '' }
-                $resName = if ($res.checkName) { $res.checkName } elseif ($res.CheckName) { $res.CheckName } else { '' }
-                $resCat  = if ($res.category) { $res.category } elseif ($res.Category) { $res.Category } else { '' }
-
-                [void]$html.Append("<tr><td><code>$(& $esc $resId)</code></td><td>$(& $esc $resName)</td><td><span class=`"badge badge-$resSevClass`">$(& $esc $resSev)</span></td><td>$(& $esc $resCat)</td></tr>")
-            }
-            [void]$html.Append('</table>')
-        }
-
-        if ((-not $Delta.NewFailures -or $Delta.NewFailures.Count -eq 0) -and (-not $Delta.Resolved -or $Delta.Resolved.Count -eq 0)) {
-            [void]$html.Append('<p style="color:var(--dim)">No changes in pass/fail status since the previous scan.</p>')
-        }
-
-        [void]$html.Append('</div>')
     }
 
     # ═══════════════════════════════════════════════════════════════

@@ -162,11 +162,21 @@ if ($EmitSummary) {
         }
     }
 
+    # Exported-command count comes from the manifest, the authoritative
+    # declaration of what ships. The website renders this number from the
+    # artifact, never from hand-maintained copy.
+    $manifest = Import-PowerShellDataFile (Join-Path $root '..' 'source' 'Guerrilla.psd1')
+    $exportedFunctions = @($manifest.FunctionsToExport).Count
+    $exportedAliases   = @($manifest.AliasesToExport).Count
+
     $artifact = [ordered]@{
         schemaVersion      = 2
         suite              = 'golden-fixtures'
         generatedAt        = (Get-Date).ToUniversalTime().ToString('o')
-        moduleVersion      = "$((Import-PowerShellDataFile (Join-Path $root '..' 'source' 'Guerrilla.psd1')).ModuleVersion)"
+        moduleVersion      = "$($manifest.ModuleVersion)"
+        exportedFunctions  = $exportedFunctions
+        exportedAliases    = $exportedAliases
+        exportedCommands   = $exportedFunctions + $exportedAliases
         gitSha             = "$(git rev-parse --short HEAD 2>$null)"
         gitBranch          = "$(git rev-parse --abbrev-ref HEAD 2>$null)"
         checkDefinitions   = $defIds.Count          # the universe (618)

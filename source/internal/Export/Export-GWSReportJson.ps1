@@ -18,7 +18,7 @@ function Export-GWSReportJson {
 
         [string]$TenantDomain = '',
         [string]$ScanId = '',
-        [hashtable]$Delta,
+        [AllowNull()]$RunDiff,
         [string]$FilePath
     )
 
@@ -58,7 +58,7 @@ function Export-GWSReportJson {
                 details          = $_.Details
             }
         })
-        delta          = $Delta
+        runComparison  = $RunDiff
     }
 
     $json = $report | ConvertTo-Json -Depth 10

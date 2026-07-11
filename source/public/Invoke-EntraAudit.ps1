@@ -43,7 +43,7 @@ function Invoke-EntraAudit {
         Skip report generation.
 
     .PARAMETER NoDelta
-        Skip delta comparison with previous scan.
+        Skip the run-over-run comparison and do not record this run in the local run history.
 
     .PARAMETER Quiet
         Suppress console output.
@@ -352,6 +352,24 @@ function Invoke-EntraAudit {
     # --- Score ---
     $score = Get-AuditPostureScore -Findings @($allFindings)
 
+    # --- Run-over-run comparison against the local run history ---
+    # Runs regardless of -NoReports (the previous mechanism read old report
+    # files, so it silently vanished whenever reports were suppressed, i.e.
+    # every campaign run). Built now, persisted only at the end of the run.
+    $runRecord = $null
+    $runDiff = $null
+    if (-not $NoDelta -and -not $TestMode) {
+        if (-not $Quiet) { Write-ProgressLine -Phase ENTRA -Message 'Comparing against previous run' }
+        try {
+            $runRecord = New-GuerrillaRunRecord -Findings @($allFindings) -Platforms @('Entra') `
+                -TargetId @($TenantId) -ScanId $scanId -OverallScore $score.OverallScore
+            $previousRun = Get-GuerrillaPreviousRun -Platforms @('Entra') -TargetHash $runRecord.scope.targetHash
+            $runDiff = Compare-GuerrillaRun -Previous $previousRun -Current $runRecord
+        } catch {
+            Write-Warning "Run comparison unavailable: $_"
+        }
+    }
+
     # --- Summary ---
     $scanEnd = [datetime]::UtcNow
     $scanDuration = $scanEnd - $scanStart
@@ -366,6 +384,7 @@ function Invoke-EntraAudit {
         Categories     = $categoriesToRun
         Findings       = @($allFindings)
         Score          = $score
+        RunComparison  = $runDiff
         DataErrors     = $auditData.Errors
         AuditData      = $auditData
         HtmlReportPath = $null
@@ -386,30 +405,6 @@ function Invoke-EntraAudit {
         $timestamp = if ($script:GuerrillaTestMode) { '00000000-000000' } else { $scanStart.ToString('yyyyMMdd-HHmmss') }
         $tenantLabel = $TenantId -replace '[^a-zA-Z0-9]', '_'
 
-        # Delta comparison
-        $previousFindings = $null
-        if (-not $NoDelta) {
-            $previousFile = Get-ChildItem -Path $outDir -Filter "entra-$tenantLabel-*.json" `
-                -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1
-            if (-not $previousFile) {
-                # Pre-rename installs exported scans under the old prefix; fall back so
-                # the first post-upgrade run still gets a delta.
-                $previousFile = Get-ChildItem -Path $outDir -Filter "infiltration-$tenantLabel-*.json" `
-                    -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1
-            }
-            if ($previousFile) {
-                try {
-                    $previousData = Get-Content -Path $previousFile.FullName -Raw | ConvertFrom-Json
-                    $previousFindings = $previousData.Findings
-                    if (-not $Quiet) {
-                        Write-ProgressLine -Phase ENTRA -Message "Delta comparison with $($previousFile.Name)"
-                    }
-                } catch {
-                    Write-Verbose "Could not load previous scan for delta: $_"
-                }
-            }
-        }
-
         # Export reports
         $baseName = "entra-$tenantLabel-$timestamp"
         $htmlPath = Join-Path $outDir "$baseName.html"
@@ -423,7 +418,7 @@ function Invoke-EntraAudit {
                 $ReportStyle = [string]$config.output.reportStyle
             }
             Export-EntraReportHtml -Result $result -OutputPath $htmlPath `
-                -PreviousFindings $previousFindings `
+                -RunDiff $runDiff `
                 -Style $ReportStyle `
                 -Branding (Get-GuerrillaBranding -Config $config)
             $result.HtmlReportPath = $htmlPath
@@ -445,6 +440,15 @@ function Invoke-EntraAudit {
 
         if (-not $Quiet) {
             Write-ProgressLine -Phase ENTRA -Message "Reports saved to $outDir"
+        }
+    }
+
+    # --- Record this completed run: it becomes the next run's baseline ---
+    if ($runRecord) {
+        try {
+            $null = Save-GuerrillaRunRecord -Record $runRecord
+        } catch {
+            Write-Warning "Run history not updated: $_"
         }
     }
 

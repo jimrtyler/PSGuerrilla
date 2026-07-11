@@ -10,7 +10,7 @@ function Export-EntraReportHtml {
         [Parameter(Mandatory)]
         [string]$OutputPath,
 
-        [PSCustomObject[]]$PreviousFindings,
+        [AllowNull()]$RunDiff,
 
         [ValidateSet('Guerrilla', 'Professional', 'Slate')]
         [string]$Style = 'Professional',
@@ -143,6 +143,9 @@ function Export-EntraReportHtml {
     [void]$html.AppendLine("<div class=`"stat`"><div class=`"num`" style=`"color:var(--dim)`">$skipCount</div><div class=`"lbl`">Skipped</div></div>")
     [void]$html.AppendLine('</div></div>')
 
+    # What changed since last run (shared section, before findings)
+    [void]$html.AppendLine((Get-GuerrillaComparisonSectionHtml -RunDiff $RunDiff -Esc $esc))
+
     # Zero Trust posture (CISA ZTMM) — pillar scores that disclose their own coverage.
     $ztScores = @($findings | Get-ZeroTrustScore)
     if ($ztScores.Count) {
@@ -183,52 +186,6 @@ function Export-EntraReportHtml {
         [void]$html.AppendLine('</div>')
     }
     [void]$html.AppendLine('</div></div>')
-
-    # Delta comparison
-    if ($PreviousFindings -and $PreviousFindings.Count -gt 0) {
-        $prevLookup = @{}
-        foreach ($pf in $PreviousFindings) {
-            if ($pf.checkId) { $prevLookup[$pf.checkId] = $pf }
-        }
-
-        $improved = [System.Collections.Generic.List[string]]::new()
-        $regressed = [System.Collections.Generic.List[string]]::new()
-        $newChecks = [System.Collections.Generic.List[string]]::new()
-
-        foreach ($f in $findings) {
-            if ($prevLookup.ContainsKey($f.CheckId)) {
-                $prev = $prevLookup[$f.CheckId]
-                $prevStatus = $prev.status ?? $prev.Status
-                if ($f.Status -eq 'PASS' -and $prevStatus -in @('FAIL', 'WARN')) {
-                    $improved.Add("$($f.CheckId): $($f.CheckName)")
-                } elseif ($f.Status -eq 'FAIL' -and $prevStatus -in @('PASS', 'WARN')) {
-                    $regressed.Add("$($f.CheckId): $($f.CheckName)")
-                }
-            } else {
-                $newChecks.Add("$($f.CheckId): $($f.CheckName)")
-            }
-        }
-
-        if ($improved.Count -gt 0 -or $regressed.Count -gt 0 -or $newChecks.Count -gt 0) {
-            [void]$html.AppendLine('<div class="section"><h2>Delta from Previous Scan</h2><div class="delta">')
-            if ($improved.Count -gt 0) {
-                [void]$html.AppendLine("<p class=`"improved`">Improved ($($improved.Count)):</p><ul>")
-                foreach ($i in $improved) { [void]$html.AppendLine("<li>$(& $esc $i)</li>") }
-                [void]$html.AppendLine('</ul>')
-            }
-            if ($regressed.Count -gt 0) {
-                [void]$html.AppendLine("<p class=`"regressed`">Regressed ($($regressed.Count)):</p><ul>")
-                foreach ($r in $regressed) { [void]$html.AppendLine("<li>$(& $esc $r)</li>") }
-                [void]$html.AppendLine('</ul>')
-            }
-            if ($newChecks.Count -gt 0) {
-                [void]$html.AppendLine("<p class=`"new`">New checks ($($newChecks.Count)):</p><ul>")
-                foreach ($n in $newChecks | Select-Object -First 20) { [void]$html.AppendLine("<li>$(& $esc $n)</li>") }
-                [void]$html.AppendLine('</ul>')
-            }
-            [void]$html.AppendLine('</div></div>')
-        }
-    }
 
     # Findings table
     [void]$html.AppendLine('<div class="section"><h2>All Findings</h2>')
