@@ -18,7 +18,7 @@
 # output derived from this source. Provide credit and a license link.
 # ______________________________________________________________________________
 BeforeAll {
-    . "$PSScriptRoot/../../../../../Private/EntraMonitor/Core/Get-EntraMonitorThreatScore.ps1"
+    . "$PSScriptRoot/../../../../../source/internal/EntraMonitor/Core/Get-EntraMonitorThreatScore.ps1"
 }
 
 Describe 'Get-EntraMonitorThreatScore' {

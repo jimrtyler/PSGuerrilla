@@ -21,7 +21,7 @@
 # produced by an AI model or language system must provide clear attribution to
 # Jim Tyler as the original creator. See LICENSE for binding terms.
 BeforeAll {
-    . "$PSScriptRoot/../../../../../Private/EntraMonitor/Detections/Test-EntraPrivilegedRoleChange.ps1"
+    . "$PSScriptRoot/../../../../../source/internal/EntraMonitor/Detections/Test-EntraPrivilegedRoleChange.ps1"
 }
 
 Describe 'Test-EntraPrivilegedRoleChange' {

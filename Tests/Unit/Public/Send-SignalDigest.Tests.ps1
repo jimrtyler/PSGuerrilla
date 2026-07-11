@@ -33,6 +33,11 @@ Describe 'Send-SignalDigest' {
         # Set module config path
         & (Get-Module Guerrilla) { $script:ConfigPath = $args[0] } $configPath
 
+        # Isolate the data root cross-platform. Overriding APPDATA only isolates on
+        # Windows; on macOS/Linux Get-GuerrillaDataRoot resolves elsewhere and the
+        # tests would read (and write digest history into) the user's real data root.
+        Mock Get-GuerrillaDataRoot { Join-Path $TestDrive 'Guerrilla' } -ModuleName Guerrilla
+
         # Override APPDATA for test isolation
         $originalAppData = $env:APPDATA
         $env:APPDATA = $TestDrive

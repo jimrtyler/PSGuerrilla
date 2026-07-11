@@ -23,20 +23,36 @@
 
 .PARAMETER DbPath
     SQLite file to append to. Defaults to
-    ~/Documents/Guerrilla-Data/psguerrilla_supabase_backup.sqlite (the migrated
-    local copy), so publishing continues that history.
+    ~/Documents/PSGuerrilla-Data/psguerrilla_supabase_backup.sqlite, the ledger
+    the website catalog generator reads, so publishing continues that history.
+
+.PARAMETER Initialize
+    Allow creating a brand-new ledger at DbPath. Without it, a DbPath that does
+    not already contain guerrilla_test_runs is an error, so a typo can never
+    silently fork the run history into a fresh empty file.
 #>
 [CmdletBinding(SupportsShouldProcess)]
 param(
     [Parameter(Mandatory)][hashtable]$Summary,
     [Parameter(Mandatory)][object[]]$Results,
-    [string]$DbPath = (Join-Path ([Environment]::GetFolderPath('UserProfile')) 'Documents' 'Guerrilla-Data' 'psguerrilla_supabase_backup.sqlite')
+    [string]$DbPath = (Join-Path ([Environment]::GetFolderPath('UserProfile')) 'Documents' 'PSGuerrilla-Data' 'psguerrilla_supabase_backup.sqlite'),
+    [switch]$Initialize
 )
 
 $ErrorActionPreference = 'Stop'
 
 $sqlite = Get-Command sqlite3 -ErrorAction SilentlyContinue
 if (-not $sqlite) { throw "sqlite3 CLI not found on PATH. Install it (macOS ships it at /usr/bin/sqlite3) or pass a machine that has it." }
+
+if (-not $Initialize) {
+    if (-not (Test-Path $DbPath)) {
+        throw "No ledger at $DbPath. Run history must append to the existing ledger; pass -Initialize only to deliberately start a new one."
+    }
+    $hasRuns = & $sqlite.Source $DbPath "SELECT name FROM sqlite_master WHERE type='table' AND name='guerrilla_test_runs';"
+    if (-not $hasRuns) {
+        throw "$DbPath exists but has no guerrilla_test_runs table; refusing to fork history into an unrelated database. Pass -Initialize to deliberately create the schema here."
+    }
+}
 
 $dbDir = Split-Path -Parent $DbPath
 if ($dbDir -and -not (Test-Path $dbDir)) { New-Item -ItemType Directory -Path $dbDir -Force | Out-Null }

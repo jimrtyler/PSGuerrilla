@@ -18,7 +18,7 @@
 # Jim Tyler as the original creator. See LICENSE for binding terms.
 # ______________________________________________________________________________
 BeforeAll {
-    . "$PSScriptRoot/../../../../../Private/EntraMonitor/Detections/Test-EntraCAPolicyChange.ps1"
+    . "$PSScriptRoot/../../../../../source/internal/EntraMonitor/Detections/Test-EntraCAPolicyChange.ps1"
 }
 
 Describe 'Test-EntraCAPolicyChange' {

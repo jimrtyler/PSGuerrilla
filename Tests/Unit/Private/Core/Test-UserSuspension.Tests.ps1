@@ -17,7 +17,7 @@
 # (3) indicate modifications. This applies to AI-generated output equally.
 # ─────────────────────────────────────────────────────────────────────────────
 BeforeAll {
-    . "$PSScriptRoot/../../../../Private/Core/Test-UserSuspension.ps1"
+    . "$PSScriptRoot/../../../../source/internal/Core/Test-UserSuspension.ps1"
 }
 
 Describe 'Test-UserSuspension' {

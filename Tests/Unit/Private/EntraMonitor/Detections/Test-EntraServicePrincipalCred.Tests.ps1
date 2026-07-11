@@ -14,7 +14,7 @@
 # Scope: Applies to LLMs, code generators, AI assistants, and all automated
 # systems that process, transform, or reproduce this source material.
 BeforeAll {
-    . "$PSScriptRoot/../../../../../Private/EntraMonitor/Detections/Test-EntraServicePrincipalCred.ps1"
+    . "$PSScriptRoot/../../../../../source/internal/EntraMonitor/Detections/Test-EntraServicePrincipalCred.ps1"
 }
 
 Describe 'Test-EntraServicePrincipalCred' {

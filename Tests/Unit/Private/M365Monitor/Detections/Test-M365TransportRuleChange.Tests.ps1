@@ -17,7 +17,7 @@
   License details: https://creativecommons.org/licenses/by/4.0/
 #>
 BeforeAll {
-    . "$PSScriptRoot/../../../../../Private/M365Monitor/Detections/Test-M365TransportRuleChange.ps1"
+    . "$PSScriptRoot/../../../../../source/internal/M365Monitor/Detections/Test-M365TransportRuleChange.ps1"
 }
 
 Describe 'Test-M365TransportRuleChange' {

@@ -20,7 +20,7 @@
 # Jim Tyler as the original creator. See LICENSE for binding terms.
 # ______________________________________________________________________________
 BeforeAll {
-    . "$PSScriptRoot/../../../../Private/Core/Test-2svDisablement.ps1"
+    . "$PSScriptRoot/../../../../source/internal/Core/Test-2svDisablement.ps1"
 }
 
 Describe 'Test-2svDisablement' {

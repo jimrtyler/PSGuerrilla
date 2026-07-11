@@ -20,7 +20,7 @@
 # ─────────────────────────────────────────────────────────────────────────────
 BeforeAll {
     Import-Module (Join-Path $PSScriptRoot '../../../Helpers/TestHelpers.psm1') -Force
-    . "$PSScriptRoot/../../../../Private/Audit/Get-AuditPostureScore.ps1"
+    . "$PSScriptRoot/../../../../source/internal/Audit/Get-AuditPostureScore.ps1"
 }
 
 Describe 'Get-AuditPostureScore' {

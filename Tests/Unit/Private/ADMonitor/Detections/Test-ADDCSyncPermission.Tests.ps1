@@ -20,7 +20,7 @@
 *******************************************************************************
 #>
 BeforeAll {
-    . "$PSScriptRoot/../../../../../Private/ADMonitor/Detections/Test-ADDCSyncPermission.ps1"
+    . "$PSScriptRoot/../../../../../source/internal/ADMonitor/Detections/Test-ADDCSyncPermission.ps1"
 }
 
 Describe 'Test-ADDCSyncPermission' {

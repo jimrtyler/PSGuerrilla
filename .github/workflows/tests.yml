@@ -45,15 +45,14 @@ jobs:
           path: Tests/test-summary.json
           if-no-files-found: error
 
-      - name: Schema + collector-contract tests
+      - name: Full unit suite (schema, contracts, everything under Tests/Unit)
         shell: pwsh
         run: |
           Install-Module Pester -MinimumVersion 5.5.0 -Force -Scope CurrentUser -SkipPublisherCheck -ErrorAction SilentlyContinue
-          $r = Invoke-Pester -Path @(
-            'Tests/Unit/ZeroTrustSchema.Tests.ps1',
-            'Tests/Unit/ProvenanceSchema.Tests.ps1',
-            'Tests/Unit/Private/Entra/CollectorQueryContract.Tests.ps1'
-          ) -Output Detailed -PassThru
-          # Every check must declare a ZT pillar + weight (schema), and collectors must
-          # request the exact Graph endpoints/params (contract). Either failing = red.
+          $r = Invoke-Pester -Path 'Tests/Unit' -Output Normal -PassThru
+          # The whole suite gates: ZT schema, provenance, collector contracts, and every
+          # other unit test. A red suite anyone routes around stops meaning anything.
+          # Windows-only surfaces (scheduled tasks, event log, APPDATA migration) self-skip
+          # off Windows and are reported as skipped, never silently green.
+          "unit: $($r.PassedCount) passed, $($r.FailedCount) failed, $($r.SkippedCount) skipped"
           if ($r.FailedCount -gt 0) { exit 1 }

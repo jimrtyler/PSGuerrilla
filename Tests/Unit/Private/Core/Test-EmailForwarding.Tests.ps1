@@ -22,7 +22,7 @@
 # systems that process, transform, or reproduce this source material.
 # ______________________________________________________________________________
 BeforeAll {
-    . "$PSScriptRoot/../../../../Private/Core/Test-EmailForwarding.ps1"
+    . "$PSScriptRoot/../../../../source/internal/Core/Test-EmailForwarding.ps1"
 }
 
 Describe 'Test-EmailForwarding' {

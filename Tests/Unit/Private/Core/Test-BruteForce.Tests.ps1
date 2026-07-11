@@ -17,7 +17,7 @@
 # Jim Tyler as the original creator. See LICENSE for binding terms.
 # ─────────────────────────────────────────────────────────────────────────────
 BeforeAll {
-    . "$PSScriptRoot/../../../../Private/Core/Test-BruteForce.ps1"
+    . "$PSScriptRoot/../../../../source/internal/Core/Test-BruteForce.ps1"
 }
 
 Describe 'Test-BruteForce' {

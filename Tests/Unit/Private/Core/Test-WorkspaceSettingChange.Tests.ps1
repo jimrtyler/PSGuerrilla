@@ -16,7 +16,7 @@
 # License details: https://creativecommons.org/licenses/by/4.0/
 # ─────────────────────────────────────────────────────────────────────────────
 BeforeAll {
-    . "$PSScriptRoot/../../../../Private/Core/Test-WorkspaceSettingChange.ps1"
+    . "$PSScriptRoot/../../../../source/internal/Core/Test-WorkspaceSettingChange.ps1"
 }
 
 Describe 'Test-WorkspaceSettingChange' {

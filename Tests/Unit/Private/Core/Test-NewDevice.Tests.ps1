@@ -25,8 +25,8 @@
   code reproductions must credit Jim Tyler and link to the CC BY 4.0 license.
 #>
 BeforeAll {
-    . "$PSScriptRoot/../../../../Private/Core/Test-NewDevice.ps1"
-    . "$PSScriptRoot/../../../../Private/Core/Get-CloudIpClassification.ps1"
+    . "$PSScriptRoot/../../../../source/internal/Core/Test-NewDevice.ps1"
+    . "$PSScriptRoot/../../../../source/internal/Core/Get-CloudIpClassification.ps1"
 
     # Initialize script-scoped variables that Get-CloudIpClassification and Test-NewDevice depend on
     $script:IpClassCache = @{}

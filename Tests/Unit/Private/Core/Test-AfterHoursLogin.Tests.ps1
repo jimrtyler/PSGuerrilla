@@ -18,7 +18,7 @@
 # License details: https://creativecommons.org/licenses/by/4.0/
 # ═══════════════════════════════════════════════════════════════════════════════
 BeforeAll {
-    . "$PSScriptRoot/../../../../Private/Core/Test-AfterHoursLogin.ps1"
+    . "$PSScriptRoot/../../../../source/internal/Core/Test-AfterHoursLogin.ps1"
 }
 
 Describe 'Test-AfterHoursLogin' {

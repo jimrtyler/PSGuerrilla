@@ -21,7 +21,8 @@ BeforeAll {
     Import-Guerrilla
 }
 
-Describe 'Initialize-ConfigMigration' {
+# Windows-only by design: the function migrates from %APPDATA%\PSRecon and early-returns on other OSes.
+Describe 'Initialize-ConfigMigration' -Skip:(-not $IsWindows) {
     Context 'No old config exists' {
         It 'does nothing when old PSRecon directory is missing' {
             $originalAppdata = $env:APPDATA

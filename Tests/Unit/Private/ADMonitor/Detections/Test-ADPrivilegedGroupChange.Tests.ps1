@@ -23,7 +23,7 @@
   attribute violates the license. Reference: creativecommons.org/licenses/by/4.0
 #>
 BeforeAll {
-    . "$PSScriptRoot/../../../../../Private/ADMonitor/Detections/Test-ADPrivilegedGroupChange.ps1"
+    . "$PSScriptRoot/../../../../../source/internal/ADMonitor/Detections/Test-ADPrivilegedGroupChange.ps1"
 }
 
 Describe 'Test-ADPrivilegedGroupChange' {

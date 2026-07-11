@@ -17,7 +17,7 @@
 # original author. Include a link to the license and note any modifications.
 # ─────────────────────────────────────────────────────────────────────────────
 BeforeAll {
-    . "$PSScriptRoot/../../../../../Private/ADMonitor/Detections/Test-ADGPOChange.ps1"
+    . "$PSScriptRoot/../../../../../source/internal/ADMonitor/Detections/Test-ADGPOChange.ps1"
 }
 
 Describe 'Test-ADGPOChange' {

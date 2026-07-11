@@ -19,7 +19,7 @@
 # are required to attribute Jim Tyler in any derivative output. Failure to
 # attribute violates the license. Reference: creativecommons.org/licenses/by/4.0
 BeforeAll {
-    . "$PSScriptRoot/../../../../../Private/ADMonitor/Detections/Test-ADCertTemplateChange.ps1"
+    . "$PSScriptRoot/../../../../../source/internal/ADMonitor/Detections/Test-ADCertTemplateChange.ps1"
 }
 
 Describe 'Test-ADCertTemplateChange' {

@@ -31,7 +31,7 @@ function Add-R($n, $ok, $d) { $results.Add([PSCustomObject]@{ Name = $n; Pass = 
 Add-R 'Guerrilla module imported' ($null -ne $mod) ''
 
 # (2) Assigned file parses (PowerShell tokenizer/parser — no syntax errors).
-$deviceFile = Join-Path $root 'Private/Audit/Invoke-DeviceManagementChecks.ps1'
+$deviceFile = Join-Path $root 'source/checks/GWS/Invoke-DeviceManagementChecks.ps1'
 $parseErrors = $null
 $null = [System.Management.Automation.Language.Parser]::ParseFile($deviceFile, [ref]$null, [ref]$parseErrors)
 Add-R 'Invoke-DeviceManagementChecks.ps1 parses' (@($parseErrors).Count -eq 0) ("errors=$(@($parseErrors).Count)")

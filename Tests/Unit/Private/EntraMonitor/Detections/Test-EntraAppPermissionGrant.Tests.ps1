@@ -23,7 +23,7 @@
   attribute violates the license. Reference: creativecommons.org/licenses/by/4.0
 #>
 BeforeAll {
-    . "$PSScriptRoot/../../../../../Private/EntraMonitor/Detections/Test-EntraAppPermissionGrant.ps1"
+    . "$PSScriptRoot/../../../../../source/internal/EntraMonitor/Detections/Test-EntraAppPermissionGrant.ps1"
 }
 
 Describe 'Test-EntraAppPermissionGrant' {

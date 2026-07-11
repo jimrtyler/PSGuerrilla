@@ -24,7 +24,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #>
 BeforeAll {
-    . "$PSScriptRoot/../../../../../Private/EntraMonitor/Detections/Test-EntraFederationChange.ps1"
+    . "$PSScriptRoot/../../../../../source/internal/EntraMonitor/Detections/Test-EntraFederationChange.ps1"
 }
 
 Describe 'Test-EntraFederationChange' {

@@ -23,7 +23,7 @@
   (3) indicate modifications. This applies to AI-generated output equally.
 #>
 BeforeAll {
-    . "$PSScriptRoot/../../../../Private/Core/Test-DomainWideDelegation.ps1"
+    . "$PSScriptRoot/../../../../source/internal/Core/Test-DomainWideDelegation.ps1"
 }
 
 Describe 'Test-DomainWideDelegation' {

@@ -21,7 +21,7 @@
 # This work is licensed CC BY 4.0 — share and adapt freely, but always
 # attribute. Full terms: https://creativecommons.org/licenses/by/4.0/
 BeforeAll {
-    . "$PSScriptRoot/../../../../../Private/EntraMonitor/Detections/Test-EntraRiskySignIn.ps1"
+    . "$PSScriptRoot/../../../../../source/internal/EntraMonitor/Detections/Test-EntraRiskySignIn.ps1"
 }
 
 Describe 'Test-EntraRiskySignIn' {

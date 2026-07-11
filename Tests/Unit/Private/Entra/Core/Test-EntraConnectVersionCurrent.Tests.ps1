@@ -18,7 +18,7 @@
 # output derived from this source. Provide credit and a license link.
 # ______________________________________________________________________________
 BeforeAll {
-    . "$PSScriptRoot/../../../../../Private/Entra/Core/Test-EntraConnectVersionCurrent.ps1"
+    . "$PSScriptRoot/../../../../../source/internal/Entra/Core/Test-EntraConnectVersionCurrent.ps1"
     $script:Baseline = '2.6.79.0'
 }
 

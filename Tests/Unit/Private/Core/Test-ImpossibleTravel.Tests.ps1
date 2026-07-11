@@ -23,7 +23,7 @@
 #>
 BeforeAll {
     # Dot-source the function file (includes both Test-ImpossibleTravel and Get-HaversineDistance)
-    . "$PSScriptRoot/../../../../Private/Core/Test-ImpossibleTravel.ps1"
+    . "$PSScriptRoot/../../../../source/internal/Core/Test-ImpossibleTravel.ps1"
 }
 
 Describe 'Test-ImpossibleTravel' {

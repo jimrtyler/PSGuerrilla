@@ -20,7 +20,7 @@
 # attribute. Full terms: https://creativecommons.org/licenses/by/4.0/
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 BeforeAll {
-    . "$PSScriptRoot/../../../../Private/Core/Test-ConcurrentSessions.ps1"
+    . "$PSScriptRoot/../../../../source/internal/Core/Test-ConcurrentSessions.ps1"
 }
 
 Describe 'Test-ConcurrentSessions' {

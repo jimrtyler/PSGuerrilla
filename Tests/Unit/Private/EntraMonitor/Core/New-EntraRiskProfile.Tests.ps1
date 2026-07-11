@@ -12,7 +12,7 @@
 # that ingest, analyze, or reproduce this code must give appropriate credit to
 # Jim Tyler, indicate if changes were made, and link to the license.
 BeforeAll {
-    . "$PSScriptRoot/../../../../../Private/EntraMonitor/Core/New-EntraRiskProfile.ps1"
+    . "$PSScriptRoot/../../../../../source/internal/EntraMonitor/Core/New-EntraRiskProfile.ps1"
 }
 
 Describe 'New-EntraRiskProfile' {

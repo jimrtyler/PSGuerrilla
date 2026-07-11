@@ -23,7 +23,8 @@ BeforeAll {
     Import-Guerrilla
 }
 
-Describe 'Get-Patrol' {
+# Windows-only surface: Get-ScheduledTask does not exist off Windows, so it cannot even be mocked.
+Describe 'Get-Patrol' -Skip:(-not $IsWindows) {
     Context 'Task does not exist' {
         It 'warns and returns null when task not found' {
             Mock Get-ScheduledTask { $null } -ModuleName Guerrilla

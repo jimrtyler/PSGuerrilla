@@ -24,7 +24,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #>
 BeforeAll {
-    . "$PSScriptRoot/../../../../Private/Core/Test-UserAgentAnomaly.ps1"
+    . "$PSScriptRoot/../../../../source/internal/Core/Test-UserAgentAnomaly.ps1"
 }
 
 Describe 'Test-UserAgentAnomaly' {

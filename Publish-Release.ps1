@@ -66,6 +66,13 @@ $ztSchema = Join-Path $root 'Tests' 'Unit' 'ZeroTrustSchema.Tests.ps1'
 if ($LASTEXITCODE -ne 0) { Fail "Zero Trust schema RED — a check is missing pillar/weight. Release blocked." }
 Ok 'Zero Trust schema green (all checks declare pillar + weight)'
 
+# 2d) GATE D — full unit suite. Red anywhere blocks publish: a suite the release
+# routes around stops meaning anything (Windows-only surfaces self-skip off Windows).
+Write-Host "-- gate D: full unit suite --"
+& pwsh -NoProfile -c "`$r = Invoke-Pester -Path (Join-Path '$PWD' 'Tests' 'Unit') -Output None -PassThru; 'unit: '+`$r.PassedCount+' passed, '+`$r.FailedCount+' failed, '+`$r.SkippedCount+' skipped'; exit `$r.FailedCount" | Out-Host
+if ($LASTEXITCODE -ne 0) { Fail "unit suite RED (exit $LASTEXITCODE) — release blocked." }
+Ok 'unit suite green'
+
 # 3) Manifest validity + ReleaseNotes length.
 $null = Test-ModuleManifest (Join-Path $root 'source' 'Guerrilla.psd1')
 $rn = (Import-PowerShellDataFile (Join-Path $root 'source' 'Guerrilla.psd1')).PrivateData.PSData.ReleaseNotes

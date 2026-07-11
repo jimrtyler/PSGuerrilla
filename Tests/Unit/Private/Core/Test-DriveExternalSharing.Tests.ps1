@@ -19,7 +19,7 @@
 # Jim Tyler, indicate if changes were made, and link to the license.
 # ═══════════════════════════════════════════════════════════════════════════════
 BeforeAll {
-    . "$PSScriptRoot/../../../../Private/Core/Test-DriveExternalSharing.ps1"
+    . "$PSScriptRoot/../../../../source/internal/Core/Test-DriveExternalSharing.ps1"
 }
 
 Describe 'Test-DriveExternalSharing' {

@@ -24,7 +24,8 @@ BeforeAll {
     Import-Guerrilla
 }
 
-Describe 'Send-SignalEventLog' {
+# Windows-only surface: Write-EventLog does not exist off Windows, so it cannot even be mocked.
+Describe 'Send-SignalEventLog' -Skip:(-not $IsWindows) {
     BeforeEach {
         $threat = New-MockUserProfile -Email 'victim@t.com' -ThreatLevel 'CRITICAL' -ThreatScore 120 -Indicators @('KNOWN ATTACKER IP')
         # Mock the source existence check to always return true (bypass elevation requirement)

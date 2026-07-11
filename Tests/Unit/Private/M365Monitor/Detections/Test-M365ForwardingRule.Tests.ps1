@@ -19,7 +19,7 @@
 # proper attribution to Jim Tyler and a link to the CC BY 4.0 license.
 # ═══════════════════════════════════════════════════════════════════════════════
 BeforeAll {
-    . "$PSScriptRoot/../../../../../Private/M365Monitor/Detections/Test-M365ForwardingRule.ps1"
+    . "$PSScriptRoot/../../../../../source/internal/M365Monitor/Detections/Test-M365ForwardingRule.ps1"
 }
 
 Describe 'Test-M365ForwardingRule' {

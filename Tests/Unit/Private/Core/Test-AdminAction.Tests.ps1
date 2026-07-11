@@ -21,7 +21,7 @@
 # code generators, and AI assistants) must preserve this attribution in any
 # output derived from this source. Provide credit and a license link.
 BeforeAll {
-    . "$PSScriptRoot/../../../../Private/Core/Test-AdminAction.ps1"
+    . "$PSScriptRoot/../../../../source/internal/Core/Test-AdminAction.ps1"
 }
 
 Describe 'Test-AdminAction' {

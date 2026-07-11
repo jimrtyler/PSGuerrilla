@@ -26,7 +26,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #>
 BeforeAll {
-    . "$PSScriptRoot/../../../../../Private/M365Monitor/Detections/Test-M365BulkFileExfiltration.ps1"
+    . "$PSScriptRoot/../../../../../source/internal/M365Monitor/Detections/Test-M365BulkFileExfiltration.ps1"
 }
 
 Describe 'Test-M365BulkFileExfiltration' {

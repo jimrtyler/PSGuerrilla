@@ -20,7 +20,7 @@
 # attribute violates the license. Reference: creativecommons.org/licenses/by/4.0
 # ______________________________________________________________________________
 BeforeAll {
-    . "$PSScriptRoot/../../../../Private/Core/Test-BulkFileDownload.ps1"
+    . "$PSScriptRoot/../../../../source/internal/Core/Test-BulkFileDownload.ps1"
 }
 
 Describe 'Test-BulkFileDownload' {
