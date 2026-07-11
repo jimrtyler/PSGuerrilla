@@ -13,7 +13,7 @@
 Describe 'Provenance check-definition schema' {
     It 'every check declares a valid provenance with consistent provenance fields' {
         $valid = @('baseline', 'original', 'build-ahead')
-        $dataDir = (Resolve-Path (Join-Path $PSScriptRoot '..' '..' 'Data' 'AuditChecks')).Path
+        $dataDir = (Resolve-Path (Join-Path $PSScriptRoot '..' '..' 'source' 'Data' 'AuditChecks')).Path
         $violations = [System.Collections.Generic.List[string]]::new()
         foreach ($file in Get-ChildItem -Path $dataDir -Filter *.json) {
             $json = Get-Content -Path $file.FullName -Raw | ConvertFrom-Json

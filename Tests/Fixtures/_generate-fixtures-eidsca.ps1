@@ -88,7 +88,7 @@ function Build-SourceObj([hashtable]$Ctl, $LeafValue) {
     return $nested
 }
 
-$catalog = Get-Content -Path (Join-Path $root '..' '..' 'Data' 'AuditChecks' 'EidscaChecks.json') -Raw | ConvertFrom-Json -AsHashtable
+$catalog = Get-Content -Path (Join-Path $root '..' '..' 'source' 'Data' 'AuditChecks' 'EidscaChecks.json') -Raw | ConvertFrom-Json -AsHashtable
 foreach ($ctl in $catalog.checks) {
     $id = "$($ctl.id)"; $src = "$($ctl.source)"; $op = "$($ctl.op)"
 
