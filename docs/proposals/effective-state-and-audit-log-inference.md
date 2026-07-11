@@ -7,8 +7,9 @@ background. The one monitoring capability that survives is run-over-run comparis
 as a report feature. This page preserves the ideas from the removed code that are
 worth building later, and records where the code went.
 
-Removal commit: RECORDED-POST-REMOVAL (the commit immediately after the one that
-adds this file deletes the subsystem; the SHA is filled in by a follow-up edit).
+Removal commit: 272bca4 ("Remove the behavioral monitoring subsystem: assess,
+score, compare, report"). Everything referenced below as removed lives at the
+parent of that commit; `git show 272bca4^:<path>` exhumes any file.
 
 ## Idea 1: audit-log evidence for controls with no configuration API
 
