@@ -81,7 +81,7 @@ Each control below carries these fields:
 - **Scope:** OU-scoped
 - **Assessment:** Machine-assessable
 - **Verdict posture:** Standard
-- **Checks:** Not yet covered
+- **Checks:** GWS-K12-001
 - **Status:** candidate
 
 **Rationale.** Districts commonly configure Drive external sharing for the
@@ -105,7 +105,7 @@ locally applied or inherited from a parent OU whose population is staff.
 - **Scope:** OU-scoped
 - **Assessment:** Machine-assessable
 - **Verdict posture:** Standard
-- **Checks:** Not yet covered
+- **Checks:** GWS-K12-002
 - **Status:** candidate
 
 **Rationale.** Whatever the staff posture, student OUs should not permit
@@ -154,7 +154,7 @@ retention coverage.
 - **Scope:** OU-scoped
 - **Assessment:** Machine-assessable
 - **Verdict posture:** Standard
-- **Checks:** Not yet covered
+- **Checks:** GWS-K12-003
 - **Status:** candidate
 
 **Rationale.** A student clicking "Sign in with Google" on an arbitrary
@@ -178,7 +178,7 @@ with a configured allowlist.
 - **Scope:** Tenant-wide
 - **Assessment:** Machine-assisted + policy review
 - **Verdict posture:** Context-dependent
-- **Checks:** Not yet covered
+- **Checks:** GWS-K12-004
 - **Status:** candidate
 
 **Rationale.** SIS platforms, rostering tools, and EdTech vendors accumulate
@@ -200,7 +200,7 @@ findings are review items rather than hard failures.
 - **Scope:** Tenant-wide
 - **Assessment:** Machine-assisted + policy review
 - **Verdict posture:** Context-dependent
-- **Checks:** Not yet covered
+- **Checks:** GWS-K12-005
 - **Status:** candidate
 
 **Rationale.** Districts routinely give counselors, secretaries, and building
@@ -235,7 +235,7 @@ such contact has occurred.
 - **Scope:** OU-scoped
 - **Assessment:** Machine-assessable
 - **Verdict posture:** Standard
-- **Checks:** Not yet covered
+- **Checks:** GWS-K12-006
 - **Status:** candidate
 
 **Rationale.** Google Chat, Meet, and Gmail each have independent settings
@@ -260,7 +260,7 @@ uses them for student OUs.
 - **Scope:** OU-scoped
 - **Assessment:** Machine-assisted + policy review
 - **Verdict posture:** Context-dependent
-- **Checks:** Not yet covered
+- **Checks:** GWS-K12-007
 - **Status:** candidate
 
 **Rationale.** Guardian email summaries and guardian access exist so parents
@@ -290,7 +290,7 @@ policy review item.
 - **Scope:** OU-scoped
 - **Assessment:** Machine-assessable
 - **Verdict posture:** Standard
-- **Checks:** Not yet covered
+- **Checks:** GWS-K12-008
 - **Status:** candidate
 
 **Rationale.** Student Chromebooks are the district's largest fleet and its
@@ -317,7 +317,7 @@ and the force-install extension list for review.
 - **Scope:** OU-scoped
 - **Assessment:** Machine-assisted + policy review
 - **Verdict posture:** Context-dependent
-- **Checks:** Not yet covered
+- **Checks:** GWS-K12-009
 - **Status:** candidate
 
 **Rationale.** Graduation and withdrawal produce accounts nobody owns. An
@@ -377,7 +377,7 @@ obligations is a policy determination.
 - **Scope:** OU-scoped
 - **Assessment:** Machine-assisted + policy review
 - **Verdict posture:** Context-dependent
-- **Checks:** Not yet covered
+- **Checks:** GWS-K12-010
 - **Status:** candidate
 
 **Rationale.** Consensus baselines demand 2SV enforcement for all users. For a

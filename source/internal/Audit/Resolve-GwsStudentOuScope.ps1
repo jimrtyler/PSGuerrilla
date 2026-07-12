@@ -141,6 +141,19 @@ function Test-GwsOrgUnitPresent {
     return $false
 }
 
+function Test-GwsValueHasField {
+    <#
+    .SYNOPSIS
+        Shape-immune "does this value object carry this field": live collector
+        objects are PSCustomObjects, fixture data may be hashtables. Both count.
+    #>
+    [CmdletBinding()]
+    param($Object, [Parameter(Mandatory)][string]$Field)
+    if ($null -eq $Object) { return $false }
+    if ($Object -is [System.Collections.IDictionary]) { return [bool]$Object.Contains($Field) }
+    return $Object.PSObject.Properties.Name -contains $Field
+}
+
 function Resolve-GwsStudentOuPolicy {
     <#
     .SYNOPSIS
@@ -210,36 +223,54 @@ function Resolve-GwsStudentOuPolicy {
     $attributed = foreach ($p in $candidates) {
         if ($null -eq $p) { continue }
         $q = $p.policyQuery
-        if ($q -and $q.PSObject.Properties.Name -contains 'group' -and "$($q.group)") {
+        if ($q -and (Test-GwsValueHasField $q 'group') -and "$($q.group)") {
             $result.GroupOverride = $true
             continue
         }
         $ouRef = if ($q) { "$($q.orgUnit)" -replace '^orgUnits/', '' } else { '' }
         $path = if ($ouRef -and $idToPath.ContainsKey($ouRef)) { $idToPath[$ouRef] } else { '(root)' }
-        [pscustomobject]@{ Policy = $p; Path = $path; Admin = ("$($p.type)" -eq 'ADMIN') }
+        $sortOrder = -1.0
+        if ($q -and (Test-GwsValueHasField $q 'sortOrder') -and $null -ne $q.sortOrder) {
+            $sortOrder = [double]$q.sortOrder
+        }
+        [pscustomobject]@{ Policy = $p; Path = $path; Admin = ("$($p.type)" -eq 'ADMIN'); SortOrder = $sortOrder }
     }
     $attributed = @($attributed)
 
-    # Nearest ancestor wins; ADMIN beats SYSTEM at the same OU; root default last.
-    $winner = $null
+    # Precedence order: nearest ancestor first, root default last; within one OU
+    # the highest sortOrder wins (the API's documented tiebreak), then ADMIN over
+    # SYSTEM. Field values can be SPLIT across policies (the API's merge
+    # semantics), so -Field extraction walks the whole precedence list and takes
+    # the field from the first policy that carries it.
+    $precedence = [System.Collections.Generic.List[object]]::new()
     foreach ($ancestor in $chain) {
-        $atOu = @($attributed | Where-Object { $_.Path -eq $ancestor } | Sort-Object { -not $_.Admin })
-        if ($atOu.Count) { $winner = $atOu[0]; break }
-    }
-    if (-not $winner) {
-        $atRoot = @($attributed | Where-Object { $_.Path -eq '(root)' } | Sort-Object { -not $_.Admin })
-        if ($atRoot.Count) { $winner = $atRoot[0] }
-    }
-    if (-not $winner) { return $result }
-
-    $value = $winner.Policy.setting.value
-    if ($PSBoundParameters.ContainsKey('Field') -and $Field) {
-        if ($null -eq $value -or $value.PSObject.Properties.Name -notcontains $Field) {
-            # Value shape does not carry the expected field: treat as unresolved,
-            # never invent a PASS/FAIL from a missing value.
-            return $result
+        foreach ($c in @($attributed | Where-Object { $_.Path -eq $ancestor } |
+                Sort-Object @{ e = { $_.SortOrder }; Descending = $true }, @{ e = { -not $_.Admin } })) {
+            $precedence.Add($c)
         }
-        $value = $value.$Field
+    }
+    foreach ($c in @($attributed | Where-Object { $_.Path -eq '(root)' } |
+            Sort-Object @{ e = { $_.SortOrder }; Descending = $true }, @{ e = { -not $_.Admin } })) {
+        $precedence.Add($c)
+    }
+    if ($precedence.Count -eq 0) { return $result }
+
+    $winner = $null
+    $value = $null
+    if ($PSBoundParameters.ContainsKey('Field') -and $Field) {
+        foreach ($c in $precedence) {
+            $v = $c.Policy.setting.value
+            if (Test-GwsValueHasField $v $Field) {
+                $winner = $c
+                $value = $v.$Field
+                break
+            }
+        }
+        # No policy carries the field: unresolved, never invent a PASS/FAIL.
+        if (-not $winner) { return $result }
+    } else {
+        $winner = $precedence[0]
+        $value = $winner.Policy.setting.value
     }
 
     $result.Found = $true
