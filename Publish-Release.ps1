@@ -50,13 +50,24 @@ Ok 'working tree clean'
 Write-Host "-- gate self-tests: injected failure must exit non-zero --"
 & pwsh -NoProfile -File (Join-Path $root 'Tests' 'Invoke-GatePoisonSelfTests.ps1') | Out-Host
 if ($LASTEXITCODE -ne 0) { Fail "gate poison self-test RED (exit $LASTEXITCODE) — a gate cannot prove it fails; its green is meaningless. Release blocked." }
-Ok 'gates A, B, D proved they can fail (C self-tests in-file)'
+Ok 'gates A, B, D, E proved they can fail (C self-tests in-file)'
 
 # 1) GATE A — golden-fixture detection suite (verdict logic). Child process so its exit() can't kill us.
+#    Emits test-summary.json (gitignored): the derived source of every public number,
+#    regenerated fresh at release time — gate E reconciles the prose against it.
 Write-Host "-- gate A: golden-fixture detection suite --"
-& pwsh -NoProfile -File (Join-Path $root 'Tests' 'Invoke-FixtureTests.ps1') | Select-Object -Last 3 | Out-Host
+$summaryPath = Join-Path $root 'Tests' 'test-summary.json'
+& pwsh -NoProfile -File (Join-Path $root 'Tests' 'Invoke-FixtureTests.ps1') -EmitSummary $summaryPath | Select-Object -Last 3 | Out-Host
 if ($LASTEXITCODE -ne 0) { Fail "golden-fixture suite RED (exit $LASTEXITCODE) — release blocked." }
-Ok 'golden-fixture suite green'
+if (-not (Test-Path $summaryPath)) { Fail 'gate A exited green but produced no test-summary.json — the derived-counts artifact is the release contract.' }
+Ok 'golden-fixture suite green (artifact emitted)'
+
+# 1b) GATE E — public numbers must reconcile with the artifact gate A just derived.
+#     Catches both stale prose after a catalog change and a version-mismatched artifact.
+Write-Host "-- gate E: derived-counts reconciliation (manifest Description + README vs artifact) --"
+& pwsh -NoProfile -File (Join-Path $root 'Tests' 'Invoke-CountReconciliation.ps1') -SummaryPath $summaryPath | Out-Host
+if ($LASTEXITCODE -ne 0) { Fail "derived-counts reconciliation RED (exit $LASTEXITCODE) — a public number does not match the gating run. Release blocked." }
+Ok 'public numbers reconcile with the derived artifact'
 
 # 2) GATE B — collector query-contract tests (endpoint/param drift).
 Write-Host "-- gate B: collector query-contract tests --"

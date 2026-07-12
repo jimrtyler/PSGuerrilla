@@ -37,6 +37,13 @@ jobs:
           # test-summary.json: the derived source of every count the website shows
           # (checks, fixtures, pass/fail, per-check verdicts, version, SHA).
 
+      - name: Reconcile public numbers against the derived artifact
+        shell: pwsh
+        run: |
+          # Gate E: every count advertised in the manifest Description and README
+          # must equal what the fixture run just derived. Stale prose fails the build.
+          ./Tests/Invoke-CountReconciliation.ps1 -SummaryPath Tests/test-summary.json
+
       - name: Upload test-summary artifact
         if: always()
         uses: actions/upload-artifact@v4

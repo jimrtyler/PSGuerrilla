@@ -47,6 +47,19 @@ Write-Host '-- poison gate A: fixture suite with an impossible expected verdict 
 & pwsh -NoProfile -File (Join-Path $root 'Tests' 'Invoke-FixtureTests.ps1') -PoisonSelfTest *> $null
 Assert-PoisonRed -Gate 'A' -ExitCode $LASTEXITCODE
 
+# --- Gate E: count reconciliation against an in-memory-perturbed artifact ---------
+Write-Host '-- poison gate E: count reconciliation with a perturbed derived total --'
+$summary = Join-Path $root 'Tests' 'test-summary.json'
+if (Test-Path $summary) {
+    & pwsh -NoProfile -File (Join-Path $root 'Tests' 'Invoke-CountReconciliation.ps1') -SummaryPath $summary -PoisonSelfTest *> $null
+    Assert-PoisonRed -Gate 'E' -ExitCode $LASTEXITCODE
+} else {
+    # No artifact yet (gate A hasn't emitted one this run): the missing-artifact
+    # path IS a red path — prove it.
+    & pwsh -NoProfile -File (Join-Path $root 'Tests' 'Invoke-CountReconciliation.ps1') -SummaryPath (Join-Path $root 'Tests' 'no-such-summary.json') *> $null
+    Assert-PoisonRed -Gate 'E' -ExitCode $LASTEXITCODE
+}
+
 # --- Gates B and D: the Invoke-Pester wrapper forms against poisoned suites -------
 $scratch = Join-Path ([System.IO.Path]::GetTempPath()) ("guerrilla-gate-poison-" + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $scratch -Force | Out-Null
@@ -87,5 +100,5 @@ if ($failures.Count -gt 0) {
     Write-Host ("POISON SELF-TEST RED: gate(s) {0} did not fail on poisoned input." -f ($failures -join ', ')) -ForegroundColor Red
     exit 1
 }
-Write-Host 'All gates proved they can fail (A, B, D poison-verified; C self-tests in-file).' -ForegroundColor Green
+Write-Host 'All gates proved they can fail (A, B, D, E poison-verified; C self-tests in-file).' -ForegroundColor Green
 exit 0
