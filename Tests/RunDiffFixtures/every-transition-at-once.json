@@ -1,6 +1,6 @@
 {
   "name": "every-transition-at-once",
-  "description": "The silent-diff case: all twelve changed-verdict pairs, all four unchanged pairs, one NEW, and one RETIRED in a single diff. Every transition present in the inputs MUST appear in the output; the runner asserts count equality against an independently computed union, not just presence.",
+  "description": "The silent-diff case: all twelve changed-verdict pairs, all four same-verdict pairs (three unchanged, one still-not-assessed: persistent darkness is its own class, never unchanged), one NEW, and one RETIRED in a single diff. Every transition present in the inputs MUST appear in the output; the runner asserts count equality against an independently computed union, not just presence.",
   "previous": {
     "schemaVersion": 1, "runId": "prev-1", "generatedAt": "2026-07-01T10:00:00Z", "moduleVersion": "2.47.0",
     "overallScore": 65, "pillarScores": { "Identity": 60 }, "summary": { "notAssessed": 4 },
@@ -50,7 +50,7 @@
   "expect": {
     "baselineRun": false,
     "versionSkew": false,
-    "counts": { "newlyFailing": 2, "lostVisibility": 3, "newlyPassing": 2, "regressed": 1, "improved": 1, "restoredVisibility": 3, "newChecks": 1, "retiredChecks": 1, "unchanged": 4 },
+    "counts": { "newlyFailing": 2, "lostVisibility": 3, "newlyPassing": 2, "regressed": 1, "improved": 1, "restoredVisibility": 3, "stillNotAssessed": 1, "newChecks": 1, "retiredChecks": 1, "unchanged": 3 },
     "scoreDelta": -4,
     "notAssessedDelta": 0,
     "pillarDeltas": { "Identity": -2 },
@@ -60,6 +60,7 @@
       { "class": "LostVisibility", "checkId": "T-PASSNA", "from": "PASS", "to": "Not Assessed" },
       { "class": "LostVisibility", "checkId": "T-WARNNA", "from": "WARN", "to": "Not Assessed" },
       { "class": "LostVisibility", "checkId": "T-FAILNA", "from": "FAIL", "to": "Not Assessed" },
+      { "class": "StillNotAssessed", "checkId": "T-NANA", "from": "Not Assessed", "to": "Not Assessed" },
       { "class": "NewlyPassing", "checkId": "T-FAILPASS", "from": "FAIL", "to": "PASS" },
       { "class": "NewlyPassing", "checkId": "T-WARNPASS", "from": "WARN", "to": "PASS" },
       { "class": "Regressed", "checkId": "T-PASSWARN", "from": "PASS", "to": "WARN" },

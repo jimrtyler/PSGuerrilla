@@ -1,6 +1,6 @@
 {
   "name": "no-change",
-  "description": "All four verdicts unchanged, including a stable FAIL and a stable Not Assessed; unchanged is a count, never enumerated. Evidence changing under a stable verdict stays unchanged-class.",
+  "description": "Three assessed verdicts unchanged (stable PASS/WARN/FAIL; unchanged is a count, never enumerated) plus one check dark in both runs, which is STILL NOT ASSESSED, its own enumerated class: persistent darkness must never blend into unchanged. Evidence changing under a stable assessed verdict stays unchanged-class.",
   "previous": {
     "schemaVersion": 1, "runId": "prev-1", "generatedAt": "2026-07-01T10:00:00Z", "moduleVersion": "2.47.0",
     "overallScore": 66, "pillarScores": { "Identity": 60, "Data": 75 }, "summary": { "notAssessed": 1 },
@@ -24,9 +24,12 @@
   "expect": {
     "baselineRun": false,
     "versionSkew": false,
-    "counts": { "newlyFailing": 0, "lostVisibility": 0, "newlyPassing": 0, "regressed": 0, "improved": 0, "restoredVisibility": 0, "newChecks": 0, "retiredChecks": 0, "unchanged": 4 },
+    "counts": { "newlyFailing": 0, "lostVisibility": 0, "newlyPassing": 0, "regressed": 0, "improved": 0, "restoredVisibility": 0, "stillNotAssessed": 1, "newChecks": 0, "retiredChecks": 0, "unchanged": 3 },
     "scoreDelta": 0,
     "notAssessedDelta": 0,
-    "pillarDeltas": { "Identity": 0, "Data": 0 }
+    "pillarDeltas": { "Identity": 0, "Data": 0 },
+    "contains": [
+      { "class": "StillNotAssessed", "checkId": "AIAGENT-001", "from": "Not Assessed", "to": "Not Assessed" }
+    ]
   }
 }

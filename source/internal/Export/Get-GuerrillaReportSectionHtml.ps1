@@ -501,6 +501,8 @@ function Get-GuerrillaComparisonSectionHtml {
   .cmp-delta .val { font-size: 1.5em; font-weight: 700; }
   .cmp-delta .lbl { font-size: .85em; opacity: .75; }
   .cmp-up { color: var(--pass); } .cmp-down { color: var(--fail); } .cmp-flat { opacity: .6; }
+  .cmp-caution { color: var(--gold); }
+  .cmp-caveat { font-size: .85em; color: var(--gold); margin: -6px 0 12px 0; }
   .cmp-class { margin: 10px 0; }
   .cmp-class ul { margin: 4px 0 8px 20px; font-size: .92em; }
   .cmp-pillars { font-size: .9em; margin-top: 8px; }
@@ -542,10 +544,24 @@ baseline.</p>
         $sign = if ($d -gt 0) { '+' } else { '' }
         return "<span class='$cls'>$arrow $sign$d</span>"
     }
+    # Checks that are dark this run (went dark, or stayed dark) are excluded from
+    # the score's denominator by the scoring engine — so a score can RISE simply
+    # because checks stopped being assessed. Never style that as a clean
+    # improvement: mark the delta as caution and say what it excludes.
+    $darkNow = @($RunDiff.LostVisibility).Count + @($RunDiff.StillNotAssessed).Count
+    $scoreDeltaHtml = & $fmtDelta $RunDiff.ScoreDelta $false
+    if ($darkNow -gt 0 -and $null -ne $RunDiff.ScoreDelta -and [int]$RunDiff.ScoreDelta -gt 0) {
+        $scoreDeltaHtml = $scoreDeltaHtml -replace "class='cmp-up'", "class='cmp-caution'"
+    }
     [void]$html.Append('<div class="cmp-deltas">')
-    [void]$html.Append("<div class='cmp-delta'><div class='val'>$(& $fmtDelta $RunDiff.ScoreDelta $false)</div><div class='lbl'>Score (now $($RunDiff.Current.OverallScore), was $($RunDiff.Previous.OverallScore))</div></div>")
+    [void]$html.Append("<div class='cmp-delta'><div class='val'>$scoreDeltaHtml</div><div class='lbl'>Score (now $($RunDiff.Current.OverallScore), was $($RunDiff.Previous.OverallScore))</div></div>")
     [void]$html.Append("<div class='cmp-delta'><div class='val'>$(& $fmtDelta $RunDiff.NotAssessedDelta $true)</div><div class='lbl'>Not Assessed count</div></div>")
     [void]$html.Append('</div>')
+    if ($darkNow -gt 0) {
+        [void]$html.Append("<div class='cmp-caveat'>Score excludes $darkNow check$(if ($darkNow -ne 1) { 's' }) not assessed this run " +
+            "($(@($RunDiff.LostVisibility).Count) lost visibility, $(@($RunDiff.StillNotAssessed).Count) still not assessed); " +
+            'a rising score with dark checks is not a clean improvement.</div>')
+    }
 
     $pillarRows = @($RunDiff.PillarDeltas | Where-Object { $null -ne $_.Delta -and $_.Delta -ne 0 })
     if ($pillarRows.Count -gt 0) {
@@ -580,6 +596,7 @@ baseline.</p>
     # dark is lost visibility with its own prominence, never "no change".
     [void]$html.Append((& $renderClass 'Newly failing' $RunDiff.NewlyFailing 'var(--fail)' $true))
     [void]$html.Append((& $renderClass 'Lost visibility (assessed before, Not Assessed now)' $RunDiff.LostVisibility 'var(--gold)' $true))
+    [void]$html.Append((& $renderClass 'Still not assessed (dark in this run and the previous one)' $RunDiff.StillNotAssessed 'var(--gold)' $false))
     [void]$html.Append((& $renderClass 'Newly passing (remediation confirmed)' $RunDiff.NewlyPassing 'var(--pass)' $true))
     [void]$html.Append((& $renderClass 'Regressed to warning' $RunDiff.Regressed 'var(--medium)' $true))
     [void]$html.Append((& $renderClass 'Improved to warning (not yet passing)' $RunDiff.Improved 'var(--medium)' $true))
@@ -589,10 +606,14 @@ baseline.</p>
 
     $changed = @($RunDiff.NewlyFailing).Count + @($RunDiff.LostVisibility).Count + @($RunDiff.NewlyPassing).Count +
         @($RunDiff.Regressed).Count + @($RunDiff.Improved).Count + @($RunDiff.RestoredVisibility).Count
+    $stillDark = @($RunDiff.StillNotAssessed).Count
+    $stillDarkNote = if ($stillDark -gt 0) {
+        " $stillDark check$(if ($stillDark -ne 1) { 's' }) remain$(if ($stillDark -eq 1) { 's' }) not assessed — dark is not stable."
+    } else { '' }
     if ($changed -eq 0) {
-        [void]$html.Append("<p>No verdict changed since the previous run. $($RunDiff.UnchangedCount) checks are unchanged.</p>")
+        [void]$html.Append("<p>No verdict changed since the previous run. $($RunDiff.UnchangedCount) checks are unchanged.$stillDarkNote</p>")
     } else {
-        [void]$html.Append("<p class='cmp-meta'>$($RunDiff.UnchangedCount) checks unchanged.</p>")
+        [void]$html.Append("<p class='cmp-meta'>$($RunDiff.UnchangedCount) checks unchanged.$stillDarkNote</p>")
     }
 
     [void]$html.Append('</div>')

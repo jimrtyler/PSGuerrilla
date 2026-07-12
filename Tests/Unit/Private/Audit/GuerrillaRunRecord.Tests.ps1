@@ -88,20 +88,122 @@ Describe 'Save-GuerrillaRunRecord / Get-GuerrillaPreviousRun' {
             Should -Be 'guerrilla-run-history'
     }
 
-    It 'anti-fork guard: refuses a directory with run records but no valid index (poison self-test)' {
-        $rh = Join-Path $script:root 'RunHistory'
-        New-Item -ItemType Directory -Path $rh -Force | Out-Null
-        Set-Content -Path (Join-Path $rh 'run-20260701T000000Z-old.json') -Value '{"schemaVersion":1}'
-
-        $rec = InModuleScope Guerrilla {
-            New-GuerrillaRunRecord -Findings @((New-MockAuditFinding -CheckId 'A-1' -Status 'PASS')) `
-                -Platforms @('AD') -TargetId @('corp.example.com') -ScanId 'scan-1' -OverallScore 90
-        }
-        {
-            InModuleScope Guerrilla -Parameters @{ rec = $rec; root = $script:root } {
-                Save-GuerrillaRunRecord -Record $rec -DataRoot $root
+    It 'rebuilds a missing or corrupt index from the records on disk instead of refusing forever' {
+        # The old anti-fork guard threw here, which permanently disabled run
+        # recording (callers warn-and-continue) while comparisons kept reading an
+        # ever-staler baseline. Records are the source of truth: the index is
+        # rebuilt from them, loudly, and recording resumes.
+        InModuleScope Guerrilla -Parameters @{ root = $script:root } {
+            $mk = {
+                param($scanId, $when)
+                $rec = New-GuerrillaRunRecord -Findings @((New-MockAuditFinding -CheckId 'A-1' -Status 'PASS')) `
+                    -Platforms @('AD') -TargetId @('corp.example.com') -ScanId $scanId -OverallScore 90
+                $rec.generatedAt = $when
+                return $rec
             }
-        } | Should -Throw -ExpectedMessage '*fork*'
+            Save-GuerrillaRunRecord -Record (& $mk 'first' '2026-07-01T10:00:00Z') -DataRoot $root | Out-Null
+
+            # Corrupt the index after a legitimate save.
+            $indexPath = Join-Path (Get-GuerrillaRunHistoryRoot -DataRoot $root) 'index.json'
+            Set-Content -Path $indexPath -Value 'not json {{{'
+
+            $wv = $null
+            $path2 = Save-GuerrillaRunRecord -Record (& $mk 'second' '2026-07-05T10:00:00Z') -DataRoot $root `
+                -WarningVariable wv -WarningAction SilentlyContinue
+            Test-Path $path2 | Should -BeTrue
+            (@($wv) -join ' ') | Should -Match 'Rebuilding the index'
+
+            # The rebuilt index is valid again and carries a locator entry per record.
+            $idx = Get-Content -Path $indexPath -Raw | ConvertFrom-Json
+            $idx.store | Should -Be 'guerrilla-run-history'
+            @($idx.runs).Count | Should -Be 2
+
+            # And the baseline lookup still sees the full history.
+            $target = Get-GuerrillaTargetHash -TargetId @('corp.example.com')
+            (Get-GuerrillaPreviousRun -Platforms @('AD') -TargetHash $target -DataRoot $root).runId | Should -Be 'second'
+        }
+    }
+
+    It 'index writes are atomic: no plain Set-Content path remains for index.json (source assertion)' {
+        # Records were always temp+rename; the index used to be a bare Set-Content.
+        # Assert every index write goes through Write-GuerrillaRunIndex, which
+        # stages to a .tmp file and renames.
+        $src = Get-Content -Raw (Join-Path $PSScriptRoot '../../../../source/internal/Audit/Save-GuerrillaRunRecord.ps1')
+        $writes = [regex]::Matches($src, 'Set-Content\s+-Path\s+(\$\w+)')
+        foreach ($w in $writes) {
+            $w.Groups[1].Value | Should -Match '^\$tmpPath$' -Because 'every write must stage to a temp path and rename'
+        }
+        $src | Should -Match 'Move-Item -Path \$tmpPath -Destination \$IndexPath -Force'
+    }
+
+    It 'leaves no temp files behind after a save' {
+        InModuleScope Guerrilla -Parameters @{ root = $script:root } {
+            $rec = New-GuerrillaRunRecord -Findings @((New-MockAuditFinding -CheckId 'A-1' -Status 'PASS')) `
+                -Platforms @('AD') -TargetId @('corp.example.com') -ScanId 'scan-1' -OverallScore 90
+            Save-GuerrillaRunRecord -Record $rec -DataRoot $root | Out-Null
+            @(Get-ChildItem -Path (Get-GuerrillaRunHistoryRoot -DataRoot $root) -Filter '*.tmp').Count | Should -Be 0
+        }
+    }
+
+    It 'retention prunes each series to the most recent N records and spares other series' {
+        InModuleScope Guerrilla -Parameters @{ root = $script:root } {
+            $mk = {
+                param($scanId, $when, $platforms)
+                $rec = New-GuerrillaRunRecord -Findings @((New-MockAuditFinding -CheckId 'A-1' -Status 'PASS')) `
+                    -Platforms $platforms -TargetId @('corp.example.com') -ScanId $scanId -OverallScore 80
+                $rec.generatedAt = $when
+                Save-GuerrillaRunRecord -Record $rec -DataRoot $root -MaxRunsPerSeries 3 | Out-Null
+            }
+            & $mk 'r1' '2026-07-01T10:00:00Z' @('AD')
+            & $mk 'r2' '2026-07-02T10:00:00Z' @('AD')
+            & $mk 'other' '2026-07-02T11:00:00Z' @('GWS')   # different series, must survive
+            & $mk 'r3' '2026-07-03T10:00:00Z' @('AD')
+            & $mk 'r4' '2026-07-04T10:00:00Z' @('AD')
+            & $mk 'r5' '2026-07-05T10:00:00Z' @('AD')
+
+            $rh = Get-GuerrillaRunHistoryRoot -DataRoot $root
+            @(Get-ChildItem -Path $rh -Filter 'run-*.json').Count | Should -Be 4 -Because '3 kept in the AD series + 1 in the GWS series'
+
+            $target = Get-GuerrillaTargetHash -TargetId @('corp.example.com')
+            (Get-GuerrillaPreviousRun -Platforms @('AD') -TargetHash $target -DataRoot $root).runId | Should -Be 'r5'
+            (Get-GuerrillaPreviousRun -Platforms @('GWS') -TargetHash $target -DataRoot $root).runId | Should -Be 'other'
+
+            $idx = Get-Content -Path (Join-Path $rh 'index.json') -Raw | ConvertFrom-Json
+            @($idx.runs).Count | Should -Be 4
+            @($idx.runs | ForEach-Object runId) | Should -Not -Contain 'r1'
+            @($idx.runs | ForEach-Object runId) | Should -Not -Contain 'r2'
+        }
+    }
+
+    It 'warns (once per lookup) when matching records are skipped for a schemaVersion mismatch' {
+        InModuleScope Guerrilla -Parameters @{ root = $script:root } {
+            $mk = {
+                param($scanId, $when, $schema)
+                $rec = New-GuerrillaRunRecord -Findings @((New-MockAuditFinding -CheckId 'A-1' -Status 'PASS')) `
+                    -Platforms @('AD') -TargetId @('corp.example.com') -ScanId $scanId -OverallScore 80
+                $rec.generatedAt = $when
+                $rec.schemaVersion = $schema
+                Save-GuerrillaRunRecord -Record $rec -DataRoot $root | Out-Null
+            }
+            & $mk 'v1-run' '2026-07-01T10:00:00Z' 1
+            & $mk 'v2-run' '2026-07-05T10:00:00Z' 2   # newer but future-schema
+
+            $target = Get-GuerrillaTargetHash -TargetId @('corp.example.com')
+            $wv = $null
+            $best = Get-GuerrillaPreviousRun -Platforms @('AD') -TargetHash $target -DataRoot $root `
+                -WarningVariable wv -WarningAction SilentlyContinue
+            $best.runId | Should -Be 'v1-run' -Because 'the v2 record is not comparable, but must not be skipped silently'
+            @($wv).Count | Should -Be 1
+            (@($wv) -join ' ') | Should -Match 'schemaVersion'
+
+            # Same warning on the full-scan fallback path (no index).
+            Remove-Item -Path (Join-Path (Get-GuerrillaRunHistoryRoot -DataRoot $root) 'index.json')
+            $wv2 = $null
+            $best2 = Get-GuerrillaPreviousRun -Platforms @('AD') -TargetHash $target -DataRoot $root `
+                -WarningVariable wv2 -WarningAction SilentlyContinue
+            $best2.runId | Should -Be 'v1-run'
+            @($wv2).Count | Should -Be 1
+        }
     }
 
     It 'refuses to persist an incomplete record' {
@@ -139,6 +241,40 @@ Describe 'Save-GuerrillaRunRecord / Get-GuerrillaPreviousRun' {
         }
     }
 
+    It 'campaign series: a failed platform keys on the requested set and surfaces as lost visibility' {
+        InModuleScope Guerrilla -Parameters @{ root = $script:root } {
+            # Baseline: full campaign (AD + Entra + GWS), every platform assessed.
+            $prevRec = New-GuerrillaRunRecord -Findings @(
+                (New-MockAuditFinding -CheckId 'AD-1' -Status 'PASS'),
+                (New-MockAuditFinding -CheckId 'ENT-1' -Status 'PASS'),
+                (New-MockAuditFinding -CheckId 'GWS-1' -Status 'PASS')
+            ) -Platforms @('AD', 'Entra', 'GWS') `
+                -TargetId @('corp.example.com', 'tenant-1', 'ws.example.com') -ScanId 'c1' -OverallScore 90
+            $prevRec.generatedAt = '2026-07-01T10:00:00Z'
+            Save-GuerrillaRunRecord -Record $prevRec -DataRoot $root | Out-Null
+
+            # Next campaign: the GWS sub-audit failed outright. The record is still
+            # keyed on the REQUESTED platform set (same series, not a false first
+            # run), and the failed platform's checks are synthesized Not-Assessed
+            # (ERROR) findings instead of vanishing.
+            $currRec = New-GuerrillaRunRecord -Findings @(
+                (New-MockAuditFinding -CheckId 'AD-1' -Status 'PASS'),
+                (New-MockAuditFinding -CheckId 'ENT-1' -Status 'PASS'),
+                (New-MockAuditFinding -CheckId 'GWS-1' -Status 'ERROR')
+            ) -Platforms @('AD', 'Entra', 'GWS') `
+                -TargetId @('corp.example.com', 'tenant-1', 'ws.example.com') -ScanId 'c2' -OverallScore 92
+
+            $prev = Get-GuerrillaPreviousRun -Platforms @('AD', 'Entra', 'GWS') `
+                -TargetHash $currRec.scope.targetHash -DataRoot $root
+            $prev | Should -Not -BeNullOrEmpty -Because 'one failed platform must not move the campaign to a new series'
+            $prev.runId | Should -Be 'c1'
+
+            $diff = Compare-GuerrillaRun -Previous $prev -Current $currRec
+            @($diff.LostVisibility | ForEach-Object CheckId) | Should -Contain 'GWS-1'
+            @($diff.RetiredChecks).Count | Should -Be 0 -Because 'a failed platform is lost visibility, never a benign retirement'
+        }
+    }
+
     It 'round-trips a record through disk and diffs cleanly against itself' {
         InModuleScope Guerrilla -Parameters @{ root = $script:root } {
             $rec = New-GuerrillaRunRecord -Findings @(
@@ -153,7 +289,8 @@ Describe 'Save-GuerrillaRunRecord / Get-GuerrillaPreviousRun' {
 
             $diff = Compare-GuerrillaRun -Previous $loaded -Current $rec
             $diff.BaselineRun | Should -BeFalse
-            $diff.UnchangedCount | Should -Be 2
+            $diff.UnchangedCount | Should -Be 1 -Because 'the stable PASS'
+            @($diff.StillNotAssessed).Count | Should -Be 1 -Because 'the SKIP is dark in both runs — enumerated, never unchanged'
             $diff.TotalClassified | Should -Be 2
             $diff.ScoreDelta | Should -Be 0
         }

@@ -29,7 +29,7 @@ BeforeAll {
     # The class names on the diff result, in one place so the invariant test
     # cannot drift from the implementation's property list.
     $script:EnumeratedClasses = @('NewlyFailing', 'LostVisibility', 'NewlyPassing',
-        'Regressed', 'Improved', 'RestoredVisibility', 'NewChecks', 'RetiredChecks')
+        'Regressed', 'Improved', 'RestoredVisibility', 'StillNotAssessed', 'NewChecks', 'RetiredChecks')
 
     function Invoke-DiffFixture {
         param($Fixture)
@@ -42,8 +42,9 @@ BeforeAll {
 Describe 'Compare-GuerrillaRun golden fixtures' {
 
     It 'discovers the fixture set' {
-        $script:RunCases.Count | Should -BeGreaterOrEqual 9
+        $script:RunCases.Count | Should -BeGreaterOrEqual 10
         @($script:RunCases | Where-Object { $_.Name -eq 'every-transition-at-once' }).Count | Should -Be 1
+        @($script:RunCases | Where-Object { $_.Name -eq 'still-not-assessed' }).Count | Should -Be 1
     }
 
     It '<Name>: expected class counts' -ForEach @($script:Cases | Where-Object { -not $_.Fixture.expect.throws }) {
@@ -55,6 +56,7 @@ Describe 'Compare-GuerrillaRun golden fixtures' {
         @($diff.Regressed).Count          | Should -Be $c.regressed          -Because 'regressed'
         @($diff.Improved).Count           | Should -Be $c.improved           -Because 'improved'
         @($diff.RestoredVisibility).Count | Should -Be $c.restoredVisibility -Because 'restoredVisibility'
+        @($diff.StillNotAssessed).Count   | Should -Be $c.stillNotAssessed   -Because 'stillNotAssessed'
         @($diff.NewChecks).Count          | Should -Be $c.newChecks          -Because 'newChecks'
         @($diff.RetiredChecks).Count      | Should -Be $c.retiredChecks      -Because 'retiredChecks'
         $diff.UnchangedCount              | Should -Be $c.unchanged          -Because 'unchanged'
@@ -144,5 +146,16 @@ Describe 'Compare-GuerrillaRun golden fixtures' {
         $poisonedTotal = $enumerated + $diff.UnchangedCount - 1   # simulate one dropped transition
 
         $poisonedTotal | Should -Not -Be $union.Count
+    }
+
+    It 'a check dark in both runs lands in StillNotAssessed, never in the unchanged count' {
+        # Persistent darkness must stay enumerated forever, not flagged once as
+        # lost visibility and then blended into "unchanged" on every later run.
+        $fx = ($script:RunCases | Where-Object { $_.Name -eq 'still-not-assessed' }).Fixture
+        $diff = Invoke-DiffFixture -Fixture $fx
+        @($diff.StillNotAssessed).Count | Should -Be 2
+        @($diff.StillNotAssessed | ForEach-Object CheckId) | Should -Contain 'EIDPIM-010'
+        @($diff.StillNotAssessed | ForEach-Object CheckId) | Should -Contain 'M365EXO-004'
+        $diff.UnchangedCount | Should -Be 1 -Because 'only the stable PASS is unchanged; dark is not stable'
     }
 }

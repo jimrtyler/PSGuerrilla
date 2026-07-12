@@ -24,7 +24,13 @@ function Compare-GuerrillaRun {
           restoredVisibility Not Assessed -> assessed   (current verdict shown;
                                                         an NA->FAIL restoration is
                                                         visible failure, listed here)
-          unchanged          same verdict               count only, never enumerated
+          stillNotAssessed   Not Assessed -> Not Assessed  persistent darkness:
+                                                        a check dark in BOTH runs is
+                                                        enumerated, never folded into
+                                                        "unchanged" — absence of
+                                                        evidence must never read as
+                                                        stability.
+          unchanged          same assessed verdict      count only, never enumerated
 
         Checks present only in the current run are NEW (module upgrade), never a
         transition. Checks present only in the previous run are RETIRED, never a
@@ -62,6 +68,7 @@ function Compare-GuerrillaRun {
             Regressed         = @()
             Improved          = @()
             RestoredVisibility = @()
+            StillNotAssessed  = @()
             NewChecks         = @()
             RetiredChecks     = @()
             UnchangedCount    = 0
@@ -100,6 +107,7 @@ function Compare-GuerrillaRun {
     $regressed = [System.Collections.Generic.List[object]]::new()
     $improved = [System.Collections.Generic.List[object]]::new()
     $restoredVisibility = [System.Collections.Generic.List[object]]::new()
+    $stillNotAssessed = [System.Collections.Generic.List[object]]::new()
     $newChecks = [System.Collections.Generic.List[object]]::new()
     $retiredChecks = [System.Collections.Generic.List[object]]::new()
     $unchangedCount = 0
@@ -130,7 +138,7 @@ function Compare-GuerrillaRun {
             'PASS>PASS'                 { $unchangedCount++ }
             'WARN>WARN'                 { $unchangedCount++ }
             'FAIL>FAIL'                 { $unchangedCount++ }
-            'Not Assessed>Not Assessed' { $unchangedCount++ }
+            'Not Assessed>Not Assessed' { $stillNotAssessed.Add($entry) }   # persistent darkness, never "unchanged"
             'PASS>FAIL'                 { $newlyFailing.Add($entry) }
             'WARN>FAIL'                 { $newlyFailing.Add($entry) }
             'PASS>Not Assessed'         { $lostVisibility.Add($entry) }
@@ -162,7 +170,7 @@ function Compare-GuerrillaRun {
     foreach ($k in $prevByKey.Keys) { [void]$unionKeys.Add($k) }
     foreach ($k in $currByKey.Keys) { [void]$unionKeys.Add($k) }
     $totalClassified = $newlyFailing.Count + $lostVisibility.Count + $newlyPassing.Count +
-        $regressed.Count + $improved.Count + $restoredVisibility.Count +
+        $regressed.Count + $improved.Count + $restoredVisibility.Count + $stillNotAssessed.Count +
         $newChecks.Count + $retiredChecks.Count + $unchangedCount
     if ($totalClassified -ne $unionKeys.Count) {
         throw ("Compare-GuerrillaRun: classified $totalClassified of $($unionKeys.Count) checks. " +
@@ -229,6 +237,7 @@ function Compare-GuerrillaRun {
         Regressed         = @($regressed)
         Improved          = @($improved)
         RestoredVisibility = @($restoredVisibility)
+        StillNotAssessed  = @($stillNotAssessed)
         NewChecks         = @($newChecks)
         RetiredChecks     = @($retiredChecks)
         UnchangedCount    = $unchangedCount

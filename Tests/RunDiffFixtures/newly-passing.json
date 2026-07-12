@@ -24,7 +24,7 @@
   "expect": {
     "baselineRun": false,
     "versionSkew": false,
-    "counts": { "newlyFailing": 0, "lostVisibility": 0, "newlyPassing": 2, "regressed": 1, "improved": 1, "restoredVisibility": 0, "newChecks": 0, "retiredChecks": 0, "unchanged": 0 },
+    "counts": { "newlyFailing": 0, "lostVisibility": 0, "newlyPassing": 2, "regressed": 1, "improved": 1, "restoredVisibility": 0, "stillNotAssessed": 0, "newChecks": 0, "retiredChecks": 0, "unchanged": 0 },
     "scoreDelta": 16,
     "notAssessedDelta": 0,
     "contains": [

@@ -1,0 +1,36 @@
+{
+  "name": "still-not-assessed",
+  "description": "Persistent darkness: a check Not Assessed in BOTH runs is STILL NOT ASSESSED, its own enumerated class — never folded into unchanged. Without this class a check flagged lost-visibility once would blend into 'no change' forever, and a rising score (Not Assessed drops out of the denominator) would read as clean improvement while checks stay dark.",
+  "previous": {
+    "schemaVersion": 1, "runId": "prev-1", "generatedAt": "2026-07-01T10:00:00Z", "moduleVersion": "2.47.0",
+    "overallScore": 78, "pillarScores": { "Identity": 80, "Data": 70 }, "summary": { "notAssessed": 3 },
+    "checks": [
+      { "checkId": "EIDPIM-010", "orgUnitPath": "", "verdict": "Not Assessed", "severity": "High", "category": "PIM", "zeroTrustPillar": "Identity", "evidenceHash": "a9" },
+      { "checkId": "M365EXO-004", "orgUnitPath": "", "verdict": "Not Assessed", "severity": "Medium", "category": "Exchange", "zeroTrustPillar": "Data", "evidenceHash": "b9" },
+      { "checkId": "INTUNE-005", "orgUnitPath": "", "verdict": "Not Assessed", "severity": "High", "category": "Intune", "zeroTrustPillar": "Devices", "evidenceHash": "c9" },
+      { "checkId": "AUTH-001", "orgUnitPath": "", "verdict": "PASS", "severity": "Critical", "category": "Auth", "zeroTrustPillar": "Identity", "evidenceHash": "d4" }
+    ]
+  },
+  "current": {
+    "schemaVersion": 1, "runId": "curr-1", "generatedAt": "2026-07-15T10:00:00Z", "moduleVersion": "2.47.0",
+    "overallScore": 78, "pillarScores": { "Identity": 80, "Data": 70 }, "summary": { "notAssessed": 2 },
+    "checks": [
+      { "checkId": "EIDPIM-010", "orgUnitPath": "", "verdict": "Not Assessed", "severity": "High", "category": "PIM", "zeroTrustPillar": "Identity", "evidenceHash": "a9" },
+      { "checkId": "M365EXO-004", "orgUnitPath": "", "verdict": "Not Assessed", "severity": "Medium", "category": "Exchange", "zeroTrustPillar": "Data", "evidenceHash": "b9" },
+      { "checkId": "INTUNE-005", "orgUnitPath": "", "verdict": "FAIL", "severity": "High", "category": "Intune", "zeroTrustPillar": "Devices", "evidenceHash": "c1" },
+      { "checkId": "AUTH-001", "orgUnitPath": "", "verdict": "PASS", "severity": "Critical", "category": "Auth", "zeroTrustPillar": "Identity", "evidenceHash": "d4" }
+    ]
+  },
+  "expect": {
+    "baselineRun": false,
+    "versionSkew": false,
+    "counts": { "newlyFailing": 0, "lostVisibility": 0, "newlyPassing": 0, "regressed": 0, "improved": 0, "restoredVisibility": 1, "stillNotAssessed": 2, "newChecks": 0, "retiredChecks": 0, "unchanged": 1 },
+    "scoreDelta": 0,
+    "notAssessedDelta": -1,
+    "contains": [
+      { "class": "StillNotAssessed", "checkId": "EIDPIM-010", "from": "Not Assessed", "to": "Not Assessed" },
+      { "class": "StillNotAssessed", "checkId": "M365EXO-004", "from": "Not Assessed", "to": "Not Assessed" },
+      { "class": "RestoredVisibility", "checkId": "INTUNE-005", "from": "Not Assessed", "to": "FAIL" }
+    ]
+  }
+}

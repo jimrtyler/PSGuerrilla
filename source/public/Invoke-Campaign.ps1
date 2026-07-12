@@ -416,18 +416,61 @@ function Invoke-Campaign {
         if (-not $NoDelta -and -not $TestMode) {
             if (-not $Quiet) { Write-ProgressLine -Phase CAMPAIGN -Message 'Comparing against previous run' }
             try {
-                $platformKeyMap = @{ 'Active Directory' = 'AD'; 'Microsoft Cloud' = 'Entra'; 'Google Workspace' = 'GWS' }
+                # Series identity is keyed on the REQUESTED platform set, never the set
+                # that happened to succeed: one transient platform failure must not move
+                # the campaign to a different history series (or a false "first run"),
+                # and the failed platform's checks must surface as lost visibility in
+                # the diff instead of silently vanishing from the record.
+                $platformInfo = @{
+                    Workspace = @{ ResultKey = 'Google Workspace'; RecordName = 'GWS' }
+                    AD        = @{ ResultKey = 'Active Directory'; RecordName = 'AD' }
+                    Cloud     = @{ ResultKey = 'Microsoft Cloud'; RecordName = 'Entra' }
+                }
                 $recordPlatforms = @()
                 $targetIds = @()
-                foreach ($key in $platformResults.Keys) {
-                    $sub = $platformResults[$key]
-                    if ($sub -is [hashtable] -and $sub.Error) { continue }
-                    $recordPlatforms += ($platformKeyMap[$key] ?? $key)
-                    $id = $sub.DomainName ?? $sub.TenantId ?? $sub.TenantDomain
-                    if ($id) { $targetIds += "$id" }
+                $recordFindings = [System.Collections.Generic.List[PSCustomObject]]::new()
+                foreach ($f in $allFindings) { $recordFindings.Add($f) }
+
+                foreach ($requested in $Platforms) {
+                    $info = $platformInfo[$requested]
+                    if (-not $info) { continue }
+                    $recordPlatforms += $info.RecordName
+
+                    $sub = $platformResults[$info.ResultKey]
+                    $failed = ($null -eq $sub) -or ($sub -is [hashtable] -and $sub.Error)
+                    if (-not $failed) {
+                        $id = $sub.DomainName ?? $sub.TenantId ?? $sub.TenantDomain
+                        if ($id) { $targetIds += "$id" }
+                        continue
+                    }
+
+                    # Failed platform: best-effort target identity from the requested
+                    # inputs, matching what the sub-audit itself would have derived
+                    # where that is knowable (TenantId for Cloud, the admin domain for
+                    # Workspace, the machine's DNS domain for AD). If none can be
+                    # determined the series hash may not match earlier runs — but the
+                    # platform is never silently dropped from the series key.
+                    $fallbackId = switch ($requested) {
+                        'Cloud'     { $TenantId }
+                        'Workspace' { if ($AdminEmail) { "$AdminEmail".Split('@')[-1] } }
+                        'AD'        { if ($env:USERDNSDOMAIN) { $env:USERDNSDOMAIN } elseif ($Server) { $Server } }
+                    }
+                    if ($fallbackId) { $targetIds += "$fallbackId" }
+
+                    # Synthesize Not-Assessed (ERROR) findings for every check the
+                    # platform would have produced, so they classify as lost
+                    # visibility in the diff instead of benign "retired".
+                    $reason = if ($sub -is [hashtable] -and $sub.Error) { "$($sub.Error)" } else { 'platform audit did not run' }
+                    foreach ($fn in @(Get-GuerrillaPlatformCheckFunction -Platform $info.RecordName)) {
+                        foreach ($na in @(Get-GuerrillaFailedCategoryFinding -CategoryFunction $fn `
+                                -Reason "$($info.ResultKey) audit failed: $reason")) {
+                            $recordFindings.Add($na)
+                        }
+                    }
                 }
+
                 if ($recordPlatforms.Count -gt 0 -and $targetIds.Count -gt 0) {
-                    $runRecord = New-GuerrillaRunRecord -Findings @($allFindings) -Platforms $recordPlatforms `
+                    $runRecord = New-GuerrillaRunRecord -Findings @($recordFindings) -Platforms $recordPlatforms `
                         -TargetId $targetIds -ScanId $scanId -OverallScore $overallScore
                     $previousRun = Get-GuerrillaPreviousRun -Platforms $recordPlatforms -TargetHash $runRecord.scope.targetHash
                     $runDiff = Compare-GuerrillaRun -Previous $previousRun -Current $runRecord

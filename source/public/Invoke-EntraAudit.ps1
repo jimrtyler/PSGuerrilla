@@ -323,6 +323,12 @@ function Invoke-EntraAudit {
                     foreach ($f in $findings) { $allFindings.Add($f) }
                 } catch {
                     Write-Warning "Check category '$funcName' failed: $_"
+                    # A thrown category must not vanish from the run record: synthesize a
+                    # Not-Assessed (ERROR) finding per check so the next comparison shows
+                    # lost visibility instead of a benign "retired" check set.
+                    foreach ($na in @(Get-GuerrillaFailedCategoryFinding -CategoryFunction $funcName -Reason "$_")) {
+                        $allFindings.Add($na)
+                    }
                 }
             } else {
                 if (-not $Quiet) {
