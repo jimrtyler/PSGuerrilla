@@ -8,10 +8,10 @@ function Get-AuditScoreLabel {
         [int]$Score
     )
 
-    if ($Score -ge 90) { return 'FORTRESS' }
-    if ($Score -ge 75) { return 'HARDENED POSITION' }
-    if ($Score -ge 60) { return 'CONTESTED PERIMETER' }
-    if ($Score -ge 40) { return 'EXPOSED FLANK' }
-    if ($Score -ge 20) { return 'BREACHABLE' }
-    return 'UNFORTIFIED'
+    if ($Score -ge 90) { return 'Low Risk' }
+    if ($Score -ge 75) { return 'Moderate Risk' }
+    if ($Score -ge 60) { return 'Elevated Risk' }
+    if ($Score -ge 40) { return 'High Risk' }
+    if ($Score -ge 20) { return 'Severe Risk' }
+    return 'Critical Risk'
 }

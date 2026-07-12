@@ -66,7 +66,7 @@ function Export-ADReportHtml {
     }
 
     $themeStyle   = Get-GuerrillaReportThemeStyleBlock -Style $Style
-    $displayLabel = Resolve-GuerrillaReportScoreLabel -Score $OverallScore -Style $Style -Fallback $ScoreLabel
+    $displayLabel = $ScoreLabel
     $brand        = Get-GuerrillaReportBrandingHtml -Branding $Branding
 
     $html = [System.Text.StringBuilder]::new(65536)

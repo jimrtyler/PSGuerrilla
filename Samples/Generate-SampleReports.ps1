@@ -232,12 +232,12 @@ function Get-PostureScore {
 # --- Helper: score label ---
 function Get-ScoreLabel {
     param([int]$Score)
-    if ($Score -ge 90) { return 'FORTRESS' }
-    if ($Score -ge 75) { return 'DEFENDED POSITION' }
-    if ($Score -ge 60) { return 'CONTESTED GROUND' }
-    if ($Score -ge 40) { return 'EXPOSED FLANK' }
-    if ($Score -ge 20) { return 'UNDER SIEGE' }
-    return 'OVERRUN'
+    if ($Score -ge 90) { return 'Low Risk' }
+    if ($Score -ge 75) { return 'Moderate Risk' }
+    if ($Score -ge 60) { return 'Elevated Risk' }
+    if ($Score -ge 40) { return 'High Risk' }
+    if ($Score -ge 20) { return 'Severe Risk' }
+    return 'Critical Risk'
 }
 
 # Get module reference for calling private export functions

@@ -86,12 +86,12 @@
       "trend": 0.15
     },
     "labels": {
-      "fortress": { "min": 90, "label": "FORTRESS", "color": "Sage" },
-      "defendedPosition": { "min": 75, "label": "DEFENDED POSITION", "color": "Sage" },
-      "contestedGround": { "min": 60, "label": "CONTESTED GROUND", "color": "Gold" },
-      "exposedFlank": { "min": 40, "label": "EXPOSED FLANK", "color": "Amber" },
-      "underSiege": { "min": 20, "label": "UNDER SIEGE", "color": "DeepOrange" },
-      "overrun": { "min": 0, "label": "OVERRUN", "color": "DarkRed" }
+      "lowRisk": { "min": 90, "label": "Low Risk", "color": "Sage" },
+      "moderateRisk": { "min": 75, "label": "Moderate Risk", "color": "Sage" },
+      "elevatedRisk": { "min": 60, "label": "Elevated Risk", "color": "Gold" },
+      "highRisk": { "min": 40, "label": "High Risk", "color": "Amber" },
+      "severeRisk": { "min": 20, "label": "Severe Risk", "color": "DeepOrange" },
+      "criticalRisk": { "min": 0, "label": "Critical Risk", "color": "DarkRed" }
     }
   },
 

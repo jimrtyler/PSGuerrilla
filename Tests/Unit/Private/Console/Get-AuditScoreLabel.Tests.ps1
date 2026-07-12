@@ -27,28 +27,28 @@ BeforeAll {
 }
 
 Describe 'Get-AuditScoreLabel' {
-    It 'Returns FORTRESS for 90+' {
-        Get-AuditScoreLabel -Score 90 | Should -Be 'FORTRESS'
-        Get-AuditScoreLabel -Score 100 | Should -Be 'FORTRESS'
+    It 'Returns Low Risk for 90+' {
+        Get-AuditScoreLabel -Score 90 | Should -Be 'Low Risk'
+        Get-AuditScoreLabel -Score 100 | Should -Be 'Low Risk'
     }
-    It 'Returns HARDENED POSITION for 75-89' {
-        Get-AuditScoreLabel -Score 75 | Should -Be 'HARDENED POSITION'
-        Get-AuditScoreLabel -Score 89 | Should -Be 'HARDENED POSITION'
+    It 'Returns Moderate Risk for 75-89' {
+        Get-AuditScoreLabel -Score 75 | Should -Be 'Moderate Risk'
+        Get-AuditScoreLabel -Score 89 | Should -Be 'Moderate Risk'
     }
-    It 'Returns CONTESTED PERIMETER for 60-74' {
-        Get-AuditScoreLabel -Score 60 | Should -Be 'CONTESTED PERIMETER'
-        Get-AuditScoreLabel -Score 74 | Should -Be 'CONTESTED PERIMETER'
+    It 'Returns Elevated Risk for 60-74' {
+        Get-AuditScoreLabel -Score 60 | Should -Be 'Elevated Risk'
+        Get-AuditScoreLabel -Score 74 | Should -Be 'Elevated Risk'
     }
-    It 'Returns EXPOSED FLANK for 40-59' {
-        Get-AuditScoreLabel -Score 40 | Should -Be 'EXPOSED FLANK'
-        Get-AuditScoreLabel -Score 59 | Should -Be 'EXPOSED FLANK'
+    It 'Returns High Risk for 40-59' {
+        Get-AuditScoreLabel -Score 40 | Should -Be 'High Risk'
+        Get-AuditScoreLabel -Score 59 | Should -Be 'High Risk'
     }
-    It 'Returns BREACHABLE for 20-39' {
-        Get-AuditScoreLabel -Score 20 | Should -Be 'BREACHABLE'
-        Get-AuditScoreLabel -Score 39 | Should -Be 'BREACHABLE'
+    It 'Returns Severe Risk for 20-39' {
+        Get-AuditScoreLabel -Score 20 | Should -Be 'Severe Risk'
+        Get-AuditScoreLabel -Score 39 | Should -Be 'Severe Risk'
     }
-    It 'Returns UNFORTIFIED for 0-19' {
-        Get-AuditScoreLabel -Score 0 | Should -Be 'UNFORTIFIED'
-        Get-AuditScoreLabel -Score 19 | Should -Be 'UNFORTIFIED'
+    It 'Returns Critical Risk for 0-19' {
+        Get-AuditScoreLabel -Score 0 | Should -Be 'Critical Risk'
+        Get-AuditScoreLabel -Score 19 | Should -Be 'Critical Risk'
     }
 }

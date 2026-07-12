@@ -54,7 +54,6 @@ function Export-EntraReportHtml {
     }
 
     $scoreLabel = Get-AuditScoreLabel -Score $overallScore
-    $scoreLabel = Resolve-GuerrillaReportScoreLabel -Score $overallScore -Style $Style -Fallback $scoreLabel
     $scoreDash = [Math]::Round(251.2 * (1 - $overallScore / 100), 1)
     $brand = Get-GuerrillaReportBrandingHtml -Branding $Branding
 

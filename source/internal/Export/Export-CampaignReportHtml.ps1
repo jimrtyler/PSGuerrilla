@@ -30,7 +30,7 @@ function Export-CampaignReportHtml {
     $timestampStr = $scanStart.ToString('yyyy-MM-dd HH:mm:ss') + ' UTC'
 
     $themeStyle   = Get-GuerrillaReportThemeStyleBlock -Style $Style
-    $displayLabel = Resolve-GuerrillaReportScoreLabel -Score $overallScore -Style $Style -Fallback $scoreLabel
+    $displayLabel = $scoreLabel
     $brand        = Get-GuerrillaReportBrandingHtml -Branding $Branding
     $durationStr  = if ($duration.TotalMinutes -ge 1) {
         '{0}m {1}s' -f [int][Math]::Floor($duration.TotalMinutes), $duration.Seconds
@@ -442,7 +442,7 @@ $($brand.Header)
         $tData  = $platformKey.Value
         $tScore = $tData.Score
         $tColor = & $getScoreColor $tScore
-        $tLabel = Resolve-GuerrillaReportScoreLabel -Score $tScore -Style $Style -Fallback ([string]$tData.ScoreLabel)
+        $tLabel = [string]$tData.ScoreLabel
 
         $tPassCount = if ($null -ne $tData.PassCount) { $tData.PassCount } else { 0 }
         $tFailCount = if ($null -ne $tData.FailCount) { $tData.FailCount } else { 0 }

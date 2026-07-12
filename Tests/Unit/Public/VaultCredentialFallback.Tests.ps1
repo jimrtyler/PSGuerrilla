@@ -105,7 +105,7 @@ Describe 'Vault credential fallback' {
                 Mock Invoke-GWSAudit { [pscustomobject]@{ Findings = @($finding); OverallScore = 50 } }
                 Mock Invoke-EntraAudit { [pscustomobject]@{ Findings = @($finding); OverallScore = 50 } }
                 Mock Get-AuditPostureScore { [pscustomobject]@{ OverallScore = 50; CategoryScores = @{} } }
-                Mock Get-AuditScoreLabel { 'CONTESTED GROUND' }
+                Mock Get-AuditScoreLabel { 'Elevated Risk' }
                 Mock Write-OperationHeader {}
                 Mock Write-ProgressLine {}
                 Mock Write-CampaignReport {}

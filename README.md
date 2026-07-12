@@ -330,14 +330,14 @@ The Guerrilla Score is a weighted composite of three components:
 | Coverage | 15% | Percentage of the three platforms assessed |
 | Trend | 15% | Score change from the previous run |
 
-| Score | Tier | Meaning |
-|-------|------|---------|
-| 90 to 100 | FORTRESS | Excellent posture, keep assessing on a cadence |
-| 75 to 89 | DEFENDED POSITION | Strong foundation, address remaining gaps |
-| 60 to 74 | CONTESTED GROUND | Needs improvement, prioritize action |
-| 40 to 59 | EXPOSED FLANK | Significant gaps, immediate attention |
-| 20 to 39 | UNDER SIEGE | Critical weaknesses, urgent remediation |
-| 0 to 19 | OVERRUN | Severe compromise risk, emergency response |
+| Score | Rating | Meaning |
+|-------|--------|---------|
+| 90 to 100 | Low Risk | Configuration closely aligned with the assessed baselines; keep assessing on a cadence |
+| 75 to 89 | Moderate Risk | Minor gaps against the baselines; address remaining findings |
+| 60 to 74 | Elevated Risk | Moderate gaps against the baselines; prioritize remediation |
+| 40 to 59 | High Risk | Significant baseline gaps; needs immediate attention |
+| 20 to 39 | Severe Risk | Widespread baseline gaps; urgent remediation |
+| 0 to 19 | Critical Risk | Critical exposure across the assessed baselines; emergency response |
 
 ---
 

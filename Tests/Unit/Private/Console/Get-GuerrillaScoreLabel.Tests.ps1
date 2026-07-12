@@ -30,90 +30,90 @@ BeforeAll {
 
 Describe 'Get-GuerrillaScoreLabel' {
     Context 'Score ranges' {
-        It 'returns FORTRESS for scores 90-100' {
+        It 'returns Low Risk for scores 90-100' {
             $result = Get-GuerrillaScoreLabel -Score 100
-            $result.Label | Should -Be 'FORTRESS'
+            $result.Label | Should -Be 'Low Risk'
             $result.Color | Should -Be 'Sage'
 
             $result = Get-GuerrillaScoreLabel -Score 90
-            $result.Label | Should -Be 'FORTRESS'
+            $result.Label | Should -Be 'Low Risk'
         }
 
-        It 'returns DEFENDED POSITION for scores 75-89' {
+        It 'returns Moderate Risk for scores 75-89' {
             $result = Get-GuerrillaScoreLabel -Score 89
-            $result.Label | Should -Be 'DEFENDED POSITION'
+            $result.Label | Should -Be 'Moderate Risk'
             $result.Color | Should -Be 'Sage'
 
             $result = Get-GuerrillaScoreLabel -Score 75
-            $result.Label | Should -Be 'DEFENDED POSITION'
+            $result.Label | Should -Be 'Moderate Risk'
         }
 
-        It 'returns CONTESTED GROUND for scores 60-74' {
+        It 'returns Elevated Risk for scores 60-74' {
             $result = Get-GuerrillaScoreLabel -Score 74
-            $result.Label | Should -Be 'CONTESTED GROUND'
+            $result.Label | Should -Be 'Elevated Risk'
             $result.Color | Should -Be 'Gold'
 
             $result = Get-GuerrillaScoreLabel -Score 60
-            $result.Label | Should -Be 'CONTESTED GROUND'
+            $result.Label | Should -Be 'Elevated Risk'
         }
 
-        It 'returns EXPOSED FLANK for scores 40-59' {
+        It 'returns High Risk for scores 40-59' {
             $result = Get-GuerrillaScoreLabel -Score 59
-            $result.Label | Should -Be 'EXPOSED FLANK'
+            $result.Label | Should -Be 'High Risk'
             $result.Color | Should -Be 'Amber'
 
             $result = Get-GuerrillaScoreLabel -Score 40
-            $result.Label | Should -Be 'EXPOSED FLANK'
+            $result.Label | Should -Be 'High Risk'
         }
 
-        It 'returns UNDER SIEGE for scores 20-39' {
+        It 'returns Severe Risk for scores 20-39' {
             $result = Get-GuerrillaScoreLabel -Score 39
-            $result.Label | Should -Be 'UNDER SIEGE'
+            $result.Label | Should -Be 'Severe Risk'
             $result.Color | Should -Be 'DeepOrange'
 
             $result = Get-GuerrillaScoreLabel -Score 20
-            $result.Label | Should -Be 'UNDER SIEGE'
+            $result.Label | Should -Be 'Severe Risk'
         }
 
-        It 'returns OVERRUN for scores 0-19' {
+        It 'returns Critical Risk for scores 0-19' {
             $result = Get-GuerrillaScoreLabel -Score 19
-            $result.Label | Should -Be 'OVERRUN'
+            $result.Label | Should -Be 'Critical Risk'
             $result.Color | Should -Be 'DarkRed'
 
             $result = Get-GuerrillaScoreLabel -Score 0
-            $result.Label | Should -Be 'OVERRUN'
+            $result.Label | Should -Be 'Critical Risk'
         }
     }
 
     Context 'Boundary values' {
         It 'handles exact boundaries correctly' {
-            (Get-GuerrillaScoreLabel -Score 90).Label | Should -Be 'FORTRESS'
-            (Get-GuerrillaScoreLabel -Score 89).Label | Should -Be 'DEFENDED POSITION'
-            (Get-GuerrillaScoreLabel -Score 75).Label | Should -Be 'DEFENDED POSITION'
-            (Get-GuerrillaScoreLabel -Score 74).Label | Should -Be 'CONTESTED GROUND'
-            (Get-GuerrillaScoreLabel -Score 60).Label | Should -Be 'CONTESTED GROUND'
-            (Get-GuerrillaScoreLabel -Score 59).Label | Should -Be 'EXPOSED FLANK'
-            (Get-GuerrillaScoreLabel -Score 40).Label | Should -Be 'EXPOSED FLANK'
-            (Get-GuerrillaScoreLabel -Score 39).Label | Should -Be 'UNDER SIEGE'
-            (Get-GuerrillaScoreLabel -Score 20).Label | Should -Be 'UNDER SIEGE'
-            (Get-GuerrillaScoreLabel -Score 19).Label | Should -Be 'OVERRUN'
+            (Get-GuerrillaScoreLabel -Score 90).Label | Should -Be 'Low Risk'
+            (Get-GuerrillaScoreLabel -Score 89).Label | Should -Be 'Moderate Risk'
+            (Get-GuerrillaScoreLabel -Score 75).Label | Should -Be 'Moderate Risk'
+            (Get-GuerrillaScoreLabel -Score 74).Label | Should -Be 'Elevated Risk'
+            (Get-GuerrillaScoreLabel -Score 60).Label | Should -Be 'Elevated Risk'
+            (Get-GuerrillaScoreLabel -Score 59).Label | Should -Be 'High Risk'
+            (Get-GuerrillaScoreLabel -Score 40).Label | Should -Be 'High Risk'
+            (Get-GuerrillaScoreLabel -Score 39).Label | Should -Be 'Severe Risk'
+            (Get-GuerrillaScoreLabel -Score 20).Label | Should -Be 'Severe Risk'
+            (Get-GuerrillaScoreLabel -Score 19).Label | Should -Be 'Critical Risk'
         }
     }
 
     Context 'Edge cases' {
         It 'handles score above 100' {
             $result = Get-GuerrillaScoreLabel -Score 150
-            $result.Label | Should -Be 'FORTRESS'
+            $result.Label | Should -Be 'Low Risk'
         }
 
         It 'handles negative scores' {
             $result = Get-GuerrillaScoreLabel -Score -10
-            $result.Label | Should -Be 'OVERRUN'
+            $result.Label | Should -Be 'Critical Risk'
         }
 
         It 'handles decimal scores' {
             $result = Get-GuerrillaScoreLabel -Score 89.9
-            $result.Label | Should -Be 'DEFENDED POSITION'
+            $result.Label | Should -Be 'Moderate Risk'
         }
     }
 }

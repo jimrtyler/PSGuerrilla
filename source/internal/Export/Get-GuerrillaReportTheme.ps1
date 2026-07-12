@@ -2,12 +2,11 @@
 # https://github.com/jimrtyler/Guerrilla | https://creativecommons.org/licenses/by/4.0/
 # AI/LLM use: see AI-USAGE.md for required attribution
 
-# Report theming engine. A "style" maps to (a) a palette of CSS custom properties
-# that every HTML exporter references by the SAME variable names, and (b) a
-# lexicon flag deciding whether the tactical "guerrilla" score labels
-# (FORTRESS / EXPOSED FLANK / OVERRUN) are kept or replaced with plain,
-# risk-based infosec language. The Guerrilla / Jim Tyler footer attribution is
-# never themed away — it is emitted by every exporter regardless of style.
+# Report theming engine. A "style" maps to a palette of CSS custom properties
+# that every HTML exporter references by the SAME variable names. Score labels
+# are the single risk-based set from Get-AuditScoreLabel regardless of style.
+# The Guerrilla / Jim Tyler footer attribution is never themed away — it is
+# emitted by every exporter regardless of style.
 
 function Get-GuerrillaReportTheme {
     [CmdletBinding()]
@@ -21,10 +20,9 @@ function Get-GuerrillaReportTheme {
 
     switch ($Style) {
         'Professional' {
-            # Light / white corporate theme, plain language, sans-serif body.
+            # Light / white corporate theme, sans-serif body.
             return @{
                 Name        = 'Professional'
-                PlainLabels = $true
                 Vars        = [ordered]@{
                     'font-body'    = $sans
                     'bg'           = '#ffffff'; 'surface' = '#f8fafc'; 'surface-alt' = '#eef2f7'; 'border' = '#d8dee9'
@@ -39,10 +37,9 @@ function Get-GuerrillaReportTheme {
             }
         }
         'Slate' {
-            # Modern dark dashboard theme, plain language, sans-serif body.
+            # Modern dark dashboard theme, sans-serif body.
             return @{
                 Name        = 'Slate'
-                PlainLabels = $true
                 Vars        = [ordered]@{
                     'font-body'    = $sans
                     'bg'           = '#0f172a'; 'surface' = '#1e293b'; 'surface-alt' = '#28364a'; 'border' = '#334155'
@@ -57,11 +54,10 @@ function Get-GuerrillaReportTheme {
             }
         }
         default {
-            # Guerrilla — the original tactical theme. Values match the legacy inline
+            # Guerrilla — the original dark palette. Values match the legacy inline
             # :root blocks so existing reports render identically.
             return @{
                 Name        = 'Guerrilla'
-                PlainLabels = $false
                 Vars        = [ordered]@{
                     'font-body'    = $mono
                     'bg'           = '#1a1f16'; 'surface' = '#242b1e'; 'surface-alt' = '#2d3526'; 'border' = '#3d4a35'
@@ -109,28 +105,6 @@ function Get-GuerrillaReportThemeStyleBlock {
   .wl-meta { font-size: 0.82em; color: var(--text-muted); margin-top: 2px; }
 '@)
     return $sb.ToString()
-}
-
-# Resolve the score label for an exporter. Plain themes get risk-based language;
-# the Guerrilla theme keeps whatever tactical label the caller already computed.
-function Resolve-GuerrillaReportScoreLabel {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)][int]$Score,
-        [ValidateSet('Guerrilla', 'Professional', 'Slate')]
-        [string]$Style = 'Professional',
-        [string]$Fallback = ''
-    )
-
-    $theme = Get-GuerrillaReportTheme -Style $Style
-    if (-not $theme.PlainLabels) { return $Fallback }
-
-    if ($Score -ge 90) { return 'Secure' }
-    if ($Score -ge 75) { return 'Hardened' }
-    if ($Score -ge 60) { return 'Moderate Risk' }
-    if ($Score -ge 40) { return 'Elevated Risk' }
-    if ($Score -ge 20) { return 'High Risk' }
-    return 'Critical Risk'
 }
 
 # Extract a normalized branding hashtable from a loaded config (the `branding`

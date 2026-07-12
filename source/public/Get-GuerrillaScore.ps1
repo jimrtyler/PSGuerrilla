@@ -11,8 +11,8 @@ function Get-GuerrillaScore {
         for component weights and thresholds.
 
         Score tiers:
-          FORTRESS (90+)  |  DEFENDED POSITION (75-89)  |  CONTESTED GROUND (60-74)
-          EXPOSED FLANK (40-59)  |  UNDER SIEGE (20-39)  |  OVERRUN (0-19)
+          Low Risk (90+)  |  Moderate Risk (75-89)  |  Elevated Risk (60-74)
+          High Risk (40-59)  |  Severe Risk (20-39)  |  Critical Risk (0-19)
 
     .PARAMETER AuditFindings
         Array of audit finding objects from the AD, Entra, and GWS audits.

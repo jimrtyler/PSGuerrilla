@@ -134,7 +134,7 @@ function New-MockAuditResult {
         [PSCustomObject[]]$Findings = @(),
         [string]$Domain = 'example.com',
         [int]$OverallScore = 72,
-        [string]$ScoreLabel = 'CONTESTED PERIMETER'
+        [string]$ScoreLabel = 'Elevated Risk'
     )
     $critCount = @($Findings | Where-Object { $_.Severity -eq 'Critical' -and $_.Status -eq 'FAIL' }).Count
     $highCount = @($Findings | Where-Object { $_.Severity -eq 'High' -and $_.Status -eq 'FAIL' }).Count

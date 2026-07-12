@@ -501,7 +501,7 @@ function New-MockReconResult {
         [PSCustomObject[]]$Findings = @(),
         [string]$DomainName = 'contoso.com',
         [int]$OverallScore = 72,
-        [string]$ScoreLabel = 'CONTESTED PERIMETER'
+        [string]$ScoreLabel = 'Elevated Risk'
     )
 
     $failFindings = @($Findings | Where-Object Status -eq 'FAIL')
