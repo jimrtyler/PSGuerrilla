@@ -175,7 +175,7 @@ $(if ($finding.Description) { "<dt>Description</dt><dd>$(& $esc $finding.Descrip
 $(if ($finding.RecommendedValue) { "<dt>Recommended</dt><dd>$(& $esc $finding.RecommendedValue)</dd>" })
 $(if ($finding.RemediationSteps) { "<dt>Remediation Steps</dt><dd>$(& $esc $finding.RemediationSteps)</dd>" })
 $(if ($finding.RemediationUrl) { "<dt>Reference</dt><dd><a href='$(& $esc $finding.RemediationUrl)' style='color:var(--olive)'>$(& $esc $finding.RemediationUrl)</a></dd>" })
-$(if ($isAccepted) { "<dt>Risk Acceptance</dt><dd style='color:var(--dim);font-style:italic;'>Accepted by $($riskAcceptances[$checkId].AcceptedBy) — $($riskAcceptances[$checkId].Justification)</dd>" })
+$(if ($isAccepted) { "<dt>Risk Acceptance</dt><dd style='color:var(--dim);font-style:italic;'>Accepted by $(& $esc $riskAcceptances[$checkId].AcceptedBy) — $(& $esc $riskAcceptances[$checkId].Justification)</dd>" })
 $(if ($finding.Compliance) {
     $compHtml = '<dt>Compliance</dt><dd>'
     if ($finding.Compliance.nistSp80053) { $compHtml += "NIST: $($finding.Compliance.nistSp80053 -join ', ') | " }

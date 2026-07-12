@@ -19,9 +19,9 @@ function Export-GWSReportCsv {
             Subcategory      = $f.Subcategory
             Severity         = $f.Severity
             Status           = $f.Status
-            CurrentValue     = $f.CurrentValue
+            CurrentValue     = (Protect-CsvCell $f.CurrentValue)
             RecommendedValue = $f.RecommendedValue
-            OrgUnitPath      = $f.OrgUnitPath
+            OrgUnitPath      = (Protect-CsvCell $f.OrgUnitPath)
             RemediationUrl   = $f.RemediationUrl
             RemediationSteps = $f.RemediationSteps
             NIST_Controls    = ($f.Compliance.NistSp80053 -join '; ')

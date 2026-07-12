@@ -19,9 +19,9 @@ function Export-ADReportCsv {
             Subcategory       = $f.Subcategory
             Severity          = $f.Severity
             Status            = $f.Status
-            CurrentValue      = $f.CurrentValue
+            CurrentValue      = (Protect-CsvCell $f.CurrentValue)
             RecommendedValue  = $f.RecommendedValue
-            OrgUnitPath       = $f.OrgUnitPath
+            OrgUnitPath       = (Protect-CsvCell $f.OrgUnitPath)
             RemediationSteps  = $f.RemediationSteps
             NIST_Controls     = ($f.Compliance.NistSp80053 -join '; ')
             MITRE_Techniques  = ($f.Compliance.MitreAttack -join '; ')

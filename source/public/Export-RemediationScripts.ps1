@@ -79,6 +79,13 @@ function Export-RemediationScripts {
     $generatedScripts = [System.Collections.Generic.List[string]]::new()
     $timestamp = [datetime]::UtcNow.ToString('yyyy-MM-dd HH:mm:ss')
 
+    # Neutralize tenant-controlled text before interpolating it into the generated
+    # script. An embedded CR/LF would terminate a '# ...' comment line (or break out
+    # of a string) and inject executable code onto the next line, so newlines collapse
+    # to spaces in BOTH contexts; quote-doubling covers the single-quoted string
+    # contexts and is inert inside comments.
+    $sanitize = { param([string]$s) (($s ?? '') -replace '\r\n|\r|\n', ' ') -replace "'", "''" }
+
     foreach ($group in $grouped) {
         $prefix = $group.Name
         $template = $remediationTemplates[$prefix]
@@ -128,16 +135,18 @@ if (`$confirm -ne 'yes') {
         $actionNum = 0
         foreach ($finding in $group.Group) {
             $actionNum++
-            $checkId = $finding.CheckId ?? $finding.Id ?? 'Unknown'
-            $name = ($finding.Name ?? $finding.CheckName ?? $checkId) -replace "'", "''"
-            $steps = ($finding.RemediationSteps ?? 'See documentation for manual remediation steps.') -replace "'", "''"
-            $sev = $finding.Severity ?? 'Medium'
+            $rawCheckId = $finding.CheckId ?? $finding.Id ?? 'Unknown'
+            $checkId = & $sanitize $rawCheckId
+            $name = & $sanitize ($finding.Name ?? $finding.CheckName ?? $rawCheckId)
+            $steps = & $sanitize ($finding.RemediationSteps ?? 'See documentation for manual remediation steps.')
+            $sev = & $sanitize ($finding.Severity ?? 'Medium')
+            $status = & $sanitize $finding.Status
 
             [void]$sb.AppendLine(@"
 
 # ──────────────────────────────────────────────────
 # [$actionNum] $checkId - $name
-# Severity: $sev | Status: $($finding.Status)
+# Severity: $sev | Status: $status
 # ──────────────────────────────────────────────────
 Write-Host ''
 Write-Host '[$actionNum/$($group.Count)] $checkId - $name' -ForegroundColor $(if ($sev -eq 'Critical') { 'Red' } elseif ($sev -eq 'High') { 'DarkYellow' } else { 'Yellow' })
@@ -147,7 +156,7 @@ Write-Host ''
 
 # TODO: Add specific remediation commands for $checkId
 # Remediation steps: $steps
-$(if ($finding.RecommendedValue) { "# Recommended value: $($finding.RecommendedValue -replace "'", "''")" })
+$(if ($finding.RecommendedValue) { "# Recommended value: $(& $sanitize $finding.RecommendedValue)" })
 "@)
         }
 

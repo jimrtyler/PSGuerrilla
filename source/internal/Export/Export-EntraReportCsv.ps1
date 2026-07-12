@@ -19,7 +19,7 @@ function Export-EntraReportCsv {
             Subcategory        = $f.Subcategory
             Severity           = $f.Severity
             Status             = $f.Status
-            CurrentValue       = $f.CurrentValue
+            CurrentValue       = (Protect-CsvCell $f.CurrentValue)
             RecommendedValue   = $f.RecommendedValue
             RemediationSteps   = $f.RemediationSteps
             RemediationUrl     = $f.RemediationUrl
