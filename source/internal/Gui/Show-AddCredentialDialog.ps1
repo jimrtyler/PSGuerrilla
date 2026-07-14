@@ -2,10 +2,11 @@
 # https://github.com/jimrtyler/Guerrilla | https://creativecommons.org/licenses/by/4.0/
 # AI/LLM use: see AI-USAGE.md for required attribution
 
-# GUI-driven credential entry (the "Add Credential" modal on the Safehouse tab).
-# Builds the list of vault entries from collected field values, and a dark WPF dialog
-# to collect them. New-AddCredentialEntries is kept pure so it can be unit-tested without
-# a UI; Show-AddCredentialDialog drives the actual window.
+# GUI-driven credential entry (the "Add credential" modal on the Safehouse page).
+# Builds the list of vault entries from collected field values, and a WPF dialog
+# to collect them, styled on the same design tokens as the main window.
+# New-AddCredentialEntries is kept pure so it can be unit-tested without a UI;
+# Show-AddCredentialDialog drives the actual window.
 
 function New-AddCredentialEntries {
     <#
@@ -84,114 +85,239 @@ function Show-AddCredentialDialog {
         Modal WPF dialog to add Entra (Graph) or Google Workspace credentials to the vault.
         Returns the entry list to store (for Save-SafehouseCredentialSet), or $null if the
         user cancelled.
+    .PARAMETER Owner
+        Owning window (centers the dialog over it).
+    .PARAMETER Theme
+        'Light' or 'Dark'. Applies the matching Get-GuerrillaGuiTheme palette so the
+        modal matches whatever theme the main window is currently showing.
     #>
     [CmdletBinding()]
     param(
-        $Owner
+        $Owner,
+        [ValidateSet('Light', 'Dark')]
+        [string]$Theme = 'Light'
     )
 
     $xaml = @'
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Add Credential" Width="520" Height="480" ResizeMode="NoResize"
-        WindowStartupLocation="CenterOwner" Background="#F4F6F8" FontFamily="Segoe UI" Foreground="#1F2933">
+        Title="Add credential" Width="560" Height="560"
+        WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="False"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource BgBrush}"
+        UseLayoutRounding="True" SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Display"
+        FontFamily="Segoe UI Variable Text, Segoe UI" FontSize="13"
+        Foreground="{DynamicResource TextBrush}">
+  <WindowChrome.WindowChrome>
+    <WindowChrome CaptionHeight="48" ResizeBorderThickness="0"
+                  GlassFrameThickness="0,0,0,1" CornerRadius="0" UseAeroCaptionButtons="False"/>
+  </WindowChrome.WindowChrome>
   <Window.Resources>
-    <Style TargetType="TextBlock"><Setter Property="Foreground" Value="#1F2933"/><Setter Property="Margin" Value="0,8,0,2"/></Style>
-    <Style TargetType="TextBox">
-      <Setter Property="Background" Value="#FFFFFF"/><Setter Property="Foreground" Value="#1F2933"/>
-      <Setter Property="BorderBrush" Value="#E2E8F0"/><Setter Property="BorderThickness" Value="1"/>
-      <Setter Property="Padding" Value="6,5"/><Setter Property="CaretBrush" Value="#1F2933"/>
-      <Setter Property="Template">
-        <Setter.Value>
-          <ControlTemplate TargetType="TextBox">
-            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                    BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4" SnapsToDevicePixels="True">
-              <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
-            </Border>
-          </ControlTemplate>
-        </Setter.Value>
-      </Setter>
-    </Style>
-    <Style TargetType="PasswordBox">
-      <Setter Property="Background" Value="#FFFFFF"/><Setter Property="Foreground" Value="#1F2933"/>
-      <Setter Property="BorderBrush" Value="#E2E8F0"/><Setter Property="BorderThickness" Value="1"/>
-      <Setter Property="Padding" Value="6,5"/><Setter Property="CaretBrush" Value="#1F2933"/>
-      <Setter Property="Template">
-        <Setter.Value>
-          <ControlTemplate TargetType="PasswordBox">
-            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                    BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4" SnapsToDevicePixels="True">
-              <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
-            </Border>
-          </ControlTemplate>
-        </Setter.Value>
-      </Setter>
-    </Style>
-    <Style TargetType="RadioButton"><Setter Property="Foreground" Value="#1F2933"/><Setter Property="Margin" Value="0,0,16,0"/></Style>
-    <Style TargetType="Button">
-      <Setter Property="Background" Value="#2563EB"/><Setter Property="Foreground" Value="#FFFFFF"/>
-      <Setter Property="BorderThickness" Value="0"/><Setter Property="Padding" Value="16,6"/><Setter Property="FontWeight" Value="Bold"/>
+    <!-- Light defaults; overwritten from Get-GuerrillaGuiTheme after load. -->
+    <SolidColorBrush x:Key="BgBrush"          Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="SurfaceBrush"     Color="#F5F5F7"/>
+    <SolidColorBrush x:Key="SurfaceAltBrush"  Color="#E8E8ED"/>
+    <SolidColorBrush x:Key="TextBrush"        Color="#1D1D1F"/>
+    <SolidColorBrush x:Key="HeadingBrush"     Color="#1D1D1F"/>
+    <SolidColorBrush x:Key="MutedBrush"       Color="#515154"/>
+    <SolidColorBrush x:Key="AccentBrush"      Color="#0066CC"/>
+    <SolidColorBrush x:Key="AccentHoverBrush" Color="#1274DB"/>
+    <SolidColorBrush x:Key="OnAccentBrush"    Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="LineBrush"        Color="#D2D2D7"/>
+    <SolidColorBrush x:Key="LineStrongBrush"  Color="#76767C"/>
+    <SolidColorBrush x:Key="FocusBrush"       Color="#0066CC"/>
+    <SolidColorBrush x:Key="BadBrush"         Color="#B32424"/>
+
+    <Style x:Key="Pill" TargetType="Button">
+      <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+      <Setter Property="Foreground" Value="{DynamicResource OnAccentBrush}"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Padding" Value="18,8"/>
+      <Setter Property="FontWeight" Value="Medium"/>
       <Setter Property="Cursor" Value="Hand"/>
       <Setter Property="Template">
         <Setter.Value>
           <ControlTemplate TargetType="Button">
-            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                    BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6"
+            <Border Background="{TemplateBinding Background}" CornerRadius="980"
                     Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
               <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Border>
           </ControlTemplate>
         </Setter.Value>
       </Setter>
+      <Style.Triggers>
+        <Trigger Property="IsMouseOver" Value="True">
+          <Setter Property="Background" Value="{DynamicResource AccentHoverBrush}"/>
+        </Trigger>
+      </Style.Triggers>
+    </Style>
+    <Style x:Key="PillGhost" TargetType="Button">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource LineBrush}"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="Padding" Value="14,7"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border Background="{TemplateBinding Background}" CornerRadius="980"
+                    BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                    Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+              <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+      <Style.Triggers>
+        <Trigger Property="IsMouseOver" Value="True">
+          <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+        </Trigger>
+      </Style.Triggers>
+    </Style>
+    <Style x:Key="SegPill" TargetType="RadioButton">
+      <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="Margin" Value="0,0,8,0"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="RadioButton">
+            <Border x:Name="bd" CornerRadius="980" Background="Transparent"
+                    BorderBrush="{DynamicResource LineBrush}" BorderThickness="1"
+                    Padding="14,6" SnapsToDevicePixels="True">
+              <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="bd" Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+              </Trigger>
+              <Trigger Property="IsChecked" Value="True">
+                <Setter TargetName="bd" Property="Background" Value="{DynamicResource AccentBrush}"/>
+                <Setter TargetName="bd" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource OnAccentBrush}"/>
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+    <Style TargetType="TextBlock">
+      <Setter Property="Foreground" Value="{DynamicResource MutedBrush}"/>
+      <Setter Property="Margin" Value="0,10,0,4"/>
+      <Setter Property="FontSize" Value="12"/>
+    </Style>
+    <Style TargetType="TextBox">
+      <Setter Property="Background" Value="{DynamicResource BgBrush}"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource LineBrush}"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="Padding" Value="10,7"/>
+      <Setter Property="CaretBrush" Value="{DynamicResource TextBrush}"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="TextBox">
+            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8" SnapsToDevicePixels="True">
+              <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
+            </Border>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+      <Style.Triggers>
+        <Trigger Property="IsKeyboardFocusWithin" Value="True">
+          <Setter Property="BorderBrush" Value="{DynamicResource FocusBrush}"/>
+        </Trigger>
+      </Style.Triggers>
+    </Style>
+    <Style TargetType="PasswordBox">
+      <Setter Property="Background" Value="{DynamicResource BgBrush}"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource LineBrush}"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="Padding" Value="10,7"/>
+      <Setter Property="CaretBrush" Value="{DynamicResource TextBrush}"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="PasswordBox">
+            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8" SnapsToDevicePixels="True">
+              <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
+            </Border>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+      <Style.Triggers>
+        <Trigger Property="IsKeyboardFocusWithin" Value="True">
+          <Setter Property="BorderBrush" Value="{DynamicResource FocusBrush}"/>
+        </Trigger>
+      </Style.Triggers>
     </Style>
   </Window.Resources>
-  <Grid Margin="20">
-    <Grid.RowDefinitions>
-      <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/>
-      <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
-    </Grid.RowDefinitions>
 
-    <TextBlock Grid.Row="0" Text="Add a credential to the safehouse vault" FontSize="16" FontWeight="Bold"/>
+  <Border BorderBrush="{DynamicResource LineBrush}" BorderThickness="1" Background="{DynamicResource BgBrush}">
+    <Grid Margin="24,0,24,20">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="48"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+      </Grid.RowDefinitions>
 
-    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,12,0,8">
-      <TextBlock Text="Environment:" VerticalAlignment="Center" Margin="0,0,12,0"/>
-      <RadioButton x:Name="rb_Entra" Content="Microsoft Entra / Graph" GroupName="Env" IsChecked="True" VerticalAlignment="Center"/>
-      <RadioButton x:Name="rb_Gws" Content="Google Workspace" GroupName="Env" VerticalAlignment="Center"/>
-    </StackPanel>
+      <Grid Grid.Row="0">
+        <TextBlock Text="Add a credential to the Safehouse" FontSize="15" FontWeight="SemiBold"
+                   Foreground="{DynamicResource HeadingBrush}" VerticalAlignment="Center" Margin="0"/>
+      </Grid>
 
-    <Grid Grid.Row="2">
-      <!-- Entra panel -->
-      <StackPanel x:Name="panel_Entra" Visibility="Visible">
-        <TextBlock Text="Tenant ID (GUID)"/>
-        <TextBox x:Name="tb_Tenant"/>
-        <TextBlock Text="Application (Client) ID (GUID)"/>
-        <TextBox x:Name="tb_ClientId"/>
-        <TextBlock Text="Client Secret"/>
-        <PasswordBox x:Name="pb_Secret"/>
-        <TextBlock Text="Secret expiry (YYYY-MM-DD, optional)"/>
-        <TextBox x:Name="tb_Expiry"/>
+      <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,4">
+        <RadioButton x:Name="rb_Entra" Content="Microsoft Entra / Graph" GroupName="Env" IsChecked="True"
+                     Style="{StaticResource SegPill}"/>
+        <RadioButton x:Name="rb_Gws" Content="Google Workspace" GroupName="Env"
+                     Style="{StaticResource SegPill}"/>
       </StackPanel>
-      <!-- Google Workspace panel -->
-      <StackPanel x:Name="panel_Gws" Visibility="Collapsed">
-        <TextBlock Text="Service account JSON key file"/>
-        <Grid>
-          <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-          <TextBox x:Name="tb_SaPath" Grid.Column="0"/>
-          <Button x:Name="btn_Browse" Grid.Column="1" Content="Browse…" Margin="8,0,0,0"/>
-        </Grid>
-        <TextBlock Text="Delegated-admin email (a Super Admin)"/>
-        <TextBox x:Name="tb_AdminEmail"/>
-        <TextBlock Text="The service account needs domain-wide delegation configured in the Google Admin Console." Foreground="#94A3B8" TextWrapping="Wrap" Margin="0,8,0,0"/>
+
+      <Grid Grid.Row="3" VerticalAlignment="Top">
+        <!-- Entra panel -->
+        <StackPanel x:Name="panel_Entra" Visibility="Visible">
+          <TextBlock Text="Tenant ID (GUID)"/>
+          <TextBox x:Name="tb_Tenant"/>
+          <TextBlock Text="Application (Client) ID (GUID)"/>
+          <TextBox x:Name="tb_ClientId"/>
+          <TextBlock Text="Client Secret"/>
+          <PasswordBox x:Name="pb_Secret"/>
+          <TextBlock Text="Secret expiry (YYYY-MM-DD, optional)"/>
+          <TextBox x:Name="tb_Expiry"/>
+        </StackPanel>
+        <!-- Google Workspace panel -->
+        <StackPanel x:Name="panel_Gws" Visibility="Collapsed">
+          <TextBlock Text="Service account JSON key file"/>
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="tb_SaPath" Grid.Column="0"/>
+            <Button x:Name="btn_Browse" Grid.Column="1" Content="Browse" Style="{StaticResource PillGhost}"
+                    Margin="8,0,0,0"/>
+          </Grid>
+          <TextBlock Text="Delegated-admin email (a Super Admin)"/>
+          <TextBox x:Name="tb_AdminEmail"/>
+          <TextBlock Text="The service account needs domain-wide delegation configured in the Google Admin Console."
+                     TextWrapping="Wrap" Margin="0,12,0,0"/>
+        </StackPanel>
+      </Grid>
+
+      <TextBlock x:Name="tb_Error" Grid.Row="4" Foreground="{DynamicResource BadBrush}" TextWrapping="Wrap"
+                 Margin="0,10,0,0" FontSize="12"/>
+
+      <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+        <Button x:Name="btn_Cancel" Content="Cancel" Style="{StaticResource PillGhost}" Margin="0,0,8,0"/>
+        <Button x:Name="btn_Save" Content="Save credential" Style="{StaticResource Pill}"/>
       </StackPanel>
     </Grid>
-
-    <TextBlock x:Name="tb_Error" Grid.Row="3" Foreground="#DC2626" TextWrapping="Wrap" Margin="0,8,0,0"/>
-
-    <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
-      <Button x:Name="btn_Cancel" Content="Cancel" Background="#FFFFFF" Foreground="#1F2933" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,8,0"/>
-      <Button x:Name="btn_Save" Content="Save credential"/>
-    </StackPanel>
-  </Grid>
+  </Border>
 </Window>
 '@
 
@@ -199,7 +325,20 @@ function Show-AddCredentialDialog {
     $win = [System.Windows.Markup.XamlReader]::Load($reader)
     if ($Owner) { $win.Owner = $Owner }
 
-    $c = {}
+    # Match the main window's current theme by overwriting the brush resources.
+    try {
+        $palettes = Get-GuerrillaGuiTheme
+        $pal = if ($Theme -eq 'Dark') { $palettes.Dark } else { $palettes.Light }
+        foreach ($key in $pal.Keys) {
+            if ($win.Resources.Contains("${key}Brush")) {
+                $color = [System.Windows.Media.ColorConverter]::ConvertFromString($pal[$key])
+                $brush = [System.Windows.Media.SolidColorBrush]::new($color)
+                $brush.Freeze()
+                $win.Resources["${key}Brush"] = $brush
+            }
+        }
+    } catch { }
+
     $ctl = @{}
     foreach ($n in 'rb_Entra', 'rb_Gws', 'panel_Entra', 'panel_Gws', 'tb_Tenant', 'tb_ClientId',
         'pb_Secret', 'tb_Expiry', 'tb_SaPath', 'btn_Browse', 'tb_AdminEmail', 'tb_Error', 'btn_Cancel', 'btn_Save') {
@@ -216,6 +355,10 @@ function Show-AddCredentialDialog {
     }.GetNewClosure())
 
     $result = @{ Entries = $null }
+
+    # Borderless window: no system close button, so wire the keyboard equivalents.
+    $ctl.btn_Cancel.IsCancel = $true    # Esc closes
+    $ctl.btn_Save.IsDefault  = $true    # Enter saves
 
     $ctl.btn_Cancel.Add_Click({ $win.Close() }.GetNewClosure())
 

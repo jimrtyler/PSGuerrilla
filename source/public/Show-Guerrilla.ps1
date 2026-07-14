@@ -4,19 +4,25 @@
 function Show-Guerrilla {
     <#
     .SYNOPSIS
-        Opens the Guerrilla operations GUI — a WPF window for managing credentials,
-        running scans, and viewing reports.
+        Opens the Guerrilla GUI — a WPF window for running audits, managing
+        credentials, and viewing reports, styled to match guerrilla.army.
 
     .DESCRIPTION
-        Show-Guerrilla wraps the most common operational paths in a single tabbed
-        Windows GUI:
+        Show-Guerrilla wraps the most common operational paths in a single
+        Windows GUI. The window is borderless with its own header navigation,
+        follows the website's design tokens, and ships a light/dark theme
+        toggle (the choice persists in your config; first launch follows the
+        OS app theme). Pages:
 
-          * Operations — run any platform's scan with category selection, live log,
-            and automatic report open on completion.
+          * Run        — one button per platform (Active Directory,
+            Entra/Azure/M365, Google Workspace, plus Campaign for everything).
+            Click it and go: live log, progress, and the report opens on
+            completion. An Options drawer holds scan depth, categories,
+            report style, student OUs, and the output directory.
           * Safehouse  — list, remove, rotate, and test stored credentials. Export
             metadata for documentation.
           * Reports    — browse HTML reports, open in browser, convert to PDF.
-          * Settings   — edit runtime config (profile, alert level, output dir).
+          * Settings   — edit runtime config (profile, output dir).
           * Inspector  — browse and read the source of every scan, check, and helper
             function in the module, filtered by area or searched by name.
           * Branding   — white-label report fields (firm, logo, consultant, client,

@@ -4,49 +4,67 @@
 function Get-GuerrillaGuiTheme {
     <#
     .SYNOPSIS
-        Returns WPF Color + SolidColorBrush hashtables for the GUI, derived from the
-        same RGB palette used by the existing HTML reports and console output.
+        Returns the GUI color palettes (Light + Dark), mirrored from the website
+        design tokens so the desktop app and guerrilla.army read as one product.
     .DESCRIPTION
-        The module-level $script:Palette stores PSStyle ANSI escape sequences (strings)
-        which can't be bound to WPF brushes directly. This helper exposes the equivalent
-        [System.Windows.Media.Color] + SolidColorBrush instances for XAML and code-behind
-        to consume. Extra "Background", "Panel", "Border" entries fill in the surface
-        colors the original console palette didn't need but a window UI does.
+        The hex values are a manual mirror of the website's src/styles/tokens.json
+        (the single source of truth for the web palette). Every light/dark pair
+        there is contrast-verified to WCAG 2.1 AA; keep this file in sync when the
+        site tokens change.
+
+        Keys map 1:1 to the DynamicResource brush names used by the GUI XAML
+        (key "Bg" -> resource "BgBrush", "SurfaceAlt" -> "SurfaceAltBrush", ...).
+        Show-GuerrillaWindow converts these hex strings into frozen
+        SolidColorBrush instances and swaps the window's resource dictionary when
+        the user toggles themes.
     #>
     [CmdletBinding()]
     param()
 
-    Add-Type -AssemblyName PresentationCore -ErrorAction SilentlyContinue
-
-    # Light, modern, clean enterprise palette. Keys keep their original names so the
-    # XAML code-behind (status lines, banners, dynamically-built checkboxes) keeps
-    # working unchanged — only the underlying hex moved from the dark scheme to light.
-    $rgb = @{
-        Amber      = @(0x25, 0x63, 0xEB)  # accent, primary buttons (now blue)
-        Khaki      = @(0x64, 0x74, 0x8B)  # secondary text
-        Gray       = @(0x94, 0xA3, 0xB8)  # muted / disabled text
-        Sage       = @(0x16, 0xA3, 0x4A)  # success / PASS
-        Parchment  = @(0x1F, 0x29, 0x33)  # primary text on light surfaces
-        Gold       = @(0xD9, 0x77, 0x06)  # warnings / highlights
-        Red        = @(0xDC, 0x26, 0x26)  # failures / critical
-        # Surface colors (not in the console palette — needed for a window UI)
-        Background = @(0xF4, 0xF6, 0xF8)  # app / window background
-        Panel      = @(0xFF, 0xFF, 0xFF)  # nav rail / card surfaces
-        Border     = @(0xE2, 0xE8, 0xF0)  # subtle separators
-        Hover      = @(0xED, 0xF1, 0xF6)  # button hover / raised surface
+    $light = @{
+        Bg          = '#FFFFFF'   # window background
+        Surface     = '#F5F5F7'   # cards, code blocks, quiet fills
+        SurfaceAlt  = '#E8E8ED'   # hover state for surfaces
+        Text        = '#1D1D1F'   # primary body text
+        Heading     = '#1D1D1F'   # headings (same as text in light)
+        Muted       = '#515154'   # secondary text
+        Link        = '#0066CC'   # link / active-nav color
+        LinkHover   = '#0050A0'
+        Accent      = '#0066CC'   # filled pill buttons (same hex both themes)
+        AccentHover = '#1274DB'   # ~ brightness(1.08) of accent
+        OnAccent    = '#FFFFFF'   # text on accent fills
+        Line        = '#D2D2D7'   # near-invisible borders
+        LineStrong  = '#76767C'   # header rules, scrollbar thumbs
+        Focus       = '#0066CC'
+        Ok          = '#207A4E'   # PASS / success
+        Warn        = '#9A4A05'   # WARN / caution
+        Bad         = '#B32424'   # FAIL / error
+        CodeBg      = '#F5F5F7'   # log pane / source viewer fill
     }
 
-    $colors  = @{}
-    $brushes = @{}
-    foreach ($key in $rgb.Keys) {
-        $c = [System.Windows.Media.Color]::FromRgb($rgb[$key][0], $rgb[$key][1], $rgb[$key][2])
-        $colors[$key]  = $c
-        $brushes[$key] = [System.Windows.Media.SolidColorBrush]::new($c)
-        $brushes[$key].Freeze()
+    $dark = @{
+        Bg          = '#000000'
+        Surface     = '#1C1C1E'
+        SurfaceAlt  = '#2C2C2E'
+        Text        = '#F5F5F7'
+        Heading     = '#FFFFFF'
+        Muted       = '#A1A1A6'
+        Link        = '#2997FF'
+        LinkHover   = '#5EB0FF'
+        Accent      = '#0066CC'
+        AccentHover = '#1274DB'
+        OnAccent    = '#FFFFFF'
+        Line        = '#3A3A3C'
+        LineStrong  = '#8E8E93'
+        Focus       = '#2997FF'
+        Ok          = '#93C793'
+        Warn        = '#E8A25C'
+        Bad         = '#F09090'
+        CodeBg      = '#1C1C1E'
     }
 
     return @{
-        Colors  = $colors
-        Brushes = $brushes
+        Light = $light
+        Dark  = $dark
     }
 }
