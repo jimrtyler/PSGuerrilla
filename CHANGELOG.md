@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [2.49.0] - 2026-07-14
+
 ### Changed
 - **The GUI is rebuilt to look like guerrilla.army and to make running an audit a one-click act.** Show-Guerrilla's window now follows the website's design tokens exactly (the same flat surfaces, pill buttons, 12px cards, near-invisible borders, and WCAG AA contrast-verified color pairs, mirrored in `Get-GuerrillaGuiTheme`), with a light/dark theme toggle whose choice persists in your config; first launch follows the OS app theme. The window is borderless with its own header navigation and custom caption buttons instead of standard Windows chrome. The former Operations tab is now a Run page with exactly one button per platform (Active Directory, Entra/Azure/M365, Google Workspace, plus Campaign for everything); category selection, scan depth, report style, student OUs, and the output directory moved into an Options drawer with sensible defaults, and the run itself shows a live log with a progress sweep and a result callout. The Add-credential modal matches the new look and picks up the active theme. Everything underneath is unchanged: the GUI still wraps the same public cmdlets, `-StartOn` accepts the same values, and the credential entry/validation helpers are untouched.
 
