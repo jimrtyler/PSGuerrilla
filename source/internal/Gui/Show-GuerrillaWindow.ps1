@@ -752,9 +752,9 @@ function Show-GuerrillaWindow {
                     <TextBlock Grid.Column="2" Text="Report style" Foreground="{DynamicResource MutedBrush}"
                                FontSize="12" VerticalAlignment="Center" Margin="0,0,10,0"/>
                     <ComboBox Grid.Column="3" x:Name="ops_ReportStyle" Width="150">
-                      <ComboBoxItem Content="Guerrilla" IsSelected="True"/>
-                      <ComboBoxItem Content="Professional"/>
-                      <ComboBoxItem Content="Slate"/>
+                      <ComboBoxItem Content="Auto" IsSelected="True"/>
+                      <ComboBoxItem Content="Light"/>
+                      <ComboBoxItem Content="Dark"/>
                     </ComboBox>
                   </Grid>
 

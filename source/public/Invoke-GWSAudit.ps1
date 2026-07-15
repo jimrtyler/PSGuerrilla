@@ -74,7 +74,7 @@ function Invoke-GWSAudit {
         SecretManagement vault name for credential resolution. Default 'Guerrilla'.
 
     .PARAMETER ReportStyle
-        Visual style for the HTML report: Guerrilla, Professional (default), or Slate.
+        Initial theme for the HTML report: Auto (default; follows the viewer's OS setting, with an in-report light/dark toggle), Light, or Dark. Legacy values Guerrilla, Professional, and Slate remain accepted (Professional maps to Light; Guerrilla and Slate map to Dark).
 
     .PARAMETER TestMode
         Run against fixture data instead of a live tenant.
@@ -116,8 +116,8 @@ function Invoke-GWSAudit {
         [string]$ConfigFile,
         [string]$VaultName = 'Guerrilla',
 
-        [ValidateSet('Guerrilla', 'Professional', 'Slate')]
-        [string]$ReportStyle = 'Professional',
+        [ValidateSet('Auto', 'Light', 'Dark', 'Guerrilla', 'Professional', 'Slate')]
+        [string]$ReportStyle = 'Auto',
 
         [switch]$TestMode,
 
@@ -392,7 +392,7 @@ function Invoke-GWSAudit {
                 if (-not $Quiet) { Write-ProgressLine -Phase REPORTING -Message 'CSV report' -Detail $csvPath }
             }
             if ($genHtml) {
-                if (-not $PSBoundParameters.ContainsKey('ReportStyle') -and $config -and $config.output -and ($config.output.reportStyle -in 'Guerrilla', 'Professional', 'Slate')) {
+                if (-not $PSBoundParameters.ContainsKey('ReportStyle') -and $config -and $config.output -and ($config.output.reportStyle -in 'Auto', 'Light', 'Dark', 'Guerrilla', 'Professional', 'Slate')) {
                     $ReportStyle = [string]$config.output.reportStyle
                 }
                 $reportBranding = Get-GuerrillaBranding -Config $config

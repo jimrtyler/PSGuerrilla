@@ -10,8 +10,8 @@ function Export-CampaignReportHtml {
         [Parameter(Mandatory)]
         [string]$OutputPath,
 
-        [ValidateSet('Guerrilla', 'Professional', 'Slate')]
-        [string]$Style = 'Professional',
+        [ValidateSet('Auto', 'Light', 'Dark', 'Guerrilla', 'Professional', 'Slate')]
+        [string]$Style = 'Auto',
 
         [hashtable]$Branding
     )
@@ -29,9 +29,7 @@ function Export-CampaignReportHtml {
 
     $timestampStr = $scanStart.ToString('yyyy-MM-dd HH:mm:ss') + ' UTC'
 
-    $themeStyle   = Get-GuerrillaReportThemeStyleBlock -Style $Style
     $displayLabel = $scoreLabel
-    $brand        = Get-GuerrillaReportBrandingHtml -Branding $Branding
     $durationStr  = if ($duration.TotalMinutes -ge 1) {
         '{0}m {1}s' -f [int][Math]::Floor($duration.TotalMinutes), $duration.Seconds
     } else {
@@ -51,30 +49,7 @@ function Export-CampaignReportHtml {
     $medCount     = @($failFindings | Where-Object Severity -eq 'Medium').Count
     $lowCount     = @($failFindings | Where-Object Severity -eq 'Low').Count
 
-    # --- Module version ---
-    $moduleVersion = '2.0.0'
-    try {
-        $manifestPath = Join-Path (Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent) 'Guerrilla.psd1'
-        if (Test-Path $manifestPath) {
-            $manifest = Import-PowerShellDataFile -Path $manifestPath -ErrorAction SilentlyContinue
-            if ($manifest.ModuleVersion) { $moduleVersion = $manifest.ModuleVersion }
-        }
-    } catch { }
-
-    # --- Score color helper ---
-    $getScoreColor = {
-        param([int]$s)
-        switch ($true) {
-            ($s -ge 90) { 'var(--sage)';        break }
-            ($s -ge 75) { 'var(--olive)';       break }
-            ($s -ge 60) { 'var(--gold)';        break }
-            ($s -ge 40) { 'var(--amber)';       break }
-            ($s -ge 20) { 'var(--deep-orange)'; break }
-            default     { 'var(--dark-red)' }
-        }
-    }
-
-    $scoreColor = & $getScoreColor $overallScore
+    $scoreColor = Get-GuerrillaScoreColorVar -Score $overallScore
 
     # --- Platform display name mapping ---
     $platformDisplayNames = @{
@@ -83,357 +58,112 @@ function Export-CampaignReportHtml {
         'Cloud'     = 'Microsoft Cloud'
     }
 
+    $extraCss = @'
+.platform-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1rem; margin: 1.4rem 0; }
+.platform-card { background: var(--g-surface); border-radius: var(--radius); padding: 1.1rem 1.3rem; }
+.platform-card .platform-header { display: flex; justify-content: space-between; align-items: baseline; gap: 0.8rem; margin-bottom: 0.5rem; }
+.platform-card .platform-name { font-weight: 600; color: var(--g-heading); }
+.platform-card .platform-label { font-size: 0.85rem; color: var(--g-muted); margin-top: 2px; }
+.platform-card .platform-score { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.02em; }
+.platform-card .platform-bar-bg { height: 6px; background: var(--g-surface-alt); border-radius: 3px; overflow: hidden; margin: 0.5rem 0; }
+.platform-card .platform-bar-fill { height: 100%; border-radius: 3px; }
+.platform-card .platform-counts { font-size: 0.85rem; color: var(--g-muted); display: flex; flex-wrap: wrap; gap: 0.9em; }
+.platform-card .platform-counts span { white-space: nowrap; }
+.filter-group { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; margin-right: 0.6rem; }
+.filter-count { font-size: 0.85rem; color: var(--g-muted); margin-left: auto; white-space: nowrap; }
+.clickable-row { cursor: pointer; }
+.finding-detail-row { display: none; }
+.finding-detail-row.expanded { display: table-row; }
+.finding-detail-row td { background: var(--g-surface); border-left: 3px solid var(--g-border-strong); padding: 1rem 1.25rem; }
+.finding-detail-row:hover td { background: var(--g-surface); }
+.finding-detail-content { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+.finding-detail-content .fd-block { margin-bottom: 0.2rem; }
+.finding-detail-content .fd-label { font-size: 0.8rem; font-weight: 600; color: var(--g-muted); margin-bottom: 0.15rem; }
+.finding-detail-content .fd-value { font-size: 0.92rem; }
+.finding-detail-content .fd-full { grid-column: 1 / -1; }
+@media print {
+  .finding-detail-row { display: table-row !important; }
+  .platform-card { break-inside: avoid; border: 1px solid var(--g-border); }
+}
+'@
+
     $html = [System.Text.StringBuilder]::new(131072)
 
-    # =================================================================
-    # HEAD
-    # =================================================================
-    [void]$html.Append(@"
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Guerrilla Campaign Report - $timestampStr</title>
-<style>
-$themeStyle
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: var(--font-body);
-    background: var(--bg); color: var(--text);
-    line-height: 1.6; padding: 24px; max-width: 1400px; margin: 0 auto;
-  }
-  h1 { font-size: 1.6em; color: var(--parchment); letter-spacing: 2px; text-transform: uppercase; }
-  h2 {
-    font-size: 1.2em; margin: 32px 0 16px; padding-bottom: 8px; color: var(--parchment);
-    border-bottom: 2px solid var(--border); letter-spacing: 1px; text-transform: uppercase;
-  }
-  h3 { font-size: 1.05em; margin: 16px 0 8px; color: var(--olive); }
-  h4 { font-size: 0.95em; margin: 12px 0 8px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; }
-  .subtitle { color: var(--dim); font-size: 0.85em; margin-bottom: 24px; }
-
-  /* Score Panel */
-  .score-panel {
-    background: var(--surface); border: 2px solid var(--border);
-    border-radius: 4px; padding: 24px 32px; margin-bottom: 24px;
-    display: flex; align-items: center; gap: 32px;
-  }
-  .score-ring {
-    width: 120px; height: 120px; position: relative; flex-shrink: 0;
-  }
-  .score-ring svg { transform: rotate(-90deg); }
-  .score-ring .value {
-    position: absolute; inset: 0; display: flex; align-items: center;
-    justify-content: center; font-size: 2em; font-weight: 700;
-  }
-  .score-detail .label {
-    font-size: 1.3em; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-  }
-  .score-detail .desc { color: var(--dim); font-size: 0.85em; margin-top: 4px; }
-  .score-stats {
-    display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px;
-  }
-  .score-stats .ss-item { font-size: 0.85em; }
-  .score-stats .ss-val { font-weight: 700; font-size: 1.1em; }
-
-  /* Stat cards */
-  .stat-grid {
-    display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px;
-  }
-  .stat-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 4px; padding: 14px 20px; text-align: center;
-    flex: 1 1 140px; min-width: 120px;
-  }
-  .stat-card .value { font-size: 1.8em; font-weight: 700; }
-  .stat-card .label { color: var(--dim); font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px; }
-
-  /* Platform cards */
-  .platform-grid {
-    display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px;
-  }
-  .platform-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 4px; padding: 20px; flex: 1 1 280px; min-width: 260px;
-  }
-  .platform-card .platform-header {
-    display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
-  }
-  .platform-card .platform-name {
-    font-size: 1em; font-weight: 700; color: var(--parchment); text-transform: uppercase; letter-spacing: 1px;
-  }
-  .platform-card .platform-score { font-size: 1.8em; font-weight: 700; }
-  .platform-card .platform-label { font-size: 0.8em; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; }
-  .platform-card .platform-bar-bg {
-    height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin: 8px 0;
-  }
-  .platform-card .platform-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
-  .platform-card .platform-counts { font-size: 0.8em; color: var(--dim); display: flex; gap: 10px; flex-wrap: wrap; }
-  .platform-card .platform-counts span { white-space: nowrap; }
-
-  /* Category cards */
-  .category-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 12px; margin-bottom: 24px;
-  }
-  .cat-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 4px; padding: 16px;
-  }
-  .cat-card .cat-header {
-    display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
-  }
-  .cat-card .cat-name {
-    font-size: 0.9em; font-weight: 700; color: var(--olive); text-transform: uppercase; letter-spacing: 1px;
-  }
-  .cat-card .cat-score { font-size: 1.4em; font-weight: 700; }
-  .cat-card .cat-bar-bg {
-    height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 8px;
-  }
-  .cat-card .cat-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
-  .cat-card .cat-counts { font-size: 0.8em; color: var(--dim); }
-  .cat-card .cat-counts span { margin-right: 10px; }
-
-  /* Badges */
-  .badge {
-    display: inline-block; padding: 2px 8px; border-radius: 2px;
-    font-size: 0.75em; font-weight: 700; letter-spacing: 1px;
-    text-transform: uppercase; font-family: 'Fira Code', 'JetBrains Mono', Consolas, monospace;
-    white-space: nowrap;
-  }
-  .badge-pass { background: var(--pass); color: #d4c9a8; }
-  .badge-fail { background: var(--fail); color: #fff; }
-  .badge-warn { background: var(--warn); color: #1a1f16; }
-  .badge-skip { background: var(--skip); color: #d4c9a8; }
-  .badge-error { background: var(--skip); color: #d4c9a8; }
-  .badge-critical { background: var(--critical); color: #fff; }
-  .badge-high { background: var(--high); color: #1a1f16; }
-  .badge-medium { background: var(--medium); color: #1a1f16; }
-  .badge-low { background: var(--low); color: #1a1f16; }
-  .badge-platform {
-    display: inline-block; padding: 2px 8px; border-radius: 2px;
-    font-size: 0.72em; font-weight: 700; letter-spacing: 1px;
-    text-transform: uppercase; font-family: 'Fira Code', 'JetBrains Mono', Consolas, monospace;
-    white-space: nowrap; border: 1px solid var(--border);
-  }
-  .badge-workspace { background: rgba(107, 155, 107, 0.15); color: var(--sage); border-color: var(--sage); }
-  .badge-ad { background: rgba(201, 168, 76, 0.15); color: var(--gold); border-color: var(--gold); }
-  .badge-cloud { background: rgba(168, 181, 139, 0.15); color: var(--olive); border-color: var(--olive); }
-
-  /* Tables */
-  table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 0.85em; }
-  th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
-  th {
-    background: var(--surface); font-weight: 700; font-size: 0.8em; color: var(--dim);
-    text-transform: uppercase; letter-spacing: 1px; position: sticky; top: 0;
-  }
-  tr:nth-child(even) { background: rgba(45, 53, 38, 0.4); }
-  tr:hover { background: rgba(168, 181, 139, 0.08); }
-  td { vertical-align: top; }
-
-  .priority-table tr td:first-child { font-family: 'Fira Code', 'JetBrains Mono', Consolas, monospace; font-size: 0.85em; }
-
-  /* Collapsible platform sections */
-  details.platform-detail {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 4px; margin-bottom: 12px;
-  }
-  details.platform-detail summary {
-    padding: 12px 16px; cursor: pointer; list-style: none;
-    display: flex; align-items: center; gap: 12px;
-    font-weight: 700; color: var(--parchment); text-transform: uppercase; letter-spacing: 1px;
-  }
-  details.platform-detail summary::-webkit-details-marker { display: none; }
-  details.platform-detail summary::before {
-    content: '\25b6'; font-size: 0.7em; color: var(--dim); transition: transform 0.2s;
-  }
-  details.platform-detail[open] summary::before { transform: rotate(90deg); }
-  details.platform-detail .detail-body { padding: 0 16px 16px; }
-
-  /* Collapsible category details */
-  details.cat-detail {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 4px; margin-bottom: 12px;
-  }
-  details.cat-detail summary {
-    padding: 12px 16px; cursor: pointer; list-style: none;
-    display: flex; align-items: center; gap: 12px;
-    font-weight: 700; color: var(--olive); text-transform: uppercase; letter-spacing: 1px;
-  }
-  details.cat-detail summary::-webkit-details-marker { display: none; }
-  details.cat-detail summary::before {
-    content: '\25b6'; font-size: 0.7em; color: var(--dim); transition: transform 0.2s;
-  }
-  details.cat-detail[open] summary::before { transform: rotate(90deg); }
-  details.cat-detail .detail-body { padding: 0 16px 16px; overflow-x: auto; }
-
-  /* Finding detail rows */
-  .finding-detail-row { display: none; }
-  .finding-detail-row.expanded { display: table-row; }
-  .finding-detail-row td {
-    padding: 16px 20px; background: var(--surface-alt);
-    border-left: 3px solid var(--border);
-  }
-  .finding-detail-content {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-  }
-  .finding-detail-content .fd-block { margin-bottom: 8px; }
-  .finding-detail-content .fd-label {
-    font-size: 0.8em; color: var(--dim); text-transform: uppercase; letter-spacing: 1px;
-    margin-bottom: 4px;
-  }
-  .finding-detail-content .fd-value { font-size: 0.9em; }
-  .finding-detail-content .fd-full { grid-column: 1 / -1; }
-
-  /* Affected entities (bulleted) */
-  .affected { margin-top: 4px; }
-  .affected-label { color: var(--amber); font-weight: 600; }
-  .affected-items { margin: 4px 0 0 0; padding-left: 20px; }
-  .affected-items li { word-break: break-word; margin: 1px 0; }
-  .affected-items li.more { list-style: none; margin-left: -20px; font-style: italic; opacity: .7; color: var(--dim); }
-
-  /* Filter bar */
-  .filter-bar {
-    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; align-items: center;
-  }
-  .filter-bar .filter-group {
-    display: flex; gap: 4px; align-items: center;
-    border: 1px solid var(--border); border-radius: 4px; padding: 4px 8px;
-    background: var(--surface);
-  }
-  .filter-bar .filter-label {
-    font-size: 0.75em; color: var(--dim); text-transform: uppercase; letter-spacing: 1px;
-    margin-right: 4px;
-  }
-  .filter-btn {
-    background: transparent; border: 1px solid var(--border); border-radius: 2px;
-    padding: 3px 10px; color: var(--text); cursor: pointer;
-    font-family: 'Fira Code', 'JetBrains Mono', Consolas, monospace;
-    font-size: 0.75em; text-transform: uppercase; letter-spacing: 1px;
-    transition: background 0.15s, border-color 0.15s;
-  }
-  .filter-btn:hover { background: rgba(168, 181, 139, 0.1); }
-  .filter-btn.active { background: rgba(168, 181, 139, 0.2); border-color: var(--olive); color: var(--parchment); }
-  .filter-count {
-    font-size: 0.8em; color: var(--dim); margin-left: 12px; white-space: nowrap;
-  }
-
-  /* Compliance table */
-  .compliance-table td code {
-    display: inline-block; padding: 1px 5px; border-radius: 2px;
-    font-size: 0.85em; margin: 1px 2px; background: rgba(168, 181, 139, 0.1);
-    border: 1px solid var(--border);
-  }
-
-  .clickable-row { cursor: pointer; }
-  .clickable-row:hover { background: rgba(168, 181, 139, 0.12) !important; }
-
-  code { font-family: 'Fira Code', 'JetBrains Mono', Consolas, monospace; font-size: 0.9em; color: var(--olive); }
-  a { color: var(--gold); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-
-  .remediation-cell { max-width: 300px; font-size: 0.85em; }
-
-  /* Print styles */
-  @media print {
-    body { background: #fff; color: #000; }
-    .score-panel, .stat-card, .cat-card, .cat-detail, .platform-card, .platform-detail,
-    .filter-bar { border-color: #ccc; background: #f9f9f9; }
-    .filter-bar { display: none; }
-    details.cat-detail, details.platform-detail { break-inside: avoid; }
-    .finding-detail-row { display: table-row !important; }
-    a { color: #336; }
-  }
-</style>
-</head>
-<body>
-"@)
-
-    # =================================================================
-    # HEADER
-    # =================================================================
+    # ═══ SHELL + HEADER ═══
     $platformList = ($platforms | ForEach-Object {
         $displayName = $platformDisplayNames[$_]
         if (-not $displayName) { $displayName = $_ }
         & $esc $displayName
     }) -join ', '
 
-    [void]$html.Append(@"
-$($brand.Banner)
-$($brand.Header)
-<h1>&#x2694; Campaign Report</h1>
-<div class="subtitle">
-  Unified Security Posture Assessment &mdash; Generated $timestampStr &mdash;
-  $totalChecks checks across $($platforms.Count) platforms ($platformList)<br>
-  Scan ID: $(& $esc $scanId) &mdash; Duration: $durationStr &mdash;
-  Guerrilla v$moduleVersion
-</div>
-"@)
+    $subtitle = "Unified security posture assessment &middot; Generated: $timestampStr &middot; " +
+        "$totalChecks checks across $($platforms.Count) platforms ($platformList)<br>" +
+        "Scan ID: $(& $esc $scanId) &middot; Duration: $durationStr"
 
-    # =================================================================
-    # SCORE PANEL (SVG ring)
-    # =================================================================
-    $circumference = [Math]::Round(2 * [Math]::PI * 52, 1)  # radius 52
-    $dashOffset    = [Math]::Round($circumference - ($circumference * $overallScore / 100), 1)
+    [void]$html.Append((Get-GuerrillaReportShellStart `
+        -Title 'Campaign Report' `
+        -Subtitle $subtitle `
+        -HtmlTitle "Guerrilla Campaign Report - $timestampStr" `
+        -TopbarMeta 'Unified Campaign Assessment' `
+        -Style $Style -Branding $Branding -ExtraCss $extraCss))
+
+    # ═══ SCORE PANEL ═══
+    $circumference = 2 * [Math]::PI * 50
+    $dashoffset = $circumference * (1 - ($overallScore / 100))
 
     [void]$html.Append(@"
 <div class="score-panel">
   <div class="score-ring">
-    <svg width="120" height="120" viewBox="0 0 120 120">
-      <circle cx="60" cy="60" r="52" fill="none" stroke="var(--border)" stroke-width="8"/>
-      <circle cx="60" cy="60" r="52" fill="none" stroke="$scoreColor" stroke-width="8"
-              stroke-dasharray="$circumference" stroke-dashoffset="$dashOffset"
+    <svg viewBox="0 0 120 120" width="120" height="120">
+      <circle cx="60" cy="60" r="50" fill="none" stroke="var(--g-surface-alt)" stroke-width="10"/>
+      <circle cx="60" cy="60" r="50" fill="none" stroke="$scoreColor" stroke-width="10"
+              stroke-dasharray="$circumference" stroke-dashoffset="$dashoffset"
               stroke-linecap="round"/>
     </svg>
-    <div class="value" style="color:$scoreColor">$overallScore</div>
+    <div class="value">$overallScore</div>
   </div>
   <div class="score-detail">
     <div class="label" style="color:$scoreColor">$(& $esc $displayLabel)</div>
-    <div class="desc">Campaign Score (0&ndash;100). Weighted assessment of $totalChecks checks across $($platforms.Count) platforms.</div>
-    <div class="score-stats">
-      <span class="ss-item"><span class="ss-val" style="color:var(--pass)">$passCount</span> Passed</span>
-      <span class="ss-item"><span class="ss-val" style="color:var(--fail)">$failCount</span> Failed</span>
-      <span class="ss-item"><span class="ss-val" style="color:var(--warn)">$warnCount</span> Warnings</span>
-      <span class="ss-item"><span class="ss-val" style="color:var(--skip)">$skipCount</span> Skipped</span>
-    </div>
+    <div class="desc">Campaign score (0-100) &middot; weighted assessment of $totalChecks checks across $($platforms.Count) platforms</div>
+    <div class="desc"><span class="verdict-pass">$passCount passed</span> &middot; <span class="verdict-fail">$failCount failed</span> &middot; <span class="verdict-warn">$warnCount warnings</span> &middot; <span class="verdict-na">$skipCount skipped</span></div>
   </div>
 </div>
 "@)
 
-    # =================================================================
-    # WHAT CHANGED SINCE LAST RUN (shared section, before findings)
-    # =================================================================
+    # ═══ WHAT CHANGED SINCE LAST RUN — shared section, before findings ═══
     [void]$html.Append((Get-GuerrillaComparisonSectionHtml -RunDiff $Result.RunComparison -Esc $esc))
 
-    # =================================================================
-    # STAT CARDS
-    # =================================================================
-    [void]$html.Append(@"
-<div class="stat-grid">
-  <div class="stat-card"><div class="value" style="color:var(--parchment)">$totalChecks</div><div class="label">Total Checks</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--pass)">$passCount</div><div class="label">Passed</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--fail)">$failCount</div><div class="label">Failed</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--warn)">$warnCount</div><div class="label">Warnings</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--skip)">$skipCount</div><div class="label">Skipped</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--critical)">$critCount</div><div class="label">Critical</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--high)">$highCount</div><div class="label">High</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--medium)">$medCount</div><div class="label">Medium</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--low)">$lowCount</div><div class="label">Low</div></div>
-</div>
+    # ═══ STAT CARDS ═══
+    [void]$html.Append('<div class="stat-grid">')
+    $statCards = @(
+        @{ Value = $totalChecks; Label = 'Total Checks'; Color = 'var(--g-heading)' }
+        @{ Value = $passCount;   Label = 'Passed';       Color = 'var(--g-ok)' }
+        @{ Value = $failCount;   Label = 'Failed';       Color = 'var(--g-bad)' }
+        @{ Value = $warnCount;   Label = 'Warnings';     Color = 'var(--g-warn)' }
+        @{ Value = $skipCount;   Label = 'Skipped';      Color = 'var(--g-muted)' }
+        @{ Value = $critCount;   Label = 'Critical';     Color = 'var(--g-sev-critical)' }
+        @{ Value = $highCount;   Label = 'High';         Color = 'var(--g-sev-high)' }
+        @{ Value = $medCount;    Label = 'Medium';       Color = 'var(--g-sev-medium)' }
+        @{ Value = $lowCount;    Label = 'Low';          Color = 'var(--g-sev-low)' }
+    )
+    foreach ($card in $statCards) {
+        [void]$html.Append(@"
+  <div class="stat">
+    <span class="value" style="color:$($card.Color)">$($card.Value)</span>
+    <span class="label">$($card.Label)</span>
+  </div>
 "@)
+    }
+    [void]$html.Append('</div>')
 
-    # =================================================================
-    # SECURITY MATURITY + ATTACK PATHS (shared sections)
+    # ═══ SECURITY MATURITY + ATTACK PATHS (shared sections) ═══
     # Maturity spans all platforms; attack paths only render if an AD platform was scanned.
-    # =================================================================
     [void]$html.Append((Get-GuerrillaMaturitySectionHtml -Findings $findings -Esc $esc))
     [void]$html.Append((Get-GuerrillaIndicatorsOfExposureHtml -Findings $findings -Esc $esc))
     [void]$html.Append((Get-GuerrillaCartographyHtml -Findings $findings -Esc $esc))
     [void]$html.Append((Get-GuerrillaAttackPathSectionHtml -Findings $findings -Esc $esc -OmitIfAbsent))
 
-    # =================================================================
-    # PLATFORM SUMMARY CARDS
-    # =================================================================
+    # ═══ PLATFORM SUMMARY CARDS ═══
     [void]$html.Append('<h2>Platform Summary</h2>')
     [void]$html.Append('<div class="platform-grid">')
 
@@ -441,7 +171,7 @@ $($brand.Header)
         $tName  = $platformKey.Key
         $tData  = $platformKey.Value
         $tScore = $tData.Score
-        $tColor = & $getScoreColor $tScore
+        $tColor = Get-GuerrillaScoreColorVar -Score $tScore
         $tLabel = [string]$tData.ScoreLabel
 
         $tPassCount = if ($null -ne $tData.PassCount) { $tData.PassCount } else { 0 }
@@ -455,25 +185,23 @@ $($brand.Header)
   <div class="platform-header">
     <div>
       <span class="platform-name">$(& $esc $tName)</span>
-      <div class="platform-label">$(& $esc $tLabel) &mdash; $tFindingCount checks</div>
+      <div class="platform-label">$(& $esc $tLabel) &middot; $tFindingCount checks</div>
     </div>
     <span class="platform-score" style="color:$tColor">$tScore</span>
   </div>
   <div class="platform-bar-bg"><div class="platform-bar-fill" style="width:${tScore}%;background:$tColor"></div></div>
   <div class="platform-counts">
-    <span style="color:var(--pass)">Pass: $tPassCount</span>
-    <span style="color:var(--fail)">Fail: $tFailCount</span>
-    <span style="color:var(--warn)">Warn: $tWarnCount</span>
-    <span style="color:var(--skip)">Skip: $tSkipCount</span>
+    <span class="verdict-pass">Pass: $tPassCount</span>
+    <span class="verdict-fail">Fail: $tFailCount</span>
+    <span class="verdict-warn">Warn: $tWarnCount</span>
+    <span class="verdict-na">Skip: $tSkipCount</span>
   </div>
 </div>
 "@)
     }
     [void]$html.Append('</div>')
 
-    # =================================================================
-    # CATEGORY SCORE GRID (grouped by platform)
-    # =================================================================
+    # ═══ CATEGORY SCORE GRID (grouped by platform) ═══
     [void]$html.Append('<h2>Category Scores by Platform</h2>')
 
     foreach ($platformKey in ($platformScores.GetEnumerator() | Sort-Object Key)) {
@@ -489,14 +217,14 @@ $($brand.Header)
         }
         $openAttr = if ($tHasFailures) { ' open' } else { '' }
 
-        [void]$html.Append("<details class=`"platform-detail`"$openAttr>")
-        [void]$html.Append("<summary>$(& $esc $tName) <span style=`"color:var(--dim);font-weight:400;font-size:0.85em;text-transform:none`">($($tCategoryScores.Count) categories)</span></summary>")
+        [void]$html.Append("<details class=`"cat-detail`"$openAttr>")
+        [void]$html.Append("<summary>$(& $esc $tName)<span class=`"sum-counts`">$($tCategoryScores.Count) categories</span></summary>")
         [void]$html.Append('<div class="detail-body">')
         [void]$html.Append('<div class="category-grid">')
 
         foreach ($cat in ($tCategoryScores.GetEnumerator() | Sort-Object { $_.Value.Score })) {
             $catScore = $cat.Value.Score
-            $catColor = & $getScoreColor $catScore
+            $catColor = Get-GuerrillaScoreColorVar -Score $catScore
             $catPass  = if ($null -ne $cat.Value.Pass) { $cat.Value.Pass } else { 0 }
             $catFail  = if ($null -ne $cat.Value.Fail) { $cat.Value.Fail } else { 0 }
             $catWarn  = if ($null -ne $cat.Value.Warn) { $cat.Value.Warn } else { 0 }
@@ -504,14 +232,14 @@ $($brand.Header)
             [void]$html.Append(@"
 <div class="cat-card">
   <div class="cat-header">
-    <span class="cat-name">$(& $esc $cat.Key)</span>
-    <span class="cat-score" style="color:$catColor">$catScore</span>
+    <div class="cat-name">$(& $esc $cat.Key)</div>
+    <div class="cat-score" style="color:$catColor">$catScore</div>
   </div>
   <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:${catScore}%;background:$catColor"></div></div>
   <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: $catPass</span>
-    <span style="color:var(--fail)">Fail: $catFail</span>
-    <span style="color:var(--warn)">Warn: $catWarn</span>
+    <span class="verdict-pass">Pass: $catPass</span>
+    <span class="verdict-fail">Fail: $catFail</span>
+    <span class="verdict-warn">Warn: $catWarn</span>
   </div>
 </div>
 "@)
@@ -520,45 +248,44 @@ $($brand.Header)
         [void]$html.Append('</div></details>')
     }
 
-    # =================================================================
-    # FINDINGS TABLE (interactive with filters)
-    # =================================================================
+    # ═══ FINDINGS TABLE (interactive with filters) ═══
     [void]$html.Append('<h2>All Findings</h2>')
 
     # --- Filter bar ---
-    [void]$html.Append('<div class="filter-bar" id="filterBar">')
+    [void]$html.Append('<div class="gg-filter" id="filterBar">')
 
     # Platform filter group
-    [void]$html.Append('<div class="filter-group"><span class="filter-label">Platform:</span>')
-    [void]$html.Append('<button class="filter-btn active" data-filter-type="platform" data-filter-value="all" onclick="toggleFilter(this)">All</button>')
+    [void]$html.Append('<div class="filter-group"><span class="gg-lbl">Platform</span>')
+    [void]$html.Append('<button class="gg-btn active" data-filter-type="platform" data-filter-value="all" onclick="toggleFilter(this)">All</button>')
     foreach ($platformKey in ($platformScores.GetEnumerator() | Sort-Object Key)) {
         $tName = $platformKey.Key
         $tSlug = ($tName -replace '[^a-zA-Z0-9]', '-').ToLower()
-        [void]$html.Append("<button class=`"filter-btn`" data-filter-type=`"platform`" data-filter-value=`"$(& $esc $tSlug)`" onclick=`"toggleFilter(this)`">$(& $esc $tName)</button>")
+        [void]$html.Append("<button class=`"gg-btn`" data-filter-type=`"platform`" data-filter-value=`"$(& $esc $tSlug)`" onclick=`"toggleFilter(this)`">$(& $esc $tName)</button>")
     }
     [void]$html.Append('</div>')
 
     # Status filter group
-    [void]$html.Append('<div class="filter-group"><span class="filter-label">Status:</span>')
-    [void]$html.Append('<button class="filter-btn active" data-filter-type="status" data-filter-value="all" onclick="toggleFilter(this)">All</button>')
+    [void]$html.Append('<div class="filter-group"><span class="gg-lbl">Status</span>')
+    [void]$html.Append('<button class="gg-btn active" data-filter-type="status" data-filter-value="all" onclick="toggleFilter(this)">All</button>')
     foreach ($statusVal in @('PASS', 'FAIL', 'WARN', 'SKIP')) {
-        [void]$html.Append("<button class=`"filter-btn`" data-filter-type=`"status`" data-filter-value=`"$statusVal`" onclick=`"toggleFilter(this)`">$statusVal</button>")
+        [void]$html.Append("<button class=`"gg-btn`" data-filter-type=`"status`" data-filter-value=`"$statusVal`" onclick=`"toggleFilter(this)`">$statusVal</button>")
     }
     [void]$html.Append('</div>')
 
     # Severity filter group
-    [void]$html.Append('<div class="filter-group"><span class="filter-label">Severity:</span>')
-    [void]$html.Append('<button class="filter-btn active" data-filter-type="severity" data-filter-value="all" onclick="toggleFilter(this)">All</button>')
+    [void]$html.Append('<div class="filter-group"><span class="gg-lbl">Severity</span>')
+    [void]$html.Append('<button class="gg-btn active" data-filter-type="severity" data-filter-value="all" onclick="toggleFilter(this)">All</button>')
     foreach ($sevVal in @('Critical', 'High', 'Medium', 'Low')) {
-        [void]$html.Append("<button class=`"filter-btn`" data-filter-type=`"severity`" data-filter-value=`"$sevVal`" onclick=`"toggleFilter(this)`">$sevVal</button>")
+        [void]$html.Append("<button class=`"gg-btn`" data-filter-type=`"severity`" data-filter-value=`"$sevVal`" onclick=`"toggleFilter(this)`">$sevVal</button>")
     }
     [void]$html.Append('</div>')
 
     [void]$html.Append('<span class="filter-count" id="filterCount">Showing all findings</span>')
-    [void]$html.Append('</div>') # filter-bar
+    [void]$html.Append('</div>') # gg-filter
 
     # --- Findings table ---
     [void]$html.Append(@'
+<div class="table-wrap">
 <table id="findingsTable">
   <thead>
   <tr>
@@ -582,35 +309,26 @@ $($brand.Header)
         $platform     = if ($f.Platform) { $f.Platform } else { 'Unknown' }
         $platformSlug = ($platform -replace '[^a-zA-Z0-9]', '-').ToLower()
 
-        # Determine platform badge class
-        $platformBadgeClass = switch -Wildcard ($platform) {
-            '*Workspace*' { 'badge-workspace'; break }
-            '*Active*'    { 'badge-ad'; break }
-            '*Cloud*'     { 'badge-cloud'; break }
-            '*Microsoft*' { 'badge-cloud'; break }
-            default       { '' }
-        }
-
         [void]$html.Append(@"
   <tr class="clickable-row finding-row" data-platform="$platformSlug" data-status="$($f.Status)" data-severity="$($f.Severity)" data-idx="$findingIdx" onclick="toggleFindingDetail($findingIdx)">
-    <td><span class="badge badge-platform $platformBadgeClass">$(& $esc $platform)</span></td>
+    <td><span class="badge">$(& $esc $platform)</span></td>
     <td><code>$(& $esc $f.CheckId)</code></td>
     <td>$(& $esc $f.CheckName)</td>
     <td>$(& $esc $f.Category)</td>
-    <td><span class="badge badge-$sevClass">$($f.Severity)</span></td>
-    <td><span class="badge badge-$statusClass">$($f.Status)</span></td>
+    <td><span class="badge badge-sev-$sevClass">$($f.Severity)</span></td>
+    <td><span class="badge badge-status-$statusClass">$($f.Status)</span></td>
     <td>$(& $esc $f.CurrentValue)</td>
   </tr>
 "@)
 
         # --- Finding detail row (hidden by default) ---
-        $descHtml = if ($f.Description) { & $esc $f.Description } else { '&mdash;' }
-        $curValHtml = if ($f.CurrentValue) { & $esc $f.CurrentValue } else { '&mdash;' }
-        $recValHtml = if ($f.RecommendedValue) { & $esc $f.RecommendedValue } else { '&mdash;' }
-        $remStepsHtml = if ($f.RemediationSteps) { & $esc $f.RemediationSteps } else { '&mdash;' }
+        $descHtml = if ($f.Description) { & $esc $f.Description } else { '' }
+        $curValHtml = if ($f.CurrentValue) { & $esc $f.CurrentValue } else { '' }
+        $recValHtml = if ($f.RecommendedValue) { & $esc $f.RecommendedValue } else { '' }
+        $remStepsHtml = if ($f.RemediationSteps) { & $esc $f.RemediationSteps } else { '' }
         $remUrlHtml = if ($f.RemediationUrl) {
-            "<a href=`"$(& $esc $f.RemediationUrl)`" target=`"_blank`" rel=`"noopener`">$(& $esc $f.RemediationUrl) &#x2197;</a>"
-        } else { '&mdash;' }
+            "<a href=`"$(& $esc $f.RemediationUrl)`" target=`"_blank`" rel=`"noopener`">$(& $esc $f.RemediationUrl)</a>"
+        } else { '' }
 
         # Compliance mappings
         $compHtml = [System.Text.StringBuilder]::new(512)
@@ -641,11 +359,7 @@ $($brand.Header)
 
             if ($compEntries.Count -gt 0) {
                 [void]$compHtml.Append($compEntries -join '<br>')
-            } else {
-                [void]$compHtml.Append('&mdash;')
             }
-        } else {
-            [void]$compHtml.Append('&mdash;')
         }
 
         # Affected entities (FAIL/WARN only) — bulleted list of impacted accounts/objects.
@@ -698,11 +412,9 @@ $($brand.Header)
         $findingIdx++
     }
 
-    [void]$html.Append('</tbody></table>')
+    [void]$html.Append('</tbody></table></div>')
 
-    # =================================================================
-    # COMPLIANCE CROSS-REFERENCE
-    # =================================================================
+    # ═══ COMPLIANCE CROSS-REFERENCE ═══
     $complianceFindings = @($failFindings | Where-Object {
         ($_.Compliance.NistSp80053 -and $_.Compliance.NistSp80053.Count -gt 0) -or
         ($_.Compliance.MitreAttack -and $_.Compliance.MitreAttack.Count -gt 0) -or
@@ -712,55 +424,50 @@ $($brand.Header)
     }, CheckId)
 
     if ($complianceFindings.Count -gt 0) {
-        [void]$html.Append('<h2>Compliance Cross-Reference</h2>')
         [void]$html.Append(@'
+<h2>Compliance Cross-Reference</h2>
+<div class="table-wrap">
 <table class="compliance-table">
+  <thead>
   <tr>
     <th>Platform</th><th>Check ID</th><th>Check Name</th><th>Severity</th>
     <th>NIST SP 800-53</th><th>MITRE ATT&amp;CK</th><th>CIS Benchmark</th>
   </tr>
+  </thead>
+  <tbody>
 '@)
         foreach ($f in $complianceFindings) {
             $sevClass = $f.Severity.ToLower()
             $platform  = if ($f.Platform) { $f.Platform } else { 'Unknown' }
-            $platformBadgeClass = switch -Wildcard ($platform) {
-                '*Workspace*' { 'badge-workspace'; break }
-                '*Active*'    { 'badge-ad'; break }
-                '*Cloud*'     { 'badge-cloud'; break }
-                '*Microsoft*' { 'badge-cloud'; break }
-                default       { '' }
-            }
 
             $nistCodes = if ($f.Compliance.NistSp80053 -and $f.Compliance.NistSp80053.Count -gt 0) {
                 ($f.Compliance.NistSp80053 | ForEach-Object { "<code>$(& $esc $_)</code>" }) -join ' '
-            } else { '&mdash;' }
+            } else { '' }
 
             $mitreCodes = if ($f.Compliance.MitreAttack -and $f.Compliance.MitreAttack.Count -gt 0) {
                 ($f.Compliance.MitreAttack | ForEach-Object { "<code>$(& $esc $_)</code>" }) -join ' '
-            } else { '&mdash;' }
+            } else { '' }
 
             $cisCodes = if ($f.Compliance.CisBenchmark -and $f.Compliance.CisBenchmark.Count -gt 0) {
                 ($f.Compliance.CisBenchmark | ForEach-Object { "<code>$(& $esc $_)</code>" }) -join ' '
-            } else { '&mdash;' }
+            } else { '' }
 
             [void]$html.Append(@"
   <tr>
-    <td><span class="badge badge-platform $platformBadgeClass">$(& $esc $platform)</span></td>
+    <td><span class="badge">$(& $esc $platform)</span></td>
     <td><code>$(& $esc $f.CheckId)</code></td>
     <td>$(& $esc $f.CheckName)</td>
-    <td><span class="badge badge-$sevClass">$($f.Severity)</span></td>
+    <td><span class="badge badge-sev-$sevClass">$($f.Severity)</span></td>
     <td>$nistCodes</td>
     <td>$mitreCodes</td>
     <td>$cisCodes</td>
   </tr>
 "@)
         }
-        [void]$html.Append('</table>')
+        [void]$html.Append('</tbody></table></div>')
     }
 
-    # =================================================================
-    # JAVASCRIPT
-    # =================================================================
+    # ═══ JAVASCRIPT ═══
     [void]$html.Append(@'
 <script>
 (function() {
@@ -777,7 +484,7 @@ $($brand.Header)
     var value = btn.getAttribute('data-filter-value');
 
     // Deactivate all buttons in this filter group
-    var siblings = btn.parentNode.querySelectorAll('.filter-btn');
+    var siblings = btn.parentNode.querySelectorAll('.gg-btn');
     for (var i = 0; i < siblings.length; i++) {
       siblings[i].classList.remove('active');
     }
@@ -840,21 +547,10 @@ $($brand.Header)
 </script>
 '@)
 
-    # =================================================================
-    # FOOTER
-    # =================================================================
-    [void]$html.Append(@"
-<div style="margin-top: 40px; padding-top: 16px; border-top: 2px solid var(--border);
-            color: var(--dim); font-size: 0.8em; text-align: center; letter-spacing: 1px;">
-  &#x2694; Guerrilla Campaign Report &nbsp;|&nbsp;
-  $timestampStr &nbsp;|&nbsp;
-  Generated by Guerrilla v$moduleVersion &nbsp;|&nbsp;
-  $totalChecks checks across $($platforms.Count) platforms &nbsp;|&nbsp; Score: $overallScore/100 ($(& $esc $displayLabel))
-  <br>By Jim Tyler, Microsoft MVP &nbsp;|&nbsp; <a href="https://github.com/jimrtyler" style="color:var(--dim)">GitHub</a> &nbsp;|&nbsp; <a href="https://linkedin.com/in/jamestyler" style="color:var(--dim)">LinkedIn</a> &nbsp;|&nbsp; <a href="https://youtube.com/@jimrtyler" style="color:var(--dim)">YouTube</a>
-</div>
-</body>
-</html>
-"@)
+    # ═══ FOOTER + SHELL END ═══
+    [void]$html.Append((Get-GuerrillaReportShellEnd `
+        -FooterNote 'Unified Campaign Audit' `
+        -TimestampText $timestampStr))
 
     Set-Content -Path $OutputPath -Value $html.ToString() -Encoding UTF8
 }

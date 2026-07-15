@@ -16,6 +16,8 @@ function Export-DashboardHtml {
         File path for the HTML output.
     .PARAMETER OrganizationName
         Organization name for the header.
+    .PARAMETER Style
+        Report style: Auto (follow the OS), Light, or Dark. Legacy names accepted.
     #>
     [CmdletBinding()]
     param(
@@ -24,25 +26,22 @@ function Export-DashboardHtml {
         [PSCustomObject[]]$ScanResults,
         [Parameter(Mandatory)]
         [string]$OutputPath,
-        [string]$OrganizationName = 'Organization'
+        [string]$OrganizationName = 'Organization',
+        [ValidateSet('Auto', 'Light', 'Dark', 'Guerrilla', 'Professional', 'Slate')]
+        [string]$Style = 'Auto'
     )
 
     $esc = { param([string]$s) [System.Web.HttpUtility]::HtmlEncode($s) }
     $html = [System.Text.StringBuilder]::new(65536)
-    $timestamp = [datetime]::UtcNow.ToString('yyyy-MM-dd HH:mm:ss')
+    $timestampStr = [datetime]::UtcNow.ToString('yyyy-MM-dd HH:mm:ss') + ' UTC'
 
     $score = $ScoreResult.Score ?? 0
     $label = $ScoreResult.Label ?? ''
 
     # Score ring
-    $ringColor = switch ($true) {
-        ([int]$score -ge 90) { '#6b9b6b'; break }
-        ([int]$score -ge 75) { '#a8b58b'; break }
-        ([int]$score -ge 60) { '#c9a84c'; break }
-        ([int]$score -ge 40) { '#d4883a'; break }
-        ([int]$score -ge 20) { '#c75c2e'; break }
-        default { '#8b2500' }
-    }
+    $ringColor = Get-GuerrillaScoreColorVar -Score ([int]$score)
+    $circumference = 2 * [Math]::PI * 50
+    $dashoffset = $circumference * (1 - ([int]$score / 100))
 
     # Stats
     $totalFindings = ($Findings ?? @()).Count
@@ -53,8 +52,8 @@ function Export-DashboardHtml {
 
     # Platform data
     $platforms = @{
-        'Active Directory' = @{ Findings = @($Findings | Where-Object { ($_.CheckId ?? '') -match '^AD' }); Color = '#6b9b6b'; Icon = '&#x1F3F0;' }
-        'Cloud'            = @{ Findings = @($Findings | Where-Object { ($_.CheckId ?? '') -match '^(AUTH|ADMIN|EMAIL|COLLAB|DRIVE|OAUTH|DEVICE|LOG|EID|M365|AZIAM|INTUNE)' }); Color = '#a8b58b'; Icon = '&#x1F50D;' }
+        'Active Directory' = @{ Findings = @($Findings | Where-Object { ($_.CheckId ?? '') -match '^AD' }) }
+        'Cloud'            = @{ Findings = @($Findings | Where-Object { ($_.CheckId ?? '') -match '^(AUTH|ADMIN|EMAIL|COLLAB|DRIVE|OAUTH|DEVICE|LOG|EID|M365|AZIAM|INTUNE)' }) }
     }
 
     # Components breakdown
@@ -66,11 +65,9 @@ function Export-DashboardHtml {
             if ($c) {
                 $barWidth = [Math]::Max(2, $c.Score)
                 $componentHtml += @"
-<div style="margin:6px 0;">
-<div style="display:flex;justify-content:space-between;font-size:0.85em;"><span>$comp</span><span>$($c.Score) ($([Math]::Round($c.Weight * 100))%)</span></div>
-<div style="background:var(--surface-alt);border-radius:3px;height:8px;margin-top:2px;">
-<div style="background:var(--olive);height:100%;width:${barWidth}%;border-radius:3px;"></div>
-</div>
+<div class="comp-row">
+  <div class="comp-head"><span>$comp</span><span>$($c.Score) ($([Math]::Round($c.Weight * 100))%)</span></div>
+  <div class="comp-bar-bg"><div class="comp-bar-fill" style="width:${barWidth}%"></div></div>
 </div>
 "@
             }
@@ -84,16 +81,16 @@ function Export-DashboardHtml {
     }} | Select-Object -First 50)
 
     foreach ($f in $sortedFindings) {
-        $sevColor = switch ($f.Severity) { 'Critical' { 'var(--dark-red)' } 'High' { 'var(--deep-orange)' } 'Medium' { 'var(--gold)' } default { 'var(--sage)' } }
-        $statusColor = if ($f.Status -eq 'FAIL') { 'var(--deep-orange)' } else { 'var(--gold)' }
+        $sevClass = ("$($f.Severity ?? 'Info')").ToLower()
+        $statusClass = ("$($f.Status)").ToLower()
         $findingsTableHtml += @"
-<tr>
-<td style="padding:5px 8px;border-bottom:1px solid var(--border);font-size:0.85em;">$(& $esc ($f.CheckId ?? ''))</td>
-<td style="padding:5px 8px;border-bottom:1px solid var(--border);font-size:0.85em;">$(& $esc ($f.Name ?? $f.CheckName ?? ''))</td>
-<td style="padding:5px 8px;border-bottom:1px solid var(--border);font-size:0.85em;color:$sevColor;">$($f.Severity)</td>
-<td style="padding:5px 8px;border-bottom:1px solid var(--border);font-size:0.85em;color:$statusColor;">$($f.Status)</td>
-<td style="padding:5px 8px;border-bottom:1px solid var(--border);font-size:0.85em;">$(& $esc ($f.Category ?? ''))</td>
-</tr>
+    <tr>
+      <td><code>$(& $esc ($f.CheckId ?? ''))</code></td>
+      <td>$(& $esc ($f.Name ?? $f.CheckName ?? ''))</td>
+      <td><span class="badge badge-sev-$sevClass">$(& $esc "$($f.Severity)")</span></td>
+      <td><span class="badge badge-status-$statusClass">$(& $esc "$($f.Status)")</span></td>
+      <td>$(& $esc ($f.Category ?? ''))</td>
+    </tr>
 "@
     }
 
@@ -105,97 +102,96 @@ function Export-DashboardHtml {
         $tTotal = $t.Findings.Count
         $tScore = if ($tTotal -gt 0) { [Math]::Round(100 * ($tTotal - $tFail) / $tTotal, 0) } else { 'N/A' }
         $isActive = $tTotal -gt 0
+        $tScoreColor = if ($isActive) { Get-GuerrillaScoreColorVar -Score ([int]$tScore) } else { 'var(--g-muted)' }
 
         $platformCardsHtml += @"
-<div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:15px;border-left:4px solid $(if ($isActive) { $t.Color } else { 'var(--dim)' });">
-<div style="font-size:1.1em;font-weight:bold;color:$(if ($isActive) { $t.Color } else { 'var(--dim)' });">$($t.Icon) $tName</div>
-$(if ($tTotal -gt 0) {
-"<div style='margin-top:8px;'>Score: <strong>$tScore%</strong> | Checks: $tTotal | Failures: <span style='color:var(--deep-orange)'>$tFail</span></div>"
-} else {
-"<div style='margin-top:8px;color:var(--dim);'>Not scanned</div>"
-})
-</div>
+  <div class="cat-card">
+    <div class="cat-header">
+      <div class="cat-name">$tName</div>
+      <div class="cat-score" style="color:$tScoreColor">$(if ($isActive) { "$tScore%" } else { 'N/A' })</div>
+    </div>
+    $(if ($isActive) {
+        "<div class=`"cat-counts`"><span>Checks: $tTotal</span><span class=`"verdict-fail`">Failures: $tFail</span></div>"
+    } else {
+        "<div class=`"cat-counts`"><span>Not scanned</span></div>"
+    })
+  </div>
 "@
     }
 
-    [void]$html.Append(@"
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Security Dashboard - $(& $esc $OrganizationName)</title>
-<style>
-:root { --bg:#1a1f16; --surface:#242b1e; --surface-alt:#2d3526; --border:#3d4a35; --text:#d4c9a8; --text-muted:#8a8468; --olive:#a8b58b; --amber:#d4883a; --sage:#6b9b6b; --parchment:#d4c4a0; --gold:#c9a84c; --dim:#6b6b5a; --deep-orange:#c75c2e; --dark-red:#8b2500; }
-body { font-family:'Segoe UI',Tahoma,sans-serif; background:var(--bg); color:var(--text); margin:0; padding:20px; }
-.container { max-width:1000px; margin:0 auto; }
-h1 { color:var(--olive); border-bottom:2px solid var(--border); padding-bottom:10px; }
-h2 { color:var(--olive); margin-top:25px; }
-.hero { display:flex; gap:25px; margin:20px 0; }
-.score-section { flex-shrink:0; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:20px; text-align:center; }
-.components-section { flex:1; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:20px; }
-.stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:10px; margin:15px 0; }
-.stat { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:10px; text-align:center; }
-.stat .val { font-size:1.4em; font-weight:bold; }
-.stat .lbl { color:var(--text-muted); font-size:0.8em; }
-.platforms { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin:15px 0; }
-table { width:100%; border-collapse:collapse; background:var(--surface); }
-th { background:var(--surface-alt); color:var(--olive); padding:6px 8px; text-align:left; font-size:0.85em; }
-.footer { color:var(--dim); font-size:0.8em; margin-top:30px; border-top:1px solid var(--border); padding-top:10px; }
-@media print { body { background:#fff; color:#333; } :root { --bg:#fff; --surface:#f9f9f9; --surface-alt:#eee; --border:#ccc; --text:#333; --text-muted:#666; --olive:#5a6b3a; --sage:#3a7a3a; --gold:#8a7a2a; --amber:#aa6a1a; --deep-orange:#aa3a0a; --dark-red:#7a1a00; --dim:#999; } }
-</style>
-</head>
-<body>
-<div class="container">
-<h1>Security Dashboard</h1>
-<p>$(& $esc $OrganizationName) | $timestamp UTC</p>
+    $extraCss = @'
+.comp-row { margin: 0.7rem 0; }
+.comp-head { display: flex; justify-content: space-between; font-size: 0.9rem; }
+.comp-bar-bg { height: 6px; background: var(--g-surface-alt); border-radius: 3px; overflow: hidden; margin-top: 0.3rem; }
+.comp-bar-fill { height: 100%; border-radius: 3px; background: var(--g-accent); }
+'@
 
-<div class="hero">
-<div class="score-section">
-<svg width="140" height="140" viewBox="0 0 140 140">
-<circle cx="70" cy="70" r="50" fill="none" stroke="var(--border)" stroke-width="10"/>
-<circle cx="70" cy="70" r="50" fill="none" stroke="$ringColor" stroke-width="10" stroke-dasharray="314" stroke-dashoffset="$([Math]::Round(314 * (1 - [int]$score / 100), 1))" stroke-linecap="round" transform="rotate(-90 70 70)"/>
-<text x="70" y="65" text-anchor="middle" fill="$ringColor" font-size="28" font-weight="bold">$score</text>
-<text x="70" y="85" text-anchor="middle" fill="var(--text-muted)" font-size="11">$label</text>
-</svg>
-<div style="margin-top:8px;color:var(--text-muted);font-size:0.85em;">Guerrilla Score</div>
+    $subtitle = "$(& $esc $OrganizationName) &middot; Generated: $timestampStr"
+    [void]$html.Append((Get-GuerrillaReportShellStart `
+        -Title 'Security Dashboard' `
+        -Subtitle $subtitle `
+        -HtmlTitle "Security Dashboard - $OrganizationName" `
+        -TopbarMeta 'Dashboard' `
+        -Style $Style -ExtraCss $extraCss))
+
+    [void]$html.Append(@"
+<div class="score-panel">
+  <div class="score-ring">
+    <svg viewBox="0 0 120 120" width="120" height="120">
+      <circle cx="60" cy="60" r="50" fill="none" stroke="var(--g-surface-alt)" stroke-width="10"/>
+      <circle cx="60" cy="60" r="50" fill="none" stroke="$ringColor" stroke-width="10"
+              stroke-dasharray="$circumference" stroke-dashoffset="$dashoffset"
+              stroke-linecap="round"/>
+    </svg>
+    <div class="value">$score</div>
+  </div>
+  <div class="score-detail">
+    <div class="label" style="color:$ringColor">$(& $esc "$label")</div>
+    <div class="desc">Guerrilla Score (0-100)</div>
+    <div class="desc">$totalFindings checks evaluated &middot; $passCount passed, $failCount failed, $warnCount warnings</div>
+  </div>
 </div>
-<div class="components-section">
-<div style="font-weight:bold;color:var(--olive);margin-bottom:10px;">Score Components</div>
+
+$(if ($componentHtml) {
+@"
+<h2>Score Components</h2>
+<div class="card">
 $componentHtml
 </div>
-</div>
+"@
+})
 
-<div class="stats">
-<div class="stat"><div class="val">$totalFindings</div><div class="lbl">Total Checks</div></div>
-<div class="stat"><div class="val" style="color:var(--sage);">$passRate%</div><div class="lbl">Pass Rate</div></div>
-<div class="stat"><div class="val" style="color:var(--deep-orange);">$failCount</div><div class="lbl">Failures</div></div>
-<div class="stat"><div class="val" style="color:var(--gold);">$warnCount</div><div class="lbl">Warnings</div></div>
+<div class="stat-grid">
+  <div class="stat"><span class="value">$totalFindings</span><span class="label">Total Checks</span></div>
+  <div class="stat"><span class="value" style="color:var(--g-ok)">$passRate%</span><span class="label">Pass Rate</span></div>
+  <div class="stat"><span class="value" style="color:var(--g-bad)">$failCount</span><span class="label">Failures</span></div>
+  <div class="stat"><span class="value" style="color:var(--g-warn)">$warnCount</span><span class="label">Warnings</span></div>
 </div>
 
 <h2>Platform Overview</h2>
-<div class="platforms">
+<div class="category-grid">
 $platformCardsHtml
 </div>
 
 $(if ($findingsTableHtml) {
 @"
 <h2>Top Findings</h2>
+<div class="table-wrap">
 <table>
-<tr><th>ID</th><th>Finding</th><th>Severity</th><th>Status</th><th>Category</th></tr>
+<thead><tr><th>ID</th><th>Finding</th><th>Severity</th><th>Status</th><th>Category</th></tr></thead>
+<tbody>
 $findingsTableHtml
+</tbody>
 </table>
-$(if ($sortedFindings.Count -ge 50) { "<p style='color:var(--text-muted);font-size:0.85em;'>Showing top 50 findings. See detailed reports for full listing.</p>" })
+</div>
+$(if ($sortedFindings.Count -ge 50) { "<p class='ap-note'>Showing top 50 findings. See detailed reports for full listing.</p>" })
 "@
 })
-
-<div class="footer">
-<p>Generated by Guerrilla v2.1.0 | $timestamp UTC</p>
-<p>By Jim Tyler, Microsoft MVP &mdash; <a href="https://github.com/jimrtyler">GitHub</a> | <a href="https://linkedin.com/in/jamestyler">LinkedIn</a> | <a href="https://youtube.com/@jimrtyler">YouTube</a></p>
-</div>
-</div>
-</body>
-</html>
 "@)
+
+    [void]$html.Append((Get-GuerrillaReportShellEnd `
+        -FooterNote 'Unified Dashboard' `
+        -TimestampText $timestampStr))
 
     $html.ToString() | Set-Content -Path $OutputPath -Encoding UTF8
     return $OutputPath

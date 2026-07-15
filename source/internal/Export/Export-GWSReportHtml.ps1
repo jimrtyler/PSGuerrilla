@@ -22,8 +22,8 @@ function Export-GWSReportHtml {
         [Parameter(Mandatory)]
         [string]$FilePath,
 
-        [ValidateSet('Guerrilla', 'Professional', 'Slate')]
-        [string]$Style = 'Professional',
+        [ValidateSet('Auto', 'Light', 'Dark', 'Guerrilla', 'Professional', 'Slate')]
+        [string]$Style = 'Auto',
 
         [hashtable]$Branding
     )
@@ -53,268 +53,54 @@ function Export-GWSReportHtml {
     $medCount     = @($failFindings | Where-Object Severity -eq 'Medium').Count
     $lowCount     = @($failFindings | Where-Object Severity -eq 'Low').Count
 
-    # --- Module version ---
-    $moduleVersion = '2.0.0'
-    try {
-        $modVer = $ExecutionContext.SessionState.Module.Version
-        if ($modVer) { $moduleVersion = $modVer.ToString() }
-    } catch { }
-
-    # --- Score color ---
-    $scoreColor = switch ($true) {
-        ($OverallScore -ge 90) { 'var(--sage)';        break }
-        ($OverallScore -ge 75) { 'var(--olive)';       break }
-        ($OverallScore -ge 60) { 'var(--gold)';        break }
-        ($OverallScore -ge 40) { 'var(--amber)';       break }
-        ($OverallScore -ge 20) { 'var(--deep-orange)'; break }
-        default                { 'var(--dark-red)' }
-    }
-
-    $themeStyle   = Get-GuerrillaReportThemeStyleBlock -Style $Style
+    $scoreColor   = Get-GuerrillaScoreColorVar -Score $OverallScore
     $displayLabel = $ScoreLabel
-    $brand        = Get-GuerrillaReportBrandingHtml -Branding $Branding
+
+    $extraCss = @'
+.extra-wrap { display: flex; flex-direction: column; gap: 0.5rem; }
+.extra-links { display: flex; flex-wrap: wrap; gap: 1.2rem; font-size: 0.88rem; margin-top: 0.2rem; }
+.remediation-cell { max-width: 300px; font-size: 0.9em; }
+'@
 
     $html = [System.Text.StringBuilder]::new(65536)
 
-    # ═══════════════════════════════════════════════════════════════
-    # HEAD
-    # ═══════════════════════════════════════════════════════════════
-    $tenantTitle = if ($TenantDomain) { " - $(& $esc $TenantDomain)" } else { '' }
+    # ═══ SHELL + HEADER ═══
+    $domainLine = if ($TenantDomain) { "Domain: $(& $esc $TenantDomain) &middot; " } else { '' }
+    $subtitle = "${domainLine}Generated: $timestampStr &middot; $totalChecks configuration checks evaluated"
+    [void]$html.Append((Get-GuerrillaReportShellStart `
+        -Title 'Google Workspace Report' `
+        -Subtitle $subtitle `
+        -HtmlTitle "Guerrilla Google Workspace Report$(if ($TenantDomain) { " - $TenantDomain" }) - $timestampStr" `
+        -TopbarMeta 'Google Workspace Assessment' `
+        -Style $Style -Branding $Branding -ExtraCss $extraCss))
 
-    [void]$html.Append(@"
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Guerrilla Google Workspace Report$tenantTitle - $timestampStr</title>
-<style>
-$themeStyle
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: var(--font-body);
-    background: var(--bg); color: var(--text);
-    line-height: 1.6; padding: 24px; max-width: 1400px; margin: 0 auto;
-  }
-  h1 { font-size: 1.6em; color: var(--parchment); letter-spacing: 2px; text-transform: uppercase; }
-  h2 {
-    font-size: 1.2em; margin: 32px 0 16px; padding-bottom: 8px; color: var(--parchment);
-    border-bottom: 2px solid var(--border); letter-spacing: 1px; text-transform: uppercase;
-  }
-  h3 { font-size: 1.05em; margin: 16px 0 8px; color: var(--olive); }
-  h4 { font-size: 0.95em; margin: 12px 0 8px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; }
-  .subtitle { color: var(--dim); font-size: 0.85em; margin-bottom: 24px; }
-
-  /* Score Panel */
-  .score-panel {
-    background: var(--surface); border: 2px solid var(--border);
-    border-radius: 4px; padding: 24px 32px; margin-bottom: 24px;
-    display: flex; align-items: center; gap: 32px;
-  }
-  .score-ring {
-    width: 120px; height: 120px; position: relative; flex-shrink: 0;
-  }
-  .score-ring svg { transform: rotate(-90deg); }
-  .score-ring .value {
-    position: absolute; inset: 0; display: flex; align-items: center;
-    justify-content: center; font-size: 2em; font-weight: 700;
-  }
-  .score-detail .label {
-    font-size: 1.3em; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-  }
-  .score-detail .desc { color: var(--dim); font-size: 0.85em; margin-top: 4px; }
-
-  /* Executive Summary */
-  .exec-summary {
-    background: var(--surface-alt); border: 1px solid var(--border); border-left: 4px solid var(--amber);
-    border-radius: 0 4px 4px 0; padding: 16px 20px; margin-bottom: 24px;
-  }
-  .exec-summary h3 { margin-top: 0; color: var(--parchment); }
-  .exec-summary p { margin: 8px 0; font-size: 0.9em; }
-
-  /* Stat cards */
-  .stat-grid {
-    display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px;
-  }
-  .stat-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 4px; padding: 14px 20px; text-align: center;
-    flex: 1 1 140px; min-width: 120px;
-  }
-  .stat-card .value { font-size: 1.8em; font-weight: 700; }
-  .stat-card .label { color: var(--dim); font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px; }
-
-  /* Category cards */
-  .category-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 12px; margin-bottom: 24px;
-  }
-  .cat-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 4px; padding: 16px;
-  }
-  .cat-card .cat-header {
-    display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
-  }
-  .cat-card .cat-name {
-    font-size: 0.9em; font-weight: 700; color: var(--olive); text-transform: uppercase; letter-spacing: 1px;
-  }
-  .cat-card .cat-score { font-size: 1.4em; font-weight: 700; }
-  .cat-card .cat-bar-bg {
-    height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 8px;
-  }
-  .cat-card .cat-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
-  .cat-card .cat-counts { font-size: 0.8em; color: var(--dim); }
-  .cat-card .cat-counts span { margin-right: 10px; }
-
-  /* Badges */
-  .badge {
-    display: inline-block; padding: 2px 8px; border-radius: 2px;
-    font-size: 0.75em; font-weight: 700; letter-spacing: 1px;
-    text-transform: uppercase; font-family: 'Fira Code', 'JetBrains Mono', Consolas, monospace;
-    white-space: nowrap;
-  }
-  .badge-pass { background: var(--pass); color: #d4c9a8; }
-  .badge-fail { background: var(--fail); color: #fff; }
-  .badge-accepted { background: var(--dim); color: var(--text); font-style: italic; }
-  .badge-warn { background: var(--warn); color: #1a1f16; }
-  .badge-skip { background: var(--skip); color: #d4c9a8; }
-  .badge-error { background: var(--skip); color: #d4c9a8; }
-  .badge-critical { background: var(--critical); color: #fff; }
-  .badge-high { background: var(--high); color: #1a1f16; }
-  .badge-medium { background: var(--medium); color: #1a1f16; }
-  .badge-low { background: var(--low); color: #1a1f16; }
-
-  /* Tables */
-  table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 0.85em; }
-  th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
-  th {
-    background: var(--surface); font-weight: 700; font-size: 0.8em; color: var(--dim);
-    text-transform: uppercase; letter-spacing: 1px; position: sticky; top: 0;
-  }
-  tr:nth-child(even) { background: rgba(45, 53, 38, 0.4); }
-  tr:hover { background: rgba(168, 181, 139, 0.08); }
-  td { vertical-align: top; }
-
-  /* Priority table highlight */
-  .priority-table tr td:first-child { font-family: 'Fira Code', 'JetBrains Mono', Consolas, monospace; font-size: 0.85em; }
-
-  /* Collapsible category details */
-  details.cat-detail {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 4px; margin-bottom: 12px;
-  }
-  details.cat-detail summary {
-    padding: 12px 16px; cursor: pointer; list-style: none;
-    display: flex; align-items: center; gap: 12px;
-    font-weight: 700; color: var(--olive); text-transform: uppercase; letter-spacing: 1px;
-  }
-  details.cat-detail summary::-webkit-details-marker { display: none; }
-  details.cat-detail summary::before {
-    content: '\25b6'; font-size: 0.7em; color: var(--dim); transition: transform 0.2s;
-  }
-  details.cat-detail[open] summary::before { transform: rotate(90deg); }
-  details.cat-detail .detail-body { padding: 0 16px 16px; overflow-x: auto; }
-
-  /* Compliance table */
-  .compliance-table td code {
-    display: inline-block; padding: 1px 5px; border-radius: 2px;
-    font-size: 0.85em; margin: 1px 2px; background: rgba(168, 181, 139, 0.1);
-    border: 1px solid var(--border);
-  }
-
-  /* Delta section */
-  .delta-section {
-    background: var(--surface-alt); border: 1px solid var(--border); border-left: 4px solid var(--gold);
-    border-radius: 0 4px 4px 0; padding: 16px 20px; margin-bottom: 24px;
-  }
-  .delta-section h3 { margin-top: 0; color: var(--parchment); }
-  .delta-arrow-up { color: var(--pass); font-weight: 700; }
-  .delta-arrow-down { color: var(--fail); font-weight: 700; }
-  .delta-arrow-same { color: var(--dim); font-weight: 700; }
-
-  code { font-family: 'Fira Code', 'JetBrains Mono', Consolas, monospace; font-size: 0.9em; color: var(--olive); }
-  a { color: var(--gold); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-
-  .remediation-cell { max-width: 300px; font-size: 0.85em; }
-
-  /* Affected accounts + actionable links (extra row beneath a finding) */
-  tr.finding-extra td {
-    background: rgba(199, 92, 46, 0.06);
-    border-left: 3px solid var(--amber);
-    padding: 4px 10px 12px 14px;
-  }
-  tr.finding-extra:hover td { background: rgba(199, 92, 46, 0.06); }
-  .extra-wrap { display: flex; flex-direction: column; gap: 8px; }
-  .affected { font-size: 0.85em; line-height: 1.5; margin-top: 4px; }
-  .affected-label { color: var(--amber); font-weight: 600; }
-  .affected-items { color: var(--text); margin: 4px 0 0 0; padding-left: 20px; }
-  .affected-items li { word-break: break-word; margin: 1px 0; }
-  .affected-items li.more { list-style: none; margin-left: -20px; font-style: italic; opacity: .7; color: var(--dim); }
-  .extra-links { display: flex; flex-wrap: wrap; gap: 18px; font-size: 0.85em; margin-top: 2px; }
-  .extra-links .why a { color: var(--gold); font-weight: 700; }
-  .extra-links .admin-link { color: var(--olive); font-weight: 700; }
-
-  /* Print styles */
-  @media print {
-    body { background: #fff; color: #000; }
-    .score-panel, .stat-card, .cat-card, .cat-detail, .exec-summary, .delta-section {
-      border-color: #ccc; background: #f9f9f9;
-    }
-    details.cat-detail { break-inside: avoid; }
-    a { color: #336; }
-  }
-</style>
-</head>
-<body>
-"@)
-
-    # ═══════════════════════════════════════════════════════════════
-    # HEADER
-    # ═══════════════════════════════════════════════════════════════
-    $domainLine = if ($TenantDomain) { " &mdash; $(& $esc $TenantDomain)" } else { '' }
-
-    [void]$html.Append(@"
-$($brand.Banner)
-$($brand.Header)
-<h1>&#x1F6E1; Guerrilla Google Workspace Report</h1>
-<div class="subtitle">
-  Generated $timestampStr$domainLine &mdash;
-  $totalChecks configuration checks evaluated
-</div>
-"@)
-
-    # ═══════════════════════════════════════════════════════════════
-    # SCORE PANEL (SVG ring)
-    # ═══════════════════════════════════════════════════════════════
-    $circumference = [Math]::Round(2 * [Math]::PI * 52, 1)  # radius 52
-    $dashOffset    = [Math]::Round($circumference - ($circumference * $OverallScore / 100), 1)
+    # ═══ SCORE PANEL ═══
+    $circumference = 2 * [Math]::PI * 50
+    $dashoffset = $circumference * (1 - ($OverallScore / 100))
 
     [void]$html.Append(@"
 <div class="score-panel">
   <div class="score-ring">
-    <svg width="120" height="120" viewBox="0 0 120 120">
-      <circle cx="60" cy="60" r="52" fill="none" stroke="var(--border)" stroke-width="8"/>
-      <circle cx="60" cy="60" r="52" fill="none" stroke="$scoreColor" stroke-width="8"
-              stroke-dasharray="$circumference" stroke-dashoffset="$dashOffset"
+    <svg viewBox="0 0 120 120" width="120" height="120">
+      <circle cx="60" cy="60" r="50" fill="none" stroke="var(--g-surface-alt)" stroke-width="10"/>
+      <circle cx="60" cy="60" r="50" fill="none" stroke="$scoreColor" stroke-width="10"
+              stroke-dasharray="$circumference" stroke-dashoffset="$dashoffset"
               stroke-linecap="round"/>
     </svg>
-    <div class="value" style="color:$scoreColor">$OverallScore</div>
+    <div class="value">$OverallScore</div>
   </div>
   <div class="score-detail">
     <div class="label" style="color:$scoreColor">$(& $esc $displayLabel)</div>
-    <div class="desc">Google Workspace Score (0&ndash;100). Weighted assessment of $totalChecks Google Workspace configuration checks.</div>
+    <div class="desc">Google Workspace security posture score (0-100)</div>
+    <div class="desc">$totalChecks checks evaluated &middot; $passCount passed, $failCount failed, $warnCount warnings, $skipCount skipped</div>
   </div>
 </div>
 "@)
 
-    # ═══════════════════════════════════════════════════════════════
-    # WHAT CHANGED SINCE LAST RUN (shared section, before findings)
+    # ═══ WHAT CHANGED SINCE LAST RUN — shared section, before findings ═══
     [void]$html.Append((Get-GuerrillaComparisonSectionHtml -RunDiff $RunDiff -Esc $esc))
 
-    # EXECUTIVE SUMMARY
-    # ═══════════════════════════════════════════════════════════════
+    # ═══ EXECUTIVE SUMMARY ═══
     $summaryVerdict = if ($critCount -gt 0) {
         "Immediate action required. $critCount critical-severity configuration failure(s) detected that expose the tenant to significant risk."
     } elseif ($highCount -gt 0) {
@@ -326,115 +112,111 @@ $($brand.Header)
     } else {
         "All checks passed. The tenant configuration meets baseline security expectations."
     }
+    $noticeClass = if ($critCount -gt 0) { 'notice-bad' } elseif ($highCount -gt 0 -or $medCount -gt 0) { 'notice-warn' } else { 'notice-ok' }
 
     [void]$html.Append(@"
-<div class="exec-summary">
+<div class="notice $noticeClass">
   <h3>Executive Summary</h3>
-  <p><strong>Assessment:</strong> $summaryVerdict</p>
+  <p><strong>Assessment:</strong> $(& $esc $summaryVerdict)</p>
   <p><strong>Scope:</strong> $totalChecks configuration checks across $($CategoryScores.Count) categories.</p>
   <p><strong>Results:</strong> $passCount passed, $failCount failed, $warnCount warnings, $skipCount skipped.</p>
 "@)
     if ($critCount -gt 0) {
-        [void]$html.Append("<p style=`"color:var(--critical)`"><strong>&#9888; $critCount critical finding(s) require immediate remediation.</strong></p>")
+        [void]$html.Append("<p style=`"color:var(--g-bad)`"><strong>$critCount critical finding(s) require immediate remediation.</strong></p>")
     }
     [void]$html.Append('</div>')
 
-    # --- Stat cards ---
-    [void]$html.Append(@"
-<div class="stat-grid">
-  <div class="stat-card"><div class="value" style="color:var(--parchment)">$totalChecks</div><div class="label">Total Checks</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--pass)">$passCount</div><div class="label">Passed</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--fail)">$failCount</div><div class="label">Failed</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--warn)">$warnCount</div><div class="label">Warnings</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--skip)">$skipCount</div><div class="label">Skipped</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--critical)">$critCount</div><div class="label">Critical</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--high)">$highCount</div><div class="label">High</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--medium)">$medCount</div><div class="label">Medium</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--low)">$lowCount</div><div class="label">Low</div></div>
-</div>
+    # ═══ STAT CARDS ═══
+    [void]$html.Append('<div class="stat-grid">')
+    $statCards = @(
+        @{ Value = $totalChecks; Label = 'Total Checks'; Color = 'var(--g-heading)' }
+        @{ Value = $passCount;   Label = 'Passed';       Color = 'var(--g-ok)' }
+        @{ Value = $failCount;   Label = 'Failed';       Color = 'var(--g-bad)' }
+        @{ Value = $warnCount;   Label = 'Warnings';     Color = 'var(--g-warn)' }
+        @{ Value = $skipCount;   Label = 'Skipped';      Color = 'var(--g-muted)' }
+        @{ Value = $critCount;   Label = 'Critical';     Color = 'var(--g-sev-critical)' }
+        @{ Value = $highCount;   Label = 'High';         Color = 'var(--g-sev-high)' }
+        @{ Value = $medCount;    Label = 'Medium';       Color = 'var(--g-sev-medium)' }
+        @{ Value = $lowCount;    Label = 'Low';          Color = 'var(--g-sev-low)' }
+    )
+    foreach ($card in $statCards) {
+        [void]$html.Append(@"
+  <div class="stat">
+    <span class="value" style="color:$($card.Color)">$($card.Value)</span>
+    <span class="label">$($card.Label)</span>
+  </div>
 "@)
+    }
+    [void]$html.Append('</div>')
 
-    # ═══════════════════════════════════════════════════════════════
-    # SECURITY MATURITY (shared section — spans the GWS categories)
-    # ═══════════════════════════════════════════════════════════════
+    # ═══ SECURITY MATURITY + INDICATORS OF EXPOSURE — shared sections ═══
     [void]$html.Append((Get-GuerrillaMaturitySectionHtml -Findings $Findings -Esc $esc))
     [void]$html.Append((Get-GuerrillaIndicatorsOfExposureHtml -Findings $Findings -Esc $esc))
 
-    # ═══════════════════════════════════════════════════════════════
-    # CATEGORY SCORE DASHBOARD
-    # ═══════════════════════════════════════════════════════════════
-    [void]$html.Append('<h2>Category Scores</h2>')
-    [void]$html.Append('<div class="category-grid">')
-
+    # ═══ CATEGORY SCORES ═══
+    [void]$html.Append('<h2>Category Scores</h2><div class="category-grid">')
     foreach ($cat in ($CategoryScores.GetEnumerator() | Sort-Object { $_.Value.Score })) {
         $catScore = $cat.Value.Score
-        $catColor = switch ($true) {
-            ($catScore -ge 90) { 'var(--sage)';        break }
-            ($catScore -ge 75) { 'var(--olive)';       break }
-            ($catScore -ge 60) { 'var(--gold)';        break }
-            ($catScore -ge 40) { 'var(--amber)';       break }
-            default            { 'var(--deep-orange)' }
-        }
-
+        $catColor = Get-GuerrillaScoreColorVar -Score $catScore
         [void]$html.Append(@"
-<div class="cat-card">
-  <div class="cat-header">
-    <span class="cat-name">$(& $esc $cat.Key)</span>
-    <span class="cat-score" style="color:$catColor">$catScore</span>
+  <div class="cat-card">
+    <div class="cat-header">
+      <div class="cat-name">$(& $esc $cat.Key)</div>
+      <div class="cat-score" style="color:$catColor">$catScore</div>
+    </div>
+    <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:${catScore}%;background:$catColor"></div></div>
+    <div class="cat-counts">
+      <span class="verdict-pass">Pass: $($cat.Value.Pass)</span>
+      <span class="verdict-fail">Fail: $($cat.Value.Fail)</span>
+      <span class="verdict-warn">Warn: $($cat.Value.Warn)</span>
+    </div>
   </div>
-  <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:${catScore}%;background:$catColor"></div></div>
-  <div class="cat-counts">
-    <span style="color:var(--pass)">Pass: $($cat.Value.Pass)</span>
-    <span style="color:var(--fail)">Fail: $($cat.Value.Fail)</span>
-    <span style="color:var(--warn)">Warn: $($cat.Value.Warn)</span>
-  </div>
-</div>
 "@)
     }
     [void]$html.Append('</div>')
 
-    # ═══════════════════════════════════════════════════════════════
-    # CRITICAL & HIGH FINDINGS TABLE
-    # ═══════════════════════════════════════════════════════════════
+    # ═══ INTERACTIVE FILTER BAR (live status/severity/search over the findings tables below) ═══
+    [void]$html.Append((Get-GuerrillaFindingsFilterHtml))
+
+    # ═══ CRITICAL & HIGH FINDINGS TABLE ═══
     $priorityFindings = @($failFindings | Where-Object { $_.Severity -in @('Critical', 'High') } |
         Sort-Object { if ($_.Severity -eq 'Critical') { 0 } else { 1 } }, CheckId)
 
     if ($priorityFindings.Count -gt 0) {
-        [void]$html.Append('<h2>Priority Findings &mdash; Critical &amp; High</h2>')
-        [void]$html.Append(@'
+        [void]$html.Append(@"
+<h2>Priority Findings &middot; Critical &amp; High</h2>
+<div class="table-wrap">
 <table class="priority-table">
-  <tr>
-    <th>Check ID</th><th>Check Name</th><th>Category</th><th>Severity</th><th>Current Value</th><th>Remediation</th>
-  </tr>
-'@)
+  <thead><tr><th>Check ID</th><th>Check Name</th><th>Category</th><th>Severity</th><th>Current Value</th><th>Remediation</th></tr></thead>
+  <tbody>
+"@)
         foreach ($f in $priorityFindings) {
             $sevClass = $f.Severity.ToLower()
+            $rowText = & $esc (("$($f.CheckId) $($f.CheckName) $($f.Category) $($f.CurrentValue)").ToLower())
             $remParts = [System.Collections.Generic.List[string]]::new()
             if ($f.RemediationUrl) {
-                $remParts.Add("<a href=`"$(& $esc $f.RemediationUrl)`" target=`"_blank`" rel=`"noopener`">&#x2699; Fix in Admin Console &#x2197;</a>")
+                $remParts.Add("<a href=`"$(& $esc $f.RemediationUrl)`" target=`"_blank`" rel=`"noopener`">Fix in Admin Console</a>")
             }
             if ($f.ReferenceUrl) {
-                $remParts.Add("<a href=`"$(& $esc $f.ReferenceUrl)`" target=`"_blank`" rel=`"noopener`" style=`"color:var(--gold)`">&#9888; Why it's unsafe &#x2197;</a>")
+                $remParts.Add("<a href=`"$(& $esc $f.ReferenceUrl)`" target=`"_blank`" rel=`"noopener`">Why it's unsafe</a>")
             }
-            $remLink = if ($remParts.Count -gt 0) { $remParts -join '<br>' } else { '&mdash;' }
+            $remLink = if ($remParts.Count -gt 0) { $remParts -join '<br>' } else { '' }
 
             [void]$html.Append(@"
-  <tr>
-    <td><code>$(& $esc $f.CheckId)</code></td>
-    <td>$(& $esc $f.CheckName)</td>
-    <td>$(& $esc $f.Category)</td>
-    <td><span class="badge badge-$sevClass">$($f.Severity)</span></td>
-    <td>$(& $esc $f.CurrentValue)</td>
-    <td>$remLink</td>
-  </tr>
+    <tr class="gg-row" data-status="$(& $esc $f.Status)" data-sev="$(& $esc $f.Severity)" data-text="$rowText">
+      <td><code>$(& $esc $f.CheckId)</code></td>
+      <td>$(& $esc $f.CheckName)</td>
+      <td>$(& $esc $f.Category)</td>
+      <td><span class="badge badge-sev-$sevClass">$(& $esc $f.Severity)</span></td>
+      <td>$(& $esc $f.CurrentValue)</td>
+      <td>$remLink</td>
+    </tr>
 "@)
         }
-        [void]$html.Append('</table>')
+        [void]$html.Append('</tbody></table></div>')
     }
 
-    # ═══════════════════════════════════════════════════════════════
-    # PER-CATEGORY DETAIL SECTIONS
-    # ═══════════════════════════════════════════════════════════════
+    # ═══ PER-CATEGORY DETAIL SECTIONS ═══
     [void]$html.Append('<h2>Detailed Findings by Category</h2>')
 
     $categories = $Findings | Group-Object -Property Category | Sort-Object Name
@@ -445,42 +227,45 @@ $($brand.Header)
             switch ($_.Severity) { 'Critical' { 0 } 'High' { 1 } 'Medium' { 2 } 'Low' { 3 } default { 4 } }
         }, CheckId)
 
-        $catHasFailures = @($catFindings | Where-Object Status -eq 'FAIL').Count -gt 0
+        $catPass = @($catFindings | Where-Object Status -eq 'PASS').Count
+        $catFail = @($catFindings | Where-Object Status -eq 'FAIL').Count
+        $catWarn = @($catFindings | Where-Object Status -eq 'WARN').Count
+
+        $catHasFailures = $catFail -gt 0
         $openAttr = if ($catHasFailures) { ' open' } else { '' }
 
         $catInfo = $CategoryScores[$catName]
-        $catScoreStr = if ($catInfo) { " &mdash; Score: $($catInfo.Score)/100" } else { '' }
+        $catScoreStr = if ($catInfo) { "Score: $($catInfo.Score)/100 &middot; " } else { '' }
 
-        [void]$html.Append("<details class=`"cat-detail`"$openAttr>")
-        [void]$html.Append("<summary>$(& $esc $catName)$catScoreStr <span style=`"color:var(--dim);font-weight:400;font-size:0.85em;text-transform:none`">($($catFindings.Count) checks)</span></summary>")
-        [void]$html.Append('<div class="detail-body">')
-        [void]$html.Append(@'
-<table>
-  <tr>
-    <th>Check ID</th><th>Name</th><th>Severity</th><th>Status</th>
-    <th>Current Value</th><th>Recommended Value</th><th>Remediation Steps</th>
-  </tr>
-'@)
+        [void]$html.Append(@"
+<details class="cat-detail"$openAttr>
+  <summary>$(& $esc $catName)<span class="sum-counts">$catScoreStr$($catFindings.Count) checks &middot; P:$catPass F:$catFail W:$catWarn</span></summary>
+  <div class="detail-body">
+    <table>
+      <thead><tr><th>Check ID</th><th>Name</th><th>Severity</th><th>Status</th><th>Current Value</th><th>Recommended Value</th><th>Remediation Steps</th></tr></thead>
+      <tbody>
+"@)
         foreach ($f in $catFindings) {
             $isAccepted  = try { Test-RiskAccepted -CheckId $f.CheckId } catch { $false }
             $statusClass = if ($isAccepted) { 'accepted' } else { $f.Status.ToLower() }
             $statusLabel = if ($isAccepted) { 'ACCEPTED' } else { $f.Status }
             $sevClass    = $f.Severity.ToLower()
+            $rowText     = & $esc (("$($f.CheckId) $($f.CheckName) $($f.Category) $($f.CurrentValue)").ToLower())
 
             $remedSteps = if ($f.RemediationSteps) {
                 "<div class=`"remediation-cell`">$(& $esc $f.RemediationSteps)</div>"
-            } else { '&mdash;' }
+            } else { '' }
 
             [void]$html.Append(@"
-  <tr>
-    <td><code>$(& $esc $f.CheckId)</code></td>
-    <td>$(& $esc $f.CheckName)</td>
-    <td><span class="badge badge-$sevClass">$($f.Severity)</span></td>
-    <td><span class="badge badge-$statusClass">$statusLabel</span></td>
-    <td>$(& $esc $f.CurrentValue)</td>
-    <td>$(& $esc $f.RecommendedValue)</td>
-    <td>$remedSteps</td>
-  </tr>
+        <tr class="gg-row" data-status="$(& $esc $f.Status)" data-sev="$(& $esc $f.Severity)" data-text="$rowText">
+          <td><code>$(& $esc $f.CheckId)</code></td>
+          <td>$(& $esc $f.CheckName)</td>
+          <td><span class="badge badge-sev-$sevClass">$(& $esc $f.Severity)</span></td>
+          <td><span class="badge badge-status-$statusClass">$(& $esc $statusLabel)</span></td>
+          <td>$(& $esc $f.CurrentValue)</td>
+          <td>$(& $esc $f.RecommendedValue)</td>
+          <td>$remedSteps</td>
+        </tr>
 "@)
 
             # --- Extra row: affected accounts + why-unsafe article + admin console deep-link ---
@@ -489,24 +274,21 @@ $($brand.Header)
             if ($f.Status -in @('FAIL', 'WARN', 'ERROR')) {
                 if ($f.ReferenceUrl) {
                     $whyTitle = if ($f.ReferenceTitle) { $f.ReferenceTitle } else { 'Why this is unsafe' }
-                    $linkParts.Add("<span class=`"why`">&#9888; <a href=`"$(& $esc $f.ReferenceUrl)`" target=`"_blank`" rel=`"noopener`">Why this is unsafe: $(& $esc $whyTitle) &#x2197;</a></span>")
+                    $linkParts.Add("<span class=`"why`"><a href=`"$(& $esc $f.ReferenceUrl)`" target=`"_blank`" rel=`"noopener`">Why this is unsafe: $(& $esc $whyTitle)</a></span>")
                 }
                 if ($f.RemediationUrl) {
-                    $linkParts.Add("<a class=`"admin-link`" href=`"$(& $esc $f.RemediationUrl)`" target=`"_blank`" rel=`"noopener`">&#x2699; Fix in Admin Console &#x2197;</a>")
+                    $linkParts.Add("<a class=`"admin-link`" href=`"$(& $esc $f.RemediationUrl)`" target=`"_blank`" rel=`"noopener`">Fix in Admin Console</a>")
                 }
             }
             $linksHtml = if ($linkParts.Count -gt 0) { "<div class=`"extra-links`">$($linkParts -join '')</div>" } else { '' }
             if ($affectedHtml -or $linksHtml) {
-                [void]$html.Append("<tr class=`"finding-extra`"><td colspan=`"7`"><div class=`"extra-wrap`">$affectedHtml$linksHtml</div></td></tr>")
+                [void]$html.Append("<tr class=`"gg-row finding-extra`" data-status=`"$(& $esc $f.Status)`" data-sev=`"$(& $esc $f.Severity)`" data-text=`"$rowText`"><td colspan=`"7`"><div class=`"extra-wrap`">$affectedHtml$linksHtml</div></td></tr>")
             }
         }
-        [void]$html.Append('</table>')
-        [void]$html.Append('</div></details>')
+        [void]$html.Append('</tbody></table></div></details>')
     }
 
-    # ═══════════════════════════════════════════════════════════════
-    # COMPLIANCE CROSS-REFERENCE
-    # ═══════════════════════════════════════════════════════════════
+    # ═══ COMPLIANCE CROSS-REFERENCE ═══
     $complianceFindings = @($failFindings | Where-Object {
         ($_.Compliance.NistSp80053 -and $_.Compliance.NistSp80053.Count -gt 0) -or
         ($_.Compliance.MitreAttack -and $_.Compliance.MitreAttack.Count -gt 0) -or
@@ -516,58 +298,46 @@ $($brand.Header)
     }, CheckId)
 
     if ($complianceFindings.Count -gt 0) {
-        [void]$html.Append('<h2>Compliance Cross-Reference</h2>')
-        [void]$html.Append(@'
+        [void]$html.Append(@"
+<h2>Compliance Cross-Reference</h2>
+<div class="table-wrap">
 <table class="compliance-table">
-  <tr>
-    <th>Check ID</th><th>Check Name</th><th>Severity</th>
-    <th>NIST SP 800-53</th><th>MITRE ATT&amp;CK</th><th>CIS Benchmark</th>
-  </tr>
-'@)
+  <thead><tr><th>Check ID</th><th>Check Name</th><th>Severity</th><th>NIST SP 800-53</th><th>MITRE ATT&amp;CK</th><th>CIS Benchmark</th></tr></thead>
+  <tbody>
+"@)
         foreach ($f in $complianceFindings) {
             $sevClass = $f.Severity.ToLower()
 
             $nistCodes = if ($f.Compliance.NistSp80053 -and $f.Compliance.NistSp80053.Count -gt 0) {
                 ($f.Compliance.NistSp80053 | ForEach-Object { "<code>$(& $esc $_)</code>" }) -join ' '
-            } else { '&mdash;' }
+            } else { '' }
 
             $mitreCodes = if ($f.Compliance.MitreAttack -and $f.Compliance.MitreAttack.Count -gt 0) {
                 ($f.Compliance.MitreAttack | ForEach-Object { "<code>$(& $esc $_)</code>" }) -join ' '
-            } else { '&mdash;' }
+            } else { '' }
 
             $cisCodes = if ($f.Compliance.CisBenchmark -and $f.Compliance.CisBenchmark.Count -gt 0) {
                 ($f.Compliance.CisBenchmark | ForEach-Object { "<code>$(& $esc $_)</code>" }) -join ' '
-            } else { '&mdash;' }
+            } else { '' }
 
             [void]$html.Append(@"
-  <tr>
-    <td><code>$(& $esc $f.CheckId)</code></td>
-    <td>$(& $esc $f.CheckName)</td>
-    <td><span class="badge badge-$sevClass">$($f.Severity)</span></td>
-    <td>$nistCodes</td>
-    <td>$mitreCodes</td>
-    <td>$cisCodes</td>
-  </tr>
+    <tr>
+      <td><code>$(& $esc $f.CheckId)</code></td>
+      <td>$(& $esc $f.CheckName)</td>
+      <td><span class="badge badge-sev-$sevClass">$(& $esc $f.Severity)</span></td>
+      <td>$nistCodes</td>
+      <td>$mitreCodes</td>
+      <td>$cisCodes</td>
+    </tr>
 "@)
         }
-        [void]$html.Append('</table>')
+        [void]$html.Append('</tbody></table></div>')
     }
 
-    # ═══════════════════════════════════════════════════════════════
-    # FOOTER
-    # ═══════════════════════════════════════════════════════════════
-    [void]$html.Append(@"
-<div style="margin-top: 40px; padding-top: 16px; border-top: 2px solid var(--border);
-            color: var(--dim); font-size: 0.8em; text-align: center; letter-spacing: 1px;">
-  &#x1F6E1; Guerrilla Google Workspace Report &nbsp;|&nbsp;
-  $timestampStr &nbsp;|&nbsp;
-  Generated by Guerrilla v$moduleVersion &nbsp;|&nbsp;
-  $totalChecks checks &nbsp;|&nbsp; Score: $OverallScore/100 ($displayLabel)
-  <br>By Jim Tyler, Microsoft MVP &nbsp;|&nbsp; <a href="https://github.com/jimrtyler" style="color:var(--dim)">GitHub</a> &nbsp;|&nbsp; <a href="https://linkedin.com/in/jamestyler" style="color:var(--dim)">LinkedIn</a> &nbsp;|&nbsp; <a href="https://youtube.com/@jimrtyler" style="color:var(--dim)">YouTube</a>
-</div>
-</body>
-</html>
-"@)
+    # ═══ FOOTER + SHELL END ═══
+    [void]$html.Append((Get-GuerrillaReportShellEnd `
+        -FooterNote 'Google Workspace Audit' `
+        -TimestampText $timestampStr))
 
     [System.IO.File]::WriteAllText($FilePath, $html.ToString(), [System.Text.Encoding]::UTF8)
 }

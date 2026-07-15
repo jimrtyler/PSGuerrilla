@@ -79,7 +79,7 @@ Add-R 'helper: Expected service-acct path excluded'  (-not ($h.Paths -match 'MSO
 Add-R 'helper: chain data reads both shapes'    ($h.ChainData.Count -eq 2) "got=$($h.ChainData.Count)"
 Add-R 'helper: hop count derived when no Length' (@($h.ChainData | Where-Object { $_.Path -match 'AdminSDHolder' }).Length -eq 1) ''
 Add-R 'helper: OmitIfAbsent => empty on GWS'    ([string]::IsNullOrEmpty($h.PathsOmitGWS)) ''
-Add-R 'helper: level color maps'                ($h.Color3 -eq 'var(--gold)') "got=$($h.Color3)"
+Add-R 'helper: level color maps'                ($h.Color3 -eq 'var(--g-sev-medium)') "got=$($h.Color3)"
 Add-R 'helper: IOE emits ranked section'        (($h.Ioe -match '<h2>Indicators of Exposure</h2>') -and ($h.Ioe -match 'ioe-item')) ''
 Add-R 'helper: IOE Critical ranked first'       ($h.Ioe -match '(?s)Indicators of Exposure.*?sev-critical') ''
 Add-R 'helper: IOE empty when all pass'         ([string]::IsNullOrEmpty($h.IoeAllPass)) ''

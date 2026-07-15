@@ -32,8 +32,8 @@
 #>
 [CmdletBinding()]
 param(
-    [ValidateSet('Guerrilla', 'Professional', 'Slate')]
-    [string]$Style = 'Guerrilla'
+    [ValidateSet('Auto', 'Light', 'Dark', 'Guerrilla', 'Professional', 'Slate')]
+    [string]$Style = 'Auto'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -46,11 +46,11 @@ $env:PSGUERRILLA_QUIET = $null
 $samplesDir = $PSScriptRoot
 
 # Non-default themes are written to suffixed showcase files (e.g.
-# GWS-AllFail-Professional.html) and carry demo white-label branding so
-# the professional look and the firm header are both visible. The default
-# 'Guerrilla' run keeps the canonical committed filenames and no branding.
-$styleSuffix = if ($Style -eq 'Guerrilla') { '' } else { "-$Style" }
-$demoBranding = if ($Style -eq 'Guerrilla') { $null } else {
+# GWS-AllFail-Dark.html) and carry demo white-label branding so the forced
+# theme and the firm header are both visible. The default 'Auto' run keeps
+# the canonical committed filenames and no branding.
+$styleSuffix = if ($Style -eq 'Auto') { '' } else { "-$Style" }
+$demoBranding = if ($Style -eq 'Auto') { $null } else {
     @{
         FirmName        = 'Northwind Security'
         ConsultantName  = 'A. Analyst'
@@ -466,9 +466,9 @@ Write-Host "  -> $campaignPath ($($campaignFindings.Count) checks, score: $($cam
 # ============================================================================
 # REPORT 5: Technical (all checks) — the README-linked sample at the repo root
 # ============================================================================
-# Only (re)generated for the default Guerrilla style; the README links this single file, so keeping
+# Only (re)generated for the default Auto style; the README links this single file, so keeping
 # it in the generator means it can never silently fall behind the report templates again.
-if ($Style -eq 'Guerrilla') {
+if ($Style -eq 'Auto') {
     Write-Host 'Generating Technical report (README sample)...' -ForegroundColor Cyan
     $techPath = Join-Path $PSScriptRoot '../Guerrilla-Sample-Report.html'
     & $mod {

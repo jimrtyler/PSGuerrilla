@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+## [2.50.0] - 2026-07-15
+
+### Changed
+- **Every generated report is rebuilt from scratch on the website's design system, so guerrilla.army, the desktop GUI, and the HTML reports now read as one product.** All ten HTML outputs (the AD, Entra, and Google Workspace reports, the unified Campaign report, the trend report, the dashboard, the technical report, the executive summary, the remediation playbook, and the budget justification) share a single theme engine (`Get-GuerrillaReportTheme`) whose light and dark palettes are a mirror of the site's contrast-verified design tokens, one shared component stylesheet (soft cards, quiet pill badges, stat tiles, light table rules, the system font stack), and one shared shell: a sticky header with the Guerrilla wordmark and a light/dark toggle, the white-label banner and firm header when branding is configured, and the standard footer. Reports default to following the viewer's OS theme (`-ReportStyle Auto`), and the in-report toggle switches instantly with the choice remembered per browser; `Light` and `Dark` force an initial theme. The legacy style names remain accepted everywhere they were before, in the cmdlets, in `output.reportStyle` config, and in the sample generator: `Professional` maps to Light, and `Guerrilla` and `Slate` map to Dark. Printing (and `Export-ReportPdf`) always renders the light palette. The interactive findings filter, run comparison, Security Maturity, Indicators of Exposure, Attack-Path Cartography, and attack-path sections carry over restyled; none of their logic changed, and the full report-section test suite passes unchanged. The GUI's report-style option now offers Auto, Light, and Dark.
+
 ## [2.49.0] - 2026-07-14
 
 ### Changed

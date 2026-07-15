@@ -115,8 +115,8 @@ function Invoke-Campaign {
         [string]$ConfigFile,
         [string]$VaultName = 'Guerrilla',
 
-        [ValidateSet('Guerrilla', 'Professional', 'Slate')]
-        [string]$ReportStyle = 'Professional',
+        [ValidateSet('Auto', 'Light', 'Dark', 'Guerrilla', 'Professional', 'Slate')]
+        [string]$ReportStyle = 'Auto',
 
         [switch]$TestMode
     )
@@ -552,7 +552,7 @@ function Invoke-Campaign {
         }
 
         try {
-            if (-not $PSBoundParameters.ContainsKey('ReportStyle') -and $config -and $config.output -and ($config.output.reportStyle -in 'Guerrilla', 'Professional', 'Slate')) {
+            if (-not $PSBoundParameters.ContainsKey('ReportStyle') -and $config -and $config.output -and ($config.output.reportStyle -in 'Auto', 'Light', 'Dark', 'Guerrilla', 'Professional', 'Slate')) {
                 $ReportStyle = [string]$config.output.reportStyle
             }
             $htmlPath = Join-Path $outDir "$baseName.html"

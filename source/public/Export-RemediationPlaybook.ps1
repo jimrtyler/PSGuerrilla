@@ -17,6 +17,8 @@ function Export-RemediationPlaybook {
         Organization name for the report header.
     .PARAMETER MaxCostTier
         Maximum cost tier to include. Default: Medium.
+    .PARAMETER Style
+        Report style: Auto (follow the OS), Light, or Dark. Legacy names accepted.
     .EXAMPLE
         Export-RemediationPlaybook -OrganizationName 'Springfield USD'
     .EXAMPLE
@@ -28,7 +30,10 @@ function Export-RemediationPlaybook {
         [string]$OutputPath,
         [string]$OrganizationName = 'Organization',
         [ValidateSet('Free', 'Low', 'Medium', 'High', 'Enterprise')]
-        [string]$MaxCostTier = 'Medium'
+        [string]$MaxCostTier = 'Medium',
+
+        [ValidateSet('Auto', 'Light', 'Dark', 'Guerrilla', 'Professional', 'Slate')]
+        [string]$Style = 'Auto'
     )
 
     if (-not $OutputPath) { $OutputPath = Join-Path (Get-Location) 'Guerrilla-Remediation-Playbook.html' }
@@ -76,41 +81,30 @@ function Export-RemediationPlaybook {
 
     # Group by severity phase
     $phases = @(
-        @{ Name = 'Phase 1: Critical Fixes'; Severity = 'Critical'; Color = 'var(--dark-red)' }
-        @{ Name = 'Phase 2: High Priority'; Severity = 'High'; Color = 'var(--deep-orange)' }
-        @{ Name = 'Phase 3: Medium Priority'; Severity = 'Medium'; Color = 'var(--gold)' }
-        @{ Name = 'Phase 4: Low Priority'; Severity = 'Low'; Color = 'var(--sage)' }
+        @{ Name = 'Phase 1: Critical Fixes'; Severity = 'Critical' }
+        @{ Name = 'Phase 2: High Priority'; Severity = 'High' }
+        @{ Name = 'Phase 3: Medium Priority'; Severity = 'Medium' }
+        @{ Name = 'Phase 4: Low Priority'; Severity = 'Low' }
     )
 
-    [void]$html.Append(@"
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Remediation Playbook - $(& $esc $OrganizationName)</title>
-<style>
-:root { --bg:#1a1f16; --surface:#242b1e; --surface-alt:#2d3526; --border:#3d4a35; --text:#d4c9a8; --text-muted:#8a8468; --olive:#a8b58b; --amber:#d4883a; --sage:#6b9b6b; --parchment:#d4c4a0; --gold:#c9a84c; --dim:#6b6b5a; --deep-orange:#c75c2e; --dark-red:#8b2500; }
-body { font-family:'Segoe UI',Tahoma,sans-serif; background:var(--bg); color:var(--text); margin:0; padding:20px; }
-.container { max-width:900px; margin:0 auto; }
-h1 { color:var(--olive); border-bottom:2px solid var(--border); padding-bottom:10px; }
-h2 { margin-top:30px; padding:8px 12px; border-radius:4px; }
-.item { background:var(--surface); border:1px solid var(--border); border-radius:6px; margin:12px 0; padding:15px; }
-.item-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-.item-header .title { font-weight:bold; }
-.meta { display:flex; gap:12px; color:var(--text-muted); font-size:0.85em; }
-.steps { margin:8px 0; padding-left:20px; }
-.steps li { margin:6px 0; }
-pre { background:var(--surface-alt); padding:8px; border-radius:4px; font-size:0.85em; overflow-x:auto; }
-.badge { display:inline-block; padding:2px 8px; border-radius:3px; font-size:0.75em; font-weight:bold; }
-.footer { color:var(--dim); font-size:0.8em; margin-top:40px; border-top:1px solid var(--border); padding-top:10px; }
-@media print { body { background:#fff; color:#333; } .item { page-break-inside:avoid; } :root { --bg:#fff; --surface:#f9f9f9; --surface-alt:#eee; --border:#ccc; --text:#333; --text-muted:#666; --olive:#5a6b3a; --sage:#3a7a3a; --gold:#8a7a2a; --amber:#aa6a1a; --deep-orange:#aa3a0a; --dark-red:#7a1a00; --dim:#999; } }
-</style>
-</head>
-<body>
-<div class="container">
-<h1>Remediation Playbook</h1>
-<p>$(& $esc $OrganizationName) | $($actionable.Count) actionable item(s) | Max cost: $MaxCostTier | $timestamp UTC</p>
-"@)
+    $extraCss = @'
+h2.pb-phase { background: var(--g-surface); border-left: 3px solid var(--g-border-strong); border-radius: var(--radius-sm); padding: 0.55rem 1rem; }
+.pb-item { background: var(--g-surface); border-radius: var(--radius); padding: 1.1rem 1.3rem; margin: 0.8rem 0; }
+.pb-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.8rem; flex-wrap: wrap; }
+.pb-title { font-weight: 600; color: var(--g-heading); }
+.pb-meta { display: flex; flex-wrap: wrap; gap: 1rem; color: var(--g-muted); font-size: 0.85rem; margin: 0.35rem 0 0.6rem; }
+.pb-item p { margin: 0.4em 0; }
+.pb-target, .pb-note { color: var(--g-muted); font-size: 0.92rem; }
+.pb-note { font-style: italic; }
+'@
+
+    $subtitle = "$(& $esc $OrganizationName) &middot; $($actionable.Count) actionable item(s) &middot; Max cost: $MaxCostTier &middot; $timestamp UTC"
+    [void]$html.Append((Get-GuerrillaReportShellStart `
+        -Title 'Remediation Playbook' `
+        -Subtitle $subtitle `
+        -HtmlTitle "Guerrilla Remediation Playbook - $OrganizationName - $timestamp UTC" `
+        -TopbarMeta 'Remediation Playbook' `
+        -Style $Style -ExtraCss $extraCss))
 
     $itemNum = 0
     foreach ($phase in $phases) {
@@ -118,7 +112,9 @@ pre { background:var(--surface-alt); padding:8px; border-radius:4px; font-size:0
             Sort-Object @{Expression={$tierOrder[$_._CostTier]}}, CheckId)
         if ($phaseItems.Count -eq 0) { continue }
 
-        [void]$html.Append("<h2 style='background:var(--surface);border-left:4px solid $($phase.Color);color:$($phase.Color);'>$($phase.Name) ($($phaseItems.Count) items)</h2>`n")
+        $phaseColor = Get-GuerrillaSeverityColorVar -Severity $phase.Severity
+        $sevClass = $phase.Severity.ToLower()
+        [void]$html.Append("<h2 class=`"pb-phase`" style=`"border-left-color:$phaseColor;color:$phaseColor;`">$($phase.Name) ($($phaseItems.Count) items)</h2>`n")
 
         foreach ($item in $phaseItems) {
             $itemNum++
@@ -126,38 +122,36 @@ pre { background:var(--surface-alt); padding:8px; border-radius:4px; font-size:0
             $effortHours = switch ($item._Effort) { 'Minimal' { '~15min' } 'Low' { '~1h' } 'Medium' { '~4h' } 'High' { '~2d' } 'Major' { '~2w' } default { '~4h' } }
 
             [void]$html.Append(@"
-<div class="item">
-<div class="item-header">
-<div class="title">$itemNum. $(& $esc ($item.Name ?? $item.CheckName ?? $checkId))</div>
-<div><span class="badge" style="background:$($phase.Color);color:#fff;">$($item.Severity)</span></div>
+<div class="pb-item">
+<div class="pb-head">
+<div class="pb-title">$itemNum. $(& $esc ($item.Name ?? $item.CheckName ?? $checkId))</div>
+<span class="badge badge-sev-$sevClass">$(& $esc $item.Severity)</span>
 </div>
-<div class="meta">
-<span>ID: $checkId</span>
+<div class="pb-meta">
+<span>ID: <code>$(& $esc $checkId)</code></span>
 <span>Cost: $($item._CostTier)</span>
 <span>Effort: $effortHours</span>
 <span>Category: $(& $esc ($item.Category ?? ''))</span>
 </div>
-$(if ($item.Description) { "<p style='margin:8px 0;'>$(& $esc $item.Description)</p>" })
+$(if ($item.Description) { "<p>$(& $esc $item.Description)</p>" })
 $(if ($item.RemediationSteps) {
-    "<p style='margin:8px 0;'><strong>Steps:</strong> $(& $esc $item.RemediationSteps)</p>"
+    "<p><strong>Steps:</strong> $(& $esc $item.RemediationSteps)</p>"
 })
-$(if ($item.RecommendedValue) { "<p style='margin:4px 0;color:var(--text-muted);'><strong>Target:</strong> $(& $esc $item.RecommendedValue)</p>" })
-$(if ($item._Notes) { "<p style='margin:4px 0;color:var(--text-muted);font-style:italic;'>Note: $(& $esc $item._Notes)</p>" })
-$(if ($item.RemediationUrl) { "<p style='margin:4px 0;'><a href='$(& $esc $item.RemediationUrl)' style='color:var(--olive);font-size:0.85em;'>$(& $esc $item.RemediationUrl)</a></p>" })
+$(if ($item.RecommendedValue) { "<p class='pb-target'><strong>Target:</strong> $(& $esc $item.RecommendedValue)</p>" })
+$(if ($item._Notes) { "<p class='pb-note'>Note: $(& $esc $item._Notes)</p>" })
+$(if ($item.RemediationUrl) { "<p><a href='$(& $esc $item.RemediationUrl)'>$(& $esc $item.RemediationUrl)</a></p>" })
 </div>
 "@)
         }
     }
 
     [void]$html.Append(@"
-<div class="footer">
-<p>Generated by Guerrilla v2.1.0 | $timestamp UTC</p>
-<p style="font-style:italic;">Review each remediation step before implementing. Test changes in a non-production environment first.</p>
-</div>
-</div>
-</body>
-</html>
+<p style="color:var(--g-muted);font-size:0.9rem;font-style:italic;">Review each remediation step before implementing. Test changes in a non-production environment first.</p>
 "@)
+
+    [void]$html.Append((Get-GuerrillaReportShellEnd `
+        -FooterNote 'Remediation Playbook' `
+        -TimestampText "$timestamp UTC"))
 
     $html.ToString() | Set-Content -Path $OutputPath -Encoding UTF8
 

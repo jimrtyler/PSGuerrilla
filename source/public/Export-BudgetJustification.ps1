@@ -19,6 +19,8 @@ function Export-BudgetJustification {
         Name of the organization for the report header.
     .PARAMETER ConfigPath
         Override config file path.
+    .PARAMETER Style
+        Report style: Auto (follow the OS), Light, or Dark. Legacy names accepted.
     .EXAMPLE
         Export-BudgetJustification -OrganizationName 'Springfield USD'
         Generates a budget justification report for the district.
@@ -34,7 +36,10 @@ function Export-BudgetJustification {
         [string]$OrganizationName = 'Organization',
         [string]$ProfileName,
         [Alias('RuntimeConfig')]
-        [string]$ConfigPath
+        [string]$ConfigPath,
+
+        [ValidateSet('Auto', 'Light', 'Dark', 'Guerrilla', 'Professional', 'Slate')]
+        [string]$Style = 'Auto'
     )
 
     # Load config
@@ -118,6 +123,10 @@ function Export-BudgetJustification {
     $score = $scoreResult.Score ?? 'N/A'
     $label = $scoreResult.Label ?? ''
 
+    $scoreNum = 0
+    $scoreIsNumeric = [int]::TryParse("$score", [ref]$scoreNum)
+    $scoreColor = if ($scoreIsNumeric) { Get-GuerrillaScoreColorVar -Score $scoreNum } else { 'var(--g-sev-info)' }
+
     # Group fixes by cost tier
     $freeFixes = @($allFixes | Where-Object CostTier -eq 'Free')
     $lowFixes = @($allFixes | Where-Object CostTier -eq 'Low')
@@ -133,92 +142,77 @@ function Export-BudgetJustification {
         [PSCustomObject]@{ Framework = $_.Name; GapCount = $_.Count }
     })
 
+    $esc = { param([string]$s) [System.Web.HttpUtility]::HtmlEncode($s) }
     $timestamp = [datetime]::UtcNow.ToString('yyyy-MM-dd HH:mm:ss')
 
     # Build fix rows HTML
-    $fixRowsHtml = { param($fixes, $tierLabel)
+    $fixRowsHtml = { param($fixes)
         $rows = ''
         foreach ($fix in $fixes) {
-            $sevColor = switch ($fix.Severity) {
-                'Critical' { '#af0000' }
-                'High'     { '#d75f00' }
-                'Medium'   { '#ff8700' }
-                default    { '#d7af5f' }
+            $sevClass = switch ("$($fix.Severity)") {
+                'Critical' { 'critical' }
+                'High'     { 'high' }
+                'Medium'   { 'medium' }
+                'Low'      { 'low' }
+                default    { 'info' }
             }
             $rows += @"
 <tr>
-<td style="padding:6px 10px;border-bottom:1px solid #333;">$($fix.CheckId)</td>
-<td style="padding:6px 10px;border-bottom:1px solid #333;">$([System.Web.HttpUtility]::HtmlEncode($fix.CheckName))</td>
-<td style="padding:6px 10px;border-bottom:1px solid #333;color:$sevColor;">$($fix.Severity)</td>
-<td style="padding:6px 10px;border-bottom:1px solid #333;">$($fix.Effort)</td>
-<td style="padding:6px 10px;border-bottom:1px solid #333;">~$($fix.EstimatedHours)h</td>
+<td><code>$([System.Web.HttpUtility]::HtmlEncode($fix.CheckId))</code></td>
+<td>$([System.Web.HttpUtility]::HtmlEncode($fix.CheckName))</td>
+<td><span class="badge badge-sev-$sevClass">$([System.Web.HttpUtility]::HtmlEncode($fix.Severity))</span></td>
+<td>$([System.Web.HttpUtility]::HtmlEncode($fix.Effort))</td>
+<td>~$($fix.EstimatedHours)h</td>
 </tr>
 "@
         }
         return $rows
     }
 
-    $freeRows = & $fixRowsHtml $freeFixes 'Free'
-    $lowRows = & $fixRowsHtml $lowFixes 'Low'
-    $medRows = & $fixRowsHtml $medFixes 'Medium'
+    $freeRows = & $fixRowsHtml $freeFixes
+    $lowRows = & $fixRowsHtml $lowFixes
+    $medRows = & $fixRowsHtml $medFixes
 
     $complianceRows = ''
     foreach ($fw in $complianceFrameworks) {
-        $complianceRows += "<tr><td style='padding:6px 10px;border-bottom:1px solid #333;'>$($fw.Framework)</td><td style='padding:6px 10px;border-bottom:1px solid #333;color:#af0000;'>$($fw.GapCount) gap(s)</td></tr>`n"
+        $complianceRows += "<tr><td>$(& $esc ([string]$fw.Framework))</td><td><span class=`"verdict-fail`">$($fw.GapCount) gap(s)</span></td></tr>`n"
     }
 
-    $html = @"
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Security Budget Justification - $([System.Web.HttpUtility]::HtmlEncode($OrganizationName))</title>
-<style>
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a1a; color: #ffd7af; margin: 0; padding: 20px; }
-.container { max-width: 900px; margin: 0 auto; }
-h1 { color: #afaf5f; border-bottom: 2px solid #585858; padding-bottom: 10px; }
-h2 { color: #afaf5f; margin-top: 30px; }
-h3 { color: #d7af5f; }
-.summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin: 20px 0; }
-.summary-card { background: #262626; border: 1px solid #585858; border-radius: 6px; padding: 15px; text-align: center; }
-.summary-card .value { font-size: 2em; font-weight: bold; }
-.summary-card .label { color: #585858; font-size: 0.85em; margin-top: 5px; }
-.score-critical { color: #af0000; }
-.score-high { color: #d75f00; }
-.score-medium { color: #ff8700; }
-.score-good { color: #87af87; }
-table { width: 100%; border-collapse: collapse; margin: 10px 0; background: #262626; }
-th { background: #333; color: #afaf5f; padding: 8px 10px; text-align: left; }
-.tier-header { background: #333; color: #afaf5f; padding: 10px; margin-top: 20px; border-radius: 4px 4px 0 0; }
-.phase { background: #262626; border: 1px solid #585858; border-radius: 6px; padding: 15px; margin: 15px 0; }
-.phase-title { color: #afaf5f; font-size: 1.1em; font-weight: bold; }
-.phase-cost { color: #87af87; float: right; }
-.footer { color: #585858; font-size: 0.8em; margin-top: 40px; border-top: 1px solid #333; padding-top: 10px; }
-@media print { body { background: #fff; color: #333; } h1, h2, h3 { color: #333; } table, .summary-card, .phase { border-color: #ccc; background: #f9f9f9; } .footer { color: #999; } }
-</style>
-</head>
-<body>
-<div class="container">
-<h1>Security Budget Justification</h1>
-<p><strong>$([System.Web.HttpUtility]::HtmlEncode($OrganizationName))</strong> | Profile: $ProfileName | Generated: $timestamp UTC</p>
+    $extraCss = @'
+.phase { background: var(--g-surface); border-radius: var(--radius); padding: 1.1rem 1.4rem; margin: 1.2rem 0; }
+.phase-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+.phase-title { font-weight: 600; font-size: 1.1rem; color: var(--g-heading); }
+.phase-cost { color: var(--g-ok); font-weight: 600; white-space: nowrap; }
+.phase > p:first-of-type { margin-top: 0.4em; }
+'@
 
+    $subtitle = "<strong>$(& $esc $OrganizationName)</strong> &middot; Profile: $(& $esc $ProfileName) &middot; Generated: $timestamp UTC"
+    $shellStart = Get-GuerrillaReportShellStart `
+        -Title 'Security Budget Justification' `
+        -Subtitle $subtitle `
+        -HtmlTitle "Guerrilla Budget Justification - $OrganizationName - $timestamp UTC" `
+        -TopbarMeta 'Budget Justification' `
+        -Style $Style -ExtraCss $extraCss
+
+    $html = @"
+$shellStart
 <h2>Executive Summary</h2>
-<div class="summary-grid">
-<div class="summary-card">
-<div class="value $(if ([int]$score -ge 75) { 'score-good' } elseif ([int]$score -ge 40) { 'score-medium' } else { 'score-critical' })">$score</div>
-<div class="label">Guerrilla Score$(if ($label) { " ($label)" })</div>
+<div class="stat-grid">
+<div class="stat">
+<span class="value" style="color:$scoreColor">$score</span>
+<span class="label">Guerrilla Score$(if ($label) { " ($(& $esc $label))" })</span>
 </div>
-<div class="summary-card">
-<div class="value score-critical">$criticalFails</div>
-<div class="label">Critical Failures</div>
+<div class="stat">
+<span class="value" style="color:var(--g-sev-critical)">$criticalFails</span>
+<span class="label">Critical Failures</span>
 </div>
-<div class="summary-card">
-<div class="value score-high">$highFails</div>
-<div class="label">High Failures</div>
+<div class="stat">
+<span class="value" style="color:var(--g-sev-high)">$highFails</span>
+<span class="label">High Failures</span>
 </div>
-<div class="summary-card">
-<div class="value">$totalChecks</div>
-<div class="label">Total Checks ($passCount pass / $failCount fail / $warnCount warn)</div>
+<div class="stat">
+<span class="value">$totalChecks</span>
+<span class="label">Total Checks ($passCount pass / $failCount fail / $warnCount warn)</span>
 </div>
 </div>
 
@@ -226,53 +220,78 @@ $(if ($complianceFrameworks.Count -gt 0) {
 @"
 <h2>Compliance Impact</h2>
 <p>The following compliance frameworks have gaps based on current audit findings:</p>
+<div class="table-wrap">
 <table>
-<tr><th>Framework</th><th>Gaps Found</th></tr>
+<thead><tr><th>Framework</th><th>Gaps Found</th></tr></thead>
+<tbody>
 $complianceRows
+</tbody>
 </table>
+</div>
 "@
 })
 
 <h2>Recommended Investment Phases</h2>
 
 <div class="phase">
-<div class="phase-title">Phase 1: Quick Wins (No Cost) <span class="phase-cost">$($costRanges.Free.annualCostRange ?? '$0')</span></div>
-<p>Configuration changes using existing tools — highest ROI, immediate security improvement.</p>
+<div class="phase-head">
+<span class="phase-title">Phase 1: Quick Wins (No Cost)</span>
+<span class="phase-cost">$($costRanges.Free.annualCostRange ?? '$0')</span>
+</div>
+<p>Configuration changes using existing tools &middot; highest ROI, immediate security improvement.</p>
 $(if ($freeFixes.Count -gt 0) {
 @"
+<div class="table-wrap">
 <table>
-<tr><th>Check</th><th>Finding</th><th>Severity</th><th>Effort</th><th>Time</th></tr>
+<thead><tr><th>Check</th><th>Finding</th><th>Severity</th><th>Effort</th><th>Time</th></tr></thead>
+<tbody>
 $freeRows
+</tbody>
 </table>
-<p><strong>$($freeFixes.Count) action(s)</strong> | Estimated total effort: $([Math]::Round(($freeFixes | Measure-Object EstimatedHours -Sum).Sum, 1)) hours</p>
+</div>
+<p><strong>$($freeFixes.Count) action(s)</strong> &middot; Estimated total effort: $([Math]::Round(($freeFixes | Measure-Object EstimatedHours -Sum).Sum, 1)) hours</p>
 "@
 } else { '<p>No free fixes identified.</p>' })
 </div>
 
 <div class="phase">
-<div class="phase-title">Phase 2: Low-Cost Improvements <span class="phase-cost">$($costRanges.Low.annualCostRange ?? '$0 - $500')</span></div>
+<div class="phase-head">
+<span class="phase-title">Phase 2: Low-Cost Improvements</span>
+<span class="phase-cost">$($costRanges.Low.annualCostRange ?? '$0 - $500')</span>
+</div>
 <p>Minor purchases or license add-ons within existing budget.</p>
 $(if ($lowFixes.Count -gt 0) {
 @"
+<div class="table-wrap">
 <table>
-<tr><th>Check</th><th>Finding</th><th>Severity</th><th>Effort</th><th>Time</th></tr>
+<thead><tr><th>Check</th><th>Finding</th><th>Severity</th><th>Effort</th><th>Time</th></tr></thead>
+<tbody>
 $lowRows
+</tbody>
 </table>
-<p><strong>$($lowFixes.Count) action(s)</strong> | Estimated total effort: $([Math]::Round(($lowFixes | Measure-Object EstimatedHours -Sum).Sum, 1)) hours</p>
+</div>
+<p><strong>$($lowFixes.Count) action(s)</strong> &middot; Estimated total effort: $([Math]::Round(($lowFixes | Measure-Object EstimatedHours -Sum).Sum, 1)) hours</p>
 "@
 } else { '<p>No low-cost fixes identified.</p>' })
 </div>
 
 <div class="phase">
-<div class="phase-title">Phase 3: Moderate Investment <span class="phase-cost">$($costRanges.Medium.annualCostRange ?? '$500 - $5,000')</span></div>
+<div class="phase-head">
+<span class="phase-title">Phase 3: Moderate Investment</span>
+<span class="phase-cost">$($costRanges.Medium.annualCostRange ?? '$500 - $5,000')</span>
+</div>
 <p>License upgrades or add-on products for enhanced security capabilities.</p>
 $(if ($medFixes.Count -gt 0) {
 @"
+<div class="table-wrap">
 <table>
-<tr><th>Check</th><th>Finding</th><th>Severity</th><th>Effort</th><th>Time</th></tr>
+<thead><tr><th>Check</th><th>Finding</th><th>Severity</th><th>Effort</th><th>Time</th></tr></thead>
+<tbody>
 $medRows
+</tbody>
 </table>
-<p><strong>$($medFixes.Count) action(s)</strong> | Estimated total effort: $([Math]::Round(($medFixes | Measure-Object EstimatedHours -Sum).Sum, 1)) hours</p>
+</div>
+<p><strong>$($medFixes.Count) action(s)</strong> &middot; Estimated total effort: $([Math]::Round(($medFixes | Measure-Object EstimatedHours -Sum).Sum, 1)) hours</p>
 "@
 } else { '<p>No medium-cost fixes identified.</p>' })
 </div>
@@ -280,19 +299,18 @@ $medRows
 $(if ($highCostFixes.Count -gt 0) {
 @"
 <div class="phase">
-<div class="phase-title">Phase 4: Strategic Investment <span class="phase-cost">$($costRanges.High.annualCostRange ?? '$5,000+')</span></div>
+<div class="phase-head">
+<span class="phase-title">Phase 4: Strategic Investment</span>
+<span class="phase-cost">$($costRanges.High.annualCostRange ?? '$5,000+')</span>
+</div>
 <p>Major purchases or infrastructure changes for long-term security posture improvement.</p>
 <p><strong>$($highCostFixes.Count) item(s)</strong> identified requiring significant investment. Contact your security advisor for detailed scoping.</p>
 </div>
 "@
 })
 
-<div class="footer">
-<p>Generated by Guerrilla v2.1.0 | $timestamp UTC | This report is for internal planning purposes.</p>
-</div>
-</div>
-</body>
-</html>
+<p style="color:var(--g-muted);font-size:0.9rem;font-style:italic;">This report is for internal planning purposes.</p>
+$(Get-GuerrillaReportShellEnd -FooterNote 'Budget Justification' -TimestampText "$timestamp UTC")
 "@
 
     $html | Set-Content -Path $OutputPath -Encoding UTF8
