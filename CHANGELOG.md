@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [2.51.0] - 2026-07-15
+
 ### Added
 - **The GUI is multilingual, starting with Spanish, on an architecture built to scale.** Every user-visible string in Show-Guerrilla (window chrome, navigation, the Run page, options drawer, status and progress messages, dialogs, and the add-credential modal) now comes from locale catalogs in `Data/Locales/` (`gui.en.json` is the English source; `gui.es.json` carries all 171 keys with per-key translation provenance, the same `machine-draft`/`human-reviewed` convention the website uses). A language selector in the header switches the entire window live, exactly the way the theme toggle works (string resources swapped through WPF DynamicResource, no restart), and the choice persists in config as `gui.language` next to `gui.theme`; first launch follows the OS display language when a matching catalog exists. Adding a future language is adding one catalog file: the selector discovers catalogs at runtime and nothing hardcodes a language list. Semantic values are decoupled from display text (localized ComboBox items carry canonical `Tag` values, so translating "Light" can never change what a cmdlet receives). A new gate, `Tests/verify-gui-localization.ps1`, fails the build if a GUI string reference is missing from the English catalog or if a shipped language is incomplete, and proves its own scanner can fail with an in-file poison self-test.
 
