@@ -1,0 +1,99 @@
+{
+  "_family": "ADAclDelegationChecks.json",
+  "ADACL-001": {
+    "name": { "value": "ACL-Audit kritischer Objekte", "status": "machine-draft" },
+    "description": { "value": "Zugriffssteuerungslisten (ACLs) auf kritischen AD-Objekten (Domänenstamm, AdminSDHolder, Schema, Konfiguration, Domänencontroller-OU) müssen auf nicht autorisierte oder übermäßige Berechtigungen überprüft werden. Falsch konfigurierte ACLs auf diesen Objekten können Angreifern ermöglichen, Berechtigungen zu erweitern, Verzeichnisdienste zu ändern oder die vollständige Kontrolle über die Domäne zu übernehmen", "status": "machine-draft" },
+    "recommendedValue": { "value": "Nur standardmäßige und ausdrücklich autorisierte ACEs auf kritischen AD-Objekten; keine unerwarteten Prinzipale mit Änderungs- oder Vollzugriff", "status": "machine-draft" },
+    "remediationSteps": { "value": "Überprüfen Sie die ACLs kritischer Objekte mit Get-Acl oder dsacls.exe. Entfernen Sie nicht standardmäßige ACEs, die nicht autorisierten Prinzipalen Schreib-, Änderungs- oder Vollzugriffsberechtigungen gewähren. Verwenden Sie AdminSDHolder, um konsistente ACLs auf geschützten Gruppen durchzusetzen. Dokumentieren Sie alle beabsichtigten Delegierungen.", "status": "machine-draft" }
+  },
+  "ADACL-002": {
+    "name": { "value": "GenericAll-Berechtigungen auf kritischen Objekten", "status": "machine-draft" },
+    "description": { "value": "GenericAll gewährt die vollständige Kontrolle über ein AD-Objekt, einschließlich der Möglichkeit, Attribute zu ändern, Kennwörter zurückzusetzen, Gruppenmitgliedschaften zu ändern und die DACL zu modifizieren. Nicht standardmäßige Prinzipale mit GenericAll auf kritischen Objekten wie Domain Admins, Domänencontrollern oder dem Domänenstamm stellen einen direkten Weg zur Kompromittierung der Domäne dar", "status": "machine-draft" },
+    "recommendedValue": { "value": "Keine nicht standardmäßigen Prinzipale mit GenericAll auf kritischen AD-Objekten", "status": "machine-draft" },
+    "remediationSteps": { "value": "Zählen Sie die ACLs kritischer Objekte mit PowerShell oder BloodHound auf. Entfernen Sie GenericAll-ACEs für jeden Prinzipal, der keine vollständige Kontrolle benötigt. Ersetzen Sie sie durch delegierte Berechtigungen nach dem Prinzip der geringsten Rechte, sofern betriebliche Anforderungen bestehen. Überwachen Sie ACL-Änderungen mit der Überwachung von Verzeichnisdienständerungen (Event ID 5136).", "status": "machine-draft" }
+  },
+  "ADACL-003": {
+    "name": { "value": "GenericWrite-Berechtigungen auf kritischen Objekten", "status": "machine-draft" },
+    "description": { "value": "GenericWrite erlaubt die Änderung der meisten Attribute eines Objekts und ermöglicht Angriffe wie gezieltes Kerberoasting (Schreiben eines SPN), Resource-Based Constrained Delegation (Schreiben von msDS-AllowedToActOnBehalfOfOtherIdentity) oder Shadow Credentials (Schreiben von msDS-KeyCredentialLink). Nicht standardmäßige Prinzipale mit GenericWrite auf kritischen Objekten sollten untersucht werden", "status": "machine-draft" },
+    "recommendedValue": { "value": "Keine nicht standardmäßigen Prinzipale mit GenericWrite auf kritischen AD-Objekten", "status": "machine-draft" },
+    "remediationSteps": { "value": "Überprüfen Sie die ACLs von Benutzer-, Computer- und Gruppenobjekten auf GenericWrite-Berechtigungen. Entfernen Sie unnötige GenericWrite-ACEs und ersetzen Sie sie durch spezifische Schreibberechtigungen auf Attributebene. Achten Sie besonders auf Schreibzugriff auf die Attribute msDS-AllowedToActOnBehalfOfOtherIdentity, servicePrincipalName und msDS-KeyCredentialLink.", "status": "machine-draft" }
+  },
+  "ADACL-004": {
+    "name": { "value": "WriteDACL-Berechtigungen auf kritischen Objekten", "status": "machine-draft" },
+    "description": { "value": "Die WriteDACL-Berechtigung erlaubt einem Prinzipal, die diskretionäre Zugriffssteuerungsliste eines Objekts zu ändern, wodurch faktisch die Möglichkeit gewährt wird, sich selbst oder anderen beliebige Berechtigungen einschließlich GenericAll zuzuweisen. Dies ist ein kritischer Vektor zur Rechteausweitung, da ein Angreifer sich damit die vollständige Kontrolle verschaffen kann, ohne sie direkt zu besitzen", "status": "machine-draft" },
+    "recommendedValue": { "value": "Keine nicht standardmäßigen Prinzipale mit WriteDACL auf kritischen AD-Objekten", "status": "machine-draft" },
+    "remediationSteps": { "value": "Zählen Sie WriteDACL-Berechtigungen auf allen kritischen Objekten auf, einschließlich Domänenstamm, AdminSDHolder, GPO-Objekten und Objekten privilegierter Gruppen. Entfernen Sie WriteDACL für nicht standardmäßige Prinzipale. Aktivieren Sie die Überwachung von ACL-Änderungen (Event ID 5136), um nicht autorisierte DACL-Änderungen zu erkennen. Überprüfen Sie Änderungen regelmäßig.", "status": "machine-draft" }
+  },
+  "ADACL-005": {
+    "name": { "value": "WriteOwner-Berechtigungen auf kritischen Objekten", "status": "machine-draft" },
+    "description": { "value": "Die WriteOwner-Berechtigung erlaubt die Änderung des Besitzers eines AD-Objekts. Der Besitzer eines Objekts hat implizit die Möglichkeit, die DACL zu ändern, wodurch WriteOwner aus Angreifersicht funktional WriteDACL entspricht. Ein Angreifer kann den Besitz übernehmen und sich anschließend beliebige gewünschte Berechtigungen gewähren", "status": "machine-draft" },
+    "recommendedValue": { "value": "Keine nicht standardmäßigen Prinzipale mit WriteOwner auf kritischen AD-Objekten", "status": "machine-draft" },
+    "remediationSteps": { "value": "Überprüfen Sie WriteOwner-Berechtigungen auf kritischen Objekten. Entfernen Sie WriteOwner-ACEs für nicht standardmäßige Prinzipale. Stellen Sie sicher, dass die Objektbesitzer geeignete privilegierte Konten sind. Aktivieren Sie die Überwachung von Besitzerwechseln und überwachen Sie Event ID 4662 auf WriteOwner-Operationen.", "status": "machine-draft" }
+  },
+  "ADACL-006": {
+    "name": { "value": "ForceChangePassword-Rechte", "status": "machine-draft" },
+    "description": { "value": "Das erweiterte Recht User-Force-Change-Password (auch als Kennwort zurücksetzen bekannt) erlaubt einem Prinzipal, das Kennwort eines anderen Benutzers zurückzusetzen, ohne das aktuelle Kennwort zu kennen. Wird es nicht privilegierten Konten oder umfassenden Gruppen gewährt, entsteht ein direkter Weg zur Kontoübernahme, der die normalen Authentifizierungsanforderungen umgeht", "status": "machine-draft" },
+    "recommendedValue": { "value": "ForceChangePassword ausschließlich auf autorisierte Helpdesk- und Admin-Gruppen beschränkt; nicht an nicht privilegierte Konten gewährt", "status": "machine-draft" },
+    "remediationSteps": { "value": "Zählen Sie alle Prinzipale mit dem erweiterten Recht User-Force-Change-Password auf Benutzerobjekten auf. Überprüfen Sie, dass jede Delegierung beabsichtigt und angemessen begrenzt ist. Entfernen Sie die Rechte von jedem Prinzipal, der keinen dokumentierten betrieblichen Bedarf hat. Verwenden Sie eine auf die OU begrenzte Delegierung statt domänenweiter Gewährungen.", "status": "machine-draft" }
+  },
+  "ADACL-007": {
+    "name": { "value": "Übermäßige Delegierung an umfassende Gruppen", "status": "machine-draft" },
+    "description": { "value": "Die Delegierung sensibler Berechtigungen an umfassende Gruppen wie Authenticated Users, Domain Users oder Everyone schafft eine große Angriffsfläche, in der jedes kompromittierte Konto die delegierten Rechte missbrauchen kann. Dies ist eine häufige Fehlkonfiguration, die den für eine Rechteausweitung erforderlichen Aufwand erheblich reduziert", "status": "machine-draft" },
+    "recommendedValue": { "value": "Keine sensiblen Berechtigungen an Authenticated Users, Domain Users, Everyone oder andere umfassende Gruppen delegiert", "status": "machine-draft" },
+    "remediationSteps": { "value": "Überprüfen Sie alle ACLs auf ACEs, die bekannten umfassenden Gruppen gewährt wurden (S-1-5-11 Authenticated Users, Domain Users, Everyone, Domain Computers). Ersetzen Sie Delegierungen an umfassende Gruppen durch spezifische Sicherheitsgruppen, die nur die erforderlichen Prinzipale enthalten. Wenden Sie Delegierungen im engstmöglichen OU-Bereich an.", "status": "machine-draft" }
+  },
+  "ADACL-008": {
+    "name": { "value": "Analyse der OU-Delegierung", "status": "machine-draft" },
+    "description": { "value": "Die Delegierung auf Ebene der Organisationseinheit (OU) ist die empfohlene Methode zur Gewährung administrativer Berechtigungen in Active Directory, doch falsch konfigurierte OU-Delegierungen können unbeabsichtigte Zugriffswege schaffen. Diese Prüfung analysiert alle Berechtigungsdelegierungen auf OU-Ebene, um zu freizügige Gewährungen, vererbte Berechtigungen, die die beabsichtigte Begrenzung umgehen, und möglicherweise veraltete Delegierungen zu identifizieren", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alle OU-Delegierungen dokumentiert, auf bestimmte Objekttypen begrenzt und nach dem Prinzip der geringsten Rechte gewährt", "status": "machine-draft" },
+    "remediationSteps": { "value": "Überprüfen Sie alle nicht standardmäßigen ACEs auf jeder OU mit dsacls.exe oder PowerShell. Stellen Sie sicher, dass Delegierungen den InheritedObjectType verwenden, um Berechtigungen auf bestimmte Objektklassen zu begrenzen. Entfernen Sie Delegierungen, die nicht mehr erforderlich sind. Dokumentieren Sie alle beabsichtigten Delegierungen in einer Autorisierungsmatrix.", "status": "machine-draft" }
+  },
+  "ADACL-009": {
+    "name": { "value": "Computerkontenkontingent (Machine Account Quota)", "status": "machine-draft" },
+    "description": { "value": "Das Attribut ms-DS-MachineAccountQuota auf dem Domänenstamm bestimmt, wie viele Computerkonten ein authentifizierter Benutzer erstellen kann. Der Standardwert von 10 erlaubt jedem Domänenbenutzer, Computer der Domäne hinzuzufügen, wodurch Computerkonten entstehen, die für Resource-Based-Constrained-Delegation-Angriffe, Relay-Angriffe und andere Techniken zur Rechteausweitung missbraucht werden können", "status": "machine-draft" },
+    "recommendedValue": { "value": "ms-DS-MachineAccountQuota auf 0 gesetzt", "status": "machine-draft" },
+    "remediationSteps": { "value": "Setzen Sie ms-DS-MachineAccountQuota mit Set-ADDomain -Identity (Get-ADDomain) -Replace @{'ms-DS-MachineAccountQuota'=0} auf 0 auf dem Domänenstamm. Delegieren Sie die Erstellung von Computerkonten an bestimmte Admin-Gruppen oder verwenden Sie einen Prestaging-Workflow. Überprüfen Sie vorhandene Computerkonten, die von Nicht-Admin-Benutzern erstellt wurden.", "status": "machine-draft" }
+  },
+  "ADACL-010": {
+    "name": { "value": "Audit erweiterter Rechte", "status": "machine-draft" },
+    "description": { "value": "Erweiterte Rechte in Active Directory umfassen leistungsstarke Operationen wie DS-Replication-Get-Changes (DCSync), User-Force-Change-Password und DS-Replication-Get-Changes-All. Nicht autorisierte Gewährungen dieser Rechte können durch Diebstahl von Anmeldeinformationen oder direkte Kontoübernahme zur vollständigen Kompromittierung der Domäne führen", "status": "machine-draft" },
+    "recommendedValue": { "value": "Erweiterte Rechte auf standardmäßige und ausdrücklich autorisierte Prinzipale beschränkt; DCSync-Rechte nur auf Domänencontrollern", "status": "machine-draft" },
+    "remediationSteps": { "value": "Zählen Sie alle ACEs für erweiterte Rechte auf dem Domänenstamm und kritischen Objekten auf. Stellen Sie sicher, dass DS-Replication-Get-Changes und DS-Replication-Get-Changes-All nur an Domänencontroller und autorisierte Replikationskonten gewährt werden. Entfernen Sie alle nicht standardmäßigen Gewährungen erweiterter Rechte. Überwachen Sie Event ID 4662 auf die Nutzung erweiterter Rechte.", "status": "machine-draft" }
+  },
+  "ADACL-011": {
+    "name": { "value": "Besitz kritischer Objekte", "status": "machine-draft" },
+    "description": { "value": "Der Besitzer eines AD-Objekts hat unabhängig von den expliziten ACL-Einträgen die implizite Berechtigung, die DACL des Objekts zu ändern. Wenn kritische Objekte wie der Domänenstamm, AdminSDHolder, privilegierte Gruppen oder GPOs im Besitz nicht privilegierter oder unerwarteter Konten sind, verfügen diese Konten über einen verborgenen Weg zur vollständigen Kontrolle", "status": "machine-draft" },
+    "recommendedValue": { "value": "Kritische Objekte ausschließlich im Besitz von Domain Admins, Enterprise Admins oder SYSTEM", "status": "machine-draft" },
+    "remediationSteps": { "value": "Zählen Sie den Besitz aller kritischen Objekte auf, einschließlich Domänenstamm, AdminSDHolder, Schema-Container, Konfigurations-Container, Objekten privilegierter Gruppen und GPO-Objekten. Übertragen Sie den Besitz falsch zugeordneter Objekte mit Set-Acl oder der Registerkarte Sicherheit in ADUC an Domain Admins. Aktivieren Sie die Überwachung von Besitzerwechseln.", "status": "machine-draft" }
+  },
+  "ADACL-012": {
+    "name": { "value": "Nicht standardmäßige Berechtigungen auf dem Domänenstamm", "status": "machine-draft" },
+    "description": { "value": "Das Domänenstammobjekt bildet die Spitze der AD-Hierarchie, und hier gesetzte Berechtigungen können sich im gesamten Verzeichnis vererben. Nicht standardmäßige ACEs auf dem Domänenstamm, die unerwarteten Prinzipalen Schreib-, Änderungs- oder erweiterte Rechte gewähren, stellen ein erhebliches Risiko dar, da sie sich auf jedes Objekt in der Domäne auswirken können", "status": "machine-draft" },
+    "recommendedValue": { "value": "Nur standardmäßige Microsoft-ACEs auf dem Domänenstamm; alle benutzerdefinierten ACEs dokumentiert und begründet", "status": "machine-draft" },
+    "remediationSteps": { "value": "Vergleichen Sie die aktuelle ACL des Domänenstamms mit der Standard-ACL für Ihre Domänenfunktionsebene. Dokumentieren Sie alle nicht standardmäßigen ACEs und bestätigen Sie ihre betriebliche Notwendigkeit. Entfernen Sie ACEs, die nicht mehr erforderlich sind oder übermäßige Berechtigungen gewähren. Achten Sie besonders auf ACEs, die für 'Dieses Objekt und alle untergeordneten Objekte' gelten.", "status": "machine-draft" }
+  },
+  "ADACL-013": {
+    "name": { "value": "GPO-Verknüpfungsberechtigungen", "status": "machine-draft" },
+    "description": { "value": "Die Möglichkeit, Gruppenrichtlinienobjekte mit Standorten, Domänen oder OUs zu verknüpfen, steuert, welche Richtlinien für welche Objekte gelten. Nicht autorisierte GPO-Verknüpfungsberechtigungen erlauben einem Angreifer, bösartige GPOs auf gezielte OUs anzuwenden und dadurch potenziell Schadsoftware zu verteilen, Sicherheitseinstellungen zu ändern oder geplante Aufgaben auf betroffenen Computern zu erstellen", "status": "machine-draft" },
+    "recommendedValue": { "value": "GPO-Verknüpfungsberechtigungen ausschließlich auf autorisierte Gruppenrichtlinienadministratoren beschränkt", "status": "machine-draft" },
+    "remediationSteps": { "value": "Überprüfen Sie die Schreibberechtigungen für gPLink und gPOptions auf allen OUs, dem Domänenstamm und Standortobjekten. Entfernen Sie GPO-Verknüpfungsberechtigungen von nicht administrativen Prinzipalen. Verwenden Sie die Gruppenrichtlinienmodellierung, um die Auswirkungen der aktuellen GPO-Verknüpfungen zu überprüfen. Führen Sie eine Änderungssteuerung für GPO-Verknüpfungsvorgänge ein.", "status": "machine-draft" }
+  },
+  "ADACL-014": {
+    "name": { "value": "GPO-Bearbeitungsberechtigungen", "status": "machine-draft" },
+    "description": { "value": "Berechtigungen zur Bearbeitung von Gruppenrichtlinienobjekten erlauben die Änderung domänenweiter Sicherheitseinstellungen, der Softwarebereitstellung, von Anmeldeskripten und geplanten Aufgaben. Nicht autorisierter GPO-Bearbeitungszugriff ist ein hochwertiges Ziel für Angreifer, da er eine weitreichende Codeausführung und Konfigurationsänderungen in der gesamten Umgebung ermöglicht", "status": "machine-draft" },
+    "recommendedValue": { "value": "GPO-Bearbeitungsberechtigungen ausschließlich auf Group Policy Creator Owners und autorisierte Administratoren beschränkt", "status": "machine-draft" },
+    "remediationSteps": { "value": "Überprüfen Sie die Registerkarten für Sicherheitsfilterung und Delegierung auf jedem GPO. Stellen Sie sicher, dass nur autorisierte Prinzipale über die Berechtigungen zum Bearbeiten von Einstellungen, Löschen oder Ändern der Sicherheit verfügen. Entfernen Sie GPO-Bearbeitungsberechtigungen von nicht administrativen Gruppen. Verwenden Sie die Gruppenrichtlinien-Verwaltungskonsole, um GPO-Berechtigungen systematisch zu überprüfen.", "status": "machine-draft" }
+  },
+  "ADACL-015": {
+    "name": { "value": "Erkennung von Shadow Admins", "status": "machine-draft" },
+    "description": { "value": "Shadow Admins sind Konten, die über ACL-Ketten indirekte Wege zu einem Domain-Admin-äquivalenten Zugriff besitzen, aber keiner privilegierten Gruppe angehören. Diese Konten umgehen den AdminSDHolder-Schutz und die herkömmliche Überwachung des privilegierten Zugriffs. Beispielsweise kann ein Konto mit WriteDACL auf der Gruppe Domain Admins sich selbst die Mitgliedschaft gewähren, ohne von der Überwachung der Gruppenmitgliedschaft erkannt zu werden", "status": "machine-draft" },
+    "recommendedValue": { "value": "Keine Shadow-Admin-Wege identifiziert; jeglicher admin-äquivalente Zugriff erfolgt über eine explizite Mitgliedschaft in privilegierten Gruppen", "status": "machine-draft" },
+    "remediationSteps": { "value": "Verwenden Sie BloodHound oder ähnliche Werkzeuge, um ACL-basierte Angriffswege zu einem Domain-Admin-äquivalenten Zugriff zu identifizieren. Entfernen Sie unnötige ACEs, die indirekte Wege zur Rechteausweitung schaffen. Stellen Sie sicher, dass jeglicher administrative Zugriff über die Mitgliedschaft in geschützten Gruppen gewährt wird. Führen Sie eine regelmäßige Analyse der Angriffswege als Teil der Sicherheitsoperationen durch.", "status": "machine-draft" }
+  },
+  "ADACL-016": {
+    "name": { "value": "Aufzählung von Angriffswegen", "status": "machine-draft" },
+    "description": { "value": "Angriffswege in Active Directory sind Ketten aus Berechtigungen, Gruppenmitgliedschaften und Vertrauensstellungen, die durchlaufen werden können, um von einem Konto mit geringen Rechten zum Domänenadministrator aufzusteigen. Eine umfassende Aufzählung der Angriffswege identifiziert Risiken, die einzelne ACL-Prüfungen möglicherweise übersehen, etwa mehrstufige Eskalationsketten über zwischengeschaltete Objekte", "status": "machine-draft" },
+    "recommendedValue": { "value": "Keine gangbaren Angriffswege von nicht privilegierten Benutzern zu Tier-Zero-Assets; alle identifizierten Wege behoben oder als akzeptiertes Risiko dokumentiert", "status": "machine-draft" },
+    "remediationSteps": { "value": "Führen Sie eine Analyse der Angriffswege mit Werkzeugen wie BloodHound durch. Konzentrieren Sie sich auf die kürzesten Wege von Domain Users oder Authenticated Users zu Domain Admins, Enterprise Admins und Domänencontrollern. Durchbrechen Sie identifizierte Angriffsketten, indem Sie das schwächste Glied in jedem Weg entfernen. Priorisieren Sie Wege, die ohne besondere Werkzeuge oder erhöhten Zugriff ausgenutzt werden können.", "status": "machine-draft" }
+  }
+}

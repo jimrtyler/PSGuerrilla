@@ -1,0 +1,123 @@
+{
+  "_family": "ADDomainForestChecks.json",
+  "ADDOM-001": {
+    "name": { "value": "Funktionsebene der Gesamtstruktur", "status": "machine-draft" },
+    "description": { "value": "Die Funktionsebene der Active Directory-Gesamtstruktur sollte auf Windows Server 2016 oder höher liegen, um moderne Sicherheitsfunktionen wie Privileged Access Management und verbesserte Kerberos-Schutzmechanismen zu ermöglichen. Der Betrieb älterer Funktionsebenen setzt die Umgebung Angriffen aus, die Schwächen veralteter Protokolle ausnutzen", "status": "machine-draft" },
+    "recommendedValue": { "value": "Windows Server 2016 oder höher", "status": "machine-draft" },
+    "remediationSteps": { "value": "Erhöhen Sie die Funktionsebene der Gesamtstruktur über Active Directory-Domänen und -Vertrauensstellungen > Rechtsklick auf den Stamm der Gesamtstruktur > Funktionsebene der Gesamtstruktur heraufstufen. Stellen Sie sicher, dass alle Domänencontroller eine unterstützte Betriebssystemversion ausführen, bevor Sie die Ebene heraufstufen", "status": "machine-draft" }
+  },
+  "ADDOM-002": {
+    "name": { "value": "Funktionsebene der Domäne", "status": "machine-draft" },
+    "description": { "value": "Die Funktionsebene der Active Directory-Domäne sollte auf Windows Server 2016 oder höher liegen. Niedrigere Funktionsebenen verhindern die Nutzung kritischer Sicherheitsfunktionen, darunter die Funktionalität der Gruppe Protected Users, Authentifizierungsrichtlinien und modernes Kerberos-Armoring", "status": "machine-draft" },
+    "recommendedValue": { "value": "Windows Server 2016 oder höher", "status": "machine-draft" },
+    "remediationSteps": { "value": "Erhöhen Sie die Funktionsebene der Domäne über Active Directory-Domänen und -Vertrauensstellungen > Rechtsklick auf die Domäne > Funktionsebene der Domäne heraufstufen. Überprüfen Sie zuerst, ob alle DCs in der Domäne eine kompatible Betriebssystemversion ausführen", "status": "machine-draft" }
+  },
+  "ADDOM-003": {
+    "name": { "value": "Identifizierung der Schemaversion", "status": "machine-draft" },
+    "description": { "value": "Die AD-Schemaversion sollte dokumentiert werden und der neuesten unterstützten Version entsprechen. Ein veraltetes Schema kann Attribute vermissen lassen, die von modernen Sicherheitsfunktionen und Anwendungen benötigt werden", "status": "machine-draft" },
+    "recommendedValue": { "value": "Schemaversion entsprechend Windows Server 2022 (Version 88) oder höher", "status": "machine-draft" },
+    "remediationSteps": { "value": "Führen Sie adprep /forestprep und adprep /domainprep vom neuesten Windows Server-Installationsmedium aus, um das Schema zu aktualisieren. Überprüfen Sie das Attribut objectVersion an CN=Schema,CN=Configuration,DC=domain", "status": "machine-draft" }
+  },
+  "ADDOM-004": {
+    "name": { "value": "Bestandsaufnahme der Domänencontroller", "status": "machine-draft" },
+    "description": { "value": "Alle Domänencontroller sollten mit Betriebssystemversion, Patch-Stand und Standort inventarisiert werden. Nicht erfasste Domänencontroller stellen ein erhebliches Sicherheitsrisiko dar, da bei ihnen Patches fehlen können oder sie unbemerkt kompromittiert werden können", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alle Domänencontroller dokumentiert mit aktueller Betriebssystemversion, Standortzugehörigkeit und Patch-Status", "status": "machine-draft" },
+    "remediationSteps": { "value": "Fragen Sie alle DC-Computerobjekte aus der Domain Controllers-OU ab. Überprüfen Sie, dass jeder DC erfasst ist, ein unterstütztes Betriebssystem ausführt und regelmäßig Patches erhält. Entfernen oder stufen Sie nicht autorisierte DCs umgehend herab", "status": "machine-draft" }
+  },
+  "ADDOM-005": {
+    "name": { "value": "Veraltetes Betriebssystem auf Domänencontrollern", "status": "machine-draft" },
+    "description": { "value": "Domänencontroller, die Betriebssysteme am Ende des Lebenszyklus (Windows Server 2012 R2 oder älter) ausführen, erhalten keine Sicherheitsupdates und sind anfällig für bekannte Exploits. Sie stellen ein kritisches Infrastrukturrisiko dar, da die Kompromittierung eines DC die vollständige Kontrolle über die Domäne verschafft", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alle Domänencontroller führen Windows Server 2019 oder höher mit aktuellen Patches aus", "status": "machine-draft" },
+    "remediationSteps": { "value": "Planen Sie die Migration von DCs, die veraltete Betriebssystemversionen ausführen. Errichten Sie neue DCs auf Windows Server 2022, übertragen Sie bei Bedarf FSMO-Rollen, replizieren Sie, und stufen Sie anschließend alte DCs herab und außer Betrieb. Priorisieren Sie diese Behebung, da veraltete DCs aktiv angegriffen werden", "status": "machine-draft" }
+  },
+  "ADDOM-006": {
+    "name": { "value": "Identifizierung der FSMO-Rolleninhaber", "status": "machine-draft" },
+    "description": { "value": "Die fünf FSMO-Rollen (Schema Master, Domain Naming Master, RID Master, PDC Emulator, Infrastructure Master) sollten dokumentiert und auf geeigneten Domänencontrollern platziert werden. Die Kenntnis der Rollenplatzierung ist für die Notfallwiederherstellung und das betriebliche Bewusstsein unerlässlich", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alle FSMO-Rollen dokumentiert, auf zuverlässigen DCs platziert und in die Notfallwiederherstellungsplanung einbezogen", "status": "machine-draft" },
+    "remediationSteps": { "value": "Führen Sie 'netdom query fsmo' aus oder fragen Sie das AD-Schema und die Domänenpartitionen ab, um die Rolleninhaber zu identifizieren. Dokumentieren Sie die Rollen und überprüfen Sie, dass sie sich auf hochverfügbaren DCs befinden. Übertragen Sie Rollen, wenn die aktuellen Inhaber ungeeignet sind", "status": "machine-draft" }
+  },
+  "ADDOM-007": {
+    "name": { "value": "Zustand der AD-Replikation", "status": "machine-draft" },
+    "description": { "value": "Fehler bei der Active Directory-Replikation können zu inkonsistenter Anwendung von Sicherheitsrichtlinien, weiterhin gültigen veralteten Anmeldeinformationen und Split-Brain-Szenarien führen. Anhaltende Replikationsfehler können außerdem auf einen kompromittierten oder betrügerischen DC hinweisen", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alle Domänencontroller replizieren erfolgreich ohne Fehler in den letzten 24 Stunden", "status": "machine-draft" },
+    "remediationSteps": { "value": "Führen Sie 'repadmin /replsummary' und 'repadmin /showrepl' aus, um Fehler zu identifizieren. Untersuchen und beheben Sie DNS-Probleme, Netzwerkkonnektivitätsprobleme oder USN-Rollback-Bedingungen. Überwachen Sie den Replikationsstatus im Rahmen des Routinebetriebs", "status": "machine-draft" }
+  },
+  "ADDOM-008": {
+    "name": { "value": "Konfiguration der Tombstone-Lebensdauer", "status": "machine-draft" },
+    "description": { "value": "Die Tombstone-Lebensdauer legt fest, wie lange gelöschte Objekte vor der endgültigen Entfernung aufbewahrt werden, und bestimmt die maximale Offline-Zeit eines DC, bevor er neu aufgebaut werden muss. Ein zu niedriger Wert kann verwaiste Objekte (Lingering Objects) verursachen; der Standardwert von 60 Tagen sollte für moderne Umgebungen auf 180 Tage erhöht werden", "status": "machine-draft" },
+    "recommendedValue": { "value": "180 Tage", "status": "machine-draft" },
+    "remediationSteps": { "value": "Ändern Sie das Attribut tombstoneLifetime an CN=Directory Service,CN=Windows NT,CN=Services,CN=Configuration,DC=domain. Setzen Sie es mit ADSIEdit oder PowerShell auf 180. Stellen Sie sicher, dass der AD-Papierkorb aktiviert ist, bevor Sie die Änderung vornehmen", "status": "machine-draft" }
+  },
+  "ADDOM-009": {
+    "name": { "value": "Status des AD-Papierkorbs", "status": "machine-draft" },
+    "description": { "value": "Der Active Directory-Papierkorb ermöglicht die Wiederherstellung gelöschter Objekte mit allen Attributen intakt. Ohne ihn erfordert das Wiederherstellen versehentlich oder böswillig gelöschter Objekte eine autoritative Wiederherstellung aus einer Sicherung, was zu erheblichen Ausfallzeiten führt", "status": "machine-draft" },
+    "recommendedValue": { "value": "Aktiviert", "status": "machine-draft" },
+    "remediationSteps": { "value": "Aktivieren Sie den AD-Papierkorb über das Active Directory-Verwaltungscenter > Rechtsklick auf die Domäne > Papierkorb aktivieren, oder führen Sie Enable-ADOptionalFeature 'Recycle Bin Feature' in PowerShell aus. Hinweis: Diese Aktion ist nicht umkehrbar", "status": "machine-draft" }
+  },
+  "ADDOM-010": {
+    "name": { "value": "Konfiguration von Standorten und Subnetzen", "status": "machine-draft" },
+    "description": { "value": "Alle verwendeten IP-Subnetze sollten AD-Standorten zugeordnet sein. Fehlende Zuordnungen von Subnetzen zu Standorten führen dazu, dass sich Clients gegen suboptimale DCs authentifizieren, wodurch möglicherweise Anmeldeinformationen im Klartext über WAN-Verbindungen gesendet werden und die Sicherheitslage verschlechtert wird", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alle IP-Subnetze den passenden AD-Standorten zugeordnet, ohne verwaiste Subnetze", "status": "machine-draft" },
+    "remediationSteps": { "value": "Überprüfen Sie den Container Subnetze unter AD-Standorte und -Dienste. Gleichen Sie ihn mit der Netzwerkdokumentation ab, um nicht zugeordnete Subnetze zu identifizieren. Erstellen Sie Subnetzobjekte für alle Produktionsnetzwerke und ordnen Sie sie dem korrekten Standort zu", "status": "machine-draft" }
+  },
+  "ADDOM-011": {
+    "name": { "value": "Konfiguration der Standortverknüpfungen", "status": "machine-draft" },
+    "description": { "value": "AD-Standortverknüpfungen sollten mit angemessenen Kosten, Replikationsintervall und Zeitplan konfiguriert werden, um eine zeitnahe Replikation unter Berücksichtigung der Netzwerkeinschränkungen sicherzustellen. Falsch konfigurierte Standortverknüpfungen können die Verbreitung von Sicherheitsrichtlinien verzögern", "status": "machine-draft" },
+    "recommendedValue": { "value": "Standortverknüpfungen mit angemessenen Kosten und Replikationsintervallen von 15 bis 60 Minuten je nach Verbindungskapazität konfiguriert", "status": "machine-draft" },
+    "remediationSteps": { "value": "Überprüfen Sie AD-Standorte und -Dienste > Standortübergreifende Transporte > IP. Stellen Sie sicher, dass jede Standortverknüpfung über angemessene Kostenwerte, ein Replikationsintervall (der Standardwert von 180 Minuten ist oft zu lang) und einen Zeitplan verfügt. Passen Sie diese anhand der Netzwerktopologie an", "status": "machine-draft" }
+  },
+  "ADDOM-012": {
+    "name": { "value": "Sicherheit von DNS-Zonen", "status": "machine-draft" },
+    "description": { "value": "AD-integrierte DNS-Zonen sollten ausschließlich sichere dynamische Updates verwenden. Das Zulassen unsicherer Updates ermöglicht es Angreifern, DNS-Einträge zu vergiften, Authentifizierungsverkehr umzuleiten und Adversary-in-the-Middle-Angriffe gegen in die Domäne eingebundene Systeme durchzuführen", "status": "machine-draft" },
+    "recommendedValue": { "value": "Ausschließlich sichere dynamische Updates auf allen AD-integrierten DNS-Zonen", "status": "machine-draft" },
+    "remediationSteps": { "value": "Öffnen Sie den DNS-Manager > Rechtsklick auf jede AD-integrierte Zone > Eigenschaften > Registerkarte Allgemein > Ändern Sie Dynamische Updates auf 'Nur sichere'. Überprüfen Sie alle Vorwärts- und Rückwärtssuchzonen. Prüfen Sie gegebenenfalls die DNSSEC-Signierung", "status": "machine-draft" }
+  },
+  "ADDOM-013": {
+    "name": { "value": "Anforderungen an die LDAP-Signierung", "status": "machine-draft" },
+    "description": { "value": "Die LDAP-Signierung muss auf allen Domänencontrollern erforderlich sein, um Adversary-in-the-Middle-Angriffe auf LDAP-Verkehr zu verhindern. Ohne Signierung können Angreifer LDAP-Abfragen und -Antworten abfangen und ändern und dabei möglicherweise Berechtigungen erhöhen oder Daten exfiltrieren", "status": "machine-draft" },
+    "recommendedValue": { "value": "Anforderung an die LDAP-Serversignierung auf allen DCs auf 'Signieren erforderlich' gesetzt", "status": "machine-draft" },
+    "remediationSteps": { "value": "Konfigurieren Sie dies über die Gruppenrichtlinie: Computerkonfiguration > Richtlinien > Windows-Einstellungen > Sicherheitseinstellungen > Lokale Richtlinien > Sicherheitsoptionen > 'Domänencontroller: Anforderungen für LDAP-Serversignatur' = 'Signieren erforderlich'. Wenden Sie dies auf die Domain Controllers-OU an", "status": "machine-draft" }
+  },
+  "ADDOM-014": {
+    "name": { "value": "LDAP-Kanalbindung", "status": "machine-draft" },
+    "description": { "value": "LDAP-Kanalbindungstoken verhindern Relay-Angriffe, indem sie die LDAP-Sitzung kryptografisch an den TLS-Kanal binden. Ohne Kanalbindung können Angreifer die LDAP-Authentifizierung weiterleiten, um unbefugten Zugriff zu erlangen", "status": "machine-draft" },
+    "recommendedValue": { "value": "LDAP-Kanalbindung auf 'Immer' auf allen Domänencontrollern gesetzt", "status": "machine-draft" },
+    "remediationSteps": { "value": "Setzen Sie den Registrierungswert LdapEnforceChannelBinding auf 2 (Immer) unter HKLM\\System\\CurrentControlSet\\Services\\NTDS\\Parameters auf allen DCs. Testen Sie zunächst mit dem Wert 1 (Wenn unterstützt), um inkompatible Clients zu identifizieren", "status": "machine-draft" }
+  },
+  "ADDOM-015": {
+    "name": { "value": "Anforderungen an die SMB-Signierung", "status": "machine-draft" },
+    "description": { "value": "Die SMB-Signierung muss auf allen Domänencontrollern erforderlich sein, um Adversary-in-the-Middle- und Relay-Angriffe auf SMB-Verkehr zu verhindern. SMB-Relay-Angriffe können genutzt werden, um SYSTEM-Zugriff auf Domänencontrollern zu erlangen, was zur vollständigen Kompromittierung der Domäne führt", "status": "machine-draft" },
+    "recommendedValue": { "value": "SMB-Signierung auf allen Domänencontrollern und Mitgliedsservern erforderlich", "status": "machine-draft" },
+    "remediationSteps": { "value": "Konfigurieren Sie dies über die Gruppenrichtlinie: Computerkonfiguration > Richtlinien > Windows-Einstellungen > Sicherheitseinstellungen > Lokale Richtlinien > Sicherheitsoptionen > 'Microsoft-Netzwerkserver: Kommunikation digital signieren (immer)' = Aktiviert. Wenden Sie dies auf die Domain Controllers-OU und alle Server-OUs an", "status": "machine-draft" }
+  },
+  "ADDOM-016": {
+    "name": { "value": "Erkennung der NTLMv1-Nutzung", "status": "machine-draft" },
+    "description": { "value": "NTLMv1 ist ein stark geschwächtes Authentifizierungsprotokoll, das mit moderner Hardware in Sekunden geknackt werden kann. Jegliche NTLMv1-Nutzung in der Umgebung muss identifiziert und beseitigt werden, da sie Anmeldeinformationen trivialen Offline-Angriffen aussetzt", "status": "machine-draft" },
+    "recommendedValue": { "value": "Keine NTLMv1-Authentifizierungsereignisse festgestellt; LAN Manager-Authentifizierungsebene so eingestellt, dass NTLMv1 abgelehnt wird", "status": "machine-draft" },
+    "remediationSteps": { "value": "Aktivieren Sie die NTLM-Überwachung über die Gruppenrichtlinie: Computerkonfiguration > Richtlinien > Windows-Einstellungen > Sicherheitseinstellungen > Lokale Richtlinien > Sicherheitsoptionen > Einstellungen 'Netzwerksicherheit: NTLM einschränken'. Überprüfen Sie die Ereignisprotokolle auf NTLMv1-Nutzung und beheben Sie betroffene Anwendungen, und setzen Sie dann 'Netzwerksicherheit: LAN Manager-Authentifizierungsebene' auf 'Nur NTLMv2-Antworten senden. LM und NTLM verweigern'", "status": "machine-draft" }
+  },
+  "ADDOM-017": {
+    "name": { "value": "Erzwingung von NTLMv2", "status": "machine-draft" },
+    "description": { "value": "Die LAN Manager-Authentifizierungsebene sollte so konfiguriert werden, dass nur NTLMv2-Antworten gesendet und LM sowie NTLMv1 abgelehnt werden. Obwohl NTLMv2 nach wie vor weniger sicher als Kerberos ist, ist es deutlich stärker als NTLMv1 und sollte der Mindeststandard für NTLM sein", "status": "machine-draft" },
+    "recommendedValue": { "value": "LAN Manager-Authentifizierungsebene auf 'Nur NTLMv2-Antworten senden. LM und NTLM verweigern' (Ebene 5) gesetzt", "status": "machine-draft" },
+    "remediationSteps": { "value": "Konfigurieren Sie dies über die Gruppenrichtlinie: Computerkonfiguration > Richtlinien > Windows-Einstellungen > Sicherheitseinstellungen > Lokale Richtlinien > Sicherheitsoptionen > 'Netzwerksicherheit: LAN Manager-Authentifizierungsebene' = 'Nur NTLMv2-Antworten senden. LM und NTLM verweigern'. Testen Sie gründlich vor der Erzwingung", "status": "machine-draft" }
+  },
+  "ADDOM-018": {
+    "name": { "value": "Enumeration über Nullsitzungen", "status": "machine-draft" },
+    "description": { "value": "Anonymer Zugriff (Nullsitzung) auf Active Directory ermöglicht es nicht authentifizierten Angreifern, Benutzer, Gruppen, Freigaben und Domäneninformationen zu enumerieren. Diese Aufklärungsdaten werden genutzt, um Angriffe auf Anmeldeinformationen und laterale Bewegung zu planen", "status": "machine-draft" },
+    "recommendedValue": { "value": "Enumeration über Nullsitzungen deaktiviert; RestrictAnonymous und RestrictAnonymousSAM so gesetzt, dass anonymer Zugriff verhindert wird", "status": "machine-draft" },
+    "remediationSteps": { "value": "Konfigurieren Sie dies über die Gruppenrichtlinie: Computerkonfiguration > Richtlinien > Windows-Einstellungen > Sicherheitseinstellungen > Lokale Richtlinien > Sicherheitsoptionen > Setzen Sie 'Netzwerkzugriff: Anonymen Zugriff auf Named Pipes und Freigaben einschränken' = Aktiviert, 'Netzwerkzugriff: Anonyme Enumeration von SAM-Konten nicht erlauben' = Aktiviert, 'Netzwerkzugriff: Anonyme Enumeration von SAM-Konten und Freigaben nicht erlauben' = Aktiviert", "status": "machine-draft" }
+  },
+  "ADDOM-019": {
+    "name": { "value": "Druckwarteschlange auf Domänencontrollern", "status": "machine-draft" },
+    "description": { "value": "Der Druckwarteschlangendienst auf Domänencontrollern ermöglicht die PrintNightmare-Angriffe (CVE-2021-34527) sowie die SpoolSample-/PrinterBug-Angriffe. Ein Angreifer kann einen DC zwingen, sich bei einem vom Angreifer kontrollierten Server zu authentifizieren, was das Weiterleiten von Anmeldeinformationen und den Missbrauch der unbeschränkten Delegierung ermöglicht", "status": "machine-draft" },
+    "recommendedValue": { "value": "Druckwarteschlangendienst auf allen Domänencontrollern deaktiviert", "status": "machine-draft" },
+    "remediationSteps": { "value": "Deaktivieren Sie den Druckwarteschlangendienst auf allen Domänencontrollern über die Gruppenrichtlinie: Computerkonfiguration > Richtlinien > Windows-Einstellungen > Sicherheitseinstellungen > Systemdienste > Druckwarteschlange > Startmodus = Deaktiviert. Wenden Sie dies auf die Domain Controllers-OU an. Stellen Sie sicher, dass keine Druckfunktionalität von DCs abhängt", "status": "machine-draft" }
+  },
+  "ADDOM-020": {
+    "name": { "value": "Konfiguration des DSRM-Kennworts", "status": "machine-draft" },
+    "description": { "value": "Das Kennwort des Verzeichnisdienst-Wiederherstellungsmodus (DSRM) bietet lokalen Administratorzugriff auf einen Domänencontroller, wenn dieser im Wiederherstellungsmodus gestartet wird. Ein Angreifer mit physischem oder Remote-Zugriff, der das DSRM-Kennwort kennt, kann die gesamte AD-Datenbank extrahieren. Das DSRM-Kennwort sollte pro DC eindeutig sein und regelmäßig rotiert werden", "status": "machine-draft" },
+    "recommendedValue": { "value": "DSRM-Kennwort pro DC eindeutig, jährlich rotiert und sicher aufbewahrt. DsrmAdminLogonBehavior auf 0 gesetzt, um DSRM-Netzwerkanmeldung zu verhindern", "status": "machine-draft" },
+    "remediationSteps": { "value": "Setzen Sie die DSRM-Kennwörter mit 'ntdsutil > set dsrm password' auf jedem DC zurück. Setzen Sie den Registrierungswert DsrmAdminLogonBehavior auf 0 unter HKLM\\System\\CurrentControlSet\\Control\\Lsa, um zu verhindern, dass das DSRM-Konto für die Netzwerkanmeldung verwendet wird. Dokumentieren und bewahren Sie die Kennwörter sicher auf", "status": "machine-draft" }
+  }
+}
