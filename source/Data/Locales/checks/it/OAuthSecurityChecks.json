@@ -1,0 +1,63 @@
+{
+  "_family": "OAuthSecurityChecks.json",
+  "OAUTH-001": {
+    "name": { "value": "Elenco consentito/bloccato delle app OAuth", "status": "machine-draft" },
+    "description": { "value": "L'accesso delle app OAuth dovrebbe essere regolato da un elenco consentito o bloccato per impedire alle applicazioni non autorizzate di accedere ai dati organizzativi.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Elenco consentito delle app OAuth configurato con le sole applicazioni approvate", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Sicurezza > Controlli API > Controllo dell'accesso alle app > Gestisci l'accesso delle app di terze parti > Configura le app attendibili/bloccate.", "status": "machine-draft" }
+  },
+  "OAUTH-002": {
+    "name": { "value": "Inventario delle app OAuth installate", "status": "machine-draft" },
+    "description": { "value": "Tutte le applicazioni OAuth installate dagli utenti dovrebbero essere inventariate ed esaminate per individuare le applicazioni non autorizzate o rischiose che accedono ai dati organizzativi.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Tutte le app OAuth installate esaminate e approvate dal team di sicurezza", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Sicurezza > Controlli API > Controllo dell'accesso alle app > Esamina le app installate e revoca l'accesso per le applicazioni non autorizzate.", "status": "machine-draft" }
+  },
+  "OAUTH-003": {
+    "name": { "value": "Analisi degli ambiti OAuth", "status": "machine-draft" },
+    "description": { "value": "Le applicazioni OAuth con ambiti ad alto rischio (Gmail, Drive, Admin) comportano un rischio significativo di esfiltrazione dei dati e devono essere esaminate e limitate.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Nessuna app non autorizzata con ambiti ad alto rischio (gmail, drive, admin)", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Sicurezza > Controlli API > Controllo dell'accesso alle app > Esamina le app con ambiti sensibili > Revoca o limita secondo necessità.", "status": "machine-draft" }
+  },
+  "OAUTH-004": {
+    "name": { "value": "Assegnazione di un punteggio di rischio alle app OAuth", "status": "machine-draft" },
+    "description": { "value": "Alle applicazioni OAuth dovrebbe essere assegnato un punteggio di rischio in base agli ambiti concessi e all'affidabilità dell'editore, così da definire le priorità della revisione di sicurezza.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Tutte le app ad alto rischio esaminate e approvate; nessuna app non esaminata con ambiti ampi", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Sicurezza > Controlli API > Controllo dell'accesso alle app > Esamina le app ordinate per ampiezza degli ambiti > Interveni sulle applicazioni ad alto rischio.", "status": "machine-draft" }
+  },
+  "OAUTH-005": {
+    "name": { "value": "Criterio di accesso alle app non verificate", "status": "machine-draft" },
+    "description": { "value": "L'accesso alle app di terze parti non verificate dovrebbe essere limitato per impedire agli utenti di concedere autorizzazioni ad applicazioni potenzialmente dannose.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Accesso alle app non verificate bloccato per tutti gli utenti", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Sicurezza > Controlli API > Controllo dell'accesso alle app > Impostazioni > Blocca le app non verificate.", "status": "machine-draft" }
+  },
+  "OAUTH-006": {
+    "name": { "value": "Controllo dell'accesso alle API", "status": "machine-draft" },
+    "description": { "value": "L'accesso alle API dovrebbe essere controllato con ambiti e restrizioni appropriati per impedire l'accesso programmatico non autorizzato ai dati organizzativi.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Accesso alle API limitato alle applicazioni e agli ambiti approvati", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Sicurezza > Controlli API > Gestisci i servizi Google > Limita l'accesso alle API alle sole app attendibili.", "status": "machine-draft" }
+  },
+  "OAUTH-007": {
+    "name": { "value": "Restrizioni all'installazione delle app dal Marketplace", "status": "machine-draft" },
+    "description": { "value": "L'installazione delle app da Google Workspace Marketplace dovrebbe essere limitata per impedire agli utenti di installare applicazioni non autorizzate.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Installazione delle app dal Marketplace limitata alle sole app approvate dall'amministratore o alle app in elenco consentito", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > App di Google Workspace Marketplace > Impostazioni > Limita l'installazione delle app dal Marketplace.", "status": "machine-draft" }
+  },
+  "OAUTH-008": {
+    "name": { "value": "Audit delle concessioni di delega a livello di dominio", "status": "machine-draft" },
+    "description": { "value": "La delega a livello di dominio consente agli account di servizio di impersonare qualsiasi utente e accedere ai suoi dati. Concessioni non autorizzate o eccessivamente permissive rappresentano un rischio di sicurezza critico.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Concessioni di delega a livello di dominio ridotte al minimo con autorizzazioni con ambito definito; tutte le concessioni esaminate e approvate", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Sicurezza > Controlli API > Delega a livello di dominio > Esamina tutte le concessioni, rimuovi quelle non necessarie e limita gli ambiti al minimo richiesto.", "status": "machine-draft" }
+  },
+  "OAUTH-009": {
+    "name": { "value": "Enumerazione delle chiavi degli account di servizio", "status": "machine-draft" },
+    "description": { "value": "Le chiavi degli account di servizio dovrebbero essere inventariate e ruotate regolarmente. Chiavi trapelate o obsolete forniscono un accesso non autorizzato persistente.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Tutte le chiavi degli account di servizio inventariate, ruotate entro 90 giorni e chiavi inutilizzate rimosse", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Cloud Console > IAM e amministrazione > Account di servizio > Esamina e ruota le chiavi > Rimuovi le chiavi degli account di servizio inutilizzate.", "status": "machine-draft" }
+  },
+  "OAUTH-010": {
+    "name": { "value": "App connesse con ambiti sensibili", "status": "machine-draft" },
+    "description": { "value": "Le applicazioni con accesso ai dati di Drive, Gmail o Calendar dovrebbero essere inventariate e convalidate per impedire l'esfiltrazione di dati tramite app connesse.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Tutte le app con ambiti sensibili (Drive, Gmail, Calendar) esaminate e approvate", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Sicurezza > Controlli API > Controllo dell'accesso alle app > Filtra per ambito (Drive, Gmail, Calendar) > Esamina e limita le app non autorizzate.", "status": "machine-draft" }
+  }
+}

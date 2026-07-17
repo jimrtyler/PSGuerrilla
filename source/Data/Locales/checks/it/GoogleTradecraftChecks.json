@@ -1,0 +1,39 @@
+{
+  "_family": "GoogleTradecraftChecks.json",
+  "GTRADE-001": {
+    "name": { "value": "Esposizione alla compromissione dell'organizzazione tramite delega a livello di dominio", "status": "machine-draft" },
+    "description": { "value": "La delega a livello di dominio associa l'impersonificazione all'ID client OAuth di un account di servizio, non alla sua chiave: pertanto chiunque possa generare una chiave su un account di servizio delegato dotato di ambiti ampi ottiene l'impersonificazione a livello di organizzazione senza essere super amministratore (la tecnica DeleFriend). Le concessioni delegate che comprendono ambiti completi Gmail/Drive/Directory/cloud-platform costituiscono la precondizione per la compromissione.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Nessun account di servizio con ambiti di impersonificazione a livello di organizzazione (Gmail/Drive/Directory/cloud-platform completi); solo ambiti ristretti di sola lettura", "status": "machine-draft" },
+    "remediationSteps": { "value": "Sicurezza > Controlli API > Delega a livello di dominio: rimuovi o restringi qualsiasi concessione che detenga ambiti completi mail.google.com, drive completo, admin.directory o cloud-platform; limita agli ambiti minimi di sola lettura necessari. In GCP, nega la creazione di chiavi sugli account di servizio delegati (iam.disableServiceAccountKeyCreation).", "status": "machine-draft" }
+  },
+  "GTRADE-002": {
+    "name": { "value": "Gruppi Google leggibili da Internet", "status": "machine-draft" },
+    "description": { "value": "I gruppi i cui argomenti sono visualizzabili da 'chiunque su Internet' divulgano silenziosamente l'intera cronologia dei messaggi, una categoria che ha esposto la posta interna di migliaia di organizzazioni (dati finanziari, credenziali, informazioni personali). Google non fornisce alcun avviso nativo per questa esposizione.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Nessun gruppo visualizzabile da chiunque su Internet (whoCanViewGroup diverso da ANYONE_CAN_VIEW)", "status": "machine-draft" },
+    "remediationSteps": { "value": "Apps > Google Workspace > Gruppi per le aziende > Impostazioni di condivisione, e impostazioni di accesso per singolo gruppo: imposta 'Chi può visualizzare le conversazioni' su membri/organizzazione soltanto, allontanandola da 'Chiunque su Internet'.", "status": "machine-draft" }
+  },
+  "GTRADE-003": {
+    "name": { "value": "Gruppi ad adesione aperta / con membri esterni", "status": "machine-draft" },
+    "description": { "value": "I gruppi a cui chiunque (o chiunque nel dominio) può aderire, oppure che consentono membri esterni, ampliano il perimetro di fiducia e abilitano l'accesso self-service: se un simile gruppo detiene anche accesso a risorse o IAM, l'adesione ne eredita l'accesso (un percorso di elevazione dei privilegi che Google classifica come comportamento previsto).", "status": "machine-draft" },
+    "recommendedValue": { "value": "Gruppi limitati ai membri invitati; nessuna adesione aperta a chiunque e nessun membro esterno salvo esplicita necessità", "status": "machine-draft" },
+    "remediationSteps": { "value": "Apps > Google Workspace > Gruppi per le aziende: imposta il valore predefinito di 'Chi può aderire' su 'Solo utenti invitati' e disabilita 'Consenti membri esterni' a meno che un gruppo non li richieda esplicitamente; esamina i gruppi che concedono accesso a risorse/IAM.", "status": "machine-draft" }
+  },
+  "GTRADE-004": {
+    "name": { "value": "Proliferazione di super amministratori", "status": "machine-draft" },
+    "description": { "value": "I super amministratori aggirano l'SSO e la maggior parte dei controlli; una vasta popolazione di super amministratori amplia la superficie di attacco di massimo valore dell'organizzazione. La best practice di Google è mantenere il numero ridotto (meno di cinque), svolgendo il lavoro quotidiano con ruoli a privilegio minimo.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Meno di 5 super amministratori attivi", "status": "machine-draft" },
+    "remediationSteps": { "value": "Account > Ruoli amministratore > Super amministratore: riduci l'appartenenza al minimo set di emergenza (break-glass); sposta le attività di routine su ruoli personalizzati/predefiniti a privilegio minimo; imponi la verifica in due passaggi (2SV) resistente al phishing su tutti i super amministratori rimanenti.", "status": "machine-draft" }
+  },
+  "GTRADE-005": {
+    "name": { "value": "Ruoli personalizzati equivalenti al super amministratore", "status": "machine-draft" },
+    "description": { "value": "I ruoli amministrativi personalizzati dotati di privilegi ad alta potenza (gestione utenti, impostazioni di sicurezza, gestione ruoli, esportazione dati/Takeout) possono avvicinarsi alla capacità di super amministratore eludendo un semplice conteggio dei super amministratori, un vettore silenzioso di concentrazione dei privilegi e persistenza.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Nessun ruolo personalizzato con privilegi equivalenti al super amministratore (gestione utenti/sicurezza/ruoli o esportazione dati) al di fuori dell'uso di emergenza", "status": "machine-draft" },
+    "remediationSteps": { "value": "Account > Ruoli amministratore: esamina i ruoli personalizzati che detengono privilegi di gestione utenti, impostazioni di sicurezza, gestione ruoli o esportazione dati/Takeout; suddividili in ruoli con ambito ristretto e limita gli assegnatari.", "status": "machine-draft" }
+  },
+  "GTRADE-006": {
+    "name": { "value": "Concessioni OAuth persistenti / con ambiti eccessivi", "status": "machine-draft" },
+    "description": { "value": "Le concessioni OAuth di terze parti che detengono ambiti completi Gmail/Drive/admin aggirano l'MFA e sopravvivono a una reimpostazione della password (Apps Script, le password per le app e le sessioni IMAP-OAuth non vengono revocate da una reimpostazione), un canale di persistenza duraturo. Google registra le concessioni ma non include alcun classificatore predefinito delle concessioni dannose.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Nessuna app OAuth di terze parti con ambiti completi mail/drive/admin; concessioni persistenti esaminate ed esplicitamente revocate", "status": "machine-draft" },
+    "remediationSteps": { "value": "Sicurezza > Controlli API > Controllo dell'accesso alle app: esamina le app con ambiti completi Gmail/Drive/Directory, limita alle app in elenco consentito e revoca esplicitamente le concessioni non necessarie (la sola reimpostazione della password NON revoca l'accesso OAuth, tramite password per le app o Apps Script).", "status": "machine-draft" }
+  }
+}

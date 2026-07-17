@@ -1,0 +1,189 @@
+{
+  "_family": "EmailSecurityChecks.json",
+  "EMAIL-001": {
+    "name": { "value": "Convalida del record SPF", "status": "machine-draft" },
+    "description": { "value": "I record Sender Policy Framework (SPF) devono esistere ed essere validi per tutti i domini. SPF previene lo spoofing della posta elettronica specificando quali server di posta sono autorizzati a inviare email per conto di un dominio", "status": "machine-draft" },
+    "recommendedValue": { "value": "Record v=spf1 valido pubblicato per tutti i domini con qualificatore -all o ~all", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Google Workspace > Gmail > Autentica email > Pubblica il record SPF: v=spf1 include:_spf.google.com ~all per ciascun dominio", "status": "machine-draft" }
+  },
+  "EMAIL-002": {
+    "name": { "value": "Firma DKIM abilitata", "status": "machine-draft" },
+    "description": { "value": "La firma DomainKeys Identified Mail (DKIM) deve essere abilitata e valida per tutti i domini. DKIM fornisce la prova crittografica che il contenuto dell'email non è stato manomesso durante il transito", "status": "machine-draft" },
+    "recommendedValue": { "value": "Firma DKIM abilitata con chiave valida pubblicata per tutti i domini", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Google Workspace > Gmail > Autentica email > Genera la chiave DKIM e pubblica il record DNS per ciascun dominio", "status": "machine-draft" }
+  },
+  "EMAIL-003": {
+    "name": { "value": "Audit del criterio DMARC", "status": "machine-draft" },
+    "description": { "value": "Il criterio Domain-based Message Authentication, Reporting and Conformance (DMARC) deve essere impostato su reject o quarantine per tutti i domini. Un criterio DMARC pari a none non offre alcuna protezione contro lo spoofing", "status": "machine-draft" },
+    "recommendedValue": { "value": "Criterio DMARC impostato su reject o quarantine per tutti i domini", "status": "machine-draft" },
+    "remediationSteps": { "value": "Pubblica il record TXT DMARC in _dmarc.<domain> con p=reject o p=quarantine. Inizia con p=none per il monitoraggio, quindi passa a quarantine e infine a reject", "status": "machine-draft" }
+  },
+  "EMAIL-004": {
+    "name": { "value": "Criterio MTA-STS", "status": "machine-draft" },
+    "description": { "value": "Mail Transfer Agent Strict Transport Security (MTA-STS) previene gli attacchi di downgrade TLS e l'intercettazione man-in-the-middle della posta in transito, richiedendo connessioni TLS autenticate", "status": "machine-draft" },
+    "recommendedValue": { "value": "Record TXT MTA-STS pubblicato e criterio ospitato all'indirizzo https://mta-sts.<domain>/.well-known/mta-sts.txt", "status": "machine-draft" },
+    "remediationSteps": { "value": "Pubblica il record TXT _mta-sts.<domain> con v=STSv1; id=<unique_id> e ospita il file del criterio MTA-STS all'indirizzo https://mta-sts.<domain>/.well-known/mta-sts.txt", "status": "machine-draft" }
+  },
+  "EMAIL-005": {
+    "name": { "value": "Imposizione del TLS", "status": "machine-draft" },
+    "description": { "value": "Il Transport Layer Security (TLS) dovrebbe essere richiesto per la trasmissione della posta elettronica al fine di prevenire l'intercettazione. Le impostazioni di conformità TLS garantiscono connessioni cifrate con i domini partner specificati", "status": "machine-draft" },
+    "recommendedValue": { "value": "TLS richiesto per tutte le connessioni in uscita e in entrata", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Google Workspace > Gmail > Conformità > Conformità del trasporto sicuro (TLS) > Aggiungi una regola che richieda il TLS per tutti i domini o per specifici domini partner", "status": "machine-draft" }
+  },
+  "EMAIL-006": {
+    "name": { "value": "Revisione degli elenchi consentiti/bloccati della posta", "status": "machine-draft" },
+    "description": { "value": "Gli elenchi consentiti e bloccati della posta dovrebbero essere esaminati per individuare voci eccessivamente permissive. I mittenti in elenco consentito aggirano il filtraggio antispam e possono essere sfruttati se configurati in modo errato", "status": "machine-draft" },
+    "recommendedValue": { "value": "Voci minime nell'elenco consentito senza domini con caratteri jolly; elenco bloccato mantenuto attivamente", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Google Workspace > Gmail > Spam, phishing e malware > Esamina gli elenchi consentiti della posta e gli elenchi dei mittenti bloccati per individuare voci eccessivamente ampie", "status": "machine-draft" }
+  },
+  "EMAIL-007": {
+    "name": { "value": "Configurazione del gateway in entrata", "status": "machine-draft" },
+    "description": { "value": "I gateway di posta in entrata dovrebbero essere configurati correttamente per preservare i risultati dell'autenticazione del mittente. Gateway configurati in modo errato possono rimuovere le intestazioni SPF/DKIM/DMARC o aggirare il filtraggio di sicurezza", "status": "machine-draft" },
+    "recommendedValue": { "value": "Gateway in entrata configurati con intervalli IP corretti e conservazione delle intestazioni", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Google Workspace > Gmail > Spam, phishing e malware > Gateway in entrata > Verifica gli IP del gateway e che le intestazioni di autenticazione siano preservate", "status": "machine-draft" }
+  },
+  "EMAIL-008": {
+    "name": { "value": "Audit delle regole di instradamento della posta", "status": "machine-draft" },
+    "description": { "value": "Le regole di instradamento della posta dovrebbero essere esaminate per individuare configurazioni sospette o non autorizzate. Regole di instradamento dannose possono reindirizzare la posta verso destinazioni controllate da un aggressore", "status": "machine-draft" },
+    "recommendedValue": { "value": "Tutte le regole di instradamento esaminate e documentate con una giustificazione aziendale", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Google Workspace > Gmail > Routing > Esamina tutte le regole di instradamento, l'instradamento predefinito e le mappe dei destinatari per individuare voci non autorizzate", "status": "machine-draft" }
+  },
+  "EMAIL-009": {
+    "name": { "value": "Criterio di inoltro automatico", "status": "machine-draft" },
+    "description": { "value": "L'inoltro automatico della posta verso indirizzi esterni dovrebbe essere disabilitato per prevenire l'esfiltrazione di dati. Gli aggressori impostano spesso regole di inoltro dopo aver compromesso un account", "status": "machine-draft" },
+    "recommendedValue": { "value": "Inoltro automatico disabilitato per tutte le unità organizzative", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Google Workspace > Gmail > Accesso utente finale > Disabilita l'inoltro automatico per tutte le OU. Esamina le regole di inoltro esistenti tramite la Gmail API", "status": "machine-draft" }
+  },
+  "EMAIL-010": {
+    "name": { "value": "Impostazioni di accesso delegato", "status": "machine-draft" },
+    "description": { "value": "La delega della posta consente agli utenti di concedere ad altri utenti l'accesso in lettura e invio alla propria casella di posta. Una delega eccessiva può portare ad accessi non autorizzati e a impersonificazione", "status": "machine-draft" },
+    "recommendedValue": { "value": "Delega della posta limitata ed esaminata periodicamente; nessun delegato imprevisto", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Google Workspace > Gmail > Accesso utente finale > Esamina le impostazioni di delega della posta. Verifica i singoli utenti per individuare delegati non autorizzati tramite la Gmail API", "status": "machine-draft" }
+  },
+  "EMAIL-011": {
+    "name": { "value": "Impostazioni di accesso POP/IMAP", "status": "machine-draft" },
+    "description": { "value": "L'accesso POP e IMAP dovrebbe essere disabilitato a meno che non sia specificamente richiesto. Questi protocolli legacy aggirano i controlli di sicurezza moderni e possono essere usati per attacchi basati sulle credenziali", "status": "machine-draft" },
+    "recommendedValue": { "value": "POP e IMAP disabilitati per tutti gli utenti", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Google Workspace > Gmail > Accesso utente finale > Disabilita l'accesso POP e IMAP. Esamina le impostazioni dei singoli utenti tramite la Gmail API", "status": "machine-draft" }
+  },
+  "EMAIL-012": {
+    "name": { "value": "Impostazioni dei filtri antispam e antiphishing", "status": "machine-draft" },
+    "description": { "value": "I filtri antispam e antiphishing avanzati dovrebbero essere abilitati per fornire la massima protezione contro gli attacchi di ingegneria sociale e le campagne email dannose", "status": "machine-draft" },
+    "recommendedValue": { "value": "Filtraggio antispam avanzato e rilevamento aggressivo del phishing abilitati", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Google Workspace > Gmail > Spam, phishing e malware > Abilita 'Sii più aggressivo nel filtrare lo spam' e tutte le opzioni di protezione dal phishing", "status": "machine-draft" }
+  },
+  "EMAIL-013": {
+    "name": { "value": "Analisi avanzata dei messaggi prima della consegna", "status": "machine-draft" },
+    "description": { "value": "L'analisi avanzata dei messaggi prima della consegna usa euristiche avanzate e sandboxing per rilevare malware e minacce prima che i messaggi vengano consegnati nelle caselle di posta degli utenti", "status": "machine-draft" },
+    "recommendedValue": { "value": "Analisi avanzata dei messaggi prima della consegna abilitata", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Google Workspace > Gmail > Spam, phishing e malware > Abilita 'Analisi avanzata dei messaggi prima della consegna' per identificare i contenuti sospetti", "status": "machine-draft" }
+  },
+  "EMAIL-014": {
+    "name": { "value": "Avviso per destinatari esterni", "status": "machine-draft" },
+    "description": { "value": "Gli utenti dovrebbero essere avvisati quando inviano email a destinatari esterni all'organizzazione, per prevenire la divulgazione accidentale di dati e l'ingegneria sociale", "status": "machine-draft" },
+    "recommendedValue": { "value": "Avviso per destinatari esterni abilitato per tutti gli utenti", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Google Workspace > Gmail > Accesso utente finale > Abilita 'Avvisa gli utenti quando inviano messaggi all'esterno del dominio'", "status": "machine-draft" }
+  },
+  "EMAIL-015": {
+    "name": { "value": "Impostazioni di sicurezza degli allegati", "status": "machine-draft" },
+    "description": { "value": "Tutte le protezioni per la sicurezza degli allegati dovrebbero essere abilitate per rilevare e bloccare gli allegati dannosi, inclusi archivi cifrati, tipi di file anomali e script", "status": "machine-draft" },
+    "recommendedValue": { "value": "Tutte le opzioni di protezione degli allegati abilitate con azione di quarantena", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Google Workspace > Gmail > Sicurezza > Allegati > Abilita tutte le protezioni: allegati cifrati, script da mittenti non attendibili e tipi di allegato anomali", "status": "machine-draft" }
+  },
+  "EMAIL-016": {
+    "name": { "value": "Protezione di link e immagini esterne", "status": "machine-draft" },
+    "description": { "value": "La protezione dei link dovrebbe essere abilitata per analizzare gli URL alla ricerca di phishing e malware. Il proxy delle immagini esterne previene i pixel di tracciamento e la divulgazione dell'IP", "status": "machine-draft" },
+    "recommendedValue": { "value": "Analisi degli URL, avvisi al momento del clic e proxy delle immagini esterne abilitati", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Google Workspace > Gmail > Sicurezza > Link e immagini esterne > Abilita 'Identifica i link dietro URL abbreviati', 'Analizza le immagini collegate' e 'Mostra un avviso quando si fa clic su link verso domini non attendibili'", "status": "machine-draft" }
+  },
+  "EMAIL-017": {
+    "name": { "value": "Protezione da spoofing e autenticazione", "status": "machine-draft" },
+    "description": { "value": "Le protezioni da spoofing e di autenticazione difendono dallo spoofing del dominio, dallo spoofing del nome dei dipendenti e dalla posta non autenticata proveniente da domini che appaiono simili a quelli dell'organizzazione", "status": "machine-draft" },
+    "recommendedValue": { "value": "Tutte le protezioni da spoofing e di autenticazione abilitate con azione di quarantena", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Google Workspace > Gmail > Sicurezza > Spoofing e autenticazione > Abilita tutte le protezioni: spoofing del dominio, spoofing del nome dei dipendenti, spoofing della posta in entrata e posta non autenticata", "status": "machine-draft" }
+  },
+  "EMAIL-018": {
+    "name": { "value": "Audit delle regole di conformità", "status": "machine-draft" },
+    "description": { "value": "Le regole di conformità dei contenuti dovrebbero essere esaminate per garantire che i dati sensibili siano gestiti in modo appropriato. Le regole possono imporre cifratura, quarantena o rifiuto in base a pattern di contenuto", "status": "machine-draft" },
+    "recommendedValue": { "value": "Regole di conformità dei contenuti configurate per i tipi di dati sensibili con azioni appropriate", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Google Workspace > Gmail > Conformità > Conformità dei contenuti > Esamina le regole esistenti e crea regole per i tipi di contenuto sensibile (informazioni personali, dati finanziari, dati sanitari)", "status": "machine-draft" }
+  },
+  "EMAIL-019": {
+    "name": { "value": "Configurazione delle regole DLP", "status": "machine-draft" },
+    "description": { "value": "Le regole di Data Loss Prevention (DLP) dovrebbero essere configurate per rilevare e impedire l'uscita di dati sensibili dall'organizzazione tramite email. La DLP fornisce ispezione automatica dei contenuti e applicazione dei criteri", "status": "machine-draft" },
+    "recommendedValue": { "value": "Regole DLP configurate per i principali tipi di dati (carte di credito, codici fiscali, dati sanitari) con azione di blocco o avviso", "status": "machine-draft" },
+    "remediationSteps": { "value": "Sicurezza > Protezione dei dati > Gestisci le regole: crea una regola DLP per Gmail che rilevi i pattern di contenuto sensibile (carte di credito, codici fiscali, dati sanitari) e applichi un'azione di blocco o avviso", "status": "machine-draft" }
+  },
+  "EMAIL-020": {
+    "name": { "value": "Modalità riservata di Gmail", "status": "machine-draft" },
+    "description": { "value": "La modalità riservata di Gmail consente ai mittenti di impostare date di scadenza e revocare l'accesso ai messaggi. Verifica se questa funzionalità è abilitata o limitata in base ai criteri organizzativi", "status": "machine-draft" },
+    "recommendedValue": { "value": "Modalità riservata di Gmail abilitata per gli utenti che gestiscono dati sensibili", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Google Workspace > Gmail > Accesso utente finale > Esamina le impostazioni della modalità riservata di Gmail e abilitala o limitala in base ai requisiti organizzativi", "status": "machine-draft" }
+  },
+  "EMAIL-021": {
+    "name": { "value": "Impostazioni S/MIME", "status": "machine-draft" },
+    "description": { "value": "S/MIME fornisce cifratura end-to-end e firme digitali per la posta elettronica. Se richiesto dalla conformità, i certificati S/MIME dovrebbero essere configurati e gestiti correttamente", "status": "machine-draft" },
+    "recommendedValue": { "value": "S/MIME abilitato se richiesto dalla conformità; certificati gestiti correttamente", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Google Workspace > Gmail > Accesso utente finale > S/MIME > Abilita S/MIME ospitato se richiesto e assicurati che i certificati siano caricati e validi", "status": "machine-draft" }
+  },
+  "EMAIL-022": {
+    "name": { "value": "Enumerazione delle regole di inoltro della posta", "status": "machine-draft" },
+    "description": { "value": "Tutte le regole di inoltro della posta a livello utente dovrebbero essere enumerate ed esaminate. Gli aggressori impostano comunemente regole di inoltro per mantenere un accesso persistente alla posta dopo la compromissione di un account", "status": "machine-draft" },
+    "recommendedValue": { "value": "Nessuna regola di inoltro non autorizzata; tutte le regole di inoltro documentate e approvate", "status": "machine-draft" },
+    "remediationSteps": { "value": "Enumera le regole di inoltro tramite la Gmail API per tutti gli utenti. Rimuovi gli indirizzi di inoltro non autorizzati. Disabilita l'inoltro automatico a livello di OU per prevenire abusi futuri", "status": "machine-draft" }
+  },
+  "EMAIL-023": {
+    "name": { "value": "Gateway in uscita per singolo utente disabilitati (GWS.GMAIL.12.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GMAIL.12.1 richiede che i gateway in uscita per singolo utente siano disabilitati. Quando sono abilitati, gli utenti possono instradare la posta in uscita attraverso i propri server SMTP esterni, aggirando i controlli di sicurezza della posta dell'organizzazione e creando un percorso di esfiltrazione dei dati e di spoofing. Questo controllo legge il criterio gmail.per_user_outbound_gateway dalla Cloud Identity Policy API e segnala qualsiasi unità organizzativa in cui è consentito l'instradamento SMTP esterno. Quando il criterio non viene restituito, l'esito è Not Assessed.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Gateway in uscita per singolo utente (SMTP esterno) disabilitati per tutte le unità organizzative", "status": "machine-draft" },
+    "remediationSteps": { "value": "Nella Google Admin Console, in Apps > Google Workspace > Gmail > Routing, assicurati che i gateway in uscita per singolo utente non siano consentiti, così che gli utenti non possano instradare la posta attraverso server SMTP esterni. Mantieni l'instradamento in uscita centralizzato solo attraverso gateway approvati.", "status": "machine-draft" }
+  },
+  "EMAIL-024": {
+    "name": { "value": "Security Sandbox di Gmail abilitata (GWS.GMAIL.16.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GMAIL.16.1 raccomanda di abilitare la Gmail Security Sandbox, che fa detonare gli allegati in entrata in un ambiente virtuale per rilevare malware zero-day che l'analisi delle firme non individua. Questo controllo legge il criterio gmail.security_sandbox dalla Cloud Identity Policy API e segnala le unità organizzative in cui la sandbox è disabilitata. Il campo esatto del criterio è best-effort in attesa di conferma su un tenant con licenza; quando il criterio non viene restituito, l'esito è Not Assessed anziché un verdetto inventato.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Security Sandbox abilitata (detonazione virtuale degli allegati) per tutte le unità organizzative", "status": "machine-draft" },
+    "remediationSteps": { "value": "Nella Google Admin Console, in Apps > Google Workspace > Gmail > Sicurezza > Allegati, abilita la Security Sandbox così che gli allegati in entrata vengano fatti detonare in un ambiente virtuale prima della consegna. Nota: la Security Sandbox richiede l'edizione di Google Workspace appropriata.", "status": "machine-draft" }
+  },
+  "EMAIL-025": {
+    "name": { "value": "Delega della posta di Gmail disabilitata (GWS.GMAIL.1.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GMAIL.1.1: la delega della posta consente a un utente di concedere a un altro account l'accesso in lettura/invio alla propria casella di posta, un percorso di accesso ai dati permanente che sopravvive allo scopo della delega. Legge gmail.mail_delegation; avvisa dove enableMailDelegation è attivo.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Delega della posta disabilitata salvo che sia deliberatamente richiesta", "status": "machine-draft" },
+    "remediationSteps": { "value": "In Gmail, in Impostazioni > Impostazioni utente, disabilita la delega della posta salvo che esista una necessità aziendale esaminata.", "status": "machine-draft" }
+  },
+  "EMAIL-026": {
+    "name": { "value": "Accesso POP e IMAP di Gmail disabilitato (GWS.GMAIL.9.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GMAIL.9.1: i protocolli legacy POP e IMAP aggirano l'autenticazione moderna e sono un vettore di credential-stuffing / bypass dell'MFA. Legge gmail.imap_access e gmail.pop_access; fallisce dove uno dei due è abilitato.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Accesso POP e IMAP disabilitato", "status": "machine-draft" },
+    "remediationSteps": { "value": "In Gmail, in Accesso utente finale, disabilita POP e IMAP così che i client di posta debbano usare protocolli moderni autenticati.", "status": "machine-draft" }
+  },
+  "EMAIL-027": {
+    "name": { "value": "Importazione di email/contatti utente di Gmail disabilitata (GWS.GMAIL.8.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GMAIL.8.1: i caricamenti di email utente (importazione di posta e contatti da account esterni) portano dati esterni nel tenant e possono esfiltrarli in senso inverso. Legge gmail.user_email_uploads; avvisa dove enableMailAndContactsImport è attivo.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Importazione di email/contatti utente disabilitata", "status": "machine-draft" },
+    "remediationSteps": { "value": "In Gmail, disabilita la possibilità per gli utenti di importare posta e contatti da altri account salvo che sia richiesto.", "status": "machine-draft" }
+  },
+  "EMAIL-028": {
+    "name": { "value": "Google Workspace Sync per Outlook disabilitato (GWS.GMAIL.10.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GMAIL.10.1: Google Workspace Sync for Microsoft Outlook (GWSMO) collega i dati della casella di posta a un client Outlook, ampliando la superficie dei dati e aggirando alcune protezioni web. Legge gmail.workspace_sync_for_outlook; avvisa dove è abilitato.", "status": "machine-draft" },
+    "recommendedValue": { "value": "GWSMO disabilitato salvo che sia richiesto", "status": "machine-draft" },
+    "remediationSteps": { "value": "Nelle impostazioni di accesso utente finale di Gmail, disabilita Google Workspace Sync for Microsoft Outlook salvo che esista una necessità esaminata.", "status": "machine-draft" }
+  },
+  "EMAIL-029": {
+    "name": { "value": "Elenchi di mittenti con override antispam di Gmail esaminati (GWS.GMAIL.18.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GMAIL.18.1: gli elenchi di mittenti approvati / con override antispam fanno sì che la posta dai domini elencati aggiri il filtraggio antispam, un bypass del phishing se troppo ampi. Legge gmail.spam_override_lists; avvisa dove sono configurati domini di mittenti con override.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Elenchi di mittenti con override antispam assenti o minimi ed esaminati", "status": "machine-draft" },
+    "remediationSteps": { "value": "Nelle impostazioni antispam di Gmail, esamina e riduci al minimo gli elenchi di mittenti approvati / di bypass, così che la posta dei domini attendibili non sia esentata in blocco dal filtraggio antispam.", "status": "machine-draft" }
+  },
+  "EMAIL-030": {
+    "name": { "value": "Inoltro automatico della posta disabilitato (GWS.GMAIL.11.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GMAIL.11.1 raccomanda di disabilitare l'inoltro automatico della posta, specialmente verso domini esterni. L'inoltro automatico è un comune canale di esfiltrazione dei dati e un meccanismo di persistenza dopo la compromissione di un account, poiché copia silenziosamente la posta in entrata verso un indirizzo controllato da un aggressore. Questo controllo legge il criterio Cloud Identity gmail.auto_forwarding e segnala qualsiasi unità organizzativa in cui l'inoltro automatico è abilitato.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Inoltro automatico della posta disabilitato (enableAutoForwarding = false) in tutte le unità organizzative.", "status": "machine-draft" },
+    "remediationSteps": { "value": "Nella Google Admin Console, in Apps > Google Workspace > Gmail > Accesso utente finale, disabilita 'Consenti agli utenti di inoltrare automaticamente la posta in entrata a un altro indirizzo', dando priorità alle destinazioni esterne. Esamina le regole di inoltro esistenti per individuare destinatari esterni imprevisti.", "status": "machine-draft" }
+  },
+  "EMAIL-031": {
+    "name": { "value": "Analisi avanzata dei messaggi prima della consegna abilitata (GWS.GMAIL.15.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GMAIL.15.1 richiede l'analisi avanzata dei messaggi prima della consegna, che migliora il rilevamento dei contenuti sospetti e di phishing prima che un messaggio raggiunga la casella di posta. Questo controllo legge il criterio Cloud Identity gmail.enhanced_pre_delivery_message_scanning e segnala qualsiasi unità organizzativa in cui il rilevamento migliorato dei contenuti sospetti non è abilitato.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Analisi avanzata dei messaggi prima della consegna abilitata (enableImprovedSuspiciousContentDetection = true) in tutte le unità organizzative.", "status": "machine-draft" },
+    "remediationSteps": { "value": "Nella Google Admin Console, in Apps > Google Workspace > Gmail > Spam, phishing e malware, abilita l'analisi avanzata dei messaggi prima della consegna così che Gmail esegua un'analisi aggiuntiva dei contenuti sospetti prima della consegna.", "status": "machine-draft" }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "_family": "GwsServiceChecks.json",
+  "GWS-SITES-001": {
+    "name": { "value": "Servizio Sites disabilitato", "status": "machine-draft" },
+    "description": { "value": "Il servizio Google Sites dovrebbe essere disabilitato per tutti gli utenti al fine di ridurre la superficie di attacco, coerentemente con il privilegio minimo. Sites può essere abilitato in modo selettivo per singola unità organizzativa o gruppo dove esiste una necessità documentata.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Servizio Sites DISATTIVATO per tutti (abilitare in modo selettivo per OU/gruppo solo se necessario)", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Google Workspace > Sites > Stato del servizio > Imposta su DISATTIVATO per tutti. Abilita in modo selettivo per singola unità organizzativa o gruppo solo dove esiste una necessità aziendale documentata.", "status": "machine-draft" }
+  },
+  "GWS-CLASS-001": {
+    "name": { "value": "Iscrizione a Classroom - Chi può partecipare ai corsi", "status": "machine-draft" },
+    "description": { "value": "Chi può partecipare ai corsi nel tuo dominio dovrebbe essere limitato ai soli utenti del tuo dominio, impedendo agli account esterni di partecipare ai corsi interni.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Chi può partecipare ai corsi impostato su 'Solo utenti del tuo dominio'", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Servizi Google aggiuntivi > Classroom > Impostazioni dei corsi > Informazioni sull'iscrizione ai corsi > Chi può partecipare ai corsi nel tuo dominio > Imposta su 'Solo utenti del tuo dominio'.", "status": "machine-draft" }
+  },
+  "GWS-CLASS-002": {
+    "name": { "value": "Iscrizione a Classroom - A quali corsi possono partecipare gli utenti", "status": "machine-draft" },
+    "description": { "value": "I corsi a cui gli utenti del tuo dominio possono partecipare dovrebbero essere limitati ai soli corsi del tuo dominio, impedendo agli utenti interni di partecipare a corsi esterni che potrebbero esfiltrare dati.", "status": "machine-draft" },
+    "recommendedValue": { "value": "A quali corsi possono partecipare gli utenti impostato su 'Solo corsi del tuo dominio'", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Servizi Google aggiuntivi > Classroom > Impostazioni dei corsi > Informazioni sull'iscrizione ai corsi > A quali corsi possono partecipare gli utenti del tuo dominio > Imposta su 'Solo corsi del tuo dominio'.", "status": "machine-draft" }
+  },
+  "GWS-CLASS-003": {
+    "name": { "value": "Accesso ai dati tramite API di Classroom limitato", "status": "machine-draft" },
+    "description": { "value": "Gli utenti non dovrebbero poter autorizzare app di terze parti ad accedere ai loro dati di Google Classroom, per impedire un accesso incontrollato ai dati da parte di integrazioni esterne.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Gli utenti non possono autorizzare app ad accedere ai dati di Classroom (accesso ai dati tramite API disabilitato)", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Servizi Google aggiuntivi > Classroom > Accesso ai dati > Deseleziona 'Gli utenti possono autorizzare app ad accedere ai loro dati di Google Classroom'.", "status": "machine-draft" }
+  },
+  "GWS-CLASS-004": {
+    "name": { "value": "Importazione degli elenchi in Classroom disabilitata", "status": "machine-draft" },
+    "description": { "value": "L'importazione degli elenchi tramite integrazione di terze parti dovrebbe essere disattivata affinché gli elenchi dei corsi non vengano sincronizzati da sistemi esterni senza una governance esplicita.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Importazione degli elenchi DISATTIVATA", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Servizi Google aggiuntivi > Classroom > Importazione degli elenchi > Seleziona DISATTIVATA.", "status": "machine-draft" }
+  },
+  "GWS-CLASS-005": {
+    "name": { "value": "Rimozione dell'iscrizione degli studenti in Classroom limitata", "status": "machine-draft" },
+    "description": { "value": "Solo agli insegnanti dovrebbe essere consentito rimuovere l'iscrizione degli studenti dai corsi, impedendo agli studenti di rimuovere sé stessi o altri e di compromettere l'integrità dell'iscrizione al corso.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Rimozione dell'iscrizione degli studenti limitata ai soli insegnanti", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Servizi Google aggiuntivi > Classroom > Rimozione dell'iscrizione degli studenti > Seleziona 'Solo insegnanti'.", "status": "machine-draft" }
+  },
+  "GWS-CLASS-006": {
+    "name": { "value": "Creazione di corsi in Classroom limitata agli insegnanti verificati", "status": "machine-draft" },
+    "description": { "value": "La creazione dei corsi dovrebbe essere limitata ai soli insegnanti verificati, impedendo a utenti non autorizzati di creare corsi e radunare membri.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Creazione di corsi limitata ai soli insegnanti verificati", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Servizi Google aggiuntivi > Classroom > Impostazioni generali > Autorizzazioni degli insegnanti > Seleziona 'Solo insegnanti verificati'.", "status": "machine-draft" }
+  },
+  "GWS-GEMINI-001": {
+    "name": { "value": "Accesso all'app Gemini limitato agli utenti con licenza", "status": "machine-draft" },
+    "description": { "value": "L'accesso degli utenti all'app Gemini dovrebbe essere impostato su DISATTIVATO per tutti coloro che non dispongono di una licenza, garantendo che l'accesso all'IA generativa sia regolato dall'assegnazione della licenza anziché essere aperto a tutti gli utenti.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Accesso all'app Gemini DISATTIVATO per gli utenti senza licenza", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > IA generativa > App Gemini > Accesso degli utenti > Deseleziona 'Consenti a tutti gli utenti di accedere all'app Gemini, indipendentemente dalla licenza'.", "status": "machine-draft" }
+  },
+  "GWS-GEMINI-002": {
+    "name": { "value": "Funzionalità Alpha di Gemini disabilitate", "status": "machine-draft" },
+    "description": { "value": "Le funzionalità Alpha di Gemini dovrebbero essere disabilitate. Le funzionalità in fase di pre-rilascio potrebbero non aver completato la revisione di sicurezza e possono esporre i dati organizzativi a un trattamento non verificato.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Accesso alle funzionalità Alpha in Gemini for Workspace disattivato", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > IA generativa > Gemini for Workspace > Funzionalità Alpha > Seleziona 'Disattiva l'accesso alle funzionalità Alpha in Gemini for Google Workspace'.", "status": "machine-draft" }
+  },
+  "GWS-GEMINI-003": {
+    "name": { "value": "Cronologia delle conversazioni di Gemini abilitata", "status": "machine-draft" },
+    "description": { "value": "La cronologia delle conversazioni di Gemini dovrebbe essere abilitata affinché le interazioni con l'IA siano conservate a fini di audit e conformità. Una cronologia disabilitata può occultare il trattamento dei dati.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Cronologia delle conversazioni di Gemini abilitata", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > IA generativa > App Gemini > Cronologia delle conversazioni di Gemini > Assicurati che la cronologia delle conversazioni sia attivata.", "status": "machine-draft" }
+  },
+  "GWS-GEMINI-004": {
+    "name": { "value": "Conservazione delle conversazioni di Gemini di almeno 18 mesi", "status": "machine-draft" },
+    "description": { "value": "La conservazione delle conversazioni di Gemini dovrebbe essere impostata su un minimo di 18 mesi per soddisfare i requisiti di audit, blocco per motivi legali e indagine sugli incidenti.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Conservazione delle conversazioni impostata ad almeno 18 mesi", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > IA generativa > App Gemini > Cronologia delle conversazioni di Gemini > Imposta il periodo di conservazione ad almeno 18 mesi.", "status": "machine-draft" }
+  },
+  "GWS-GEMINI-005": {
+    "name": { "value": "Condivisione delle conversazioni di Gemini disabilitata", "status": "machine-draft" },
+    "description": { "value": "La condivisione delle conversazioni di Gemini tramite link dovrebbe essere impostata su DISATTIVATO per impedire che il contenuto delle conversazioni con l'IA, che può includere prompt e output sensibili, venga condiviso al di fuori dei destinatari previsti.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Condivisione delle conversazioni tramite link impostata su DISATTIVATO", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > IA generativa > App Gemini > Condivisione > Imposta 'Consenti la condivisione delle conversazioni tramite link' su DISATTIVATO.", "status": "machine-draft" }
+  }
+}

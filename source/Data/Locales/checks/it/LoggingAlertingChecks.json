@@ -1,0 +1,39 @@
+{
+  "_family": "LoggingAlertingChecks.json",
+  "LOG-001": {
+    "name": { "value": "Impostazioni di conservazione dei log di controllo", "status": "machine-draft" },
+    "description": { "value": "I log di controllo dovrebbero essere conservati per un periodo adeguato a supportare l'indagine sugli incidenti e i requisiti di conformità. La conservazione predefinita varia a seconda dell'edizione di Workspace.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Conservazione dei log di controllo di 12 mesi o più; estesa tramite esportazione in BigQuery per la conservazione a lungo termine", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Report > Audit e indagine > Verifica la disponibilità dei log. Configura l'esportazione in BigQuery tramite Google Admin Console > Report > Esportazione in BigQuery per la conservazione a lungo termine.", "status": "machine-draft" }
+  },
+  "LOG-002": {
+    "name": { "value": "Inventario delle regole del centro avvisi", "status": "machine-draft" },
+    "description": { "value": "Le regole del centro avvisi dovrebbero essere configurate per rilevare e notificare gli eventi rilevanti per la sicurezza, inclusi accessi sospetti, esfiltrazione di dati e violazioni dei criteri.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Regole di avviso configurate per gli eventi di sicurezza chiave (accesso sospetto, esfiltrazione di dati, modifiche ai privilegi)", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Sicurezza > Centro avvisi > Esamina le regole esistenti > Crea regole per le categorie di eventi di sicurezza mancanti.", "status": "machine-draft" }
+  },
+  "LOG-003": {
+    "name": { "value": "Analisi della copertura delle regole di attività", "status": "machine-draft" },
+    "description": { "value": "Le regole di attività dovrebbero fornire una copertura adeguata nei vari domini di sicurezza, inclusi gli eventi di accesso, di Drive, amministrativi e di posta elettronica.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Regole di attività che coprono accessi, condivisione in Drive, modifiche amministrative, inoltro di posta elettronica ed eventi OAuth", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Sicurezza > Centro avvisi > Regole > Esamina la copertura nelle categorie di eventi > Aggiungi regole per i domini di sicurezza non coperti.", "status": "machine-draft" }
+  },
+  "LOG-004": {
+    "name": { "value": "Impostazioni di esportazione dei dati", "status": "machine-draft" },
+    "description": { "value": "Google Takeout (esportazione dei dati) dovrebbe essere controllato per impedire agli utenti di esportare in blocco i dati organizzativi al di fuori del dominio.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Google Takeout disabilitato o limitato per la maggior parte degli utenti", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Apps > Servizi Google aggiuntivi > Google Takeout > Disabilita o limita per le OU pertinenti.", "status": "machine-draft" }
+  },
+  "LOG-005": {
+    "name": { "value": "Configurazione degli avvisi email per gli amministratori", "status": "machine-draft" },
+    "description": { "value": "Gli avvisi email dovrebbero essere configurati per le azioni amministrative critiche, incluse le modifiche ai super amministratori, le modifiche alle impostazioni di sicurezza e le operazioni in blocco.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Avvisi email abilitati per le azioni amministrative critiche e gli eventi di sicurezza", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Sicurezza > Centro avvisi > Configura i destinatari delle notifiche email per i tipi di avviso critici.", "status": "machine-draft" }
+  },
+  "LOG-006": {
+    "name": { "value": "Accesso all'API Reports", "status": "machine-draft" },
+    "description": { "value": "L'accesso all'API Reports dovrebbe essere esaminato per garantire che solo gli account di servizio e le applicazioni autorizzati possano recuperare i dati di audit e di utilizzo.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Accesso all'API Reports limitato ai soli account di servizio autorizzati", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console > Sicurezza > Controlli API > Delega a livello di dominio > Esamina le concessioni con ambiti dell'API Reports > Rimuovi gli accessi non autorizzati.", "status": "machine-draft" }
+  }
+}
