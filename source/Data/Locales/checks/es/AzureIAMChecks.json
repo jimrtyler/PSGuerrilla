@@ -1,0 +1,183 @@
+{
+  "_family": "AzureIAMChecks.json",
+  "AZIAM-001": {
+    "name": {
+      "value": "Auditoría de asignaciones de roles a nivel de suscripción",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las asignaciones de roles a nivel de suscripción otorgan permisos amplios sobre todos los recursos de una suscripción. Las asignaciones excesivamente permisivas u obsoletas en este ámbito pueden permitir el movimiento lateral y el acceso no autorizado a cargas de trabajo sensibles. Las auditorías periódicas garantizan que solo el personal autorizado conserve privilegios en toda la suscripción.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Minimice las asignaciones de roles a nivel de suscripción; prefiera el ámbito de grupo de recursos o de recurso individual",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise todas las asignaciones de roles a nivel de suscripción en Azure IAM y elimine las que estén obsoletas, sean innecesarias o demasiado amplias. Reasigne los permisos a nivel de grupo de recursos o de recurso individual cuando sea posible. Implemente una revisión de acceso trimestral recurrente mediante las revisiones de acceso de Azure AD para los roles con ámbito de suscripción.",
+      "status": "machine-draft"
+    }
+  },
+  "AZIAM-002": {
+    "name": {
+      "value": "Usuarios con roles de Azure IAM directamente sobre recursos",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las asignaciones de roles directas a usuarios individuales sobre recursos de Azure eluden la gobernanza de acceso basada en grupos y dificultan el seguimiento de permisos. Esta práctica aumenta el riesgo de permisos huérfanos cuando los usuarios cambian de rol o abandonan la organización. Las asignaciones basadas en grupos proporcionan mejor auditabilidad y gestión del ciclo de vida.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Asigne roles a grupos de Azure AD en lugar de directamente a usuarios individuales",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Identifique todas las asignaciones de roles directas de usuario a recurso mediante Azure Resource Graph o la hoja de IAM. Cree grupos de seguridad de Azure AD adecuados para cada patrón de acceso y migre las asignaciones individuales a asignaciones basadas en grupos. Elimine las asignaciones directas de usuario tras confirmar que la pertenencia al grupo otorga acceso equivalente.",
+      "status": "machine-draft"
+    }
+  },
+  "AZIAM-003": {
+    "name": {
+      "value": "Análisis de permisos de grupos de recursos",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los grupos de recursos sirven como contenedores lógicos para los recursos de Azure y sus asignaciones de IAM se propagan a todos los recursos contenidos. Unos permisos de grupo de recursos mal configurados pueden otorgar acceso de forma inadvertida a recursos sensibles como bases de datos, almacenes de claves o máquinas virtuales. El análisis de estos permisos garantiza la aplicación coherente de los principios de privilegio mínimo.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Aplique asignaciones de roles de privilegio mínimo a nivel de grupo de recursos con justificación documentada",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Enumere todas las asignaciones de roles en cada grupo de recursos con Get-AzRoleAssignment y revise si hay permisos excesivos, como los roles Owner o Contributor otorgados a grupos amplios. Reduzca los roles demasiado permisivos a roles integrados más específicos, como Reader o roles específicos del proveedor de recursos. Documente la justificación de negocio de cada asignación de rol de grupo de recursos y programe revisiones periódicas.",
+      "status": "machine-draft"
+    }
+  },
+  "AZIAM-004": {
+    "name": {
+      "value": "Auditoría de directivas de acceso de Azure Key Vault",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Azure Key Vault almacena claves criptográficas, secretos y certificados críticos para la seguridad de las aplicaciones y la protección de datos. Unas directivas de acceso demasiado permisivas pueden exponer secretos a usuarios o entidades de servicio no autorizados, lo que conduce al robo de credenciales o a filtraciones de datos. Deben auditarse tanto el modelo de directiva de acceso como el de autorización RBAC para verificar el cumplimiento del privilegio mínimo.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Use Azure RBAC para el control de acceso a Key Vault; restrinja los permisos Get/List/Set a las entidades de seguridad mínimas necesarias",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise todas las directivas de acceso o asignaciones RBAC de Key Vault y elimine cualquier entidad de seguridad con permisos innecesarios, como Purge o derechos completos de gestión de claves. Migre del modelo heredado de directiva de acceso a la autorización basada en Azure RBAC para lograr un control y una auditabilidad más granulares. Habilite el registro de Key Vault en un área de trabajo de Log Analytics y configure alertas para patrones de acceso sospechosos.",
+      "status": "machine-draft"
+    }
+  },
+  "AZIAM-005": {
+    "name": {
+      "value": "Configuración de seguridad de cuentas de almacenamiento",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las cuentas de almacenamiento de Azure suelen contener datos empresariales sensibles, copias de seguridad y estado de aplicaciones que deben protegerse en reposo y en tránsito. Configuraciones mal establecidas, como permitir el acceso público a blobs, deshabilitar la exigencia de HTTPS o usar versiones heredadas de TLS, crean riesgos significativos de exposición de datos. La configuración de seguridad de las cuentas de almacenamiento debe reforzarse para evitar el acceso no autorizado y la fuga de datos.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Exija transferencia solo por HTTPS, deshabilite el acceso público a blobs, requiera TLS 1.2 como mínimo y habilite el cifrado de infraestructura",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Establezca la versión mínima de TLS en 1.2, habilite la transferencia solo por HTTPS y deshabilite el acceso público a blobs en todas las cuentas de almacenamiento. Habilite el cifrado de infraestructura para lograr doble cifrado en reposo y configure puntos de conexión privados para restringir el acceso de red. Revise las firmas de acceso compartido y las claves de acceso, rote las claves de forma periódica y prefiera la autenticación de Azure AD sobre el acceso basado en claves.",
+      "status": "machine-draft"
+    }
+  },
+  "AZIAM-006": {
+    "name": {
+      "value": "Auditoría de reglas de grupos de seguridad de red",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los grupos de seguridad de red controlan el flujo de tráfico entrante y saliente hacia los recursos de Azure y son un mecanismo principal de segmentación de red. Unas reglas de NSG demasiado permisivas, como permitir acceso entrante sin restricciones desde Internet en puertos de administración, exponen los recursos a ataques de fuerza bruta y explotación. Las auditorías periódicas de las reglas de NSG son esenciales para mantener un perímetro de red seguro.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Deniegue todo el tráfico entrante de Internet de forma predeterminada; permita únicamente los puertos necesarios desde rangos de IP de origen específicos",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise todas las reglas de NSG en busca de entradas demasiado permisivas, en particular cualquier regla que permita tráfico entrante desde 0.0.0.0/0 o Any en puertos como 22, 3389, 445 o 1433. Reemplace las reglas de permiso amplias por rangos de IP de origen específicos o etiquetas de servicio y elimine las reglas sin usar. Habilite los registros de flujo de NSG e intégrelos con Azure Network Watcher para la supervisión continua de los patrones de tráfico y la detección de anomalías.",
+      "status": "machine-draft"
+    }
+  },
+  "AZIAM-007": {
+    "name": {
+      "value": "Estado de cumplimiento de Azure Policy",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Azure Policy aplica los estándares de la organización y evalúa el cumplimiento a escala en los recursos de Azure. Los recursos no conformes indican una desviación de configuración respecto a las líneas base de seguridad, lo que puede exponer el entorno a riesgos que los controles de gobernanza están diseñados para prevenir. La supervisión del cumplimiento de directivas garantiza que los recursos implementados cumplan de forma coherente los requisitos de seguridad y regulatorios.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las directivas asignadas deben informar un cumplimiento del 95% o superior; los recursos no conformes deben tener excepciones documentadas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise el panel de cumplimiento de Azure Policy para identificar los recursos no conformes y priorice la corrección según la gravedad de la directiva. Utilice tareas de corrección para reparar automáticamente los recursos no conformes cuando el efecto de la directiva lo admita (DeployIfNotExists, Modify). Para los recursos que no puedan hacerse conformes, cree exenciones de directiva documentadas con fechas de caducidad y justificación de negocio.",
+      "status": "machine-draft"
+    }
+  },
+  "AZIAM-008": {
+    "name": {
+      "value": "Revisión de la estructura de grupos de administración",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los grupos de administración proporcionan una estructura jerárquica para organizar suscripciones y aplicar controles de gobernanza a escala. Una estructura de grupos de administración mal diseñada o plana dificulta la aplicación de directivas diferenciadas para los entornos de producción, desarrollo y espacio aislado. La revisión de la jerarquía garantiza que la herencia de directivas y las asignaciones de roles se alineen con los requisitos de seguridad de la organización.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Implemente una jerarquía de grupos de administración que separe los entornos de producción, desarrollo y espacio aislado con las asignaciones de directivas adecuadas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise la jerarquía actual de grupos de administración y asegúrese de que refleje los límites de la organización, como unidades de negocio, entornos y clasificaciones de carga de trabajo. Aplique directivas restrictivas en los niveles superiores de los grupos de administración para una aplicación amplia y permita excepciones en los niveles inferiores solo con justificación documentada. Asegúrese de que el grupo de administración raíz tenga asignaciones de roles directas mínimas y que las suscripciones sensibles se ubiquen en grupos de administración gobernados adecuadamente.",
+      "status": "machine-draft"
+    }
+  },
+  "AZIAM-009": {
+    "name": {
+      "value": "Definiciones de roles RBAC personalizados",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los roles RBAC personalizados de Azure proporcionan permisos adaptados más allá de lo que ofrecen los roles integrados, pero pueden otorgar de forma inadvertida combinaciones de acciones excesivas o peligrosas. Los roles personalizados mal delimitados con permisos comodín o ámbitos asignables demasiado amplios crean rutas de escalada de privilegios. Cada rol personalizado debe revisarse para garantizar que siga los principios de privilegio mínimo y no combine operaciones sensibles.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Minimice las definiciones de roles personalizados; evite las acciones comodín; restrinja los ámbitos asignables a grupos de administración o suscripciones específicos",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Enumere todas las definiciones de roles RBAC personalizados y revise sus actions, notActions, dataActions y ámbitos asignables en busca de configuraciones demasiado permisivas. Elimine cualquier permiso comodín (*/*, Microsoft.*/*, etc.) y reemplácelo por cadenas de acción específicas necesarias para la función del rol. Documente la justificación de negocio de cada rol personalizado y evalúe si un rol integrado o una combinación de roles integrados podría reemplazar la definición personalizada.",
+      "status": "machine-draft"
+    }
+  },
+  "AZIAM-010": {
+    "name": {
+      "value": "Configuración de bloqueos de recursos",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los bloqueos de recursos de Azure evitan la eliminación o modificación accidental de recursos críticos como bases de datos de producción, componentes de red y almacenes de claves. Sin bloqueos de recursos, los usuarios con permisos suficientes pueden destruir infraestructura de forma inadvertida, causando interrupciones del servicio y posible pérdida de datos. Aplicar bloqueos CanNotDelete o ReadOnly a los recursos críticos proporciona una capa de seguridad adicional más allá de RBAC.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Aplique bloqueos CanNotDelete en todos los grupos de recursos de producción y en los recursos individuales críticos",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Identifique todos los grupos de recursos y recursos de producción y de importancia crítica para el negocio que deban protegerse contra la eliminación o modificación accidental. Aplique bloqueos CanNotDelete a nivel de grupo de recursos para los entornos de producción y bloqueos ReadOnly para los componentes de infraestructura inmutables. Documente la estrategia de bloqueo y asegúrese de que los procedimientos operativos incluyan pasos para la eliminación del bloqueo cuando se requieran cambios intencionados, con la aprobación adecuada de gestión de cambios.",
+      "status": "machine-draft"
+    }
+  }
+}

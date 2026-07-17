@@ -1,0 +1,327 @@
+{
+  "_family": "EntraAuthChecks.json",
+  "EIDAUTH-001": {
+    "name": {
+      "value": "Auditoría de la directiva de métodos de autenticación",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La directiva de métodos de autenticación define qué métodos están disponibles para que los usuarios inicien sesión y realicen MFA. Una directiva mal configurada puede permitir métodos débiles o en desuso, lo que aumenta la superficie de ataque. Esta comprobación audita el estado actual de la directiva frente a las líneas base de seguridad reconocidas de Entra ID.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Directiva de métodos de autenticación revisada y alineada con la línea base de seguridad de la organización",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya a Entra ID > Protección > Métodos de autenticación > Directivas. Revise cada método habilitado y deshabilite los que no requiera su organización. Asegúrese de que los métodos resistentes al phishing, como FIDO2 y Microsoft Authenticator, tengan prioridad sobre SMS y voz.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAUTH-002": {
+    "name": {
+      "value": "Estado de registro de MFA de todos los usuarios",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Todos los usuarios deben estar registrados para la autenticación multifactor a fin de evitar el compromiso de cuentas mediante credenciales robadas o adivinadas. Las cuentas sin registro de MFA son el objetivo principal de los ataques basados en credenciales, incluidos el rociado de contraseñas y el phishing. Los usuarios no registrados representan brechas críticas en su postura de seguridad de identidad.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "El 100% de los usuarios activos registrados para MFA",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise el estado de registro de MFA en Entra ID > Protección > Métodos de autenticación > Detalles de registro de usuario. Aplique el registro de MFA mediante directivas de acceso condicional que requieran MFA para todos los usuarios. Establezca una fecha límite de registro y comunique los requisitos a los usuarios no registrados.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAUTH-003": {
+    "name": {
+      "value": "Análisis de la distribución de métodos de MFA",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Comprender la distribución de los métodos de MFA entre los usuarios ayuda a evaluar la solidez general de los controles de autenticación. Las organizaciones deben hacer seguimiento de la adopción de métodos resistentes al phishing, como FIDO2 y las notificaciones push de Authenticator, frente a métodos más débiles como SMS. Esta visibilidad permite realizar campañas específicas para migrar a los usuarios a métodos más robustos.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "La mayoría de los usuarios registrados con métodos de MFA resistentes al phishing (FIDO2, Microsoft Authenticator, Windows Hello)",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise la distribución de métodos en Entra ID > Protección > Métodos de autenticación > Detalles de registro de usuario. Identifique a los usuarios que dependen únicamente de métodos más débiles y elabore planes de migración. Use los informes de actividad de métodos de autenticación para hacer seguimiento del progreso de adopción.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAUTH-004": {
+    "name": {
+      "value": "Usuarios con métodos de MFA únicamente por SMS o voz",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los usuarios que dependen únicamente de MFA basado en SMS o voz son vulnerables a los ataques de intercambio de SIM, en los que los atacantes manipulan mediante ingeniería social a los operadores de telefonía móvil para transferir el número de teléfono de la víctima, y a los ataques del protocolo de señalización SS7 que interceptan los mensajes SMS en tránsito. Estos métodos ofrecen una protección significativamente más débil que la autenticación basada en aplicaciones o en tokens de hardware. Las organizaciones deben identificar y migrar a estos usuarios a métodos resistentes al phishing.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Ningún usuario que dependa exclusivamente de SMS o voz como su único método de MFA",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Identifique a los usuarios con MFA solo por SMS o voz en Entra ID > Protección > Métodos de autenticación > Detalles de registro de usuario. Elabore un plan de migración para trasladar a estos usuarios a Microsoft Authenticator o a claves de seguridad FIDO2. Considere deshabilitar SMS y voz como métodos permitidos en la directiva de métodos de autenticación una vez completada la migración.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAUTH-005": {
+    "name": {
+      "value": "Usuarios sin ningún método de MFA registrado",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los usuarios sin ningún método de MFA registrado no pueden satisfacer los desafíos de MFA y representan brechas de seguridad críticas. Estas cuentas están totalmente expuestas a los ataques basados en credenciales, incluidos el rociado de contraseñas, el phishing y los ataques de fuerza bruta. Se requiere una corrección inmediata para garantizar que todas las cuentas activas tengan al menos un método de MFA inscrito.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Cero usuarios activos sin al menos un método de MFA registrado",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consulte los detalles de registro de usuario en Entra ID > Protección > Métodos de autenticación > Detalles de registro de usuario para identificar a los usuarios sin métodos. Aplique el registro de MFA mediante una directiva de acceso condicional dirigida a los usuarios no registrados. Use el pase de acceso temporal para ayudar a los usuarios que necesiten iniciar su registro de MFA.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAUTH-006": {
+    "name": {
+      "value": "Inventario y auditoría de claves de seguridad FIDO2",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las claves de seguridad FIDO2 proporcionan autenticación resistente al phishing, pero deben inventariarse y gestionarse a lo largo de su ciclo de vida. Las claves sin seguimiento pueden permanecer asociadas a empleados que ya no están o extraviarse sin que se detecte. Las auditorías periódicas garantizan que solo estén activas las claves autorizadas y que estén correctamente asignadas a los usuarios actuales.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las claves FIDO2 registradas inventariadas con asignaciones de propietario documentadas y revisiones de atestación periódicas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise los registros de claves FIDO2 en Entra ID > Protección > Métodos de autenticación > Clave de seguridad FIDO2. Coteje las claves registradas con su inventario de activos de hardware y elimine las claves de los usuarios que ya no están. Implemente directivas de registro de claves que restrinjan los valores AAGUID permitidos a los modelos de proveedor aprobados.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAUTH-007": {
+    "name": {
+      "value": "Comprobación de la vulnerabilidad ROCA en claves FIDO2",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La vulnerabilidad ROCA (Return of Coppersmith's Attack) (CVE-2017-15361) afecta a la generación de claves RSA en el firmware de TPM de Infineon utilizado en determinadas claves de seguridad FIDO2, permitiendo la recuperación de la clave privada a partir de las claves públicas. Las claves afectadas producen pares de claves RSA débiles que pueden factorizarse, lo que socava por completo la seguridad de la credencial de autenticación. Las claves con firmware vulnerable deben identificarse y reemplazarse de inmediato.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Ninguna clave FIDO2 con firmware de TPM de Infineon vulnerable a ROCA en uso",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Identifique las claves FIDO2 que usan TPM de Infineon comprobando los valores AAGUID frente a los modelos vulnerables conocidos. Pruebe las claves registradas con herramientas de detección de ROCA para confirmar su estado de vulnerabilidad. Reemplace todas las claves afectadas por versiones de firmware corregidas o hardware alternativo y revoque los registros de las claves antiguas en Entra ID.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAUTH-008": {
+    "name": {
+      "value": "Preparación para la autenticación sin contraseña",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La autenticación sin contraseña elimina las contraseñas como vector de ataque, suprimiendo el riesgo de robo de credenciales, phishing y rociado de contraseñas. Las organizaciones deben evaluar su preparación para implementar métodos sin contraseña como FIDO2, Windows Hello para empresas e inicio de sesión por teléfono de Microsoft Authenticator. Esta comprobación evalúa la adopción actual de métodos e identifica las brechas que impiden la implementación sin contraseña.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "La organización tiene un plan de implementación sin contraseña con al menos el 50% de los usuarios capaces de iniciar sesión sin contraseña",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise los registros de métodos de autenticación para determinar cuántos usuarios tienen inscritos métodos compatibles con el inicio de sesión sin contraseña. Habilite el inicio de sesión sin contraseña de FIDO2 y Microsoft Authenticator en la directiva de métodos de autenticación. Cree un plan de implementación por fases que comience con los usuarios con privilegios y el personal de TI antes de ampliarlo al resto de la organización.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAUTH-009": {
+    "name": {
+      "value": "Configuración de Windows Hello para empresas",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Windows Hello para empresas proporciona autenticación resistente al phishing y respaldada por hardware mediante datos biométricos o PIN vinculados al TPM del dispositivo. Las implementaciones de WHfB mal configuradas pueden recurrir a un PIN de conveniencia más débil sin una atestación de TPM adecuada, lo que reduce las garantías de seguridad. La configuración debe exigir claves respaldadas por TPM y directivas biométricas adecuadas.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Windows Hello para empresas habilitado con el requisito de TPM aplicado y el desbloqueo multifactor configurado para los roles sensibles",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya a Entra ID > Protección > Métodos de autenticación > Windows Hello para empresas. Habilite el método y configure las restricciones de clave para requerir claves respaldadas por TPM. Implemente perfiles de configuración de WHfB mediante Intune para aplicar la atestación de TPM y los requisitos de complejidad del PIN en los dispositivos administrados.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAUTH-010": {
+    "name": {
+      "value": "Auditoría de la directiva de pase de acceso temporal (TAP)",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "El pase de acceso temporal permite códigos de acceso con tiempo limitado para incorporar a los usuarios a las credenciales sin contraseña, pero puede servir como puerta trasera si no se restringe adecuadamente. Los TAP configurados con tiempos de vida prolongados o con opciones reutilizables pueden ser explotados por atacantes que comprometan el proceso de emisión. La directiva de TAP debe exigir tiempos de vida cortos, restricciones de un solo uso y limitar la emisión a los administradores autorizados.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "TAP habilitado con un tiempo de vida máximo de 1 hora, de un solo uso y restringido a los administradores de incorporación autorizados",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise la directiva de TAP en Entra ID > Protección > Métodos de autenticación > Pase de acceso temporal. Establezca el tiempo de vida mínimo y máximo en la duración práctica más corta y habilite el uso único. Restrinja los permisos de emisión de TAP a un conjunto limitado de administradores mediante controles de acceso basados en roles.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAUTH-011": {
+    "name": {
+      "value": "Configuración del restablecimiento de contraseña de autoservicio (SSPR)",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "El SSPR permite a los usuarios restablecer sus propias contraseñas sin intervención del servicio de asistencia, pero debe configurarse adecuadamente para evitar el secuestro de cuentas. Un SSPR mal configurado con métodos de verificación débiles o con métodos requeridos insuficientes permite a los atacantes restablecer contraseñas usando información personal comprometida. El SSPR debe requerir varios métodos de verificación robustos y estar habilitado para todos los usuarios.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "SSPR habilitado para todos los usuarios con un mínimo de dos métodos de autenticación requeridos para el restablecimiento",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya a Entra ID > Protección > Restablecimiento de contraseña > Propiedades y habilite el SSPR para todos los usuarios. Establezca en 2 el número de métodos requeridos para el restablecimiento. En Métodos de autenticación, asegúrese de que solo se permitan métodos robustos, como la notificación de aplicación móvil, el código de aplicación móvil y el correo electrónico, y deshabilite las preguntas de seguridad.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAUTH-012": {
+    "name": {
+      "value": "Métodos y requisitos de SSPR",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los métodos específicos permitidos para el SSPR y el número requerido afectan directamente a la seguridad del proceso de restablecimiento de contraseñas. Permitir métodos débiles, como las preguntas de seguridad, o requerir un solo método crea oportunidades para que los atacantes restablezcan contraseñas mediante ingeniería social u OSINT. Las organizaciones deben requerir al menos dos métodos robustos para todos los restablecimientos de contraseña.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Dos o más métodos de autenticación robustos requeridos para el restablecimiento de contraseña, con las preguntas de seguridad deshabilitadas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya a Entra ID > Protección > Restablecimiento de contraseña > Métodos de autenticación. Establezca en 2 el número de métodos requeridos y elimine las preguntas de seguridad de la lista de métodos permitidos. Priorice la notificación de aplicación móvil y el código de aplicación móvil como los métodos principales de SSPR para garantizar una verificación robusta.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAUTH-013": {
+    "name": {
+      "value": "Configuración de la protección de contraseñas (contraseñas prohibidas)",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La protección de contraseñas de Entra ID evita que los usuarios elijan contraseñas comúnmente comprometidas comprobándolas frente a una lista global de contraseñas prohibidas que mantiene Microsoft. Sin la protección de contraseñas habilitada, los usuarios pueden seleccionar contraseñas que aparecen en bases de datos de filtraciones conocidas, lo que hace que las cuentas sean vulnerables al rociado de contraseñas y a los ataques de diccionario. La característica debe habilitarse en modo aplicado tanto para entornos en la nube como locales.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Protección de contraseñas habilitada en modo Aplicado con la lista global de contraseñas prohibidas activa",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya a Entra ID > Protección > Métodos de autenticación > Protección de contraseñas. Establezca el modo en Aplicado y asegúrese de que la lista global de contraseñas prohibidas esté habilitada. Si utiliza identidad híbrida con Active Directory local, implemente el proxy de protección de contraseñas de Entra ID y los agentes de controlador de dominio para extender la protección a los cambios de contraseña locales.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAUTH-014": {
+    "name": {
+      "value": "Estado de la lista personalizada de contraseñas prohibidas",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Además de la lista global de contraseñas prohibidas, las organizaciones deben mantener una lista personalizada de contraseñas prohibidas que contenga términos específicos de la empresa, nombres de productos, ubicaciones y otras variaciones fáciles de adivinar. Sin una lista personalizada, los usuarios pueden elegir contraseñas basadas en el contexto de la organización que los atacantes pueden adivinar fácilmente mediante ataques dirigidos. La lista personalizada admite hasta 1000 entradas y debe actualizarse periódicamente.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Lista personalizada de contraseñas prohibidas habilitada con términos específicos de la organización, incluidos el nombre de la empresa, productos, ubicaciones y variaciones comunes",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya a Entra ID > Protección > Métodos de autenticación > Protección de contraseñas. Habilite la lista personalizada de contraseñas prohibidas y agregue entradas para el nombre de su organización, nombres de productos, ubicaciones de oficinas y términos internos de uso común. Revise y actualice la lista trimestralmente para incluir nuevos términos y patrones identificados en las auditorías de contraseñas.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAUTH-015": {
+    "name": {
+      "value": "Uso de protocolos de autenticación heredados",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los protocolos de autenticación heredados, incluidos POP3, IMAP4, SMTP AUTH y Exchange ActiveSync básico, no admiten la autenticación moderna ni MFA, lo que permite a los atacantes eludir MFA por completo usando credenciales robadas. Estos protocolos transmiten las credenciales de formas susceptibles de interceptación y son el vector principal de los ataques de rociado de contraseñas contra los inquilinos de Microsoft 365. Toda la autenticación heredada debe bloquearse mediante directivas de acceso condicional.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todos los protocolos de autenticación heredados bloqueados mediante acceso condicional sin uso activo detectado en los registros de inicio de sesión",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise el uso de la autenticación heredada en Entra ID > Supervisión > Registros de inicio de sesión > Filtrar por aplicación cliente (protocolos heredados). Cree una directiva de acceso condicional para bloquear la autenticación heredada para todos los usuarios y todas las aplicaciones en la nube. Supervise los intentos de inicio de sesión bloqueados y colabore con los usuarios afectados para migrarlos a clientes de autenticación moderna.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAUTH-016": {
+    "name": {
+      "value": "Flujo ROPC (credenciales de contraseña del propietario del recurso) habilitado",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "El flujo de autenticación de credenciales de contraseña del propietario del recurso (ROPC) envía el nombre de usuario y la contraseña directamente al punto de conexión de tokens, eludiendo por completo la autenticación multifactor y las directivas de acceso condicional. Las aplicaciones que usan el tipo de concesión ROPC exponen las credenciales de una forma que no puede protegerse con controles de seguridad modernos y representan una brecha de seguridad significativa. ROPC debe deshabilitarse para todas las aplicaciones, salvo que exista un requisito técnico absoluto con controles compensatorios.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Flujo ROPC deshabilitado para todos los registros de aplicaciones, sin aplicaciones que usen el tipo de concesión de contraseña",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise los registros de aplicaciones en Entra ID > Aplicaciones > Registros de aplicaciones en busca de aplicaciones configuradas para permitir flujos de cliente público. Deshabilite la configuración 'Permitir flujos de cliente público' para las aplicaciones que no requieran ROPC. Migre las aplicaciones que usan ROPC a flujos interactivos compatibles, como el código de autorización con PKCE o el flujo de código de dispositivo.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAUTH-017": {
+    "name": {
+      "value": "Detección de conflictos entre MFA por usuario y MFA de acceso condicional",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La configuración heredada de MFA por usuario (habilitada o aplicada a nivel de usuario individual) puede entrar en conflicto con las directivas de MFA basadas en acceso condicional, creando un comportamiento de autenticación impredecible. Cuando ambas están activas, los usuarios pueden experimentar solicitudes de MFA duplicadas, errores de autenticación o una aplicación de directivas incoherente según qué mecanismo se evalúe primero. Las organizaciones deben migrar por completo al MFA basado en acceso condicional y deshabilitar la configuración de MFA por usuario para garantizar una aplicación coherente de las directivas.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "MFA por usuario deshabilitado para todos los usuarios, con MFA aplicado exclusivamente mediante directivas de acceso condicional",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Compruebe el estado de MFA por usuario en Entra ID > Usuarios > MFA por usuario e identifique a los usuarios con MFA por usuario habilitado o aplicado. Cree directivas de acceso condicional equivalentes que apliquen MFA para todos los usuarios antes de deshabilitar el MFA por usuario. Deshabilite el MFA por usuario estableciendo el estado de cada usuario en Deshabilitado tras confirmar que la cobertura de MFA de acceso condicional es completa.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAUTH-018": {
+    "name": {
+      "value": "Contexto de inicio de sesión de Microsoft Authenticator (nombre de la aplicación y ubicación)",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Cuando el método de autenticación de Microsoft Authenticator está habilitado, mostrar la información de contexto de inicio de sesión (nombre de la aplicación y ubicación geográfica) en las notificaciones push y sin contraseña proporciona al usuario la conciencia situacional necesaria para reconocer y rechazar las solicitudes de MFA que no haya iniciado. Sin este contexto, los usuarios son mucho más propensos a aprobar solicitudes push iniciadas por un adversario durante la fatiga de MFA o ataques de phishing en tiempo real. Esta configuración se controla mediante las opciones de característica displayAppInformationRequiredState y displayLocationInformationRequiredState en la configuración del método MicrosoftAuthenticator.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Si Microsoft Authenticator está habilitado, displayAppInformationRequiredState está habilitado (se muestra el nombre de la aplicación); también se recomienda displayLocationInformationRequiredState",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya a Entra ID > Protección > Métodos de autenticación > Directivas > Microsoft Authenticator. En la pestaña Configurar, establezca 'Mostrar el nombre de la aplicación en las notificaciones push y sin contraseña' en Habilitado para todos los usuarios y habilite 'Mostrar la ubicación geográfica en las notificaciones push y sin contraseña'. Esto satisface SCuBA MS.AAD.3.3, que requiere que Microsoft Authenticator esté configurado para mostrar el contexto de inicio de sesión cuando está habilitado.",
+      "status": "machine-draft"
+    }
+  }
+}

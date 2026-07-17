@@ -1,0 +1,363 @@
+{
+  "_family": "EntraAppChecks.json",
+  "EIDAPP-001": {
+    "name": {
+      "value": "Inventario de registros de aplicaciones",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Un inventario completo de todos los registros de aplicaciones proporciona una visibilidad fundamental de las aplicaciones integradas con su inquilino de Entra ID. Sin un inventario exhaustivo, las organizaciones no pueden evaluar la superficie de ataque de sus aplicaciones ni identificar aplicaciones no autorizadas, abandonadas o de TI en la sombra. Esta línea base habilita todas las comprobaciones de seguridad de aplicaciones posteriores y debe mantenerse como un documento vivo.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todos los registros de aplicaciones inventariados con propietarios, propósito y justificación de negocio documentados",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya a Entra ID > Aplicaciones > Registros de aplicaciones y exporte la lista completa de aplicaciones registradas. Revise cada registro para confirmar que tiene un propietario asignado, un propósito de negocio documentado y que sigue siendo necesario de forma activa. Elimine o deshabilite los registros que ya no sean necesarios o que carezcan de una propiedad identificable.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAPP-002": {
+    "name": {
+      "value": "Registros de aplicaciones con permisos de API de alto riesgo",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los registros de aplicaciones con permisos de API de alto riesgo, como Mail.ReadWrite, Files.ReadWrite.All, RoleManagement.ReadWrite.Directory o Application.ReadWrite.All, pueden explotarse para leer datos sensibles, modificar objetos de directorio o escalar privilegios en todo el inquilino. Los atacantes que comprometen una aplicación con estos permisos obtienen un acceso amplio equivalente o superior al de un administrador global. Todos los permisos de alto riesgo deben revisarse y justificarse con controles compensatorios.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Ningún registro de aplicación con permisos de API de alto riesgo, salvo que esté documentado con justificación de negocio y controles compensatorios",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise todos los registros de aplicaciones en Entra ID > Aplicaciones > Registros de aplicaciones y examine la pestaña de permisos de API de cada uno. Identifique las aplicaciones con permisos de alto privilegio, como Directory.ReadWrite.All, Mail.ReadWrite o RoleManagement.ReadWrite.Directory. Elimine los permisos innecesarios y reemplace los ámbitos amplios por los permisos más restrictivos que sigan cumpliendo los requisitos de la aplicación.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAPP-003": {
+    "name": {
+      "value": "Registros de aplicaciones con credenciales agregadas",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los registros de aplicaciones con secretos de cliente o certificados agregados representan posibles mecanismos de persistencia para los atacantes. Un secreto o certificado comprometido permite a un atacante autenticarse como la aplicación y ejercer todos sus permisos otorgados sin interacción del usuario. Las credenciales deben inventariarse, rotarse según un calendario y eliminarse cuando ya no sean necesarias para limitar la ventana de exposición.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las credenciales de aplicaciones inventariadas con calendarios de rotación definidos y sin credenciales de más de 12 meses de antigüedad",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise todos los registros de aplicaciones y examine la hoja de Certificados y secretos de cada uno. Documente todas las credenciales activas, incluidas sus fechas de caducidad y las marcas de tiempo de creación. Elimine de inmediato las credenciales caducadas o sin uso y establezca una directiva de rotación que exija renovar las credenciales al menos anualmente, con alertas automatizadas antes de la caducidad.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAPP-004": {
+    "name": {
+      "value": "Entidades de servicio propias de Microsoft con credenciales agregadas",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los atacantes agregan credenciales a las entidades de servicio propias de Microsoft para establecer un acceso de puerta trasera persistente que se mezcla con los servicios legítimos de Microsoft. Dado que las entidades de servicio propias son de confianza de forma predeterminada y a menudo tienen permisos amplios, las credenciales agregadas a estos objetos proporcionan una persistencia sigilosa y de alto privilegio que rara vez se audita. Cualquier adición de credenciales a las entidades de servicio propias de Microsoft debe tratarse como un indicador crítico de compromiso.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Ninguna credencial (secretos o certificados) agregada a ninguna entidad de servicio propia de Microsoft",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Enumere todas las entidades de servicio en las que el appOwnerOrganizationId coincida con el id. de inquilino de Microsoft (f8cdef31-a31e-4b4a-93e4-5f571e91255a) y compruebe si hay credenciales de clave o de contraseña agregadas. Elimine de inmediato cualquier credencial encontrada en entidades de servicio propias de Microsoft, ya que casi con certeza no están autorizadas. Investigue los registros de auditoría para determinar quién agregó las credenciales y cuándo, tratando esto como un posible incidente de seguridad.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAPP-005": {
+    "name": {
+      "value": "Entidades de servicio con privilegios elevados y credenciales agregadas",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las entidades de servicio que combinan permisos de API de alto privilegio o asignaciones de roles de directorio con credenciales de cliente agregadas representan los objetos de aplicación de mayor riesgo del inquilino. Un atacante que obtenga estas credenciales puede autenticarse de forma no interactiva con permisos elevados, eludiendo por completo los controles de MFA y de acceso condicional. Esta combinación de privilegio y acceso a credenciales es una técnica principal de persistencia y movimiento lateral en los ataques basados en la nube.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Ninguna entidad de servicio con permisos de alto privilegio y credenciales agregadas a la vez, salvo que esté documentada con controles compensatorios obligatorios",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Coteje las entidades de servicio que tienen permisos de API de alto privilegio o asignaciones de roles de directorio frente a aquellas con credenciales de clave o de contraseña agregadas. Para cada coincidencia, valide la necesidad de negocio y elimine los permisos excesivos o migre a la autenticación mediante identidad administrada, que elimina la necesidad de almacenar credenciales. Implemente autenticación basada en certificados con certificados de corta duración donde las identidades administradas no sean viables.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAPP-006": {
+    "name": {
+      "value": "Permisos excesivos de Microsoft Graph",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las aplicaciones a las que se otorgan permisos de aplicación amplios de Microsoft Graph, como Directory.ReadWrite.All, Sites.ReadWrite.All o Mail.ReadWrite, obtienen acceso a datos y configuración en todo el inquilino sin contexto de usuario. Los permisos excesivos de Graph vulneran el principio de privilegio mínimo y proporcionan a los atacantes que comprometen la aplicación un acceso amplio a buzones, archivos, objetos de directorio y configuración del inquilino. Los permisos deben delimitarse al mínimo necesario para la funcionalidad de la aplicación.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todos los permisos de Microsoft Graph delimitados al mínimo necesario, con los permisos de aplicación reemplazados por permisos delegados cuando sea posible",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise los permisos de Microsoft Graph de todos los registros de aplicaciones e identifique los que usan ámbitos .All amplios o permisos de nivel de aplicación cuando los permisos delegados serían suficientes. Reemplace los permisos amplios por alternativas granulares, como Mail.Read en lugar de Mail.ReadWrite.All o User.Read.All en lugar de Directory.Read.All. Use la referencia de permisos de Microsoft Graph para identificar el permiso de privilegio mínimo para cada llamada de API que realiza la aplicación.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAPP-007": {
+    "name": {
+      "value": "Registros de aplicaciones con asignaciones de roles de Azure IAM",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los registros de aplicaciones o sus entidades de servicio correspondientes con asignaciones de roles de IAM a nivel de recurso de Azure, como Contributor, Owner o User Access Administrator, pueden modificar la infraestructura de Azure, implementar recursos o escalar privilegios entre suscripciones. Estas asignaciones de roles extienden el radio de impacto de la aplicación más allá de Entra ID hacia el plano de recursos de Azure, permitiendo el compromiso de la infraestructura si se roban las credenciales de la aplicación.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Ningún registro de aplicación con asignaciones de roles de Azure IAM por encima de Reader, salvo que esté documentado con justificación de negocio y ámbito de privilegio mínimo",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise las asignaciones de roles de Azure IAM en los niveles de grupo de administración, suscripción y grupo de recursos para identificar las asignadas a entidades de servicio de aplicaciones. Elimine las asignaciones de Owner y User Access Administrator y reemplace los roles Contributor amplios por roles personalizados delimitados a tipos de recursos y acciones específicos. Limite las asignaciones de IAM al ámbito más reducido posible, prefiriendo las asignaciones a nivel de grupo de recursos sobre las de nivel de suscripción.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAPP-008": {
+    "name": {
+      "value": "Supervisión de la caducidad de credenciales",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las credenciales de aplicación (secretos de cliente y certificados) que se aproximan a su caducidad o que ya han caducado pueden provocar interrupciones del servicio si no se rotan a tiempo, o crear riesgos de seguridad si las directivas de caducidad se establecen demasiado lejos en el futuro. Las credenciales con periodos de validez prolongados amplían la ventana durante la cual una credencial comprometida puede explotarse. La supervisión y las alertas proactivas sobre la caducidad de credenciales garantizan una rotación oportuna y reducen la exposición de seguridad.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las credenciales de aplicación tienen una validez máxima de 12 meses, con alertas automatizadas 30 y 60 días antes de la caducidad",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Enumere todas las credenciales de aplicación y sus fechas de caducidad mediante la API de Microsoft Graph. Identifique las credenciales que caduquen en un plazo de 30 días y aquellas con periodos de validez superiores a 12 meses. Establezca un proceso de supervisión automatizado que alerte a los propietarios de las aplicaciones y a los equipos de seguridad cuando las credenciales se aproximen a la caducidad, y aplique una directiva de tiempo de vida máximo de credenciales mediante procedimientos de gobernanza.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAPP-009": {
+    "name": {
+      "value": "Registros de aplicaciones obsoletos",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los registros de aplicaciones sin actividad de inicio de sesión reciente pueden estar abandonados, huérfanos o ya no ser necesarios, pero conservan todos los permisos y credenciales otorgados. Las aplicaciones obsoletas amplían la superficie de ataque porque es poco probable que sus propietarios originales las supervisen o mantengan, lo que las convierte en objetivos atractivos para los atacantes que buscan aprovechar credenciales o permisos olvidados. La limpieza periódica de aplicaciones sin usar reduce la exposición general al riesgo del inquilino.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Ningún registro de aplicación sin actividad de inicio de sesión en los últimos 90 días, salvo que esté documentado con una excepción válida",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise los registros de inicio de sesión de aplicaciones en Entra ID para identificar las aplicaciones sin actividad de autenticación en los últimos 90 días. Póngase en contacto con los propietarios de las aplicaciones indicados para confirmar si la aplicación sigue siendo necesaria. Deshabilite o elimine los registros de aplicaciones obsoletos tras confirmar que ya no son necesarios, y elimine las credenciales y permisos asociados.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAPP-010": {
+    "name": {
+      "value": "Análisis de aplicaciones multiinquilino",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los registros de aplicaciones multiinquilino están configurados para aceptar inicios de sesión desde cualquier inquilino de Entra ID, lo que permite a los usuarios de organizaciones externas autenticarse. Si bien es necesario para escenarios de SaaS y de socios, la configuración multiinquilino en aplicaciones internas crea un riesgo innecesario al permitir que identidades externas obtengan tokens. Cada aplicación multiinquilino debe validarse para confirmar que la configuración es intencionada y que existen controles de autorización adecuados.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Ningún registro de aplicación multiinquilino, salvo que lo requiera una necesidad de negocio con justificación documentada y controles de autorización adecuados",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise todos los registros de aplicaciones e identifique los que tienen signInAudience establecido en AzureADMultipleOrgs o AzureADandPersonalMicrosoftAccount. Para cada aplicación multiinquilino, valide que el acceso multiinquilino es necesario y documente la justificación de negocio. Convierta a configuración de inquilino único las aplicaciones que no requieran acceso multiinquilino e implemente la validación de tokens para restringir qué inquilinos externos pueden acceder a las aplicaciones multiinquilino.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAPP-011": {
+    "name": {
+      "value": "Análisis de concesiones de consentimiento",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las concesiones de consentimiento de OAuth autorizan a las aplicaciones a acceder a los datos de la organización en nombre de los usuarios (delegado) o como la propia aplicación (nivel de aplicación). Las concesiones de consentimiento del administrador proporcionan acceso a todo el inquilino para todos los usuarios, mientras que las concesiones de consentimiento de usuario se delimitan a usuarios individuales. Las concesiones de consentimiento maliciosas o excesivas son una técnica principal utilizada en los ataques de phishing de OAuth para obtener acceso persistente a buzones, archivos y datos de directorio sin necesidad de credenciales.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las concesiones de consentimiento del administrador revisadas y justificadas. Sin concesiones de consentimiento de usuario para permisos de alto riesgo. Revisiones periódicas de concesiones de consentimiento establecidas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Enumere todas las concesiones de permisos de OAuth2 del inquilino mediante Microsoft Graph y clasifíquelas como consentimiento del administrador o consentimiento de usuario. Revise las concesiones de consentimiento del administrador en busca de permisos demasiado amplios y revoque las que ya no estén justificadas. Investigue las concesiones de consentimiento de usuario para aplicaciones sospechosas, en particular las que solicitan Mail.Read, Files.ReadWrite u otros ámbitos sensibles, y revoque las concesiones no autorizadas.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAPP-012": {
+    "name": {
+      "value": "Directiva de configuración del consentimiento de usuario",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La directiva de configuración del consentimiento de usuario controla si los usuarios pueden otorgar a las aplicaciones acceso a los datos de la organización sin la aprobación del administrador. Una configuración de consentimiento permisiva permite a los usuarios autorizar aplicaciones de forma independiente, algo que los atacantes explotan mediante campañas de phishing de concesión de consentimiento ilícito para obtener acceso persistente. Restringir el consentimiento de usuario a editores verificados o deshabilitarlo por completo obliga a que todo el consentimiento pase por un flujo de trabajo de aprobación del administrador.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Consentimiento de usuario deshabilitado o restringido a aplicaciones de editores verificados con solo permisos de bajo riesgo",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya a Entra ID > Aplicaciones empresariales > Consentimiento y permisos > Configuración del consentimiento de usuario. Establezca el consentimiento de usuario en 'No permitir el consentimiento de usuario' o 'Permitir el consentimiento de usuario para aplicaciones de editores verificados, solo para permisos seleccionados', con solo permisos de bajo riesgo seleccionados. Habilite el flujo de trabajo de consentimiento del administrador para proporcionar un proceso estructurado que permita a los usuarios solicitar acceso a las aplicaciones que requieren aprobación del administrador.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAPP-013": {
+    "name": {
+      "value": "Configuración del flujo de trabajo de consentimiento del administrador",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "El flujo de trabajo de consentimiento del administrador proporciona un proceso estructurado para que los usuarios soliciten la aprobación del administrador antes de que las aplicaciones puedan acceder a los datos de la organización. Sin un flujo de trabajo de consentimiento del administrador, los usuarios cuyo consentimiento está restringido no tienen un mecanismo formal para solicitar acceso a las aplicaciones, lo que conduce a soluciones alternativas de TI en la sombra o a cuellos de botella en el servicio de asistencia. Un flujo de trabajo bien configurado garantiza que las solicitudes de aplicación legítimas sean revisadas y aprobadas por administradores designados.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Flujo de trabajo de consentimiento del administrador habilitado con revisores designados y un SLA definido para completar la revisión",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya a Entra ID > Aplicaciones empresariales > Consentimiento y permisos > Configuración del consentimiento del administrador. Habilite el flujo de trabajo de consentimiento del administrador y designe revisores adecuados de sus equipos de seguridad o de administración de TI. Configure las opciones de notificación para alertar a los revisores de las solicitudes pendientes y establezca un acuerdo de nivel de servicio para el tiempo de respuesta de la revisión a fin de evitar cuellos de botella en el flujo de trabajo.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAPP-014": {
+    "name": {
+      "value": "Titulares del rol de suplantación de aplicaciones",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "El rol ApplicationImpersonation de Exchange Online otorga la capacidad de suplantar cualquier buzón de la organización, permitiendo acceso completo de lectura y escritura a todo el correo sin el conocimiento del propietario del buzón. Este rol se abusa con frecuencia en los ataques de compromiso del correo electrónico empresarial y de exfiltración de datos, ya que una sola cuenta comprometida con este rol puede acceder al correo de toda la organización. Las asignaciones deben ser extremadamente limitadas, con tiempo limitado y supervisadas de forma continua.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Ninguna asignación permanente del rol ApplicationImpersonation. Cualquier asignación necesaria debe delimitarse a buzones específicos y tener tiempo limitado",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise las asignaciones de roles de Exchange Online para identificar todas las entidades de seguridad que tienen el rol ApplicationImpersonation mediante Get-ManagementRoleAssignment en Exchange Online PowerShell. Elimine de inmediato todas las asignaciones innecesarias y reemplace las concesiones de suplantación amplias por asignaciones delimitadas restringidas a buzones específicos cuando sea necesario. Implemente alertas de supervisión para cualquier nueva asignación del rol ApplicationImpersonation y realice revisiones mensuales de las asignaciones existentes.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAPP-015": {
+    "name": {
+      "value": "Revisión de las concesiones de permisos de OAuth2",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las concesiones de permisos de OAuth2 definen los permisos específicos que se ha autorizado ejercer a las aplicaciones, ya sea como permisos delegados que actúan en nombre de un usuario o como permisos de aplicación que actúan de forma independiente. Las concesiones de permisos acumuladas en muchas aplicaciones pueden crear una compleja red de acceso difícil de auditar y que puede incluir autorizaciones demasiado amplias o innecesarias. La revisión periódica garantiza que las concesiones permanezcan alineadas con los requisitos de negocio actuales.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las concesiones de permisos de OAuth2 revisadas trimestralmente, con las concesiones obsoletas o excesivas revocadas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Exporte todas las concesiones de permisos de OAuth2 mediante Microsoft Graph y clasifíquelas por tipo de permiso (delegado frente a aplicación), recurso y ámbito. Identifique las concesiones de aplicaciones que ya no están activas o los permisos que superan lo necesario para la funcionalidad actual de la aplicación. Revoque las concesiones innecesarias a través del centro de administración de Entra o la API de Microsoft Graph y establezca un ciclo de revisión trimestral para todas las concesiones activas.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAPP-016": {
+    "name": {
+      "value": "Inventario y permisos de identidades administradas",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las identidades administradas proporcionan a los recursos de Azure credenciales gestionadas automáticamente para autenticarse en servicios que admiten la autenticación de Entra ID. Si bien las identidades administradas eliminan la necesidad de almacenar credenciales, aún pueden tener permisos excesivos o estar asignadas a recursos que ya no las requieren. Un inventario exhaustivo de las identidades administradas y sus asignaciones de permisos garantiza el acceso con privilegio mínimo e identifica las identidades huérfanas asociadas a recursos eliminados.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las identidades administradas inventariadas con asociaciones de recursos documentadas y asignaciones de permisos de privilegio mínimo",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Enumere todas las identidades administradas asignadas por el sistema y asignadas por el usuario en las suscripciones de Azure mediante Azure Resource Graph o el portal de Azure. Revise las asignaciones de roles y los permisos de API otorgados a cada identidad administrada y verifique que siguen los principios de privilegio mínimo. Elimine las asignaciones de roles de las identidades administradas asociadas a recursos eliminados o retirados y documente el propósito y los requisitos de permisos de cada identidad administrada activa.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAPP-017": {
+    "name": {
+      "value": "Actividad de inicio de sesión de entidades de servicio",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La supervisión de la actividad de inicio de sesión de las entidades de servicio proporciona visibilidad de qué aplicaciones se están autenticando de forma activa y desde qué direcciones IP. Los patrones de inicio de sesión inusuales, como la autenticación desde ubicaciones geográficas inesperadas, volúmenes de solicitud anormales o inicios de sesión de aplicaciones que deberían estar inactivas, pueden indicar un compromiso de credenciales o un uso no autorizado. Estos datos de actividad de referencia son esenciales para detectar anomalías e investigar incidentes.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Registros de inicio de sesión de entidades de servicio revisados periódicamente, con perfiles de actividad de referencia establecidos para las aplicaciones críticas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise los registros de inicio de sesión de entidades de servicio en Entra ID > Supervisión > Registros de inicio de sesión > Inicios de sesión de entidades de servicio. Establezca perfiles de actividad de referencia para las aplicaciones críticas, incluidos la frecuencia normal de autenticación, los rangos de IP de origen y los recursos de destino. Configure alertas para los patrones anómalos de inicio de sesión de entidades de servicio, como la autenticación desde nuevas direcciones IP, la actividad en horas inusuales del día o los inicios de sesión de aplicaciones que han estado inactivas.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAPP-018": {
+    "name": {
+      "value": "Seguimiento de cambios en registros de aplicaciones y entidades de servicio",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los cambios en los registros de aplicaciones y las entidades de servicio, como la adición de nuevas credenciales, las modificaciones de permisos o los cambios de configuración, deben rastrearse y revisarse. Los atacantes modifican con frecuencia las aplicaciones existentes para agregar credenciales de puerta trasera, escalar permisos o cambiar los URI de redirección como parte de las técnicas de persistencia y escalada de privilegios. Sin el seguimiento de cambios, estas modificaciones pueden pasar desapercibidas indefinidamente.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todos los cambios en los registros de aplicaciones y las entidades de servicio registrados, supervisados y revisados, con alertas para las modificaciones de alto riesgo",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Configure la supervisión de los registros de auditoría para capturar todos los cambios en los registros de aplicaciones y las entidades de servicio, incluidas las adiciones de credenciales, los cambios de permisos y las modificaciones de configuración. Cree reglas de alerta en Microsoft Sentinel o Azure Monitor para los cambios de alto riesgo, como las nuevas credenciales agregadas a aplicaciones existentes, los cambios en las concesiones de permisos de aplicación y las modificaciones de las URL de respuesta. Establezca un proceso de revisión para todos los cambios de aplicaciones con revisores de seguridad designados.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAPP-019": {
+    "name": {
+      "value": "URL de respuesta colgantes",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las URL de respuesta que apuntan a dominios caducados, sin propietario o sin reclamar permiten el robo de tokens al posibilitar que los atacantes registren el dominio abandonado e intercepten los códigos de autorización y tokens de OAuth redirigidos por Entra ID. Esta vulnerabilidad, conocida como apropiación de subdominio o ataque de DNS colgante, otorga a los atacantes la capacidad de obtener tokens de acceso válidos para los permisos de la aplicación sin ningún compromiso de credenciales. Todas las URL de respuesta deben validarse para garantizar que se resuelven a infraestructura controlada por la organización.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las URL de respuesta se resuelven a dominios activos y propiedad de la organización, sin referencias a dominios colgantes o caducados",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Extraiga todas las URL de respuesta de los registros de aplicaciones y resuelva cada dominio para verificar la propiedad y el registro DNS activo. Identifique las URL de respuesta que apunten a dominios que estén caducados, disponibles para registro o no controlados por la organización. Elimine o actualice de inmediato las URL de respuesta colgantes e implemente un proceso de revisión periódico para detectar nuevas referencias colgantes a medida que los dominios caduquen o cambie la infraestructura.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDAPP-020": {
+    "name": {
+      "value": "Consentimiento del propietario del grupo a las aplicaciones bloqueado",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Cuando el consentimiento específico de grupo (del propietario del grupo) está habilitado, los propietarios de grupos de Microsoft 365 y de Teams pueden autorizar a las aplicaciones a acceder a los datos propiedad de su grupo sin revisión del administrador. Los atacantes explotan esto mediante phishing de concesión de consentimiento ilícito dirigido a los propietarios de grupos y equipos para obtener acceso persistente y delimitado a los datos de la organización. SCuBA exige que no se permita a los propietarios de grupos dar consentimiento a las aplicaciones, forzando que todo ese consentimiento pase por el flujo de trabajo de aprobación del administrador. En Entra ID esto se rige por la configuración EnableGroupSpecificConsent en la configuración de directorio (grupo); debe ser false. Tenga en cuenta que Microsoft ha dejado en desuso el conmutador del centro de administración para este control, pero la configuración de directorio subyacente sigue siendo la señal autoritativa.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "EnableGroupSpecificConsent establecido en false en la configuración de directorio (grupo): los propietarios de grupos no pueden dar consentimiento a las aplicaciones",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Asegúrese de que los propietarios de grupos no puedan dar consentimiento a las aplicaciones, satisfaciendo SCuBA MS.AAD.5.4. Establezca la configuración de directorio (grupo) 'EnableGroupSpecificConsent' en false (plantilla de configuración Group.Unified). Enrute todo el consentimiento de aplicaciones para los datos propiedad de grupos a través del flujo de trabajo de consentimiento del administrador, de modo que un revisor apruebe el acceso. Donde el conmutador heredado del centro de administración ya no esté presente, confirme directamente el valor de la configuración de directorio a través de la configuración de opciones del grupo.",
+      "status": "machine-draft"
+    }
+  }
+}
