@@ -1,0 +1,237 @@
+{
+  "_family": "EntraFedChecks.json",
+  "EIDFED-001": {
+    "name": {
+      "value": "Enumeración de dominios federados",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Un inventario completo de todos los dominios federados del inquilino proporciona visibilidad sobre cómo se configura la autenticación de cada dominio. Los dominios federados redirigen la autenticación a proveedores de identidad externos, que deben protegerse y supervisarse adecuadamente. Este inventario de línea base permite evaluar la superficie de ataque de la federación e identifica los dominios que podrían haber sido configurados por atacantes como parte de un ataque de Golden SAML o de federación de puerta trasera.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todos los dominios federados inventariados con los extremos del proveedor de identidad, los certificados de firma y la justificación de negocio documentados",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Enumere todos los dominios del inquilino mediante Microsoft Graph e identifique aquellos con autenticación de federación configurada. Documente el extremo del proveedor de identidad, los detalles del certificado de firma y el protocolo de federación de cada dominio federado. Verifique que cada relación de confianza de federación esté autorizada y corresponda a un proveedor de identidad conocido y legítimo bajo control de la organización.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDFED-002": {
+    "name": {
+      "value": "Periodo de validez del certificado de firma de federación",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los certificados de firma de federación con periodos de validez excesivamente largos ofrecen una ventana ampliada para que los atacantes que obtengan la clave privada falsifiquen tokens SAML y mantengan un acceso no autorizado persistente. Los certificados con periodos de validez superiores a 3 años se desvían de las prácticas recomendadas de seguridad y pueden indicar un certificado comprometido o creado por un atacante. Los certificados de corta duración limitan la duración del posible abuso si la clave privada se ve comprometida.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Certificados de firma de federación con periodos de validez no superiores a 1 año y procedimientos de rotación automatizados implementados",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise los certificados de firma de todos los dominios federados y compruebe sus fechas NotBefore y NotAfter para determinar el periodo de validez. Reemplace cualquier certificado con periodos de validez superiores a 3 años por certificados nuevos con tiempos de vida más cortos, alineados con la directiva de certificados de la organización. Implemente procedimientos de rotación de certificados automatizados y configure alertas de supervisión para los certificados próximos a caducar.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDFED-003": {
+    "name": {
+      "value": "Discrepancia entre emisor y sujeto del certificado de firma de federación",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Una discrepancia entre los campos de emisor y sujeto de un certificado de firma de federación es un fuerte indicador de un posible ataque de Golden SAML, en el que un atacante ha reemplazado el certificado de firma legítimo por uno que controla. En un ataque de Golden SAML, el atacante genera un certificado autofirmado con valores arbitrarios de emisor y sujeto y lo configura como certificado de firma de la relación de confianza de federación, lo que le permite falsificar tokens SAML de cualquier usuario. Toda discrepancia entre emisor y sujeto que no se ajuste a la cadena de entidad de certificación esperada requiere una investigación inmediata.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Los campos de emisor y sujeto del certificado de firma de federación coinciden con la cadena de PKI esperada de la organización, sin certificados autofirmados inesperados",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Extraiga el certificado de firma de cada relación de confianza de dominio federado y compare los campos de emisor y sujeto con la jerarquía de PKI esperada de su organización. Investigue cualquier certificado cuyo emisor no coincida con su entidad de certificación conocida o cuyo sujeto contenga valores inesperados. Si se detecta una discrepancia, trátela como un posible incidente de seguridad, rote de inmediato el certificado de firma de federación y revise los registros de auditoría en busca de cambios no autorizados en la configuración de federación.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDFED-004": {
+    "name": {
+      "value": "Análisis de metadatos de la relación de confianza de federación",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los metadatos de la relación de confianza de federación definen los extremos del proveedor de identidad, los protocolos admitidos y la configuración de firma de tokens usados para la autenticación federada. Los metadatos manipulados pueden redirigir los flujos de autenticación a extremos controlados por el atacante o introducir certificados de firma no autorizados, lo que permite la falsificación de tokens y ataques de suplantación. La URL del extremo de metadatos, los extremos pasivos y activos, y las configuraciones del algoritmo de firma deben validarse frente a valores conocidos como correctos.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todos los metadatos de la relación de confianza de federación validados frente a una línea base conocida como correcta, con URL de actualización de metadatos que apuntan a extremos controlados por la organización",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise la configuración de federación de cada dominio federado, incluidos el URI de intercambio de metadatos, el extremo de inicio de sesión pasivo, el URI del emisor y los detalles del certificado de firma. Compare los valores actuales con una configuración de línea base documentada para identificar modificaciones no autorizadas. Asegúrese de que los extremos de actualización de metadatos usen HTTPS y apunten a infraestructura controlada por la organización, y valide que los algoritmos de firma usen SHA-256 o superior.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDFED-005": {
+    "name": {
+      "value": "Revisión de la configuración de Azure AD Connect",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Azure AD Connect sincroniza los objetos de Active Directory local con Entra ID y es un componente crítico de la arquitectura de identidad híbrida. Una configuración incorrecta de Azure AD Connect puede exponer atributos confidenciales a la nube, crear rutas de escalada de privilegios no deseadas o permitir que atacantes con acceso local manipulen identidades en la nube. Los permisos de la cuenta de conector, las reglas de sincronización y la configuración de funciones deben revisarse frente a las prácticas recomendadas de seguridad.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Azure AD Connect configurado con cuentas de conector de privilegio mínimo, reglas de sincronización reforzadas y todas las funciones de seguridad habilitadas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise la configuración de Azure AD Connect, incluidos los permisos de la cuenta de conector, las reglas de sincronización y las funciones habilitadas. Asegúrese de que la cuenta de conector de AD DS use los permisos mínimos necesarios y de que la cuenta de conector de Entra ID sea una cuenta de servicio dedicada exclusivamente en la nube. Verifique que el servidor de Azure AD Connect se trate como un activo de Tier 0 con acceso administrativo restringido y supervisión exhaustiva.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDFED-006": {
+    "name": {
+      "value": "Auditoría del ámbito de sincronización de Azure AD Connect",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "El ámbito de sincronización de Azure AD Connect determina qué unidades organizativas, grupos y atributos locales se replican en Entra ID. Un ámbito de sincronización demasiado amplio puede replicar cuentas de servicio confidenciales, cuentas administrativas o grupos de seguridad que deberían permanecer exclusivamente en el entorno local. Por el contrario, un ámbito restringido de forma inadecuada puede no sincronizar cuentas que requieren acceso a la nube, lo que provoca errores de autenticación.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Ámbito de sincronización restringido únicamente a las unidades organizativas y objetos necesarios, con las cuentas de servicio confidenciales y los objetos administrativos excluidos",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise el ámbito de sincronización de Azure AD Connect, incluidas las reglas de filtrado por OU, el filtrado basado en grupos y el filtrado a nivel de atributo. Verifique que solo se incluyan en el ámbito de sincronización las OU que contengan cuentas de usuario que requieran acceso a la nube. Excluya las cuentas de servicio locales confidenciales, las cuentas administrativas y los grupos de seguridad que no necesiten representación en la nube, y documente la justificación de cada OU incluida.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDFED-007": {
+    "name": {
+      "value": "Estado de habilitación de la sincronización de hash de contraseñas",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La sincronización de hash de contraseñas (PHS) replica un hash de los hashes de contraseñas locales en Entra ID, lo que permite la autenticación en la nube como respaldo cuando la federación o la autenticación de paso a través no están disponibles. Aunque PHS proporciona resiliencia y permite la detección de credenciales filtradas mediante Entra ID Identity Protection, las organizaciones deben comprender las implicaciones de seguridad de almacenar derivados de contraseñas en la nube. PHS debe evaluarse frente a los requisitos de seguridad de la organización y su tolerancia al riesgo.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "PHS habilitado como método de autenticación de respaldo con la detección de credenciales filtradas activa mediante Entra ID Identity Protection",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Compruebe la configuración de Azure AD Connect para determinar si la sincronización de hash de contraseñas está habilitada. Si PHS está deshabilitado, evalúe habilitarlo como método de autenticación de respaldo y para dar soporte a la detección de credenciales filtradas de Entra ID Identity Protection. Si PHS ya está habilitado, verifique que Entra ID Identity Protection esté configurado para aprovechar los hashes de contraseñas en la detección de credenciales comprometidas basada en riesgo.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDFED-008": {
+    "name": {
+      "value": "Estado del agente de autenticación de paso a través",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La autenticación de paso a través (PTA) valida las contraseñas de los usuarios frente a Active Directory local en tiempo real sin almacenar hashes de contraseñas en la nube. Los agentes de PTA que se ejecutan en servidores locales deben protegerse, supervisarse y mantenerse actualizados adecuadamente, ya que un agente de PTA comprometido podría manipularse para aceptar cualquier contraseña o interceptar credenciales durante la autenticación. El estado del agente, la actualidad de la versión y la postura de seguridad del servidor son fundamentales para mantener la integridad de la autenticación.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Al menos 2 agentes de PTA desplegados en servidores reforzados con versiones de agente actuales y supervisión de estado habilitada",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise el estado del agente de PTA en Entra ID > Administración híbrida > Azure AD Connect > Autenticación de paso a través. Verifique que haya al menos dos agentes desplegados para la redundancia y que todos los agentes muestren un estado correcto con versiones de software actuales. Asegúrese de que los servidores de agente de PTA se traten como activos de Tier 0 con acceso administrativo restringido, parches de seguridad actualizados y supervisión exhaustiva del registro de eventos.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDFED-009": {
+    "name": {
+      "value": "Evaluación de la configuración del servidor de AD FS",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los servidores de Servicios de federación de Active Directory (AD FS) gestionan la autenticación de los dominios federados y procesan tokens SAML sensibles para la seguridad. Una configuración incorrecta de AD FS, como algoritmos de firma de tokens débiles, registro de auditoría deshabilitado, acceso de extranet demasiado permisivo o reglas de notificación desactualizadas, puede explotarse para la falsificación de tokens, la recolección de credenciales o el acceso no autorizado. La configuración de AD FS debe evaluarse periódicamente frente a las líneas base de seguridad y las guías de refuerzo de Microsoft.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Servidores de AD FS configurados según la línea base de seguridad de Microsoft, con firma SHA-256, registro de auditoría exhaustivo y parches actuales de Windows Server",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise la configuración del servidor de AD FS, incluidos el algoritmo de firma de tokens (debe ser SHA-256), la configuración del registro de auditoría (debe capturar eventos de éxito y de error), las directivas de acceso de extranet y la complejidad de las reglas de notificación. Asegúrese de que los servidores de AD FS ejecuten los últimos parches de Windows Server y de que la granja de AD FS esté configurada con servidores redundantes. Valide que la cuenta de servicio de AD FS siga los principios de privilegio mínimo y que la clave privada del certificado de firma de tokens esté debidamente protegida.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDFED-010": {
+    "name": {
+      "value": "Configuración de bloqueo de extranet de AD FS",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "El bloqueo de extranet de AD FS protege frente a los ataques de fuerza bruta y de password spray dirigidos al extremo de AD FS expuesto a Internet. Sin una configuración adecuada del bloqueo de extranet, los atacantes pueden intentar un número ilimitado de conjeturas de contraseña contra cualquier cuenta federada a través del proxy de AD FS, lo que puede comprometer las cuentas con contraseñas débiles o de uso común. La función de bloqueo inteligente de AD FS proporciona protección al tiempo que minimiza el impacto del bloqueo sobre los usuarios legítimos.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Bloqueo inteligente de extranet habilitado con un umbral y una ventana de observación apropiados configurados para prevenir ataques de fuerza bruta",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise la configuración de bloqueo de extranet de AD FS mediante Get-AdfsProperties en PowerShell en el servidor de AD FS. Habilite el bloqueo inteligente de extranet si aún no está activo y configure un umbral de bloqueo y una ventana de observación apropiados según los patrones de autenticación de su organización. Supervise los registros de seguridad de AD FS en busca de eventos de bloqueo de extranet y ajuste los umbrales si se está bloqueando a usuarios legítimos o si los intentos de fuerza bruta están teniendo éxito.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDFED-011": {
+    "name": {
+      "value": "Configuración de la unión híbrida",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La unión híbrida a Azure AD registra los dispositivos locales unidos a un dominio con Entra ID, lo que habilita directivas de acceso condicional que exigen el cumplimiento del dispositivo o el estado de unión a dominio. Una configuración incorrecta de la unión híbrida puede provocar que los dispositivos no se registren, lo que impide que los usuarios cumplan los requisitos de acceso condicional basados en dispositivo, o puede permitir que se registren dispositivos no autorizados si el punto de conexión de servicio no está debidamente protegido. La configuración debe validarse de extremo a extremo.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Unión híbrida a Azure AD configurada y funcional, con el punto de conexión de servicio debidamente protegido y el registro de dispositivos verificado para todas las OU de destino",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Verifique la configuración del punto de conexión de servicio (SCP) en Active Directory y asegúrese de que apunte al inquilino de Entra ID correcto. Compruebe que la configuración de unión híbrida en Azure AD Connect incluya los dominios correctos y que los extremos de registro empresarial necesarios sean accesibles desde los dispositivos cliente. Valide que los dispositivos se registren correctamente revisando la lista de dispositivos en Entra ID y solucionando los problemas de cualquier dispositivo que muestre un estado pendiente.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDFED-012": {
+    "name": {
+      "value": "Análisis de cuentas exclusivas de la nube frente a sincronizadas",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Comprender la distribución de las cuentas exclusivas de la nube frente a las cuentas sincronizadas desde el entorno local proporciona visibilidad sobre el panorama de identidad híbrida y ayuda a identificar posibles brechas de seguridad. Las cuentas exclusivas de la nube se gestionan íntegramente en Entra ID, mientras que las cuentas sincronizadas se originan en Active Directory local y heredan su postura de seguridad. Este análisis ayuda a identificar cuentas que deberían ser exclusivas de la nube pero se están sincronizando, o viceversa, e informa las decisiones sobre la selección del método de autenticación y la ubicación de los controles de seguridad.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las cuentas categorizadas como exclusivas de la nube o sincronizadas, con documentación del estado esperado para cada tipo de cuenta y rol",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Exporte todas las cuentas de usuario de Entra ID y categorícelas según la propiedad onPremisesSyncEnabled para determinar qué cuentas se sincronizan desde el entorno local frente a las exclusivas de la nube. Verifique que las cuentas administrativas privilegiadas sean exclusivas de la nube para evitar que un compromiso local afecte a la administración de la nube. Documente el origen de identidad esperado para cada tipo de cuenta e investigue cualquier cuenta cuyo origen real no coincida con la configuración esperada.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDFED-013": {
+    "name": {
+      "value": "Actualidad de la versión del cliente de sincronización de Entra Connect",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Microsoft Entra Connect (anteriormente Azure AD Connect) es el cliente de sincronización que replica las identidades de Active Directory local en Entra ID y es un componente híbrido de Tier-0: un compromiso del servidor de Connect puede conducir a identidades en la nube falsificadas o manipuladas y a un impacto en todo el inquilino. Microsoft publica periódicamente compilaciones de Entra Connect que contienen correcciones de seguridad no divulgadas acompañadas de una guía urgente de 'actualizar de inmediato'. Un servidor de Connect que ejecuta una compilación por debajo de la línea base mínima segura es un activo de Tier-0 sin parches expuesto a vulnerabilidades conocidas pero no divulgadas. Dado que la versión es un atributo del servidor de Connect local y no una propiedad del directorio en la nube, la actualidad de la versión debe confirmarse de forma fiable en el host de Connect; cuando no puede leerse, debe exponerse para verificación manual en lugar de asumirse conforme.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Entra Connect actualizado a la última compilación disponible (igual o superior a la línea base mínima segura), con la actualización automática habilitada donde se admita y el servidor de Connect gestionado como un activo de Tier-0",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Identifique la compilación de Entra Connect instalada en el servidor de sincronización mediante la clave del registro HKLM\\SOFTWARE\\Microsoft\\Azure AD Connect o Get-ADSyncGlobalSettings, y compárela con la última compilación publicada por Microsoft. Actualice Entra Connect a la última versión para aplicar las correcciones de seguridad y habilite la actualización automática donde la implementación lo admita. Trate el servidor de Entra Connect como un activo de Tier-0: restrinja el acceso administrativo, aplique los parches actuales del sistema operativo y habilite una supervisión exhaustiva. Documente un proceso recurrente para hacer seguimiento de las notas de la versión de Microsoft Entra Connect y aplicar con prontitud las compilaciones de seguridad.",
+      "status": "machine-draft"
+    }
+  }
+}

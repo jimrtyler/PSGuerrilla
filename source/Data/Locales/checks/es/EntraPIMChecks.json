@@ -1,0 +1,255 @@
+{
+  "_family": "EntraPIMChecks.json",
+  "EIDPIM-001": {
+    "name": {
+      "value": "Enumeración de Global Administrator",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "El rol Global Administrator otorga acceso sin restricciones a todos los servicios de Microsoft 365 y Entra ID, lo que lo convierte en el rol de mayor privilegio del inquilino. Las organizaciones deben mantener un mínimo de 2 y un máximo de 4 Global Administrators para equilibrar la resiliencia operativa con los principios de privilegio mínimo. Un número excesivo de asignaciones de Global Administrator amplía drásticamente la superficie de ataque para el robo de credenciales y el compromiso de todo el inquilino",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Máximo de 2 a 4 Global Admins",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya a Entra ID > Roles y administradores > Global Administrator y revise todos los usuarios asignados. Elimine las asignaciones permanentes innecesarias y asegúrese de que no más de 4 cuentas tengan este rol. Convierta las asignaciones permanentes en asignaciones elegibles de PIM siempre que sea posible",
+      "status": "machine-draft"
+    }
+  },
+  "EIDPIM-002": {
+    "name": {
+      "value": "Todas las asignaciones de roles privilegiados",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Un inventario exhaustivo de todas las asignaciones de roles privilegiados, incluidas tanto las permanentes (activas) como las elegibles (just-in-time), es esencial para comprender el panorama del acceso privilegiado. Esta enumeración proporciona visibilidad sobre cuántos usuarios tienen permisos elevados y si las asignaciones siguen el principio de privilegio mínimo. La revisión periódica de este inventario ayuda a identificar la proliferación de roles y las cuentas sobreaprovisionadas",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las asignaciones de roles privilegiados documentadas y revisadas trimestralmente. Se prefieren las asignaciones elegibles frente a las permanentes",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise todas las asignaciones de roles en Entra ID > Roles y administradores para cada rol privilegiado. Documente todas las asignaciones permanentes y elegibles con justificación de negocio. Establezca un proceso de revisión de acceso trimestral para validar la necesidad continua de cada asignación",
+      "status": "machine-draft"
+    }
+  },
+  "EIDPIM-003": {
+    "name": {
+      "value": "Asignaciones permanentes de roles privilegiados",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las asignaciones permanentes (activas) de roles privilegiados proporcionan acceso administrativo permanente sin límites de tiempo ni requisitos de activación. Estas asignaciones permanentes deben convertirse en asignaciones elegibles (just-in-time) mediante PIM, que exigen una activación explícita con justificación, aprobación y ventanas de acceso con límite temporal. El acceso privilegiado permanente aumenta el riesgo y el impacto del compromiso de credenciales, ya que el atacante obtiene acceso elevado inmediato sin ningún control adicional",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Ninguna asignación permanente de roles privilegiados salvo para las cuentas break-glass. El resto de las asignaciones privilegiadas deben ser elegibles de PIM",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya a Entra ID > Roles y administradores e identifique todas las asignaciones de roles permanentes. Convierta cada asignación permanente en una asignación elegible mediante PIM eliminando la asignación activa y creando la correspondiente asignación elegible. Solo las cuentas break-glass deben conservar asignaciones permanentes de Global Administrator",
+      "status": "machine-draft"
+    }
+  },
+  "EIDPIM-004": {
+    "name": {
+      "value": "Asignaciones de roles privilegiados a usuarios invitados",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los usuarios invitados o externos con asignaciones de roles privilegiados de Entra ID presentan un riesgo significativo de cadena de suministro y de terceros. Estas cuentas se originan en organizaciones externas y no están sujetas a los mismos controles de seguridad, directivas de contraseñas ni supervisión que las cuentas internas. Una cuenta de invitado comprometida con privilegios administrativos puede conducir al compromiso total del inquilino y ser difícil de detectar mediante la supervisión de seguridad interna normal",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Ningún usuario invitado o externo asignado a roles privilegiados de Entra ID",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise todas las asignaciones de roles privilegiados e identifique cualquier miembro con un userType de Guest. Elimine de inmediato las asignaciones de roles privilegiados de todas las cuentas de invitado. Si se requiere acceso administrativo externo, aprovisione cuentas dedicadas exclusivas de la nube dentro del inquilino bajo control total de la organización en lugar de usar invitaciones de invitado",
+      "status": "machine-draft"
+    }
+  },
+  "EIDPIM-005": {
+    "name": {
+      "value": "Asignaciones de roles privilegiados a cuentas sincronizadas",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las cuentas sincronizadas desde Active Directory local mediante Entra Connect que tienen roles privilegiados en la nube crean una peligrosa ruta de ataque híbrida. Si el entorno local se ve comprometido, un atacante puede manipular las credenciales o los atributos de las cuentas sincronizadas para obtener acceso administrativo al inquilino de la nube. Los roles privilegiados en la nube solo deben asignarse a cuentas exclusivas de la nube para mantener un límite de seguridad entre los entornos local y en la nube",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Ninguna cuenta sincronizada (híbrida) asignada a roles privilegiados de Entra ID. Todas las cuentas privilegiadas deben ser exclusivas de la nube",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Identifique todos los miembros de roles privilegiados cuya propiedad onPremisesSyncEnabled sea true. Cree cuentas administrativas dedicadas exclusivas de la nube para cada administrador y asigne los roles privilegiados requeridos a estas nuevas cuentas. Elimine las asignaciones de roles privilegiados de todas las cuentas sincronizadas para eliminar la ruta de escalada del entorno local a la nube",
+      "status": "machine-draft"
+    }
+  },
+  "EIDPIM-006": {
+    "name": {
+      "value": "Usuarios privilegiados sin MFA",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las cuentas privilegiadas sin autenticación multifactor registrada están expuestas a ataques basados en credenciales, incluidos el password spraying, el phishing y la fuerza bruta. Una cuenta privilegiada comprometida sin MFA proporciona a un atacante acceso administrativo inmediato usando únicamente una contraseña robada. Todas las cuentas con asignaciones de roles privilegiados deben tener métodos de MFA robustos registrados y aplicados mediante directivas de acceso condicional",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "El 100% de los usuarios privilegiados con MFA registrada y aplicada mediante acceso condicional",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise el estado de registro de MFA de todos los usuarios privilegiados mediante Entra ID > Usuarios > MFA por usuario o el informe de actividad de métodos de autenticación. Asegúrese de que una directiva de acceso condicional exija MFA para todas las asignaciones de roles de directorio. Póngase en contacto con los usuarios privilegiados que carezcan de registro de MFA y exija el registro dentro de un plazo definido",
+      "status": "machine-draft"
+    }
+  },
+  "EIDPIM-007": {
+    "name": {
+      "value": "Usuarios privilegiados con métodos de autenticación débiles",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las cuentas privilegiadas que dependen de métodos de autenticación débiles como SMS, llamada de voz o OTP por correo electrónico son vulnerables a ataques de intercambio de SIM, interceptación de llamadas y compromiso del correo electrónico. Estos métodos de MFA heredados no proporcionan el mismo nivel de garantía que los métodos resistentes al phishing, como las claves de seguridad FIDO2, Windows Hello para Empresas o la autenticación basada en certificados. Debe exigirse a las cuentas privilegiadas el uso exclusivo de métodos de autenticación resistentes al phishing",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todos los usuarios privilegiados usan métodos de MFA resistentes al phishing (FIDO2, Windows Hello para Empresas o autenticación basada en certificados). Sin SMS, voz ni OTP por correo electrónico",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise los métodos de autenticación registrados para cada usuario privilegiado mediante Entra ID > Métodos de autenticación > Actividad. Cree una directiva de acceso condicional dirigida a los roles privilegiados que exija una fortaleza de autenticación de MFA resistente al phishing. Aprovisione claves de seguridad FIDO2 o configure Windows Hello para Empresas para todos los usuarios privilegiados y elimine los métodos débiles",
+      "status": "machine-draft"
+    }
+  },
+  "EIDPIM-008": {
+    "name": {
+      "value": "Cuentas deshabilitadas en roles privilegiados",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las cuentas de usuario deshabilitadas que conservan asignaciones de roles privilegiados crean un riesgo de seguridad latente. Si la cuenta se vuelve a habilitar mediante una acción administrativa o un compromiso, recupera de inmediato el acceso privilegiado total. Las cuentas deshabilitadas deben eliminarse con prontitud de todos los roles privilegiados como parte del proceso de baja o desaprovisionamiento de cuentas para eliminar este riesgo de reactivación",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Ninguna cuenta deshabilitada con asignaciones de roles privilegiados activas o elegibles",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Enumere todos los miembros de roles privilegiados y filtre por las cuentas cuyo accountEnabled sea false. Elimine de inmediato todas las asignaciones de roles privilegiados de las cuentas deshabilitadas. Implemente un proceso automatizado o una revisión de acceso que detecte y elimine las asignaciones de roles cuando se deshabiliten las cuentas",
+      "status": "machine-draft"
+    }
+  },
+  "EIDPIM-009": {
+    "name": {
+      "value": "Cuentas que nunca han iniciado sesión con un rol privilegiado activo",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las cuentas que tienen asignaciones de roles privilegiados pero nunca han iniciado sesión pueden representar cuentas aprovisionadas pero no reclamadas, cuentas de prueba o restos de migración. Estas cuentas privilegiadas inactivas son objetivos de alto riesgo porque pueden tener credenciales predeterminadas o débiles y es poco probable que sus propietarios previstos las supervisen. Un atacante que descubra una de estas cuentas y se autentique como tal obtiene acceso privilegiado inmediato",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Ninguna asignación de roles privilegiados en cuentas que nunca han iniciado sesión",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise todos los miembros de roles privilegiados e identifique las cuentas con un lastSignInDateTime nulo o vacío. Investigue cada cuenta para determinar si sigue siendo necesaria. Elimine las asignaciones de roles privilegiados de las cuentas inactivas y deshabilite cualquier cuenta que no tenga un propósito de negocio válido",
+      "status": "machine-draft"
+    }
+  },
+  "EIDPIM-010": {
+    "name": {
+      "value": "Auditoría de la configuración de PIM",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La configuración de roles de Privileged Identity Management controla el flujo de activación, incluido si se requiere aprobación, si debe proporcionarse una justificación, la duración máxima de la activación y los destinatarios de las notificaciones. Una configuración incorrecta de PIM puede permitir que los roles privilegiados se activen sin supervisión, lo que anula de hecho los beneficios de seguridad del acceso just-in-time. Cada rol privilegiado debe requerir la aprobación de un aprobador designado, exigir una justificación de la activación y enviar notificaciones al personal de seguridad",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todos los roles privilegiados configurados con: aprobación requerida, justificación requerida, duración máxima de activación de 8 horas o menos y notificaciones habilitadas para la activación de roles",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya a Entra ID > Roles y administradores > Configuración y revise la configuración de cada rol privilegiado. Habilite el requisito de aprobación con aprobadores designados, exija la justificación de la activación, establezca la duración máxima de activación en 8 horas o menos y configure los destinatarios de las notificaciones para los eventos de activación. Preste especial atención a los roles Global Administrator, Privileged Role Administrator y Exchange Administrator",
+      "status": "machine-draft"
+    }
+  },
+  "EIDPIM-011": {
+    "name": {
+      "value": "Historial de activación de roles elegibles de PIM",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Revisar el historial de activación de PIM proporciona información sobre con qué frecuencia se activan los roles privilegiados, por quién, con qué justificación y durante cuánto tiempo. Este registro de auditoría es fundamental para detectar patrones anómalos de acceso privilegiado, como activaciones fuera del horario laboral, activaciones sin justificación válida o una frecuencia de activación excesiva que pueda indicar una cuenta comprometida o una amenaza interna",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Registros de activación de PIM revisados periódicamente. Todas las activaciones tienen una justificación de negocio válida documentada",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise el historial de activación de PIM mediante Entra ID > Roles y administradores > Registros de auditoría filtrados por operaciones de PIM. Investigue cualquier activación con patrones inusuales, incluidas las activaciones fuera de horario, las activaciones por cuentas desconocidas o las activaciones con justificaciones vagas. Establezca una cadencia de revisión periódica de los registros de auditoría de PIM como parte de las operaciones de seguridad",
+      "status": "machine-draft"
+    }
+  },
+  "EIDPIM-012": {
+    "name": {
+      "value": "Validación de cuentas de acceso de emergencia",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las cuentas de acceso de emergencia (break-glass) son salvaguardas críticas que garantizan el acceso administrativo al inquilino cuando fallan los mecanismos de autenticación normales, como durante interrupciones de MFA, configuraciones incorrectas de acceso condicional o fallos del proveedor de identidad. Deben existir al menos 2 cuentas break-glass, ser exclusivas de la nube, estar excluidas de todas las directivas de acceso condicional y protegerse con autenticación robusta, como claves FIDO2 almacenadas de forma segura. Sin cuentas break-glass configuradas correctamente, una organización corre el riesgo de quedar bloqueada permanentemente de su propio inquilino",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Al menos 2 cuentas de acceso de emergencia que sean exclusivas de la nube, con Global Administrator asignado de forma permanente, excluidas de todas las directivas de acceso condicional, con claves FIDO2 o contraseñas largas y complejas almacenadas de forma segura",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Cree al menos 2 cuentas de acceso de emergencia dedicadas que sean exclusivas de la nube (no sincronizadas), asigne el rol Global Administrator permanente, exclúyalas de todas las directivas de acceso condicional y configúrelas con claves de seguridad FIDO2 o contraseñas muy largas y complejas almacenadas en una caja fuerte física. Configure alertas de supervisión para cualquier actividad de inicio de sesión en estas cuentas y pruebe el procedimiento break-glass trimestralmente",
+      "status": "machine-draft"
+    }
+  },
+  "EIDPIM-013": {
+    "name": {
+      "value": "Aplicación de cuentas de administración independientes",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las acciones administrativas deben realizarse desde cuentas administrativas dedicadas y no desde las mismas cuentas usadas para las actividades diarias, como el correo electrónico, la navegación web y la colaboración. Usar una sola cuenta para tareas administrativas y diarias expone las credenciales privilegiadas al phishing, las descargas no autorizadas y otras amenazas encontradas durante el trabajo rutinario. Las cuentas de administración independientes reducen significativamente la probabilidad de que las credenciales privilegiadas se vean comprometidas a través de la actividad normal del usuario",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todos los administradores usan cuentas de administración dedicadas, independientes de sus cuentas de uso diario. Las cuentas de administración no deben tener buzones ni licencias de productividad asignadas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise todos los miembros de roles privilegiados e identifique las cuentas que también tengan licencias de productividad (Exchange Online, SharePoint, Teams) asignadas, lo que indica un uso dual. Cree cuentas de administración dedicadas siguiendo una convención de nomenclatura como adm-nombreusuario para cada administrador. Asigne los roles privilegiados únicamente a las cuentas de administración dedicadas y elimine los roles privilegiados de las cuentas de uso diario",
+      "status": "machine-draft"
+    }
+  },
+  "EIDPIM-014": {
+    "name": {
+      "value": "Configuración de notificaciones de asignación de roles privilegiados",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Deben configurarse notificaciones para alertar al personal de seguridad cuando se activen o se asignen de forma permanente roles privilegiados. Sin una configuración de notificaciones adecuada, la escalada de privilegios o la activación de roles no autorizadas pueden pasar desapercibidas, lo que permite a los atacantes o a los agentes internos malintencionados operar con permisos elevados sin activar ninguna alerta. La configuración de notificaciones es un control de detección fundamental que complementa las configuraciones preventivas de PIM",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Notificaciones habilitadas para todas las activaciones de roles privilegiados y las nuevas asignaciones permanentes, enviadas a los contactos designados de operaciones de seguridad",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya a Entra ID > Roles y administradores > Configuración para cada rol privilegiado. En la pestaña Notificación, asegúrese de que las notificaciones estén habilitadas para los eventos de activación de roles, asignación permanente y asignación elegible. Configure los destinatarios de las notificaciones para incluir la lista de distribución del equipo de operaciones de seguridad. Verifique que las notificaciones se reciben realizando una activación de prueba",
+      "status": "machine-draft"
+    }
+  }
+}

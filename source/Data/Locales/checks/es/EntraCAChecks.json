@@ -1,0 +1,327 @@
+{
+  "_family": "EntraCAChecks.json",
+  "EIDCA-001": {
+    "name": {
+      "value": "Inventario completo de directivas de acceso condicional",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Debe mantenerse un inventario completo de todas las directivas de acceso condicional con su configuración. Esto proporciona visibilidad sobre la postura de seguridad y permite el análisis de brechas, el seguimiento de cambios y la auditoría de cumplimiento en todo el inquilino.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las directivas de acceso condicional documentadas con su estado, condiciones, controles de concesión y controles de sesión",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya a la hoja de Acceso condicional del centro de administración de Entra y exporte todas las directivas. Revise cada directiva en cuanto a convenciones de nomenclatura correctas, descripciones y un estado apropiado (habilitada, deshabilitada o solo informe). Mantenga un registro versionado de todas las configuraciones de directivas con fines de auditoría.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDCA-002": {
+    "name": {
+      "value": "Análisis de brechas de cobertura de directivas de acceso condicional",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Todos los usuarios y aplicaciones deben estar cubiertos por al menos una directiva de acceso condicional. Las brechas en la cobertura dejan a usuarios o aplicaciones sin controles de seguridad como MFA, cumplimiento de dispositivos o restricciones de ubicación, lo que crea vectores de ataque para el acceso no autorizado.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "El 100% de los usuarios activos y las aplicaciones críticas cubiertos por al menos una directiva de acceso condicional",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise todas las directivas de acceso condicional para identificar usuarios y aplicaciones que no estén incluidos en ninguna directiva. Cree directivas que cubran a los usuarios y aplicaciones no cubiertos con los controles de concesión y de sesión apropiados. Priorice la cobertura de las cuentas privilegiadas y las aplicaciones críticas para el negocio.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDCA-003": {
+    "name": {
+      "value": "Directivas de acceso condicional en modo solo informe",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las directivas de acceso condicional que permanecen en modo solo informe no aplican controles de seguridad y solo registran lo que habría ocurrido. Las directivas que han completado las pruebas deben pasarse al estado habilitado para proteger activamente el entorno.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Ninguna directiva en modo solo informe salvo que se esté probando de forma activa con un cronograma de transición definido",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise todas las directivas de acceso condicional que actualmente están en modo solo informe y evalúe los datos de impacto de sus registros de inicio de sesión. En el caso de las directivas que se han validado y muestran un impacto aceptable, cambie el estado de solo informe a habilitada. Establezca un proceso de ciclo de vida de directivas que defina la duración máxima en modo solo informe antes de la aplicación.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDCA-004": {
+    "name": {
+      "value": "Análisis de grupos de exclusión de acceso condicional",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los usuarios y grupos excluidos de las directivas de acceso condicional omiten controles de seguridad críticos. Las exclusiones deben minimizarse, documentarse con justificación de negocio y revisarse periódicamente para evitar la acumulación de privilegios y el acceso no autorizado.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las exclusiones documentadas con justificación de negocio y revisadas trimestralmente",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Audite todas las directivas de acceso condicional para identificar los usuarios y grupos excluidos. Documente la justificación de negocio de cada exclusión y designe a un responsable de su revisión periódica. Elimine cualquier exclusión que ya no tenga una necesidad de negocio válida e implemente controles compensatorios donde las exclusiones sean necesarias.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDCA-005": {
+    "name": {
+      "value": "Grupos no protegidos en exclusiones de acceso condicional",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los grupos usados en exclusiones de acceso condicional que carecen de propietario, revisiones de pertenencia o restricciones de acceso pueden ser aprovechados por atacantes para eludir las directivas de seguridad. Un atacante que se añada a un grupo de exclusión no protegido elude de forma efectiva todos los controles de acceso condicional dirigidos a ese grupo.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todos los grupos de exclusión de acceso condicional tienen propietarios asignados, gestión de pertenencia restringida y revisiones de acceso periódicas habilitadas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Identifique todos los grupos referenciados en las exclusiones de directivas de acceso condicional y verifique que cada grupo tenga un propietario asignado, configuración restringida de unión y abandono, y una programación de revisión de acceso activa. Habilite las funciones de Grupos de acceso privilegiado o restrinja los cambios de pertenencia a grupos únicamente a los administradores autorizados. Elimine de inmediato de las exclusiones de acceso condicional cualquier grupo no gestionado o huérfano.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDCA-006": {
+    "name": {
+      "value": "Validación de exclusión de cuentas break-glass del acceso condicional",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las cuentas de acceso de emergencia (break-glass) deben excluirse de las directivas de acceso condicional para garantizar el acceso durante interrupciones o configuraciones incorrectas, pero estas exclusiones deben controlarse de forma estricta. No configurar correctamente las exclusiones de las cuentas break-glass puede provocar un bloqueo total durante incidentes críticos o crear cuentas de puerta trasera sin supervisión.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Exactamente dos cuentas break-glass excluidas de todas las directivas de acceso condicional con supervisión, alertas y validación periódica",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Verifique que existen cuentas break-glass dedicadas, que están excluidas de todas las directivas de acceso condicional y que no se usan para operaciones diarias. Configure alertas de Azure Monitor que se activen ante cualquier actividad de inicio de sesión de las cuentas break-glass. Pruebe el acceso de las cuentas break-glass trimestralmente y almacene las credenciales de forma segura en una caja fuerte física o un módulo de seguridad de hardware.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDCA-007": {
+    "name": {
+      "value": "Aplicación de MFA mediante acceso condicional",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La autenticación multifactor debe exigirse a todos los usuarios mediante directivas de acceso condicional para prevenir ataques basados en credenciales. Sin la aplicación de MFA, unas contraseñas comprometidas por sí solas otorgan acceso total a los recursos de la organización, lo que convierte a este en el control más impactante frente a la apropiación de cuentas.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "MFA exigida al 100% de los usuarios en todas las aplicaciones en la nube mediante acceso condicional",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Cree una directiva de acceso condicional dirigida a todos los usuarios y todas las aplicaciones en la nube con un control de concesión que exija la autenticación multifactor. Verifique que la directiva cubre todos los tipos de usuario, incluidos los invitados y los colaboradores externos. Supervise los registros de inicio de sesión para confirmar que se solicita MFA y revise el libro de información de acceso condicional en busca de brechas de cobertura.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDCA-008": {
+    "name": {
+      "value": "Bloqueo de la autenticación heredada mediante acceso condicional",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los protocolos de autenticación heredados como IMAP, POP3, SMTP y ActiveSync no admiten la autenticación moderna ni MFA, lo que los convierte en un vector de ataque principal para ataques de password spray y de fuerza bruta. Bloquear la autenticación heredada mediante acceso condicional es esencial para impedir que estos protocolos eludan los controles de MFA.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todos los protocolos de autenticación heredada bloqueados mediante acceso condicional para todos los usuarios",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Cree una directiva de acceso condicional dirigida a todos los usuarios y todas las aplicaciones en la nube con la condición de aplicaciones cliente establecida en clientes de Exchange ActiveSync y otros clientes, y luego establezca el control de concesión en bloquear el acceso. Verifique que la directiva está en estado habilitado y supervise los registros de inicio de sesión en busca de intentos de autenticación heredada restantes. Coordine con los propietarios de las aplicaciones para migrar las dependencias de protocolos heredados restantes a la autenticación moderna.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDCA-009": {
+    "name": {
+      "value": "Requisito de cumplimiento de dispositivos en acceso condicional",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las directivas de acceso condicional deben exigir el cumplimiento de los dispositivos para garantizar que solo los dispositivos gestionados y en buen estado puedan acceder a los recursos de la organización. Sin requisitos de cumplimiento de dispositivos, los dispositivos no gestionados o comprometidos pueden acceder a datos confidenciales, lo que aumenta el riesgo de exfiltración de datos y propagación de malware.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Cumplimiento del dispositivo o unión híbrida a Azure AD exigidos para el acceso a todas las aplicaciones en la nube",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Cree o actualice directivas de acceso condicional para exigir el cumplimiento del dispositivo o la unión híbrida a Azure AD como control de concesión para todas las aplicaciones en la nube. Asegúrese de que las directivas de cumplimiento de dispositivos de Intune estén configuradas con líneas base de seguridad apropiadas antes de aplicar este requisito. Use inicialmente el modo solo informe para evaluar el impacto y luego pase a la aplicación tras confirmar que la cobertura de dispositivos gestionados es suficiente.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDCA-010": {
+    "name": {
+      "value": "Auditoría de directivas de acceso condicional basadas en ubicación",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las directivas de acceso condicional basadas en ubicación restringen el acceso según intervalos de direcciones IP, países o ubicaciones con nombre. Sin controles de ubicación, los atacantes pueden autenticarse desde cualquier ubicación geográfica, lo que dificulta detectar y prevenir el acceso no autorizado desde regiones sospechosas o de alto riesgo.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Directivas basadas en ubicación configuradas para bloquear o exigir controles adicionales para el acceso desde ubicaciones no confiables",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise las ubicaciones con nombre existentes y asegúrese de que los intervalos de IP corporativos de confianza y los países estén definidos con precisión. Cree directivas de acceso condicional que exijan MFA o bloqueen el acceso desde ubicaciones no confiables, en particular para las cuentas privilegiadas y las aplicaciones confidenciales. Actualice periódicamente las definiciones de ubicaciones con nombre a medida que cambie la infraestructura de red corporativa.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDCA-011": {
+    "name": {
+      "value": "Revisión de la configuración de ubicaciones con nombre",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las ubicaciones con nombre definen los límites de red de confianza y no confiables que usan las directivas de acceso condicional. Las ubicaciones con nombre mal configuradas pueden dar lugar a un acceso excesivamente permisivo desde redes no confiables o a un acceso restringido innecesariamente desde ubicaciones corporativas legítimas.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las ubicaciones con nombre reflejan con precisión los límites actuales de la red corporativa, con las ubicaciones de confianza marcadas de forma adecuada",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya a la hoja de Ubicaciones con nombre en el centro de administración de Entra y revise la precisión de todas las ubicaciones configuradas. Verifique que los intervalos de IP corporativos de confianza estén actualizados y que las ubicaciones basadas en país se ajusten a la presencia de la organización. Elimine las ubicaciones con nombre obsoletas o no utilizadas y asegúrese de que los indicadores de ubicación de confianza solo se apliquen a redes corporativas verificadas.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDCA-012": {
+    "name": {
+      "value": "Directivas de acceso condicional basadas en el riesgo de inicio de sesión",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las directivas de acceso condicional basadas en el riesgo de inicio de sesión usan las señales de Azure AD Identity Protection para detectar comportamientos de inicio de sesión anómalos, como el viaje imposible, el uso de IP anónimas y la detección de fugas de credenciales. Sin directivas basadas en riesgo, unas credenciales comprometidas pueden usarse desde ubicaciones o patrones sospechosos sin activar una verificación adicional.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Directivas de acceso condicional configuradas para exigir MFA o bloquear el acceso ante niveles de riesgo de inicio de sesión medio y alto",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Cree directivas de acceso condicional dirigidas a todos los usuarios con la condición de riesgo de inicio de sesión establecida en medio y alto, que exijan la autenticación multifactor como control de concesión. Asegúrese de que Azure AD Identity Protection esté habilitado y con la licencia adecuada (requiere Entra ID P2). Supervise periódicamente el informe de inicios de sesión de riesgo y ajuste la sensibilidad de detección de riesgos según los patrones de la organización.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDCA-013": {
+    "name": {
+      "value": "Directivas de acceso condicional basadas en el riesgo de usuario",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las directivas de acceso condicional basadas en el riesgo de usuario responden a señales de riesgo acumulativas que indican que una cuenta de usuario puede estar comprometida, como credenciales filtradas o patrones de actividad anómalos. Sin directivas de riesgo de usuario, las cuentas marcadas como comprometidas por Identity Protection siguen operando con normalidad sin requerir cambios de contraseña ni verificación adicional.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Directivas de acceso condicional configuradas para exigir el cambio de contraseña ante un riesgo de usuario alto y MFA ante un riesgo de usuario medio",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Cree directivas de acceso condicional dirigidas a todos los usuarios con las condiciones de riesgo de usuario establecidas en medio y alto, que exijan un cambio de contraseña seguro como control de concesión para el riesgo alto y MFA para el riesgo medio. Asegúrese de que el restablecimiento de contraseña de autoservicio (SSPR) esté habilitado y registrado para todos los usuarios a fin de permitir la corrección automatizada. Revise periódicamente el informe de usuarios de riesgo e investigue las cuentas que permanezcan en niveles de riesgo elevados.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDCA-014": {
+    "name": {
+      "value": "Auditoría de controles de sesión",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los controles de sesión de acceso condicional rigen la frecuencia de inicio de sesión y la persistencia de la sesión del navegador. Sin controles de sesión adecuados, los usuarios pueden permanecer autenticados indefinidamente, lo que amplía la ventana de oportunidad para el secuestro de sesión y los ataques de robo de tokens.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Frecuencia de inicio de sesión establecida en no más de 24 horas para las aplicaciones confidenciales, con las sesiones persistentes de navegador deshabilitadas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise las directivas de acceso condicional en busca de configuraciones de control de sesión, incluidas la frecuencia de inicio de sesión y los ajustes de sesión persistente del navegador. Configure la frecuencia de inicio de sesión en intervalos apropiados según la sensibilidad de la aplicación, con intervalos más cortos para el acceso privilegiado. Deshabilite las sesiones persistentes del navegador en las aplicaciones confidenciales para asegurar que los tokens caduquen y requieran una nueva autenticación.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDCA-015": {
+    "name": {
+      "value": "Simulación What-If de acceso condicional para escenarios de ataque",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La herramienta What-If de acceso condicional permite simular escenarios de inicio de sesión para validar el comportamiento de las directivas frente a patrones de ataque comunes. Sin pruebas What-If periódicas, las configuraciones incorrectas o brechas de las directivas pueden pasar desapercibidas hasta que un atacante las explote.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Simulaciones What-If trimestrales que cubran escenarios de ataque comunes, incluidos atacante externo, dispositivo comprometido e intentos de autenticación heredada",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Use la herramienta What-If de acceso condicional para simular escenarios de inicio de sesión de patrones de ataque comunes como la elusión de MFA externa, los intentos de autenticación heredada, el acceso desde dispositivos no gestionados y el uso de credenciales comprometidas. Documente los resultados de cada simulación y corrija cualquier directiva que no logre bloquear el ataque simulado. Incorpore las pruebas What-If al proceso de gestión de cambios para todas las modificaciones de directivas de acceso condicional.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDCA-016": {
+    "name": {
+      "value": "Exportación de la documentación de directivas de acceso condicional",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Debe generarse una exportación completa de todas las directivas de acceso condicional con fines de documentación, recuperación ante desastres y auditoría de cumplimiento. Sin exportaciones documentadas de las directivas, reconstruir las directivas de acceso condicional tras un compromiso del inquilino o una eliminación accidental requiere un esfuerzo considerable y puede dar lugar a brechas de seguridad.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Exportación completa de directivas de acceso condicional generada y almacenada en un repositorio seguro y versionado, actualizado tras cada cambio de directiva",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Exporte todas las directivas de acceso condicional mediante la API de Microsoft Graph o el centro de administración de Entra y almacene el resultado en un repositorio seguro con control de versiones. Establezca un proceso automatizado para capturar instantáneas de las directivas de forma periódica o al producirse modificaciones de directivas. Incluya la exportación en su plan de recuperación ante desastres del inquilino y valide que las directivas puedan restaurarse a partir de la exportación.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDCA-017": {
+    "name": {
+      "value": "Notificación de usuarios de alto riesgo a los administradores",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Identity Protection puede enviar correos electrónicos a los administradores cuando los usuarios se marcan como de alto riesgo, lo que permite la investigación y contención proactivas de un probable compromiso de cuenta a medida que ocurre. SCuBA recomienda que se envíe tal notificación a los administradores cuando se detecten usuarios de alto riesgo. La configuración del destinatario de la notificación 'Users at risk detected' de Identity Protection no se expone a través de un extremo de Microsoft Graph estable y de solo lectura, por lo que una evaluación sin agente no puede confirmarla de forma positiva; esta comprobación expone el requisito de forma honesta e informa de si la telemetría de detección de riesgos de apoyo está siquiera disponible en el inquilino, en lugar de afirmar un cumplimiento que no puede verificar.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Identity Protection configurado para enviar correos electrónicos a los administradores cuando se detecten usuarios de alto riesgo",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Configure la notificación de usuarios de alto riesgo, satisfaciendo SCuBA MS.AAD.2.2. En Entra ID, vaya a Protección > Identity Protection > Notificaciones y configure las alertas de 'Users at risk detected' para que envíen correo electrónico a los administradores de seguridad apropiados o a una lista de distribución de operaciones de seguridad supervisada. Este control requiere Entra ID P2 (Identity Protection). Dado que la lista de destinatarios de la notificación no puede leerse sin agente mediante Microsoft Graph, verifique la configuración manualmente en el portal.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDCA-018": {
+    "name": {
+      "value": "Dispositivo gestionado requerido para el registro de MFA",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Exigir un dispositivo gestionado por la organización (compatible o unido a Entra híbrido) para la acción de registro de información de seguridad reduce el riesgo de que un adversario use credenciales robadas para inscribir su propio método de MFA y establecer persistencia. SCuBA recomienda que se exijan dispositivos gestionados para registrar MFA. Esto se implementa como una directiva de acceso condicional dirigida a la acción de usuario 'Registrar información de seguridad' que exige un dispositivo compatible o unido a Entra ID híbrido como control de concesión. Esta comprobación inspecciona las directivas de acceso condicional habilitadas en busca de esa configuración.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Una directiva de acceso condicional habilitada se dirige a la acción de usuario de registro de información de seguridad y exige un dispositivo compatible o unido a Entra ID híbrido",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Cree una directiva de acceso condicional para exigir un dispositivo gestionado para el registro de MFA, satisfaciendo SCuBA MS.AAD.3.8. Diríjala a la acción de usuario 'Registrar información de seguridad', aplíquela a todos los usuarios (excluyendo las cuentas break-glass) y establezca el control de concesión para exigir un dispositivo compatible o unido a Entra ID híbrido. Pruébela en modo solo informe, asegúrese de que exista una vía de arranque para los dispositivos nuevos (por ejemplo, un Pase de acceso temporal) y luego habilite la aplicación.",
+      "status": "machine-draft"
+    }
+  }
+}

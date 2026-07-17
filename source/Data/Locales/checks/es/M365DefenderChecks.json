@@ -1,0 +1,57 @@
+{
+  "_family": "M365DefenderChecks.json",
+  "M365DEF-001": {
+    "name": {
+      "value": "Auditoría de directivas de seguridad preestablecidas",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las directivas de seguridad preestablecidas de Microsoft Defender for Office 365 proporcionan configuraciones recomendadas por Microsoft para antispam, antiphishing, antimalware, Datos adjuntos seguros y Vínculos seguros como un paquete de directivas unificado. Las organizaciones que no aprovechan las directivas preestablecidas o configuraciones personalizadas equivalentes pueden tener niveles de protección incoherentes entre las distintas funciones de protección contra amenazas. Verificar que se aplique la directiva preestablecida Estándar o Estricta garantiza una línea base exhaustiva y mantenida de forma coherente.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Directiva preestablecida de protección Estándar aplicada como mínimo a todos los usuarios; protección Estricta aplicada a las cuentas prioritarias y a los ejecutivos",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Habilite la directiva de seguridad preestablecida de protección Estándar y asígnela a todos los usuarios para establecer una línea base de seguridad recomendada por Microsoft para la protección contra amenazas de correo electrónico. Aplique la directiva preestablecida de protección Estricta a las cuentas prioritarias, los ejecutivos y los objetivos de alto valor que tienen más probabilidades de ser objetivo de ataques sofisticados. Si se prefieren directivas personalizadas frente a las preestablecidas, verifique que cada directiva personalizada cumpla o supere la configuración definida en la configuración preestablecida Estándar o Estricta.",
+      "status": "machine-draft"
+    }
+  },
+  "M365DEF-002": {
+    "name": {
+      "value": "Inventario de directivas de alerta",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las directivas de alerta de Microsoft 365 Defender generan notificaciones cuando se detectan eventos de seguridad específicos o actividades sospechosas, lo que permite una respuesta a incidentes oportuna. Sin un conjunto exhaustivo de directivas de alerta, los eventos de seguridad críticos, como las eliminaciones masivas de archivos, el viaje imposible o las campañas de malware, pueden pasar desapercibidos durante periodos prolongados. Revisar el inventario de directivas de alerta garantiza que todas las categorías de amenazas importantes tengan los mecanismos de detección y notificación correspondientes.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las directivas de alerta predeterminadas habilitadas; directivas de alerta personalizadas para amenazas específicas de la organización; destinatarios de alertas configurados para el equipo de seguridad",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise todas las directivas de alerta predeterminadas y personalizadas en el portal de Microsoft 365 Defender y asegúrese de que las directivas de alerta de seguridad predeterminadas no se hayan deshabilitado ni modificado para reducir su eficacia. Configure los destinatarios de las notificaciones de alerta para incluir al equipo de operaciones de seguridad y verifique que las notificaciones por correo electrónico se entregan y supervisan. Cree directivas de alerta personalizadas para escenarios de amenazas específicos de la organización, como patrones inusuales de flujo de correo, cambios masivos de permisos o acceso desde geografías bloqueadas.",
+      "status": "machine-draft"
+    }
+  },
+  "M365DEF-003": {
+    "name": {
+      "value": "Configuración de inteligencia sobre amenazas",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las capacidades de inteligencia sobre amenazas de Microsoft Defender for Office 365 proporcionan visibilidad sobre el panorama de amenazas dirigido a su organización, incluidas las vistas de campaña, el análisis de amenazas y la información del rastreador de amenazas. Sin utilizar las funciones de inteligencia sobre amenazas, los equipos de seguridad carecen del contexto necesario para comprender si su organización está siendo objetivo de actores de amenazas o campañas de ataque específicos. Una configuración adecuada de la inteligencia sobre amenazas permite una defensa proactiva y una toma de decisiones de seguridad informada.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Explorador de amenazas y detecciones en tiempo real supervisados activamente; rastreadores de amenazas configurados para las amenazas prioritarias; investigación y respuesta automatizadas habilitadas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Asegúrese de que los analistas de seguridad tengan acceso a las vistas del Explorador de amenazas o de detecciones en tiempo real y estén capacitados para usarlas en la investigación de amenazas y campañas basadas en correo electrónico. Configure los rastreadores de amenazas para supervisar categorías de amenazas específicas relevantes para su sector y perfil de organización. Habilite las capacidades de investigación y respuesta automatizadas (AIR) para investigar y corregir automáticamente las amenazas detectadas, lo que reduce el tiempo entre la detección y la respuesta para los patrones de amenazas comunes.",
+      "status": "machine-draft"
+    }
+  }
+}

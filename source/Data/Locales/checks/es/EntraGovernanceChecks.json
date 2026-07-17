@@ -1,0 +1,93 @@
+{
+  "_family": "EntraGovernanceChecks.json",
+  "EIDGOV-001": {
+    "name": {
+      "value": "Las directivas de asignación de paquetes de acceso requieren aprobación",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las directivas de asignación de la gestión de derechos de Entra ID Governance controlan cómo los usuarios obtienen los paquetes de acceso (conjuntos de acceso a grupos, aplicaciones y SharePoint). Una directiva cuya configuración de aprobación de solicitudes está deshabilitada concede el acceso agrupado sin intervención humana, lo que convierte un paquete de acceso en acceso permanente de autoservicio. Esta comprobación inspecciona cada directiva de asignación y marca las que no requieren aprobación para que puedan revisarse. Los resultados vacíos se tratan como 'no se usa gestión de derechos' (nada que gobernar) solo cuando la recopilación se realizó correctamente; una recopilación fallida es No evaluado.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las directivas de asignación de paquetes de acceso requieren aprobación, o los paquetes de aprobación automática conceden únicamente acceso de bajo riesgo y de ámbito interno que se ha revisado deliberadamente",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "En el centro de administración de Microsoft Entra > Gobernanza de identidades > Gestión de derechos > Paquetes de acceso, abra las directivas de cada paquete y habilite 'Requerir aprobación' en las directivas que concedan acceso confidencial o de ámbito externo. Reserve la aprobación automática para los paquetes de autoservicio de bajo riesgo y ámbito interno, y documente esa decisión. Combine la aprobación con revisiones de acceso para que las concesiones permanentes vuelvan a justificarse.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDGOV-002": {
+    "name": {
+      "value": "Las directivas de asignación de paquetes de acceso aplican revisiones de acceso",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Una directiva de asignación de paquetes de acceso sin revisiones de acceso concede un acceso que nunca se vuelve a justificar de forma periódica, acumulando privilegios permanentes con el tiempo. Entra ID Governance puede asociar revisiones de acceso recurrentes a cada directiva para que los asignatarios (o sus responsables) reconfirmen la necesidad. Esta comprobación marca las directivas de asignación cuya configuración de revisión de acceso no está habilitada.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las directivas de asignación de paquetes de acceso tienen habilitadas revisiones de acceso recurrentes",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Para cada directiva de asignación de paquetes de acceso, habilite las revisiones de acceso en la configuración de ciclo de vida de la directiva: elija una periodicidad (por ejemplo, trimestral), los revisores (uno mismo, el responsable o un revisor designado) y una acción de eliminación automática para las asignaciones denegadas o sin revisar, de modo que el acceso no utilizado se revoque automáticamente.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDGOV-003": {
+    "name": {
+      "value": "Las asignaciones de paquetes de acceso tienen límite temporal",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Una directiva de asignación de paquetes de acceso configurada sin caducidad concede acceso perpetuo, lo opuesto al just-in-time. Limitar temporalmente las asignaciones obliga a volver a solicitar y volver a aprobar, lo que restringe cuánto tiempo sobrevive cualquier concesión sin revisión. Esta comprobación marca las directivas de asignación cuya caducidad está establecida en nunca.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Las directivas de asignación de paquetes de acceso hacen que las asignaciones caduquen tras un periodo acotado en lugar de conceder acceso perpetuo",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "En la configuración de ciclo de vida de cada directiva de asignación, establezca una caducidad de la asignación (un número de días o una fecha de fin fija) en lugar de 'Las asignaciones nunca caducan'. Los usuarios vuelven a solicitar a través del flujo del paquete de acceso cuando aún necesitan el acceso, lo que mantiene las concesiones deliberadas.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDGOV-004": {
+    "name": {
+      "value": "La elegibilidad externa a paquetes de acceso está controlada",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La gestión de derechos puede extender los paquetes de acceso a usuarios ajenos al inquilino (invitados y usuarios de organizaciones conectadas). Una directiva que a la vez permite destinatarios externos y no requiere aprobación deja que usuarios externos se autoprovisionen acceso interno, una vía directa de exposición externa. Esta comprobación FALLA cuando una directiva permite elegibilidad externa sin aprobación, ADVIERTE cuando la elegibilidad externa está condicionada a aprobación y pasa cuando las directivas tienen ámbito interno.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Ninguna directiva de asignación permite la elegibilidad de usuarios externos o de todos los usuarios sin aprobación; la elegibilidad externa se limita a organizaciones conectadas específicas y está condicionada a aprobación",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Para las directivas cuyo ámbito de destinatarios permitidos incluya usuarios externos o a todos los usuarios, reduzca el ámbito a organizaciones conectadas específicas o exija aprobación (y preferiblemente revisiones de acceso) en la directiva. Nunca deje una directiva de elegibilidad externa de ámbito amplio con aprobación automática.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDGOV-005": {
+    "name": {
+      "value": "Visibilidad externa del catálogo de paquetes de acceso revisada",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Un catálogo de gestión de derechos marcado como visible externamente puede mostrar sus paquetes de acceso a usuarios ajenos al inquilino en el portal Mi acceso. Los catálogos visibles externamente son apropiados para la colaboración B2B deliberada, pero conviene confirmarlos, ya que amplían quién puede descubrir y solicitar acceso. Esta comprobación marca los catálogos visibles externamente para su revisión.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Los catálogos visibles externamente son intencionados y se limitan a los necesarios para la colaboración B2B",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "En Gobernanza de identidades > Gestión de derechos > Catálogos, revise cada catálogo con la visibilidad externa habilitada. Deshabilite la visibilidad externa en los catálogos que solo dan servicio a paquetes de acceso internos, manteniendo la detectabilidad externa limitada a los catálogos creados deliberadamente para la colaboración con socios o invitados.",
+      "status": "machine-draft"
+    }
+  }
+}

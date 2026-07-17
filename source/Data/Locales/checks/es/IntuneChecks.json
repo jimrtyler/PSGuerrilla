@@ -1,0 +1,417 @@
+{
+  "_family": "IntuneChecks.json",
+  "INTUNE-001": {
+    "name": {
+      "value": "Inventario de directivas de cumplimiento de dispositivos",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las directivas de cumplimiento de dispositivos definen los requisitos de línea base de seguridad que deben cumplir los dispositivos inscritos, como la versión del sistema operativo, el cifrado y la complejidad de la contraseña. Sin un inventario exhaustivo de estas directivas, las organizaciones no pueden verificar que todas las plataformas de dispositivos y grupos de usuarios tengan requisitos de cumplimiento adecuados. Las directivas ausentes o incompletas dejan los dispositivos sin gobernar y potencialmente no conformes.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Al menos una directiva de cumplimiento por cada plataforma admitida (Windows, iOS, Android, macOS)",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise el inventario actual de directivas de cumplimiento de dispositivos en el centro de administración de Intune y verifique que cada plataforma admitida tenga al menos una directiva asignada. Cree directivas de cumplimiento para las plataformas que carezcan de cobertura, definiendo requisitos apropiados para la versión del sistema operativo, el cifrado y el estado del dispositivo. Asigne las directivas a los grupos de usuarios o dispositivos apropiados y asegúrese de que ningún dispositivo quede fuera del ámbito de las directivas.",
+      "status": "machine-draft"
+    }
+  },
+  "INTUNE-002": {
+    "name": {
+      "value": "Resumen del estado de cumplimiento de dispositivos",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "El estado general de cumplimiento de los dispositivos indica si los dispositivos inscritos cumplen los requisitos de sus directivas de cumplimiento asignadas. Un porcentaje elevado de dispositivos no conformes o no evaluados señala brechas de aplicación que podrían permitir que dispositivos inseguros accedan a los recursos corporativos. La supervisión continua del estado de cumplimiento es esencial para mantener la postura de seguridad del conjunto de dispositivos.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Tasa de cumplimiento de dispositivos del 95% o superior en todos los dispositivos inscritos",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise el panel de resumen de cumplimiento de dispositivos para identificar la distribución de dispositivos conformes, no conformes y no evaluados. Investigue los dispositivos en estado no evaluado para determinar si carecen de directivas asignadas o tienen problemas de sincronización que impiden la evaluación. Configure notificaciones de estado de cumplimiento e intégrelas con el acceso condicional para bloquear el acceso de los dispositivos no conformes a los recursos corporativos.",
+      "status": "machine-draft"
+    }
+  },
+  "INTUNE-003": {
+    "name": {
+      "value": "Enumeración de dispositivos no conformes",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los dispositivos que no superan la evaluación de la directiva de cumplimiento suponen un riesgo directo para la organización al carecer potencialmente de cifrado, ejecutar sistemas operativos desactualizados o tener funciones de seguridad deshabilitadas. Enumerar los dispositivos no conformes y comprender los errores de cumplimiento específicos permite una corrección dirigida. Sin esta visibilidad, los dispositivos inseguros pueden seguir accediendo a los datos corporativos sin ser detectados.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Cero dispositivos no conformes con acceso a los recursos corporativos; todos los dispositivos no conformes deben estar bloqueados o en corrección",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Genere un informe detallado de los dispositivos no conformes que incluya la configuración de cumplimiento específica que falla en cada dispositivo. Priorice la corrección de los dispositivos que no superan comprobaciones de cumplimiento críticas, como los requisitos de cifrado o de antivirus, y colabore con los propietarios de los dispositivos para resolver los problemas. Configure las acciones ante el incumplimiento en cada directiva de cumplimiento para marcar los dispositivos como no conformes tras un periodo de gracia e intégrelas con el acceso condicional para restringir el acceso a los recursos.",
+      "status": "machine-draft"
+    }
+  },
+  "INTUNE-004": {
+    "name": {
+      "value": "Inventario de perfiles de configuración",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los perfiles de configuración envían configuraciones de seguridad, restricciones y ajustes de funciones a los dispositivos inscritos. Un inventario incompleto de los perfiles de configuración puede provocar brechas de seguridad en las que no se apliquen configuraciones críticas, como el bloqueo de pantalla, la seguridad de Wi-Fi o la implementación de certificados. Comprender el alcance completo de los perfiles de configuración es necesario para identificar las brechas de cobertura en el conjunto de dispositivos.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Inventario documentado de todos los perfiles de configuración con convenciones de nomenclatura claras y documentación de asignación",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Exporte la lista completa de perfiles de configuración de Intune y revise el propósito, la plataforma de destino y el estado de asignación actual de cada perfil. Identifique los perfiles que estén sin asignar, en conflicto o sean redundantes y consolídelos cuando corresponda. Establezca una convención de nomenclatura y un estándar de documentación para todos los perfiles a fin de facilitar la gestión y auditoría continuas.",
+      "status": "machine-draft"
+    }
+  },
+  "INTUNE-005": {
+    "name": {
+      "value": "Análisis de asignación de perfiles de configuración",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los perfiles de configuración solo son eficaces cuando se asignan correctamente a los grupos de dispositivos o usuarios adecuados. Los perfiles asignados a grupos demasiado amplios pueden causar conflictos o aplicar configuraciones a dispositivos inapropiados, mientras que los perfiles asignados de forma demasiado restringida pueden dejar dispositivos sin configurar. Analizar la cobertura de asignación garantiza que las configuraciones de seguridad lleguen a todos los puntos de conexión previstos sin conflictos.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todos los perfiles críticos para la seguridad asignados a los grupos apropiados, sin perfiles críticos sin asignar ni asignaciones en conflicto",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise el estado de asignación y los grupos de destino de cada perfil de configuración, prestando atención a los perfiles con errores o conflictos. Resuelva cualquier conflicto de perfiles ajustando las asignaciones, combinando perfiles similares o usando filtros para dirigirse a características específicas de los dispositivos. Asegúrese de que los perfiles críticos para la seguridad, como los de configuración de BitLocker, firewall y antivirus, se asignen a todos los dispositivos aplicables mediante una pertenencia a grupos exhaustiva.",
+      "status": "machine-draft"
+    }
+  },
+  "INTUNE-006": {
+    "name": {
+      "value": "Configuración de anillos de Windows Update para empresas",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los anillos de Windows Update para empresas controlan la cadencia y los periodos de aplazamiento de las actualizaciones de calidad y de características en los dispositivos Windows gestionados. Unos anillos de actualización mal configurados pueden provocar que los dispositivos ejecuten compilaciones desactualizadas con vulnerabilidades conocidas durante periodos prolongados. Unos anillos de actualización escalonados adecuadamente equilibran la estabilidad operativa con la aplicación oportuna de parches de seguridad.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Actualizaciones de calidad aplazadas no más de 7 días; actualizaciones de características aplazadas no más de 60 días; todos los anillos asignados y entregando actualizaciones activamente",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise todas las configuraciones de anillos de Windows Update para empresas y verifique que los periodos de aplazamiento de las actualizaciones de calidad no superen los 7 días en los anillos críticos para la seguridad. Asegúrese de que existan al menos un anillo piloto y otro de implementación amplia con un escalonamiento de aplazamiento apropiado. Supervise los informes de cumplimiento de actualizaciones para identificar los dispositivos que no hayan instalado las actualizaciones recientes e investigue cualquier error de actualización o instalación bloqueada.",
+      "status": "machine-draft"
+    }
+  },
+  "INTUNE-007": {
+    "name": {
+      "value": "Auditoría de la directiva de cifrado BitLocker",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "El cifrado de unidad BitLocker protege los datos en reposo en los dispositivos Windows, lo que impide el acceso no autorizado al contenido del disco duro si un dispositivo se pierde o es robado. Sin una directiva de BitLocker configurada correctamente, los dispositivos pueden almacenar datos corporativos sin cifrar, lo que expone información confidencial. La directiva debe aplicar el cifrado en las unidades del sistema operativo y de datos fijas con opciones seguras de recuperación de claves.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "BitLocker habilitado en todas las unidades del sistema operativo y de datos fijas con cifrado XTS-AES de 256 bits y custodia de claves en Azure AD",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Cree o actualice el perfil de protección de puntos de conexión de Intune para exigir el cifrado BitLocker en las unidades del sistema operativo y de datos fijas mediante cifrado XTS-AES de 256 bits. Configure la custodia de claves de recuperación en Azure AD para garantizar que la recuperación de claves sea posible y establezca la directiva para habilitar el cifrado de forma silenciosa sin interacción del usuario. Supervise el informe de estado de cifrado para identificar los dispositivos que no hayan completado el cifrado y corrija cualquier error.",
+      "status": "machine-draft"
+    }
+  },
+  "INTUNE-008": {
+    "name": {
+      "value": "Auditoría de la directiva de Windows Defender/Antivirus",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Windows Defender Antivirus es el agente principal de protección de puntos de conexión en los dispositivos Windows y debe configurarse correctamente para proporcionar protección en tiempo real, protección entregada desde la nube y envío de muestras. Una configuración de antivirus deshabilitada o debilitada deja los dispositivos vulnerables a infecciones de malware que pueden conducir al robo de datos, ransomware y movimiento lateral. Los atacantes intentan con frecuencia manipular o deshabilitar el antivirus como primer paso de una cadena de ataque.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Protección en tiempo real habilitada, protección entregada desde la nube habilitada, envío automático de muestras habilitado, protección contra manipulaciones habilitada",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Implemente una directiva de antivirus de Intune que aplique la protección en tiempo real, la protección entregada desde la nube, el envío automático de muestras y la protección contra manipulaciones en todos los dispositivos Windows gestionados. Verifique que la protección contra PUA (aplicaciones potencialmente no deseadas) esté habilitada y que los análisis programados estén configurados para al menos un análisis completo semanal. Supervise el estado del agente de antivirus de Defender en todo el conjunto de dispositivos e investigue cualquier dispositivo que informe de protección deshabilitada o definiciones desactualizadas.",
+      "status": "machine-draft"
+    }
+  },
+  "INTUNE-009": {
+    "name": {
+      "value": "Configuración de reglas de reducción de la superficie de ataque",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las reglas de reducción de la superficie de ataque (ASR) de Microsoft Defender bloquean técnicas de ataque comunes, como los scripts ofuscados, la explotación de macros de Office y el robo de credenciales de LSASS. Sin reglas ASR configuradas y aplicadas, los puntos de conexión siguen siendo vulnerables a patrones de ataque bien conocidos que el malware común y los adversarios explotan de forma rutinaria. Unas reglas ASR configuradas correctamente reducen significativamente la superficie de ataque de los puntos de conexión Windows.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las reglas ASR recomendadas habilitadas en modo de bloqueo; modo de auditoría para las reglas recién implementadas durante las pruebas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise la configuración actual de reglas ASR en la seguridad de puntos de conexión de Intune y habilite todas las reglas recomendadas por Microsoft al menos en modo de auditoría. Tras un periodo de supervisión para identificar falsos positivos, pase las reglas al modo de bloqueo, empezando por las reglas de alto impacto, como el bloqueo de la creación de procesos secundarios por parte de las aplicaciones de Office y el bloqueo del robo de credenciales de LSASS. Configure las exclusiones de reglas ASR con moderación y únicamente para aplicaciones críticas para el negocio documentadas, supervisando el informe de eventos de ASR para verificar su eficacia continua.",
+      "status": "machine-draft"
+    }
+  },
+  "INTUNE-010": {
+    "name": {
+      "value": "Configuración de detección y respuesta de puntos de conexión",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las capacidades de detección y respuesta de puntos de conexión (EDR) que proporciona Microsoft Defender for Endpoint permiten la detección avanzada de amenazas, la investigación y la respuesta automatizada en los dispositivos gestionados. Sin la incorporación a EDR y una configuración de sensor adecuada, los equipos de seguridad carecen de visibilidad sobre los ataques sofisticados que eluden el antivirus tradicional. EDR es fundamental para detectar malware sin archivos, técnicas de living-off-the-land y amenazas persistentes avanzadas.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todos los dispositivos gestionados incorporados a Defender for Endpoint con EDR en modo de bloqueo; uso compartido de muestras y protección en la nube habilitados",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Verifique que todos los dispositivos Windows gestionados estén incorporados a Microsoft Defender for Endpoint mediante la directiva de EDR de Intune y que el estado de salud del sensor aparezca como activo. Habilite EDR en modo de bloqueo para proporcionar capacidades de bloqueo adicionales incluso cuando un antivirus de terceros sea el motor principal. Revise el inventario de dispositivos en el portal de Defender para identificar los dispositivos con problemas de salud del sensor y corrija los problemas de conectividad o configuración que impidan una incorporación correcta.",
+      "status": "machine-draft"
+    }
+  },
+  "INTUNE-011": {
+    "name": {
+      "value": "Directivas de protección de aplicaciones (MAM)",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las directivas de protección de aplicaciones (Administración de aplicaciones móviles) controlan cómo se gestionan los datos corporativos dentro de las aplicaciones gestionadas, tanto en dispositivos inscritos como no inscritos. Sin estas directivas, los usuarios pueden copiar datos corporativos a aplicaciones personales, compartir archivos a través de canales no gestionados o realizar copias de seguridad de datos corporativos en almacenamiento personal en la nube. Las directivas MAM son esenciales para prevenir la fuga de datos en los dispositivos móviles.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Directivas de protección de aplicaciones aplicadas a todas las aplicaciones gestionadas en iOS y Android; cortar/copiar/pegar restringido a aplicaciones gestionadas; copia de seguridad en servicios no gestionados bloqueada",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Cree directivas de protección de aplicaciones para las plataformas iOS y Android dirigidas a todas las aplicaciones de Microsoft 365 y de línea de negocio que gestionen datos corporativos. Configure los ajustes de protección de datos para impedir cortar/copiar/pegar en aplicaciones no gestionadas, bloquee la copia de seguridad en servicios personales en la nube y exija autenticación con PIN o biométrica a nivel de aplicación. Asigne las directivas a todos los usuarios que accedan a datos corporativos en dispositivos móviles y supervise el informe de estado de protección de aplicaciones en busca de aplicaciones no conformes.",
+      "status": "machine-draft"
+    }
+  },
+  "INTUNE-012": {
+    "name": {
+      "value": "Configuración de inicio condicional",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La configuración de inicio condicional dentro de las directivas de protección de aplicaciones define las condiciones bajo las cuales se puede iniciar una aplicación gestionada, como la versión mínima del sistema operativo, el nivel máximo de amenaza permitido o la detección de jailbreak/root. Sin esta configuración, los dispositivos comprometidos o desactualizados pueden acceder a datos corporativos a través de las aplicaciones gestionadas incluso cuando el propio dispositivo es inseguro. Estos controles proporcionan una última línea de defensa fundamental para la protección de datos.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Bloquear el acceso en dispositivos con jailbreak/root; exigir una versión mínima del sistema operativo; bloquear el acceso cuando el nivel de amenaza del dispositivo sea alto",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise y actualice la configuración de inicio condicional de cada directiva de protección de aplicaciones para bloquear el acceso a la aplicación en dispositivos con jailbreak o root. Configure los requisitos de versión mínima del sistema operativo que se alineen con las versiones admitidas por el proveedor y establezca umbrales de nivel máximo de amenaza del dispositivo que se integren con su solución de defensa contra amenazas móviles. Pruebe la configuración de inicio condicional con un grupo piloto antes de una implementación amplia para asegurarse de que los usuarios legítimos no queden bloqueados de forma inadvertida.",
+      "status": "machine-draft"
+    }
+  },
+  "INTUNE-013": {
+    "name": {
+      "value": "Restricciones de inscripción de dispositivos",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las restricciones de inscripción de dispositivos controlan qué tipos de dispositivos, plataformas y versiones de sistema operativo pueden inscribirse en la administración de Intune. Sin restricciones adecuadas, los usuarios podrían inscribir dispositivos personales que ejecuten versiones de sistema operativo no admitidas o vulnerables, lo que amplía la superficie de ataque. Las restricciones de inscripción también impiden que tipos de dispositivos no autorizados obtengan acceso a los recursos corporativos a través de la administración de dispositivos.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Bloquear los dispositivos de propiedad personal o limitarlos a plataformas específicas; aplicar requisitos de versión mínima del sistema operativo; limitar el número de dispositivos inscritos por usuario",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise las restricciones de inscripción de dispositivos en Intune y configure restricciones específicas por plataforma que se alineen con la directiva de dispositivos admitidos de su organización. Establezca requisitos de versión mínima del sistema operativo para cada plataforma y configure el número máximo de dispositivos que un solo usuario puede inscribir para evitar abusos. Si se prefiere la inscripción de dispositivos de propiedad corporativa, bloquee la inscripción de dispositivos de propiedad personal y dirija a los usuarios a usar directivas de protección de aplicaciones para los escenarios BYOD.",
+      "status": "machine-draft"
+    }
+  },
+  "INTUNE-014": {
+    "name": {
+      "value": "Configuración de Autopilot",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Windows Autopilot proporciona una experiencia de implementación sin intervención que garantiza que los dispositivos nuevos se configuren con las líneas base de seguridad correctas desde el primer arranque. Un perfil de implementación de Autopilot mal configurado o ausente significa que los dispositivos nuevos pueden aprovisionarse sin configuraciones de seguridad críticas, lo que crea una ventana de vulnerabilidad. Revisar las configuraciones de Autopilot garantiza un aprovisionamiento de dispositivos coherente y seguro.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Perfil de implementación de Autopilot configurado para todos los dispositivos corporativos con modo controlado por el usuario o de autoimplementación y unión a Azure AD",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise los perfiles de implementación de Autopilot existentes y verifique que estén configurados para la unión a Azure AD con los ajustes de modo controlado por el usuario o de autoimplementación apropiados. Asegúrese de que la página de estado de inscripción esté habilitada para impedir que los usuarios accedan al escritorio antes de que se instalen todas las directivas y aplicaciones críticas. Verifique que todos los hashes de hardware de los dispositivos corporativos estén registrados en el servicio Autopilot y asignados al perfil de implementación apropiado.",
+      "status": "machine-draft"
+    }
+  },
+  "INTUNE-015": {
+    "name": {
+      "value": "Estado de cifrado de disco",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "El cifrado de disco completo garantiza que los datos almacenados en las unidades de los dispositivos estén protegidos si el dispositivo físico se pierde, es robado o se retira del servicio. Los dispositivos sin cifrado habilitado exponen los datos corporativos, incluidas las credenciales en caché, los documentos y el correo electrónico, a ataques de robo físico. Supervisar el estado de cifrado en todo el conjunto de dispositivos identifica los dispositivos que han fallado el cifrado o que aún no se han cifrado.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "El 100% de los dispositivos gestionados informando de cifrado habilitado en todas las unidades",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise el informe de cifrado de Intune para identificar todos los dispositivos que no informen del cifrado de disco completo como habilitado. Investigue los errores de cifrado, que pueden deberse a hardware no compatible, problemas de TPM o conflictos de directivas, y resuelva las causas subyacentes. Para los dispositivos que no puedan admitir el cifrado, evalúe si se les debe permitir el acceso a los recursos corporativos y considere bloquearlos mediante directivas de acceso condicional.",
+      "status": "machine-draft"
+    }
+  },
+  "INTUNE-016": {
+    "name": {
+      "value": "Configuración de la directiva de firewall",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Windows Defender Firewall proporciona protección de red basada en host que bloquea las conexiones entrantes y salientes no autorizadas. Sin una directiva de firewall gestionada centralmente a través de Intune, los dispositivos individuales pueden tener configuraciones de firewall incoherentes o deshabilitadas, lo que los deja vulnerables a los ataques basados en red. La gestión centralizada del firewall garantiza una protección coherente en todos los puntos de conexión gestionados con independencia de la ubicación de red.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Windows Defender Firewall habilitado para todos los perfiles (Dominio, Privado, Público); bloquear las conexiones entrantes de forma predeterminada; registrar los paquetes descartados",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Implemente una directiva de firewall de seguridad de puntos de conexión de Intune que habilite Windows Defender Firewall para los perfiles de red de Dominio, Privado y Público, con las conexiones entrantes bloqueadas de forma predeterminada. Configure reglas de firewall para cualquier excepción de aplicación necesaria y habilite el registro de las conexiones descartadas y correctas. Supervise el estado de implementación de la directiva de firewall e investigue cualquier dispositivo que informe de errores de aplicación de la directiva o estados de firewall deshabilitado.",
+      "status": "machine-draft"
+    }
+  },
+  "INTUNE-017": {
+    "name": {
+      "value": "Cumplimiento de las líneas base de seguridad",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las líneas base de seguridad de Microsoft en Intune proporcionan grupos preconfigurados de configuraciones de Windows recomendadas por los equipos de seguridad de Microsoft, que abarcan áreas como la protección de credenciales, la seguridad del navegador y la reducción de la superficie de ataque. Los dispositivos que se desvían de la línea base de seguridad tienen posturas de seguridad debilitadas y pueden ser vulnerables a vectores de ataque conocidos. Supervisar el cumplimiento de la línea base identifica la desviación de configuración y ayuda a mantener una postura de seguridad coherente.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Cumplimiento del 90% o superior de las líneas base de seguridad asignadas; todos los estados de conflicto y error resueltos",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Implemente el perfil de línea base de seguridad de Microsoft más reciente para Windows y Defender for Endpoint en todos los dispositivos gestionados y supervise el estado de cumplimiento por configuración. Investigue las configuraciones que informen de estados de conflicto o error, ya que a menudo indican directivas en competencia que deben conciliarse. Aborde las configuraciones no conformes evaluando si la desviación se debe a un requisito de negocio legítimo que justifique una excepción documentada o a un problema de configuración que deba corregirse.",
+      "status": "machine-draft"
+    }
+  },
+  "INTUNE-018": {
+    "name": {
+      "value": "Auditoría de la implementación de scripts de PowerShell",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Intune permite a los administradores implementar scripts de PowerShell en los dispositivos Windows gestionados, que se ejecutan con privilegios de nivel SYSTEM de forma predeterminada. Los scripts malintencionados o mal escritos implementados a través de este canal pueden comprometer la seguridad del dispositivo, exfiltrar datos o instalar software no autorizado en todo el conjunto de dispositivos. Todo script implementado debe revisarse en busca de implicaciones de seguridad y rastrearse para verificar su implementación autorizada.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todos los scripts implementados revisados y aprobados mediante la gestión de cambios; los scripts se ejecutan en el contexto del usuario cuando sea posible; contenido de los scripts documentado",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Audite todos los scripts de PowerShell implementados actualmente a través de Intune y revise su contenido en busca de riesgos de seguridad, como credenciales codificadas de forma fija, descargas remotas sin restricciones o cambios de permisos excesivos. Asegúrese de que los scripts se ejecuten en el contexto del usuario en lugar del contexto SYSTEM siempre que sea posible y de que la ejecución de scripts se limite al ámbito de dispositivos mínimo necesario. Implemente un proceso de gestión de cambios para la implementación de scripts que incluya la revisión por pares del contenido del script y la aprobación formal antes de la implementación en producción.",
+      "status": "machine-draft"
+    }
+  },
+  "INTUNE-019": {
+    "name": {
+      "value": "Revisión de seguridad de la implementación de aplicaciones Win32",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las implementaciones de aplicaciones Win32 a través de Intune empaquetan y distribuyen aplicaciones de escritorio tradicionales a los dispositivos gestionados. Las aplicaciones verificadas de forma inadecuada pueden contener vulnerabilidades, malware incluido o modificaciones excesivas del sistema que debilitan la seguridad del dispositivo. Revisar el catálogo de implementación de aplicaciones Win32 garantiza que solo se distribuyan aplicaciones aprobadas y seguras al conjunto de dispositivos gestionados.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las aplicaciones Win32 procedentes de proveedores de confianza con aprobación documentada; comandos de instalación revisados en busca de implicaciones de seguridad",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise todas las aplicaciones Win32 implementadas a través de Intune y verifique que cada aplicación proceda de un proveedor de confianza y haya sido aprobada mediante su proceso de aprobación de software. Examine las líneas de comandos de instalación y desinstalación en busca de parámetros sospechosos, ejecución de scripts o modificaciones del registro que puedan debilitar la seguridad. Implemente un proceso de revisión de aplicaciones que evalúe los nuevos paquetes de aplicaciones Win32 en busca de riesgos de seguridad antes de la implementación en los grupos de dispositivos de producción.",
+      "status": "machine-draft"
+    }
+  },
+  "INTUNE-020": {
+    "name": {
+      "value": "Categorías y agrupación de dispositivos",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las categorías de dispositivos y los grupos dinámicos de Intune organizan los dispositivos gestionados para la implementación dirigida de directivas y aplicaciones. Sin un esquema de categorización estructurado, las directivas pueden aplicarse de forma incoherente y las configuraciones de seguridad críticas podrían omitir segmentos enteros de la población de dispositivos. Una agrupación adecuada de dispositivos permite posturas de seguridad diferenciadas para distintos roles de dispositivos y poblaciones de usuarios.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Categorías de dispositivos definidas alineadas con las necesidades de la organización; grupos dinámicos basados en las propiedades de los dispositivos para la orientación automatizada de directivas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise y establezca categorías de dispositivos que se alineen con los roles de dispositivos de la organización, como ejecutivo, usuario estándar, quiosco o dispositivo compartido. Cree grupos dinámicos de dispositivos basados en las propiedades de los dispositivos, incluidas la categoría, el sistema operativo, el tipo de propiedad y el estado de cumplimiento, para la orientación automatizada de directivas y aplicaciones. Verifique que todas las asignaciones de directivas hagan referencia a los grupos apropiados y que ningún dispositivo quede fuera de la estructura de agrupación.",
+      "status": "machine-draft"
+    }
+  },
+  "INTUNE-021": {
+    "name": {
+      "value": "Auditoría de acciones remotas (borrar, retirar, bloquear)",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las acciones remotas de Intune, como borrar, retirar y bloquear de forma remota, son capacidades potentes de administración de dispositivos que, si se usan de forma indebida, pueden provocar la pérdida de datos o la denegación de servicio a usuarios legítimos. Los borrados remotos no autorizados o accidentales pueden destruir datos críticos para el negocio en los dispositivos, mientras que las acciones de bloqueo remoto sin auditar podrían indicar un compromiso de cuenta. Todas las acciones remotas deben registrarse y revisarse para verificar su uso autorizado.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las acciones remotas registradas con la identidad del operador; las acciones de borrado requieren aprobación documentada; registros de auditoría revisados semanalmente",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise los registros de auditoría de Intune para todos los eventos de acciones remotas, incluidos el borrado, la retirada, el bloqueo remoto y el restablecimiento de código de acceso, a fin de identificar cualquier actividad no autorizada o inusual. Implemente un flujo de aprobación para las acciones remotas destructivas, como el borrado completo, que requiera una justificación documentada y una aprobación secundaria. Configure notificaciones de alerta para las acciones de borrado remoto a fin de garantizar que los equipos de seguridad tengan conocimiento inmediato cuando se estén borrando dispositivos.",
+      "status": "machine-draft"
+    }
+  },
+  "INTUNE-022": {
+    "name": {
+      "value": "Restricciones de sincronización de OneDrive",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La configuración del cliente de sincronización de OneDrive controla cómo se sincronizan los archivos corporativos entre el almacenamiento en la nube y los dispositivos gestionados, y una sincronización sin restricciones puede provocar que los datos corporativos se almacenen en dispositivos no gestionados o no conformes. Sin restricciones de dominio en el cliente de sincronización, los usuarios pueden sincronizar contenido corporativo de SharePoint y OneDrive en dispositivos personales fuera del control de TI. Unas restricciones de sincronización adecuadas evitan la fuga de datos a través de la sincronización de archivos no gestionada.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Sincronización de OneDrive restringida a dispositivos unidos a un dominio o gestionados por Intune; Mover carpeta conocida habilitado para la copia de seguridad; Archivos a petición habilitado",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Configure el cliente de sincronización de OneDrive a través de Intune para restringir la sincronización a los dispositivos unidos a Azure AD o gestionados por Intune mediante la lista de permitidos del inquilino. Habilite Mover carpeta conocida para redirigir automáticamente el Escritorio, los Documentos y las Imágenes a OneDrive para la protección de datos y habilite Archivos a petición para minimizar el almacenamiento local de datos. Bloquee la sincronización de cuentas personales de OneDrive en los dispositivos corporativos si lo permite la directiva de la organización para evitar la mezcla de datos.",
+      "status": "machine-draft"
+    }
+  },
+  "INTUNE-023": {
+    "name": {
+      "value": "Aprobación de varios administradores para acciones destructivas en dispositivos",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Microsoft Intune admite directivas de aprobación de varios administradores que requieren que un segundo administrador apruebe operaciones de alto impacto, como el borrado masivo de dispositivos, la retirada masiva de dispositivos y las implementaciones de scripts, antes de que se ejecuten. Sin la aprobación de varios administradores, una sola cuenta de administrador comprometida puede desencadenar borrados masivos de dispositivos en toda la organización. Esta comprobación verifica que las directivas de aprobación de operaciones estén configuradas para proteger frente a las acciones destructivas realizadas por una cuenta de administrador comprometida o malintencionada.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Aprobación de varios administradores habilitada para las operaciones destructivas, incluidas el borrado masivo de dispositivos, la retirada masiva de dispositivos y las acciones de implementación de scripts",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya al centro de administración de Microsoft Intune > Administración de inquilinos > Aprobación de varios administradores. Cree una directiva de aprobación que requiera que un segundo administrador apruebe las operaciones destructivas. Como mínimo, habilite la aprobación para: acciones masivas de dispositivos (Borrar, Retirar, Eliminar), implementación de aplicaciones en grupos grandes e implementaciones de scripts. Asigne un grupo de aprobación que contenga administradores sénior de confianza que revisarán y aprobarán estas solicitudes. Considere implementar un proceso de aprobación acelerado para escenarios de emergencia.",
+      "status": "machine-draft"
+    }
+  }
+}

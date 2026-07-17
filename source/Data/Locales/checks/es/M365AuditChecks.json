@@ -1,0 +1,57 @@
+{
+  "_family": "M365AuditChecks.json",
+  "M365AUDIT-001": {
+    "name": {
+      "value": "Registro de auditoría unificado habilitado",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "El registro de auditoría unificado de Microsoft 365 registra las actividades de usuarios y administradores en Exchange Online, SharePoint Online, OneDrive, Azure AD, Microsoft Teams y otros servicios, y proporciona la fuente de datos fundamental para las investigaciones de seguridad. Si la auditoría unificada está deshabilitada, la organización pierde visibilidad sobre actividades críticas como el acceso a buzones, el uso compartido de archivos, los cambios de permisos y las operaciones administrativas. Deshabilitar el registro de auditoría es una técnica conocida de los adversarios usada para cubrir sus huellas tras comprometer un inquilino.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Registro de auditoría unificado habilitado en toda la organización, sin invalidaciones por usuario o por buzón que deshabiliten la auditoría",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Verifique que el registro de auditoría unificado esté habilitado ejecutando Get-AdminAuditLogConfig y confirmando que UnifiedAuditLogIngestionEnabled esté establecido en True. Si la auditoría está deshabilitada, habilítela de inmediato e investigue el historial de auditoría para determinar cuándo y por quién se deshabilitó, ya que esto puede indicar un compromiso de seguridad. Configure una alerta de supervisión para detectar cualquier intento futuro de deshabilitar el registro de auditoría unificado y restrinja los permisos necesarios para modificar la configuración del registro de auditoría a un conjunto mínimo de administradores de confianza.",
+      "status": "machine-draft"
+    }
+  },
+  "M365AUDIT-002": {
+    "name": {
+      "value": "Directiva de retención del registro de auditoría",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "De forma predeterminada, los registros del registro de auditoría de Microsoft 365 se conservan durante 180 días (o 90 días para las licencias estándar), lo que puede ser insuficiente para detectar ataques de larga duración o cumplir los requisitos normativos de cumplimiento. Las amenazas persistentes avanzadas pueden operar dentro de un entorno durante meses antes de su detección y, sin una retención de registros adecuada, las pruebas forenses necesarias para la investigación pueden haberse purgado ya. Ampliar la retención del registro de auditoría garantiza que los datos históricos de actividad estén disponibles cuando se necesiten.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Retención del registro de auditoría establecida en al menos 365 días; tipos de actividad prioritarios conservados durante periodos más largos; registros exportados a un SIEM externo para el almacenamiento a largo plazo",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Configure directivas de retención del registro de auditoría en el portal de cumplimiento de Microsoft Purview para conservar todos los registros del registro de auditoría durante al menos 365 días, ampliando la retención de los tipos de registro de alta prioridad como MailItemsAccessed, FileAccessed y UserLoggedIn. Para las organizaciones con Microsoft 365 E5 o licencias equivalentes, configure directivas de retención de 10 años para los tipos de registro de auditoría críticos a fin de respaldar las investigaciones forenses a largo plazo. Implemente la exportación de registros a un SIEM externo o a una plataforma de análisis de registros como Microsoft Sentinel para el almacenamiento a largo plazo y la correlación avanzada más allá del periodo de retención nativo.",
+      "status": "machine-draft"
+    }
+  },
+  "M365AUDIT-003": {
+    "name": {
+      "value": "Capacidad de búsqueda en el registro de auditoría",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La capacidad de buscar y analizar de forma eficaz los datos del registro de auditoría es fundamental para las investigaciones de seguridad, las auditorías de cumplimiento y las actividades de respuesta a incidentes. Sin una capacidad de búsqueda verificada y personal capacitado, los datos del registro de auditoría existentes no pueden aprovecharse durante incidentes de seguridad urgentes. Las organizaciones deben asegurarse de que las herramientas de búsqueda del registro de auditoría estén accesibles, sean funcionales y de que los procedimientos de respuesta incluyan el análisis del registro de auditoría.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Búsqueda en el registro de auditoría accesible para el equipo de seguridad; consultas de búsqueda probadas y documentadas para escenarios de investigación comunes; integración con SIEM operativa",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Verifique que los miembros de los equipos de operaciones de seguridad y respuesta a incidentes tengan las asignaciones de rol apropiadas (rol Registros de auditoría o Registros de auditoría de solo lectura) para buscar en el registro de auditoría unificado. Cree y documente consultas de búsqueda estándar para escenarios de investigación comunes, como el compromiso de buzones, el acceso no autorizado a archivos y la escalada de privilegios administrativos. Pruebe periódicamente la funcionalidad de búsqueda del registro de auditoría y valide que la integración con SIEM esté ingiriendo e indexando los eventos de auditoría correctamente para la detección y correlación automatizadas.",
+      "status": "machine-draft"
+    }
+  }
+}

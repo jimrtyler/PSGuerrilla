@@ -1,0 +1,291 @@
+{
+  "_family": "EntraTenantChecks.json",
+  "EIDTNT-001": {
+    "name": {
+      "value": "Exportación de la configuración de todo el inquilino",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Una exportación exhaustiva de toda la configuración de nivel de inquilino establece una línea base conocida como correcta para la detección de cambios y la recuperación ante desastres. Sin una línea base documentada, es imposible determinar si la configuración actual se ha desviado de su estado previsto o si un atacante ha modificado la configuración del inquilino para debilitar los controles de seguridad. Esta línea base debe capturarse en la configuración inicial y actualizarse cada vez que se realicen cambios autorizados.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Línea base completa de la configuración del inquilino exportada y almacenada en un repositorio con control de versiones y con instantáneas periódicas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Exporte toda la configuración de nivel de inquilino mediante la API de Microsoft Graph, incluidas las directivas de autorización, las directivas de métodos de autenticación, las directivas de consentimiento, la configuración de acceso entre inquilinos y la configuración del directorio. Almacene la exportación en un repositorio seguro con control de versiones y establezca un proceso programado para capturar instantáneas periódicas. Compare periódicamente la configuración actual con la línea base para detectar desviaciones de configuración no autorizadas o no deseadas.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDTNT-002": {
+    "name": {
+      "value": "Revisión de la configuración de usuario",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La configuración de usuario de nivel de inquilino controla si los usuarios estándar pueden registrar aplicaciones, dar su consentimiento a que las aplicaciones accedan a los datos de la empresa, crear grupos de seguridad y leer la información de directorio de otros usuarios. Una configuración de usuario demasiado permisiva habilita la TI en la sombra, las integraciones de aplicaciones no autorizadas y la proliferación de grupos que amplían la superficie de ataque. Esta configuración debe restringirse para impedir que los usuarios estándar realicen acciones que deberían requerir supervisión administrativa.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Los usuarios no pueden registrar aplicaciones, el consentimiento de usuario está restringido a los editores verificados y la creación de grupos está limitada a los usuarios autorizados",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya a Entra ID > Configuración de usuario y revise cada opción. Deshabilite 'Los usuarios pueden registrar aplicaciones' para evitar la proliferación incontrolada de registros de aplicaciones. Restrinja la configuración de consentimiento de usuario para permitir el consentimiento únicamente a aplicaciones de editores verificados con permisos de bajo riesgo. Limite quién puede crear grupos de Microsoft 365 y grupos de seguridad a administradores o propietarios de grupos designados.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDTNT-003": {
+    "name": {
+      "value": "Restricciones de acceso de usuarios invitados",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los usuarios invitados son identidades externas invitadas a colaborar con la organización. De forma predeterminada, los usuarios invitados pueden tener una visibilidad excesivamente amplia del directorio, incluida la capacidad de enumerar usuarios, grupos y aplicaciones. Un acceso de invitado sin restricciones permite que partes externas mapeen la estructura de identidad de la organización, identifiquen objetivos de alto valor y recopilen inteligencia para ataques posteriores. Los permisos de invitado deben restringirse al mínimo necesario para la colaboración.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Acceso de usuarios invitados restringido únicamente a las propiedades y pertenencias de sus propios objetos de directorio",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya a Entra ID > Identidades externas > Configuración de colaboración externa y revise las restricciones de acceso de los usuarios invitados. Establezca el acceso de usuarios invitados en la opción más restrictiva, que limita a los invitados a las propiedades y pertenencias de sus propios objetos de directorio. Verifique que los invitados no puedan enumerar la lista completa de usuarios, las pertenencias a grupos ni los registros de aplicaciones probando con una cuenta de invitado.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDTNT-004": {
+    "name": {
+      "value": "Restricciones de invitación de invitados",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La configuración de invitación de invitados controla quién puede invitar a usuarios externos al inquilino, desde permitir que cualquier usuario invite invitados hasta restringir las invitaciones únicamente a los administradores. Una configuración de invitación permisiva permite que los usuarios estándar inviten a partes externas sin supervisión, lo que puede introducir identidades externas sin verificar con acceso a los recursos de la organización. Las restricciones de invitación deben alinearse con los requisitos de gobernanza de la colaboración externa de la organización.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Invitaciones de invitados restringidas a usuarios con roles de administrador específicos o con el rol de invitador de invitados, sin acceso de invitado de autoservicio habilitado",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya a Entra ID > Identidades externas > Configuración de colaboración externa y revise la configuración de invitación de invitados. Restrinja las invitaciones de invitados a los usuarios asignados al rol Invitador de invitados o a roles de administrador específicos en lugar de permitir que todos los miembros inviten. Deshabilite la opción de que los invitados inviten a otros invitados para evitar cadenas de invitación incontroladas y establezca un flujo de aprobación para las solicitudes de invitación de invitados.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDTNT-005": {
+    "name": {
+      "value": "Configuración de colaboración externa",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La configuración de colaboración externa define el ámbito de dominios desde los que se pueden invitar usuarios invitados y qué organizaciones externas pueden colaborar con el inquilino. Sin restricciones de dominio, se puede invitar a invitados desde cualquier organización externa, incluidos competidores, entidades sancionadas o inquilinos controlados por atacantes. Deben configurarse listas de permitidos o de bloqueados de dominios para limitar la colaboración a las organizaciones asociadas aprobadas y evitar el acceso externo no autorizado.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Colaboración externa restringida a dominios permitidos específicos con una lista de denegación para dominios conocidos de alto riesgo",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya a Entra ID > Identidades externas > Configuración de colaboración externa y configure las restricciones de colaboración. Implemente una lista de permitidos de dominios asociados aprobados o una lista de bloqueados de dominios conocidos de alto riesgo y de competidores según el modelo de colaboración de su organización. Revise y actualice la lista de dominios trimestralmente para reflejar los cambios en las relaciones con socios y asegúrese de que las restricciones de colaboración se alineen con las directivas de clasificación de datos e intercambio de información.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDTNT-006": {
+    "name": {
+      "value": "Directivas de acceso entre inquilinos de Azure B2B",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las directivas de acceso entre inquilinos proporcionan un control granular sobre cómo se autentican los usuarios y acceden a los recursos al colaborar con inquilinos externos de Entra ID. La configuración predeterminada de acceso entre inquilinos puede permitir un acceso entrante y saliente amplio que no se alinea con los requisitos de seguridad de la organización. Las directivas de acceso entre inquilinos configuradas correctamente permiten la colaboración B2B de confianza al tiempo que impiden el acceso no autorizado desde inquilinos no confiables y controlan qué usuarios pueden acceder a recursos externos.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Directiva de acceso entre inquilinos predeterminada establecida en bloquear, con reglas de permiso explícitas únicamente para los inquilinos asociados aprobados",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya a Entra ID > Identidades externas > Configuración de acceso entre inquilinos y revise la configuración predeterminada de acceso entrante y saliente. Configure la directiva predeterminada para restringir tanto el acceso entrante como el saliente y, a continuación, cree directivas específicas para los inquilinos asociados aprobados con los controles de acceso apropiados. Habilite la configuración de confianza para los inquilinos asociados a fin de aceptar sus notificaciones de MFA y el cumplimiento de dispositivos cuando corresponda, lo que reduce la fricción de autenticación en las colaboraciones de confianza.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDTNT-007": {
+    "name": {
+      "value": "Estado de habilitación o deshabilitación de los valores predeterminados de seguridad",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los valores predeterminados de seguridad proporcionan un conjunto de base de mecanismos de seguridad de identidad, incluidos los requisitos de registro de MFA, los desafíos de MFA para los administradores y el bloqueo de la autenticación heredada. Las organizaciones que usan directivas de acceso condicional deben tener los valores predeterminados de seguridad deshabilitados para evitar conflictos, pero los inquilinos sin acceso condicional que también tengan los valores predeterminados de seguridad deshabilitados no tienen protección de base frente a los ataques de identidad comunes. Esta comprobación verifica que los valores predeterminados de seguridad o directivas de acceso condicional equivalentes protegen activamente el inquilino.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Valores predeterminados de seguridad habilitados para los inquilinos sin acceso condicional. Para los inquilinos con acceso condicional, valores predeterminados de seguridad deshabilitados con directivas de acceso condicional equivalentes o más estrictas implementadas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Compruebe si los valores predeterminados de seguridad están habilitados en Entra ID > Propiedades > Administrar valores predeterminados de seguridad. Si los valores predeterminados de seguridad están deshabilitados, verifique que las directivas de acceso condicional proporcionen una protección equivalente o más estricta, incluidas MFA para todos los usuarios, el bloqueo de la autenticación heredada y MFA para las acciones administrativas. Si no se han implementado ni los valores predeterminados de seguridad ni directivas de acceso condicional equivalentes, habilite de inmediato los valores predeterminados de seguridad como medida de protección de base.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDTNT-008": {
+    "name": {
+      "value": "Inventario y utilización de licencias",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Un inventario exhaustivo de las licencias asignadas y sus tasas de utilización proporciona visibilidad sobre las funciones de seguridad disponibles e identifica posibles brechas donde no se están usando las capacidades con licencia. Las organizaciones pueden estar pagando por funciones de seguridad avanzadas como Entra ID P2, Microsoft Defender for Identity o Microsoft Sentinel que no están totalmente implementadas o configuradas. Comprender el panorama de licencias garantiza que todas las capacidades de seguridad adquiridas se activen y utilicen.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las licencias inventariadas con seguimiento de utilización y todas las funciones de seguridad con licencia totalmente implementadas y configuradas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise el resumen de asignación de licencias en el centro de administración de Microsoft 365 o en Entra ID > Licencias > Información general. Identifique las licencias relevantes para la seguridad, como Entra ID P1/P2, Microsoft Defender for Identity y Microsoft 365 E5 Security. Verifique que las funciones incluidas en cada licencia estén configuradas e implementadas activamente y elabore un plan para activar cualquier capacidad de seguridad sin usar que ya tenga licencia.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDTNT-009": {
+    "name": {
+      "value": "Configuración de unidades administrativas",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Las unidades administrativas proporcionan un ámbito administrativo delegado al agrupar usuarios, grupos y dispositivos en contenedores lógicos con administradores específicos asignados para gestionar únicamente esos objetos. Sin unidades administrativas, los administradores delegados pueden tener un acceso más amplio del previsto, o los límites administrativos pueden no alinearse con la estructura de la organización. Las unidades administrativas configuradas correctamente aplican la delegación de privilegio mínimo y evitan el exceso de alcance administrativo.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Unidades administrativas configuradas para alinearse con el modelo de delegación de la organización, con unidades administrativas de gestión restringida usadas para los objetos confidenciales",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise la configuración de unidades administrativas existente en Entra ID > Roles y administradores > Unidades administrativas. Evalúe si la estructura actual se alinea con los requisitos de delegación de su organización y si los objetos confidenciales, como las cuentas privilegiadas, están protegidos por unidades administrativas de gestión restringida. Cree o modifique unidades administrativas según sea necesario para garantizar que los administradores solo puedan gestionar objetos dentro de su ámbito designado.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDTNT-010": {
+    "name": {
+      "value": "Configuración de dominios personalizados",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los dominios personalizados registrados en el inquilino definen la dirección de correo electrónico y los sufijos de inicio de sesión que usa la organización. Los dominios no verificados o no autorizados pueden indicar una configuración incorrecta o un atacante que intenta establecer presencia en el inquilino. Cada dominio personalizado debe verificarse mediante registros DNS y revisarse periódicamente para asegurar que todos los dominios sigan siendo propiedad de la organización y que los registros de verificación DNS permanezcan intactos.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todos los dominios personalizados verificados, gestionados activamente y con los registros de verificación DNS intactos",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise todos los dominios personalizados registrados en Entra ID > Nombres de dominio personalizados y verifique que cada dominio siga siendo propiedad de la organización y que los registros de verificación DNS estén configurados correctamente. Elimine los dominios que ya no estén en uso o que no puedan verificarse como propiedad de la organización. Asegúrese de que los registros DNS de los dominios estén protegidos con bloqueos de registrador y de que se supervisen las fechas de caducidad de los dominios para evitar la pérdida involuntaria de dominios.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDTNT-011": {
+    "name": {
+      "value": "Configuración de diagnóstico para los registros de auditoría e inicio de sesión",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Entra ID genera registros de auditoría y registros de inicio de sesión que son fundamentales para la supervisión de seguridad, la investigación de incidentes y la generación de informes de cumplimiento. Sin una configuración de diagnóstico que exporte estos registros a una ubicación de almacenamiento duradera, como un área de trabajo de Log Analytics, una cuenta de Azure Storage o un SIEM, los registros se conservan solo durante un periodo limitado dentro de Entra ID y pueden no estar disponibles durante la investigación de incidentes. Los atacantes atacan activamente la configuración de registro para deshabilitarla o evadir la detección.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las categorías de registros de Entra ID (auditoría, inicio de sesión, inicio de sesión no interactivo, inicio de sesión de entidad de servicio, inicio de sesión de identidad administrada, aprovisionamiento) exportadas a un área de trabajo de Log Analytics o a un SIEM",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Vaya a Entra ID > Supervisión > Configuración de diagnóstico y cree o verifique una configuración de diagnóstico que exporte todas las categorías de registros a un área de trabajo de Log Analytics, una cuenta de Azure Storage o un Event Hub para la ingesta en un SIEM. Asegúrese de que estén seleccionadas todas las categorías de registros disponibles, incluidos los registros de auditoría, los registros de inicio de sesión, los registros de inicio de sesión no interactivo, los registros de inicio de sesión de entidad de servicio, los registros de inicio de sesión de identidad administrada y los registros de aprovisionamiento. Verifique que el almacenamiento de destino tenga configuradas directivas de retención y controles de acceso apropiados.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDTNT-012": {
+    "name": {
+      "value": "Configuración de retención de los registros de auditoría",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La retención de los registros de auditoría determina durante cuánto tiempo los eventos de seguridad históricos están disponibles para la investigación, la generación de informes de cumplimiento y el análisis forense. Unos periodos de retención insuficientes pueden hacer que pruebas críticas no estén disponibles al investigar incidentes que se descubren semanas o meses después del compromiso inicial. Las organizaciones deben conservar los registros de auditoría durante al menos 1 año para respaldar los plazos de respuesta a incidentes y cumplir los requisitos normativos comunes.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Registros de auditoría conservados durante un mínimo de 1 año en una ubicación de almacenamiento inmutable, con al menos 90 días consultables de inmediato",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise la configuración de retención del área de trabajo de Log Analytics, la cuenta de Azure Storage o el destino SIEM donde se exportan los registros de Entra ID. Configure la retención de al menos 365 días para todas las categorías de registros de Entra ID a fin de respaldar la investigación de incidentes y los requisitos de cumplimiento. Asegúrese de que al menos 90 días de registros sean consultables de inmediato sin operaciones de restauración e implemente almacenamiento inmutable o directivas de escritura única para evitar la manipulación de los datos históricos de registro.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDTNT-013": {
+    "name": {
+      "value": "Auditoría de la configuración de notificaciones",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La configuración de notificaciones de Entra ID controla quién recibe alertas de eventos de seguridad críticos, como usuarios en riesgo, informes de resumen semanal y notificaciones administrativas. Una configuración de notificaciones incorrecta puede provocar que las alertas de seguridad se envíen a buzones inactivos, a antiguos empleados o que no se envíen en absoluto. El enrutamiento adecuado de las notificaciones garantiza que los eventos relevantes para la seguridad lleguen al personal apropiado para su investigación y respuesta oportunas.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las notificaciones de seguridad enrutadas a buzones activos y supervisados que pertenezcan al personal actual de operaciones de seguridad",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise la configuración de notificaciones en Entra ID, incluidos los destinatarios de notificaciones de Identity Protection, la configuración de notificaciones de restablecimiento de contraseña y los contactos de notificaciones técnicas. Verifique que todos los destinatarios de notificaciones sean empleados actuales con buzones supervisados activamente y actualice cualquier referencia a antiguos empleados o listas de distribución inactivas. Configure las notificaciones para que se envíen a una lista de distribución de operaciones de seguridad en lugar de a usuarios individuales a fin de garantizar la continuidad cuando se produzcan cambios de personal.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDTNT-014": {
+    "name": {
+      "value": "Caducidad de contraseñas de usuario deshabilitada (las contraseñas nunca caducan)",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La rotación periódica obligatoria de contraseñas empuja a los usuarios hacia contraseñas predecibles, más débiles y reutilizadas, y aporta poco valor defensivo cuando se han implementado MFA y las protecciones de credenciales modernas. En consonancia con las directrices de NIST SP 800-63B y OMB M-22-09, las contraseñas de usuario deben configurarse para que nunca caduquen. En Entra ID esto se rige por dominio verificado mediante la propiedad passwordValidityPeriodInDays; el valor 2147483647 indica que las contraseñas están configuradas para no caducar nunca. Esta comprobación inspecciona cada dominio gestionado y marca cualquier dominio que todavía aplique un periodo de caducidad de contraseña finito.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "passwordValidityPeriodInDays establecido en 2147483647 (nunca caduca) en todos los dominios gestionados",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Configure la directiva de caducidad de contraseñas para que las contraseñas nunca caduquen, satisfaciendo SCuBA MS.AAD.6.1. En el centro de administración de Microsoft 365, vaya a Configuración > Configuración de la organización > Seguridad y privacidad > Directiva de caducidad de contraseñas y seleccione 'Establecer que las contraseñas nunca caduquen'. De forma equivalente, para cada dominio gestionado establezca passwordValidityPeriodInDays en 2147483647 (nunca caduca). Asegúrese de que se mantengan los controles compensatorios: MFA aplicada, protección de contraseñas prohibidas y corrección de credenciales basada en riesgo.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDTNT-015": {
+    "name": {
+      "value": "Acceso administrativo delegado de partners privilegiado (GDAP)",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Los privilegios de administración delegada granular (GDAP) permiten que un partner CSP o de servicios administrados tenga roles administrativos permanentes en su inquilino. Esta relación es invisible en la mayoría de las vistas administrativas cotidianas, rara vez se revisa y es una ruta de propagación de tipo Kaseya: un atacante que comprometa a un partner hereda la administración delegada en todos los inquilinos de clientes descendentes a la vez. Una relación de partner que conlleve un rol de directorio de Tier-0 / alto impacto (Global Administrator, Privileged Role Administrator, Privileged/Authentication Administrator, Security Administrator, User/Password/Application/Cloud Application Administrator) es de hecho un juego externo de llaves del reino. Esta comprobación inventaría las delegatedAdminRelationships activas y FALLA cuando alguna relación activa concede uno de esos roles privilegiados; advierte cuando existe acceso de partner no privilegiado para que pueda confirmarse y acotarse, y pasa solo cuando no hay administración delegada de partner activa. Los resultados vacíos se tratan como 'sin relaciones' solo cuando la recopilación se realizó correctamente; una llamada fallida se expone como No evaluado, nunca como una aprobación limpia.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Ninguna relación GDAP activa concede un rol de directorio privilegiado; el acceso de partner es de privilegio mínimo, con límite temporal y revisado",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Revise cada relación de administración delegada de partner (GDAP) activa en el centro de administración de Microsoft Entra > Identidad > Identidades externas > Acceso entre inquilinos (dirigido por partner) y en el centro de administración de Microsoft 365 > Configuración > Relaciones de partner. Para cada relación, elimine los roles de Tier-0 / alto impacto (Global Administrator, Privileged Role Administrator, Privileged Authentication Administrator, Security Administrator, User/Password/Application/Cloud Application Administrator) salvo que exista una necesidad documentada y con límite temporal. Reemplace la delegación privilegiada permanente por roles de privilegio mínimo, solicite la elevación just-in-time a través del propio PIM del partner cuando sea posible y finalice cualquier relación que ya no sea necesaria. Confirme que el propio inquilino del partner aplique MFA resistente al phishing a los administradores que ejercen este acceso.",
+      "status": "machine-draft"
+    }
+  },
+  "EIDTNT-016": {
+    "name": {
+      "value": "Higiene de las concesiones de administración delegada de partners (GDAP de larga duración)",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "La duración de una relación GDAP es su ventana de extensión automática: cuando vence, se renueva por ese periodo sin ninguna revisión humana. Por tanto, una extensión automática larga (más de un año) es una concesión permanente y autorrenovable de acceso administrativo de partner, lo opuesto al just-in-time, y es exactamente el tipo de relación olvidada que sobrevive al compromiso que la creó. Esta comprobación inspecciona las delegatedAdminRelationships activas y advierte cuando alguna relación se extiende automáticamente más allá de 365 días; una relación cuya duración no puede determinarse se trata de forma conservadora como de larga duración en lugar de asumirse correcta. Pasa solo cuando todas las relaciones activas se extienden automáticamente en un plazo de un año. Esta es una señal de higiene y gobernanza que complementa a EIDTNT-015 (que califica el privilegio que tiene el partner); aquí la preocupación es cuánto tiempo persiste la concesión sin revisar.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas las relaciones GDAP activas se extienden automáticamente en un plazo de 365 días y se revisan en cada renovación",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Para cada relación de administración delegada de partner (GDAP) activa, establezca la duración de extensión automática más corta que se ajuste al compromiso (evite las concesiones permanentes de varios años) y programe una revisión en cada renovación. En el centro de administración de Microsoft 365, en Configuración > Relaciones de partner, confirme que cada relación sigue siendo necesaria y finalice las obsoletas. Prefiera delegaciones cortas y renovables frente al acceso autoextensible de larga duración, de modo que la administración de partner se vuelva a autorizar de forma deliberada y no por defecto.",
+      "status": "machine-draft"
+    }
+  }
+}
