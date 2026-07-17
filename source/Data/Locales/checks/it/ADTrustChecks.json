@@ -1,0 +1,69 @@
+{
+  "_family": "ADTrustChecks.json",
+  "ADTRUST-001": {
+    "name": { "value": "Enumerazione delle relazioni di trust", "status": "machine-draft" },
+    "description": { "value": "Tutte le relazioni di trust dovrebbero essere inventariate per stabilire un quadro completo del confine di autenticazione. I trust non documentati ampliano la superficie di attacco consentendo agli utenti di domini esterni di accedere alle risorse", "status": "machine-draft" },
+    "recommendedValue": { "value": "Tutte le relazioni di trust documentate con giustificazione aziendale, direzione, tipo e proprietario", "status": "machine-draft" },
+    "remediationSteps": { "value": "Esegui Get-ADTrust -Filter * per enumerare tutti i trust. Documenta ogni trust con la sua direzione, il tipo (foresta, esterno, shortcut, realm), la transitività e la giustificazione aziendale. Esamina e rimuovi eventuali trust che non servono più a un'esigenza aziendale", "status": "machine-draft" }
+  },
+  "ADTRUST-002": {
+    "name": { "value": "Analisi della direzione dei trust", "status": "machine-draft" },
+    "description": { "value": "I trust in entrata consentono agli utenti di domini esterni di autenticarsi nel tuo dominio. Ogni trust in entrata o bidirezionale dovrebbe essere esaminato per assicurarsi che il dominio attendibile mantenga controlli di sicurezza adeguati. Un dominio attendibile compromesso può essere usato per attaccare il tuo ambiente", "status": "machine-draft" },
+    "recommendedValue": { "value": "Tutte le direzioni dei trust giustificate e documentate. Trust bidirezionali convertiti in unidirezionali dove possibile per ridurre la superficie di attacco", "status": "machine-draft" },
+    "remediationSteps": { "value": "Esamina la direzione di ogni trust usando Get-ADTrust -Filter *. Per i trust bidirezionali, valuta se entrambe le direzioni sono necessarie. Converti in trust unidirezionali quando l'esigenza aziendale richiede una sola direzione. Documenta la giustificazione per tutti i percorsi di trust in entrata", "status": "machine-draft" }
+  },
+  "ADTRUST-003": {
+    "name": { "value": "Analisi della transitività dei trust", "status": "machine-draft" },
+    "description": { "value": "I trust transitivi estendono i percorsi di autenticazione oltre i partner di trust diretti, creando potenzialmente percorsi di accesso non voluti attraverso catene di domini attendibili. Ogni trust transitivo dovrebbe essere valutato per la superficie di attacco estesa che crea", "status": "machine-draft" },
+    "recommendedValue": { "value": "Tutti i trust transitivi documentati con un'analisi completa dei percorsi di transitività. Trust esterni preferiti ai trust di foresta quando la transitività non è necessaria", "status": "machine-draft" },
+    "remediationSteps": { "value": "Mappa tutti i percorsi di trust transitivi per individuare le rotte di autenticazione indirette. Per i trust di foresta, tieni presente che tutti i domini figlio sono attendibili in modo transitivo. Valuta l'uso di trust esterni (non transitivi) quando è necessario l'accesso solo a domini specifici", "status": "machine-draft" }
+  },
+  "ADTRUST-004": {
+    "name": { "value": "Stato del filtraggio dei SID", "status": "machine-draft" },
+    "description": { "value": "Il filtraggio dei SID rimuove i SID dei domini esterni dai token di autenticazione, impedendo gli attacchi di iniezione di SID history. Senza il filtraggio dei SID, un aggressore che compromette un dominio attendibile può creare ticket contenenti SID privilegiati (come Enterprise Admins) del tuo dominio, ottenendo la compromissione totale", "status": "machine-draft" },
+    "recommendedValue": { "value": "Filtraggio dei SID (quarantena) abilitato su tutti i trust esterni e di foresta", "status": "machine-draft" },
+    "remediationSteps": { "value": "Verifica lo stato del filtraggio dei SID usando 'netdom trust /domain:trusted.domain /Quarantine'. Abilita il filtraggio dei SID con 'netdom trust /domain:trusted.domain /Quarantine:Yes'. Nota: il filtraggio dei SID è abilitato per impostazione predefinita sui trust esterni, ma deve essere verificato sui trust di foresta dove potrebbe essere stato disabilitato deliberatamente", "status": "machine-draft" }
+  },
+  "ADTRUST-005": {
+    "name": { "value": "Rilevamento dell'abuso della SID history", "status": "machine-draft" },
+    "description": { "value": "La SID history è pensata per le migrazioni di dominio, ma può essere abusata per iniettare SID privilegiati nei token utente attraverso i confini di trust. Gli aggressori che compromettono un dominio attendibile possono aggiungere SID di Enterprise Admin o Domain Admin alla SID history di qualsiasi account che controllano", "status": "machine-draft" },
+    "recommendedValue": { "value": "Nessun account con valori di SID history che referenziano gruppi privilegiati. SID history ripulita al termine di tutte le migrazioni", "status": "machine-draft" },
+    "remediationSteps": { "value": "Cerca gli account con SID history usando Get-ADUser -Filter {SIDHistory -like '*'} -Properties SIDHistory. Individua eventuali voci di SID history che referenziano gruppi privilegiati (Domain Admins, Enterprise Admins, ecc.). Ripulisci la SID history dopo la migrazione usando Remove-ADUser con il parametro SIDHistory. Abilita il filtraggio dei SID sui trust", "status": "machine-draft" }
+  },
+  "ADTRUST-006": {
+    "name": { "value": "Stato dell'autenticazione selettiva", "status": "machine-draft" },
+    "description": { "value": "L'autenticazione selettiva limita quali utenti di un dominio attendibile possono autenticarsi alle risorse del tuo dominio richiedendo autorizzazioni esplicite su ciascuna risorsa. Senza di essa, tutti gli utenti autenticati del dominio attendibile possono accedere a qualsiasi risorsa per cui dispongono di autorizzazioni, ampliando notevolmente la superficie di attacco", "status": "machine-draft" },
+    "recommendedValue": { "value": "Autenticazione selettiva abilitata su tutti i trust di foresta. Autorizzazioni Allowed-to-Authenticate concesse solo sulle risorse necessarie", "status": "machine-draft" },
+    "remediationSteps": { "value": "Abilita l'autenticazione selettiva sui trust di foresta tramite Active Directory Domains and Trusts > Proprietà del trust > scheda Authentication > seleziona 'Selective authentication'. Quindi concedi l'autorizzazione 'Allowed to Authenticate' sugli oggetti computer specifici a cui gli utenti esterni devono accedere", "status": "machine-draft" }
+  },
+  "ADTRUST-007": {
+    "name": { "value": "Sicurezza del trust ibrido con Azure AD", "status": "machine-draft" },
+    "description": { "value": "Le configurazioni di identità ibrida che collegano l'AD locale con Azure AD creano ulteriori percorsi di attacco. Azure AD Connect, gli agenti di autenticazione pass-through e i servizi di federazione possono essere presi di mira per effettuare un pivot tra ambienti cloud e locali", "status": "machine-draft" },
+    "recommendedValue": { "value": "Azure AD Connect in esecuzione all'ultima versione su un server dedicato e rafforzato. PHS preferito a PTA/federazione. Seamless SSO disabilitato se non necessario. Account break-glass solo cloud configurati", "status": "machine-draft" },
+    "remediationSteps": { "value": "Esamina la configurazione di Azure AD Connect e assicurati che venga eseguito su un server rafforzato Tier 0. Valuta il passaggio dalla federazione o da PTA a Password Hash Sync (PHS) per ridurre la superficie di attacco. Se usi il Seamless SSO, assicurati che la password dell'account computer AZUREADSSOACC venga ruotata. Verifica che esistano account di accesso di emergenza solo cloud", "status": "machine-draft" }
+  },
+  "ADTRUST-008": {
+    "name": { "value": "Enumerazione dei trust con domini esterni", "status": "machine-draft" },
+    "description": { "value": "I trust con domini esterni all'organizzazione estendono il confine di sicurezza a entità con standard di sicurezza potenzialmente diversi. I trust con domini esterni dovrebbero ricevere un esame aggiuntivo, poiché l'organizzazione che concede il trust non può controllare la postura di sicurezza del dominio esterno", "status": "machine-draft" },
+    "recommendedValue": { "value": "Tutti i trust con domini esterni documentati con valutazione di sicurezza esterna, requisiti di sicurezza contrattuali e revisione annuale", "status": "machine-draft" },
+    "remediationSteps": { "value": "Individua i trust con domini esterni all'organizzazione usando Get-ADTrust -Filter *. Per ogni trust esterno, verifica che sia in atto un accordo di sicurezza, che il filtraggio dei SID sia abilitato, che l'autenticazione selettiva sia configurata e che il trust sia rivisto annualmente", "status": "machine-draft" }
+  },
+  "ADTRUST-009": {
+    "name": { "value": "Rilevamento dei trust orfani", "status": "machine-draft" },
+    "description": { "value": "I trust orfani referenziano domini che non esistono più o che non sono più raggiungibili. Questi oggetti trust non aggiornati possono conservare credenziali e creare confusione durante gli audit di sicurezza. Dovrebbero essere rimossi per ridurre la superficie di attacco non necessaria e mantenere una topologia di trust pulita", "status": "machine-draft" },
+    "recommendedValue": { "value": "Nessuna relazione di trust orfana o non risolvibile presente", "status": "machine-draft" },
+    "remediationSteps": { "value": "Enumera tutti i trust e tenta di convalidarne ciascuno risolvendo il nome del dominio attendibile e verificando il trust con 'netdom trust /verify'. Rimuovi i trust orfani in cui il dominio partner non esiste più o è irraggiungibile usando 'netdom trust /Remove' o Active Directory Domains and Trusts", "status": "machine-draft" }
+  },
+  "ADTRUST-010": {
+    "name": { "value": "Età e rotazione della chiave di trust", "status": "machine-draft" },
+    "description": { "value": "Le password dei trust (chiavi inter-realm) dovrebbero essere ruotate regolarmente. Chiavi di trust non aggiornate aumentano la finestra per gli attacchi basati sulle credenziali. Per impostazione predefinita, le password dei trust vengono ruotate ogni 30 giorni, ma ciò dovrebbe essere verificato, poiché le rotazioni fallite possono passare inosservate", "status": "machine-draft" },
+    "recommendedValue": { "value": "Password dei trust ruotate negli ultimi 30 giorni. Rotazione automatica della password del trust non disabilitata", "status": "machine-draft" },
+    "remediationSteps": { "value": "Verifica la data dell'ultima impostazione della password del trust esaminando l'attributo trustAuthOutgoing o eseguendo 'netdom trust /domain:trusted.domain /verify'. Se la password del trust non è aggiornata, reimpostala usando 'netdom trust /domain:trusted.domain /Reset'. Verifica che nessuna GPO o impostazione di registro abbia disabilitato la rotazione automatica della password del trust", "status": "machine-draft" }
+  },
+  "ADTRUST-011": {
+    "name": { "value": "Visualizzazione della gerarchia dei trust", "status": "machine-draft" },
+    "description": { "value": "Dovrebbe essere mantenuta una mappa completa della topologia dei trust che mostri tutte le relazioni di trust, le direzioni, i tipi e i percorsi di transitività. Questa visualizzazione è essenziale per comprendere l'intero confine di autenticazione e individuare percorsi di accesso inattesi", "status": "machine-draft" },
+    "recommendedValue": { "value": "Diagramma aggiornato della topologia dei trust mantenuto e rivisto trimestralmente", "status": "machine-draft" },
+    "remediationSteps": { "value": "Genera una mappa della topologia dei trust usando strumenti automatizzati o documenta manualmente tutte le relazioni di trust, inclusi direzione, tipo, transitività, stato del filtraggio dei SID e stato dell'autenticazione selettiva. Aggiorna il diagramma ogni volta che i trust vengono aggiunti, modificati o rimossi. Includi la mappa nella documentazione di sicurezza e rivedila trimestralmente", "status": "machine-draft" }
+  }
+}
