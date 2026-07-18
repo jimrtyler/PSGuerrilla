@@ -1,0 +1,63 @@
+{
+  "_family": "OAuthSecurityChecks.json",
+  "OAUTH-001": {
+    "name": { "value": "OAuth アプリの許可リスト/ブロックリスト", "status": "machine-draft" },
+    "description": { "value": "許可されていないアプリケーションが組織のデータにアクセスすることを防ぐため、OAuth アプリのアクセスは許可リストまたはブロックリストで管理する必要があります", "status": "machine-draft" },
+    "recommendedValue": { "value": "承認されたアプリケーションのみを含む OAuth アプリの許可リストが構成されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > セキュリティ > API の制御 > アプリ アクセス制御 > サードパーティ アプリのアクセスを管理 > 信頼するアプリ/ブロックするアプリを構成します", "status": "machine-draft" }
+  },
+  "OAUTH-002": {
+    "name": { "value": "インストール済み OAuth アプリのインベントリ", "status": "machine-draft" },
+    "description": { "value": "組織のデータにアクセスする許可されていないアプリケーションやリスクの高いアプリケーションを特定するため、ユーザーがインストールしたすべての OAuth アプリケーションをインベントリ化して確認する必要があります", "status": "machine-draft" },
+    "recommendedValue": { "value": "インストール済みのすべての OAuth アプリがセキュリティチームによって確認され承認されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > セキュリティ > API の制御 > アプリ アクセス制御 > インストール済みのアプリを確認し、許可されていないアプリケーションのアクセスを取り消します", "status": "machine-draft" }
+  },
+  "OAUTH-003": {
+    "name": { "value": "OAuth スコープの分析", "status": "machine-draft" },
+    "description": { "value": "リスクの高いスコープ (Gmail、Drive、Admin) を持つ OAuth アプリケーションは、重大なデータ持ち出しのリスクをもたらすため、確認して制限する必要があります", "status": "machine-draft" },
+    "recommendedValue": { "value": "リスクの高いスコープ (gmail、drive、admin) を持つ許可されていないアプリが存在しない", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > セキュリティ > API の制御 > アプリ アクセス制御 > 機密性の高いスコープを持つアプリを確認します > 必要に応じて取り消しまたは制限します", "status": "machine-draft" }
+  },
+  "OAUTH-004": {
+    "name": { "value": "OAuth アプリのリスクスコアリング", "status": "machine-draft" },
+    "description": { "value": "セキュリティレビューの優先順位を付けるため、OAuth アプリケーションは付与されたスコープと発行元の信頼性に基づいてリスクスコアを付ける必要があります", "status": "machine-draft" },
+    "recommendedValue": { "value": "リスクの高いすべてのアプリが確認され承認されており、広範なスコープを持つ未確認のアプリが存在しない", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > セキュリティ > API の制御 > アプリ アクセス制御 > スコープの広さで並べ替えてアプリを確認します > リスクの高いアプリケーションに対処します", "status": "machine-draft" }
+  },
+  "OAUTH-005": {
+    "name": { "value": "未確認アプリのアクセスポリシー", "status": "machine-draft" },
+    "description": { "value": "ユーザーが悪意のある可能性のあるアプリケーションに権限を付与することを防ぐため、未確認のサードパーティアプリへのアクセスを制限する必要があります", "status": "machine-draft" },
+    "recommendedValue": { "value": "すべてのユーザーで未確認アプリのアクセスがブロックされている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > セキュリティ > API の制御 > アプリ アクセス制御 > 設定 > 未確認のアプリをブロックします", "status": "machine-draft" }
+  },
+  "OAUTH-006": {
+    "name": { "value": "API アクセスの制御", "status": "machine-draft" },
+    "description": { "value": "組織のデータへの許可されていないプログラムによるアクセスを防ぐため、API アクセスは適切なスコープ設定と制限で制御する必要があります", "status": "machine-draft" },
+    "recommendedValue": { "value": "API アクセスが承認されたアプリケーションとスコープに制限されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > セキュリティ > API の制御 > Google サービスを管理 > API アクセスを信頼するアプリのみに制限します", "status": "machine-draft" }
+  },
+  "OAUTH-007": {
+    "name": { "value": "Marketplace アプリのインストール制限", "status": "machine-draft" },
+    "description": { "value": "ユーザーが許可されていないアプリケーションをインストールすることを防ぐため、Google Workspace Marketplace アプリのインストールを制限する必要があります", "status": "machine-draft" },
+    "recommendedValue": { "value": "Marketplace アプリのインストールが、管理者が承認したアプリまたは許可リストに登録されたアプリのみに制限されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > Google Workspace Marketplace アプリ > 設定 > Marketplace アプリのインストールを制限します", "status": "machine-draft" }
+  },
+  "OAUTH-008": {
+    "name": { "value": "ドメイン全体の委任付与の監査", "status": "machine-draft" },
+    "description": { "value": "ドメイン全体の委任により、サービスアカウントは任意のユーザーになりすまし、そのデータにアクセスできます。許可されていない付与や過度に緩い付与は、重大なセキュリティリスクとなります", "status": "machine-draft" },
+    "recommendedValue": { "value": "ドメイン全体の委任付与が最小限で、権限が範囲限定されており、すべての付与が確認され承認されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > セキュリティ > API の制御 > ドメイン全体の委任 > すべての付与を確認し、不要なものを削除し、スコープを必要最小限に制限します", "status": "machine-draft" }
+  },
+  "OAUTH-009": {
+    "name": { "value": "サービスアカウントキーの列挙", "status": "machine-draft" },
+    "description": { "value": "サービスアカウントキーは、インベントリ化して定期的にローテーションする必要があります。漏洩したキーや古いキーは、永続的な不正アクセスを可能にします", "status": "machine-draft" },
+    "recommendedValue": { "value": "すべてのサービスアカウントキーがインベントリ化され、90 日以内にローテーションされ、未使用のキーが削除されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Cloud Console > IAM と管理 > サービス アカウント > キーを確認してローテーションします > 未使用のサービスアカウントキーを削除します", "status": "machine-draft" }
+  },
+  "OAUTH-010": {
+    "name": { "value": "機密性の高いスコープを持つ接続済みアプリ", "status": "machine-draft" },
+    "description": { "value": "接続済みアプリを通じたデータの持ち出しを防ぐため、Drive、Gmail、Calendar のデータにアクセスできるアプリケーションをインベントリ化して検証する必要があります", "status": "machine-draft" },
+    "recommendedValue": { "value": "機密性の高いスコープ (Drive、Gmail、Calendar) を持つすべてのアプリが確認され承認されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > セキュリティ > API の制御 > アプリ アクセス制御 > スコープ (Drive、Gmail、Calendar) でフィルタリングします > 許可されていないアプリを確認して制限します", "status": "machine-draft" }
+  }
+}

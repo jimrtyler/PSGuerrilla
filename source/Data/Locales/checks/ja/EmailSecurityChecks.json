@@ -1,0 +1,189 @@
+{
+  "_family": "EmailSecurityChecks.json",
+  "EMAIL-001": {
+    "name": { "value": "SPF レコードの検証", "status": "machine-draft" },
+    "description": { "value": "Sender Policy Framework (SPF) レコードは、すべてのドメインについて存在し、有効である必要があります。SPF は、どのメールサーバーがドメインに代わってメールを送信する権限を持つかを指定することで、メールのなりすましを防ぎます", "status": "machine-draft" },
+    "recommendedValue": { "value": "すべてのドメインについて、-all または ~all 修飾子を含む有効な v=spf1 レコードが公開されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > Google Workspace > Gmail > メールを認証 > 各ドメインについて SPF レコードを公開します: v=spf1 include:_spf.google.com ~all", "status": "machine-draft" }
+  },
+  "EMAIL-002": {
+    "name": { "value": "DKIM 署名の有効化", "status": "machine-draft" },
+    "description": { "value": "DomainKeys Identified Mail (DKIM) 署名は、すべてのドメインについて有効化され、有効である必要があります。DKIM は、メールの内容が転送中に改ざんされていないことを暗号学的に証明します", "status": "machine-draft" },
+    "recommendedValue": { "value": "すべてのドメインについて DKIM 署名が有効化され、有効なキーが公開されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > Google Workspace > Gmail > メールを認証 > 各ドメインについて DKIM キーを生成し、DNS レコードを公開します", "status": "machine-draft" }
+  },
+  "EMAIL-003": {
+    "name": { "value": "DMARC ポリシーの監査", "status": "machine-draft" },
+    "description": { "value": "Domain-based Message Authentication, Reporting and Conformance (DMARC) ポリシーは、すべてのドメインについて reject または quarantine に設定する必要があります。none の DMARC ポリシーは、なりすましに対する保護を一切提供しません", "status": "machine-draft" },
+    "recommendedValue": { "value": "すべてのドメインについて DMARC ポリシーが reject または quarantine に設定されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "_dmarc.<domain> に p=reject または p=quarantine を含む DMARC TXT レコードを公開します。監視のためにまず p=none から始め、その後 quarantine に、最終的に reject に段階的に強化します", "status": "machine-draft" }
+  },
+  "EMAIL-004": {
+    "name": { "value": "MTA-STS ポリシー", "status": "machine-draft" },
+    "description": { "value": "Mail Transfer Agent Strict Transport Security (MTA-STS) は、認証された TLS 接続を必須とすることで、TLS ダウングレード攻撃や転送中のメールに対する中間者による傍受を防ぎます", "status": "machine-draft" },
+    "recommendedValue": { "value": "MTA-STS TXT レコードが公開され、ポリシーが https://mta-sts.<domain>/.well-known/mta-sts.txt でホストされている", "status": "machine-draft" },
+    "remediationSteps": { "value": "v=STSv1; id=<unique_id> を含む _mta-sts.<domain> TXT レコードを公開し、MTA-STS ポリシーファイルを https://mta-sts.<domain>/.well-known/mta-sts.txt でホストします", "status": "machine-draft" }
+  },
+  "EMAIL-005": {
+    "name": { "value": "TLS の強制", "status": "machine-draft" },
+    "description": { "value": "盗聴を防ぐため、メール送信には Transport Layer Security (TLS) を必須にする必要があります。コンプライアンス TLS 設定により、指定したパートナードメインとの暗号化された接続が保証されます", "status": "machine-draft" },
+    "recommendedValue": { "value": "すべての送信および受信接続に TLS が必須となっている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > Google Workspace > Gmail > コンプライアンス > セキュア トランスポート (TLS) コンプライアンス > すべてのドメインまたは特定のパートナードメインに TLS を必須とするルールを追加します", "status": "machine-draft" }
+  },
+  "EMAIL-006": {
+    "name": { "value": "メール許可リスト/ブロックリストの確認", "status": "machine-draft" },
+    "description": { "value": "メール許可リストおよびブロックリストは、過度に緩いエントリがないか確認する必要があります。許可リストに登録された送信者はスパムフィルタリングを回避するため、設定を誤ると悪用される可能性があります", "status": "machine-draft" },
+    "recommendedValue": { "value": "許可リストのエントリが最小限で、ワイルドカードドメインが含まれておらず、ブロックリストが積極的に維持されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > Google Workspace > Gmail > 迷惑メール、フィッシング、マルウェア > メール許可リストおよびブロックした送信者リストを確認し、過度に広範なエントリがないか調べます", "status": "machine-draft" }
+  },
+  "EMAIL-007": {
+    "name": { "value": "受信ゲートウェイの構成", "status": "machine-draft" },
+    "description": { "value": "受信メールゲートウェイは、送信者認証の結果を保持するように適切に構成する必要があります。構成を誤ったゲートウェイは、SPF/DKIM/DMARC ヘッダーを除去したり、セキュリティフィルタリングを回避したりする可能性があります", "status": "machine-draft" },
+    "recommendedValue": { "value": "受信ゲートウェイが正しい IP 範囲とヘッダー保持で構成されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > Google Workspace > Gmail > 迷惑メール、フィッシング、マルウェア > 受信ゲートウェイ > ゲートウェイの IP と認証ヘッダーが保持されていることを確認します", "status": "machine-draft" }
+  },
+  "EMAIL-008": {
+    "name": { "value": "メールルーティングルールの監査", "status": "machine-draft" },
+    "description": { "value": "メールルーティングルールは、疑わしい構成や不正な構成がないか確認する必要があります。悪意のあるルーティングルールは、メールを攻撃者が管理する宛先へリダイレクトする可能性があります", "status": "machine-draft" },
+    "recommendedValue": { "value": "すべてのルーティングルールが確認され、業務上の正当性とともに文書化されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > Google Workspace > Gmail > ルーティング > すべてのルーティングルール、デフォルトルーティング、受信者マップを確認し、不正なエントリがないか調べます", "status": "machine-draft" }
+  },
+  "EMAIL-009": {
+    "name": { "value": "自動転送ポリシー", "status": "machine-draft" },
+    "description": { "value": "データの持ち出しを防ぐため、外部アドレスへのメールの自動転送は無効にする必要があります。攻撃者はアカウントを侵害した後に転送ルールを設定することがよくあります", "status": "machine-draft" },
+    "recommendedValue": { "value": "すべての組織部門で自動転送が無効になっている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > Google Workspace > Gmail > エンドユーザー アクセス > すべての組織部門で自動転送を無効にします。Gmail API を通じて既存の転送ルールを確認します", "status": "machine-draft" }
+  },
+  "EMAIL-010": {
+    "name": { "value": "委任アクセス設定", "status": "machine-draft" },
+    "description": { "value": "メールの委任により、ユーザーは他のユーザーに自分のメールボックスへの読み取りおよび送信アクセスを付与できます。過剰な委任は、不正アクセスやなりすましにつながる可能性があります", "status": "machine-draft" },
+    "recommendedValue": { "value": "メールの委任が制限され、定期的に確認されており、想定外の委任先が存在しない", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > Google Workspace > Gmail > エンドユーザー アクセス > メールの委任設定を確認します。Gmail API を通じて個々のユーザーに不正な委任先がないか確認します", "status": "machine-draft" }
+  },
+  "EMAIL-011": {
+    "name": { "value": "POP/IMAP アクセス設定", "status": "machine-draft" },
+    "description": { "value": "POP および IMAP アクセスは、特に必要な場合を除き無効にする必要があります。これらのレガシープロトコルは最新のセキュリティ制御を回避し、資格情報を用いた攻撃に使用される可能性があります", "status": "machine-draft" },
+    "recommendedValue": { "value": "すべてのユーザーで POP および IMAP が無効になっている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > Google Workspace > Gmail > エンドユーザー アクセス > POP および IMAP アクセスを無効にします。Gmail API を通じて個々のユーザー設定を確認します", "status": "machine-draft" }
+  },
+  "EMAIL-012": {
+    "name": { "value": "スパムおよびフィッシングフィルター設定", "status": "machine-draft" },
+    "description": { "value": "ソーシャルエンジニアリング攻撃や悪意のあるメールキャンペーンに対して最大限の保護を提供するため、強化されたスパムおよびフィッシングフィルターを有効にする必要があります", "status": "machine-draft" },
+    "recommendedValue": { "value": "強化されたスパムフィルタリングと積極的なフィッシング検出が有効になっている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > Google Workspace > Gmail > 迷惑メール、フィッシング、マルウェア > 「迷惑メールのフィルタリングをより積極的に行う」およびすべてのフィッシング保護オプションを有効にします", "status": "machine-draft" }
+  },
+  "EMAIL-013": {
+    "name": { "value": "配信前メッセージスキャンの強化", "status": "machine-draft" },
+    "description": { "value": "強化された配信前メッセージスキャンは、高度なヒューリスティックとサンドボックスを使用して、メッセージがユーザーの受信トレイに配信される前にマルウェアや脅威を検出します", "status": "machine-draft" },
+    "recommendedValue": { "value": "強化された配信前メッセージスキャンが有効になっている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > Google Workspace > Gmail > 迷惑メール、フィッシング、マルウェア > 疑わしいコンテンツを識別するために「配信前メッセージスキャンの強化」を有効にします", "status": "machine-draft" }
+  },
+  "EMAIL-014": {
+    "name": { "value": "外部受信者の警告", "status": "machine-draft" },
+    "description": { "value": "偶発的なデータ開示やソーシャルエンジニアリングを防ぐため、組織外の受信者にメールを送信する際にユーザーへ警告する必要があります", "status": "machine-draft" },
+    "recommendedValue": { "value": "すべてのユーザーで外部受信者の警告が有効になっている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > Google Workspace > Gmail > エンドユーザー アクセス > 「ドメイン外にメッセージを送信する際にユーザーへ警告する」を有効にします", "status": "machine-draft" }
+  },
+  "EMAIL-015": {
+    "name": { "value": "添付ファイルの安全性設定", "status": "machine-draft" },
+    "description": { "value": "暗号化されたアーカイブ、異常なファイル形式、スクリプトを含む悪意のあるファイル添付を検出してブロックするため、すべての添付ファイル安全性保護を有効にする必要があります", "status": "machine-draft" },
+    "recommendedValue": { "value": "すべての添付ファイル保護オプションが有効になっており、検疫アクションが設定されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > Google Workspace > Gmail > 安全性 > 添付ファイル > すべての保護を有効にします: 暗号化された添付ファイル、信頼できない送信者からのスクリプト、異常な添付ファイル形式", "status": "machine-draft" }
+  },
+  "EMAIL-016": {
+    "name": { "value": "リンクおよび外部画像の保護", "status": "machine-draft" },
+    "description": { "value": "フィッシングやマルウェアについて URL をスキャンするため、リンク保護を有効にする必要があります。外部画像のプロキシ処理により、トラッキングピクセルや IP アドレスの開示を防ぎます", "status": "machine-draft" },
+    "recommendedValue": { "value": "URL スキャン、クリック時の警告、外部画像のプロキシ処理が有効になっている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > Google Workspace > Gmail > 安全性 > リンクと外部画像 > 「短縮 URL の背後にあるリンクを識別する」、「リンクされた画像をスキャンする」、「信頼できないドメインへのリンクをクリックした際に警告を表示する」を有効にします", "status": "machine-draft" }
+  },
+  "EMAIL-017": {
+    "name": { "value": "なりすましおよび認証保護", "status": "machine-draft" },
+    "description": { "value": "なりすましおよび認証保護は、ドメインのなりすまし、従業員名のなりすまし、組織に類似したドメインからの認証されていないメールから保護します", "status": "machine-draft" },
+    "recommendedValue": { "value": "すべてのなりすましおよび認証保護が有効になっており、検疫アクションが設定されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > Google Workspace > Gmail > 安全性 > なりすましと認証 > すべての保護を有効にします: ドメインのなりすまし、従業員名のなりすまし、受信メールのなりすまし、認証されていないメール", "status": "machine-draft" }
+  },
+  "EMAIL-018": {
+    "name": { "value": "コンプライアンスルールの監査", "status": "machine-draft" },
+    "description": { "value": "機密データが適切に扱われていることを確認するため、コンテンツ コンプライアンス ルールを確認する必要があります。ルールは、コンテンツのパターンに基づいて暗号化、検疫、または拒否を強制できます", "status": "machine-draft" },
+    "recommendedValue": { "value": "機密データの種類に応じたコンテンツ コンプライアンス ルールが適切なアクションとともに構成されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > Google Workspace > Gmail > コンプライアンス > コンテンツ コンプライアンス > 既存のルールを確認し、機密性の高いコンテンツの種類 (PII、財務データ、健康記録) に対するルールを作成します", "status": "machine-draft" }
+  },
+  "EMAIL-019": {
+    "name": { "value": "DLP ルールの構成", "status": "machine-draft" },
+    "description": { "value": "メールを介して機密データが組織外に流出するのを検出して防ぐため、Data Loss Prevention (DLP) ルールを構成する必要があります。DLP は、自動化されたコンテンツ検査とポリシーの強制を提供します", "status": "machine-draft" },
+    "recommendedValue": { "value": "主要なデータの種類 (クレジットカード、社会保障番号、健康記録) に対する DLP ルールが、ブロックまたは警告アクションとともに構成されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "セキュリティ > データ保護 > ルールの管理: 機密性の高いコンテンツのパターン (クレジットカード、社会保障番号、健康記録) を検出し、ブロックまたは警告アクションを適用する Gmail DLP ルールを作成します", "status": "machine-draft" }
+  },
+  "EMAIL-020": {
+    "name": { "value": "Gmail 情報保護モード", "status": "machine-draft" },
+    "description": { "value": "Gmail の情報保護モードでは、送信者が有効期限を設定し、メッセージへのアクセスを取り消すことができます。この機能が組織のポリシーに従って有効化または制限されているかを確認します", "status": "machine-draft" },
+    "recommendedValue": { "value": "機密データを扱うユーザーに対して Gmail の情報保護モードが有効になっている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > Google Workspace > Gmail > エンドユーザー アクセス > Gmail の情報保護モードの設定を確認し、組織の要件に基づいて有効化または制限します", "status": "machine-draft" }
+  },
+  "EMAIL-021": {
+    "name": { "value": "S/MIME 設定", "status": "machine-draft" },
+    "description": { "value": "S/MIME は、エンドツーエンドのメール暗号化とデジタル署名を提供します。コンプライアンス上必要な場合は、S/MIME 証明書を適切に構成して管理する必要があります", "status": "machine-draft" },
+    "recommendedValue": { "value": "コンプライアンス上必要な場合は S/MIME が有効になっており、証明書が適切に管理されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > Google Workspace > Gmail > エンドユーザー アクセス > S/MIME > 必要に応じてホスト型 S/MIME を有効にし、証明書がアップロードされ有効であることを確認します", "status": "machine-draft" }
+  },
+  "EMAIL-022": {
+    "name": { "value": "メール転送ルールの列挙", "status": "machine-draft" },
+    "description": { "value": "すべてのユーザーレベルのメール転送ルールを列挙して確認する必要があります。攻撃者は、アカウント侵害後にメールへの永続的なアクセスを維持するために転送ルールを設定することがよくあります", "status": "machine-draft" },
+    "recommendedValue": { "value": "不正な転送ルールが存在せず、すべての転送ルールが文書化され承認されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "Gmail API を通じてすべてのユーザーの転送ルールを列挙します。不正な転送先アドレスを削除します。将来の悪用を防ぐため、組織部門レベルで自動転送を無効にします", "status": "machine-draft" }
+  },
+  "EMAIL-023": {
+    "name": { "value": "ユーザー単位の送信ゲートウェイの無効化 (GWS.GMAIL.12.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GMAIL.12.1 は、ユーザー単位の送信ゲートウェイを無効にすることを要求します。有効になっていると、ユーザーは自身の外部 SMTP サーバーを経由して送信メールをルーティングでき、組織のメールセキュリティ制御を回避し、データの持ち出しやなりすましの経路を生み出します。このチェックは Cloud Identity Policy API から gmail.per_user_outbound_gateway ポリシーを読み取り、外部 SMTP ルーティングが許可されている組織部門にフラグを立てます。ポリシーが返されない場合、結果は Not Assessed となります。", "status": "machine-draft" },
+    "recommendedValue": { "value": "すべての組織部門でユーザー単位の送信ゲートウェイ (外部 SMTP) が無効になっている", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console のアプリ > Google Workspace > Gmail > ルーティングで、ユーザー単位の送信ゲートウェイが許可されていないことを確認し、ユーザーが外部 SMTP サーバーを経由してメールをルーティングできないようにします。送信ルーティングは承認されたゲートウェイのみに集約したままにします。", "status": "machine-draft" }
+  },
+  "EMAIL-024": {
+    "name": { "value": "Gmail セキュリティ サンドボックスの有効化 (GWS.GMAIL.16.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GMAIL.16.1 は、Gmail セキュリティ サンドボックスの有効化を推奨しています。これは、受信した添付ファイルを仮想環境で実行 (デトネート) し、シグネチャスキャンでは見逃されるゼロデイマルウェアを検出します。このチェックは Cloud Identity Policy API から gmail.security_sandbox ポリシーを読み取り、サンドボックスが無効になっている組織部門にフラグを立てます。正確なポリシーフィールドは、ライセンスのあるテナントでの確認待ちのベストエフォートです。ポリシーが返されない場合、結果は捏造された判定ではなく Not Assessed となります。", "status": "machine-draft" },
+    "recommendedValue": { "value": "すべての組織部門でセキュリティ サンドボックス (添付ファイルの仮想環境での実行) が有効になっている", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console のアプリ > Google Workspace > Gmail > 安全性 > 添付ファイルで、セキュリティ サンドボックスを有効にし、受信した添付ファイルが配信前に仮想環境で実行されるようにします。セキュリティ サンドボックスには適切な Google Workspace エディションが必要である点に注意してください。", "status": "machine-draft" }
+  },
+  "EMAIL-025": {
+    "name": { "value": "Gmail メール委任の無効化 (GWS.GMAIL.1.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GMAIL.1.1: メールの委任により、ユーザーは他のアカウントに自分のメールボックスへの読み取り/送信アクセスを付与できます。これは委任の目的を超えて残り続ける恒常的なデータアクセスの経路です。gmail.mail_delegation を読み取り、enableMailDelegation が有効になっている場合に警告します。", "status": "machine-draft" },
+    "recommendedValue": { "value": "意図的に必要とされる場合を除き、メールの委任が無効になっている", "status": "machine-draft" },
+    "remediationSteps": { "value": "Gmail 設定 > ユーザー設定で、確認済みの業務上の必要性がない限り、メールの委任を無効にします。", "status": "machine-draft" }
+  },
+  "EMAIL-026": {
+    "name": { "value": "Gmail POP および IMAP アクセスの無効化 (GWS.GMAIL.9.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GMAIL.9.1: レガシーの POP および IMAP プロトコルは最新の認証を回避し、クレデンシャルスタッフィングや MFA 回避の経路となります。gmail.imap_access および gmail.pop_access を読み取り、いずれかが有効になっている場合に失敗と判定します。", "status": "machine-draft" },
+    "recommendedValue": { "value": "POP および IMAP アクセスが無効になっている", "status": "machine-draft" },
+    "remediationSteps": { "value": "Gmail 設定 > エンドユーザー アクセスで、POP および IMAP を無効にし、メールクライアントが最新の認証済みプロトコルを使用しなければならないようにします。", "status": "machine-draft" }
+  },
+  "EMAIL-027": {
+    "name": { "value": "Gmail のユーザーによるメール/連絡先インポートの無効化 (GWS.GMAIL.8.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GMAIL.8.1: ユーザーによるメールのアップロード (外部アカウントからのメールと連絡先のインポート) は、外部のデータをテナントに取り込み、逆方向にデータを持ち出すこともあり得ます。gmail.user_email_uploads を読み取り、enableMailAndContactsImport が有効になっている場合に警告します。", "status": "machine-draft" },
+    "recommendedValue": { "value": "ユーザーによるメール/連絡先のインポートが無効になっている", "status": "machine-draft" },
+    "remediationSteps": { "value": "Gmail 設定で、必要な場合を除き、ユーザーが他のアカウントからメールや連絡先をインポートする機能を無効にします。", "status": "machine-draft" }
+  },
+  "EMAIL-028": {
+    "name": { "value": "Google Workspace Sync for Outlook の無効化 (GWS.GMAIL.10.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GMAIL.10.1: Google Workspace Sync for Microsoft Outlook (GWSMO) は、メールボックスのデータを Outlook クライアントに橋渡しし、データの露出面を拡大し、一部のウェブ保護を回避します。gmail.workspace_sync_for_outlook を読み取り、有効になっている場合に警告します。", "status": "machine-draft" },
+    "recommendedValue": { "value": "必要な場合を除き、GWSMO が無効になっている", "status": "machine-draft" },
+    "remediationSteps": { "value": "Gmail のエンドユーザー アクセス設定で、確認済みの必要性がない限り、Google Workspace Sync for Microsoft Outlook を無効にします。", "status": "machine-draft" }
+  },
+  "EMAIL-029": {
+    "name": { "value": "Gmail のスパムオーバーライド送信者リストの確認 (GWS.GMAIL.18.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GMAIL.18.1: 承認済み送信者/スパムオーバーライドのリストは、リストに登録されたドメインからのメールがスパムフィルタリングを回避する原因となり、過度に広範な場合はフィッシングの回避経路になります。gmail.spam_override_lists を読み取り、オーバーライド送信者ドメインが構成されている場合に警告します。", "status": "machine-draft" },
+    "recommendedValue": { "value": "スパムオーバーライド送信者リストが存在しないか、最小限であり、かつ確認されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "Gmail の迷惑メール設定で、承認済み送信者/バイパスのリストを確認して最小限に抑え、信頼できるドメインのメールがスパムフィルタリングから一律に除外されないようにします。", "status": "machine-draft" }
+  },
+  "EMAIL-030": {
+    "name": { "value": "自動メール転送の無効化 (GWS.GMAIL.11.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GMAIL.11.1 は、特に外部ドメインへの自動メール転送を無効にすることを推奨しています。自動転送は一般的なデータ持ち出しの経路であり、アカウント乗っ取り後の永続化の手段でもあります。受信メールを攻撃者が管理するアドレスに密かにコピーするためです。このチェックは gmail.auto_forwarding の Cloud Identity ポリシーを読み取り、自動転送が有効になっている組織部門にフラグを立てます。", "status": "machine-draft" },
+    "recommendedValue": { "value": "すべての組織部門で自動メール転送が無効になっている (enableAutoForwarding = false)。", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console のアプリ > Google Workspace > Gmail > エンドユーザー アクセスで、「ユーザーが受信メールを別のアドレスに自動転送することを許可する」を無効にし、外部の宛先を優先します。既存の転送ルールに想定外の外部受信者がないか確認します。", "status": "machine-draft" }
+  },
+  "EMAIL-031": {
+    "name": { "value": "配信前メッセージスキャンの強化の有効化 (GWS.GMAIL.15.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GMAIL.15.1 は、配信前メッセージスキャンの強化を要求します。これは、メッセージが受信トレイに届く前に、疑わしいコンテンツやフィッシングコンテンツの検出を改善します。このチェックは gmail.enhanced_pre_delivery_message_scanning の Cloud Identity ポリシーを読み取り、改善された疑わしいコンテンツの検出が有効になっていない組織部門にフラグを立てます。", "status": "machine-draft" },
+    "recommendedValue": { "value": "すべての組織部門で配信前メッセージスキャンの強化が有効になっている (enableImprovedSuspiciousContentDetection = true)。", "status": "machine-draft" },
+    "remediationSteps": { "value": "Google Admin Console のアプリ > Google Workspace > Gmail > 迷惑メール、フィッシング、マルウェアで、配信前メッセージスキャンの強化を有効にし、Gmail が配信前に疑わしいコンテンツの追加分析を実行するようにします。", "status": "machine-draft" }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "_family": "GwsServiceChecks.json",
+  "GWS-SITES-001": {
+    "name": { "value": "Sites サービスの無効化", "status": "machine-draft" },
+    "description": { "value": "最小権限の原則に沿って攻撃対象領域を削減するため、Google Sites サービスはすべてのユーザーで無効にする必要があります。文書化された必要性がある場合は、組織部門またはグループごとに Sites を選択的に有効化できます。", "status": "machine-draft" },
+    "recommendedValue": { "value": "Sites サービスが全員に対して OFF になっている (必要に応じて組織部門/グループごとに選択的に有効化する)", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > Google Workspace > Sites > サービスのステータス > 全員に対して OFF に設定します。文書化された業務上の必要性がある場合にのみ、組織部門またはグループごとに選択的に有効化します。", "status": "machine-draft" }
+  },
+  "GWS-CLASS-001": {
+    "name": { "value": "Classroom のメンバーシップ - クラスに参加できるユーザー", "status": "machine-draft" },
+    "description": { "value": "ドメイン内のクラスに参加できるユーザーは、ドメイン内のユーザーのみに制限し、外部アカウントが内部のクラスに参加できないようにする必要があります。", "status": "machine-draft" },
+    "recommendedValue": { "value": "クラスに参加できるユーザーが「ドメイン内のユーザーのみ」に設定されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > その他の Google サービス > Classroom > クラスの設定 > クラスのメンバーシップについて > ドメイン内のクラスに参加できるユーザー > 「ドメイン内のユーザーのみ」に設定します。", "status": "machine-draft" }
+  },
+  "GWS-CLASS-002": {
+    "name": { "value": "Classroom のメンバーシップ - ユーザーが参加できるクラス", "status": "machine-draft" },
+    "description": { "value": "ドメイン内のユーザーが参加できるクラスは、ドメイン内のクラスのみに制限し、内部ユーザーがデータを持ち出す可能性のある外部のクラスに参加できないようにする必要があります。", "status": "machine-draft" },
+    "recommendedValue": { "value": "ユーザーが参加できるクラスが「ドメイン内のクラスのみ」に設定されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > その他の Google サービス > Classroom > クラスの設定 > クラスのメンバーシップについて > ドメイン内のユーザーが参加できるクラス > 「ドメイン内のクラスのみ」に設定します。", "status": "machine-draft" }
+  },
+  "GWS-CLASS-003": {
+    "name": { "value": "Classroom API データアクセスの制限", "status": "machine-draft" },
+    "description": { "value": "外部連携による制御されないデータアクセスを防ぐため、ユーザーがサードパーティアプリに Google Classroom データへのアクセスを許可できないようにする必要があります。", "status": "machine-draft" },
+    "recommendedValue": { "value": "ユーザーがアプリに Classroom データへのアクセスを許可できない (API データアクセスが無効)", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > その他の Google サービス > Classroom > データアクセス > 「ユーザーがアプリに自分の Google Classroom データへのアクセスを許可できる」のチェックを外します。", "status": "machine-draft" }
+  },
+  "GWS-CLASS-004": {
+    "name": { "value": "Classroom の名簿インポートの無効化", "status": "machine-draft" },
+    "description": { "value": "明示的なガバナンスなしに外部システムからクラス名簿が同期されないよう、サードパーティ連携による名簿インポートは無効にする必要があります。", "status": "machine-draft" },
+    "recommendedValue": { "value": "名簿インポートが OFF になっている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > その他の Google サービス > Classroom > 名簿インポート > OFF を選択します。", "status": "machine-draft" }
+  },
+  "GWS-CLASS-005": {
+    "name": { "value": "Classroom の生徒の登録解除の制限", "status": "machine-draft" },
+    "description": { "value": "生徒が自分自身や他人を削除してクラスのメンバーシップの整合性を乱すことを防ぐため、クラスからの生徒の登録解除は教師のみに許可する必要があります。", "status": "machine-draft" },
+    "recommendedValue": { "value": "生徒の登録解除が教師のみに制限されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > その他の Google サービス > Classroom > 生徒の登録解除 > 「教師のみ」を選択します。", "status": "machine-draft" }
+  },
+  "GWS-CLASS-006": {
+    "name": { "value": "Classroom のクラス作成を確認済みの教師に制限", "status": "machine-draft" },
+    "description": { "value": "許可されていないユーザーがクラスを作成してメンバーを集めることを防ぐため、クラスの作成は確認済みの教師のみに制限する必要があります。", "status": "machine-draft" },
+    "recommendedValue": { "value": "クラスの作成が確認済みの教師のみに制限されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > その他の Google サービス > Classroom > 全般設定 > 教師の権限 > 「確認済みの教師のみ」を選択します。", "status": "machine-draft" }
+  },
+  "GWS-GEMINI-001": {
+    "name": { "value": "Gemini アプリのアクセスをライセンス保有ユーザーに制限", "status": "machine-draft" },
+    "description": { "value": "生成 AI へのアクセスがすべてのユーザーに開放されるのではなくライセンスの割り当てによって管理されるよう、Gemini アプリのユーザーアクセスはライセンスを持たない全員に対して OFF に設定する必要があります。", "status": "machine-draft" },
+    "recommendedValue": { "value": "ライセンスを持たないユーザーに対して Gemini アプリのアクセスが OFF になっている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > 生成 AI > Gemini アプリ > ユーザーアクセス > 「ライセンスに関係なくすべてのユーザーが Gemini アプリにアクセスできるようにする」のチェックを外します。", "status": "machine-draft" }
+  },
+  "GWS-GEMINI-002": {
+    "name": { "value": "Gemini のアルファ機能の無効化", "status": "machine-draft" },
+    "description": { "value": "Gemini のアルファ機能は無効にする必要があります。プレリリースの機能はセキュリティレビューが完了していない可能性があり、組織のデータを未検証の処理にさらすおそれがあります。", "status": "machine-draft" },
+    "recommendedValue": { "value": "Gemini for Workspace のアルファ機能へのアクセスが OFF になっている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > 生成 AI > Gemini for Workspace > アルファ機能 > 「Gemini for Google Workspace のアルファ機能へのアクセスを無効にする」を選択します。", "status": "machine-draft" }
+  },
+  "GWS-GEMINI-003": {
+    "name": { "value": "Gemini の会話履歴の有効化", "status": "machine-draft" },
+    "description": { "value": "監査およびコンプライアンスの目的で AI とのやり取りが保持されるよう、Gemini の会話履歴を有効にする必要があります。履歴を無効にすると、データの取り扱いが見えなくなる可能性があります。", "status": "machine-draft" },
+    "recommendedValue": { "value": "Gemini の会話履歴が有効になっている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > 生成 AI > Gemini アプリ > Gemini の会話履歴 > 会話履歴が ON になっていることを確認します。", "status": "machine-draft" }
+  },
+  "GWS-GEMINI-004": {
+    "name": { "value": "Gemini の会話保持期間を最低 18 か月に", "status": "machine-draft" },
+    "description": { "value": "監査、リーガルホールド、インシデント調査の要件をサポートするため、Gemini の会話保持期間は最低 18 か月に設定する必要があります。", "status": "machine-draft" },
+    "recommendedValue": { "value": "会話の保持期間が最低 18 か月に設定されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > 生成 AI > Gemini アプリ > Gemini の会話履歴 > 保持期間を最低 18 か月に設定します。", "status": "machine-draft" }
+  },
+  "GWS-GEMINI-005": {
+    "name": { "value": "Gemini の会話共有の無効化", "status": "machine-draft" },
+    "description": { "value": "機密性の高いプロンプトや出力を含む可能性のある AI の会話内容が、意図した受信者の範囲外に共有されるのを防ぐため、リンクによる Gemini の会話共有は OFF に設定する必要があります。", "status": "machine-draft" },
+    "recommendedValue": { "value": "リンクによる会話共有が OFF に設定されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > 生成 AI > Gemini アプリ > 共有 > 「リンクによる会話共有を許可する」を OFF に設定します。", "status": "machine-draft" }
+  }
+}

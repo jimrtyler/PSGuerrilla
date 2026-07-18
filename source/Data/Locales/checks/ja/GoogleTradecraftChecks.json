@@ -1,0 +1,39 @@
+{
+  "_family": "GoogleTradecraftChecks.json",
+  "GTRADE-001": {
+    "name": { "value": "ドメイン全体の委任による組織乗っ取りのリスク", "status": "machine-draft" },
+    "description": { "value": "ドメイン全体の委任は、なりすましをサービスアカウントのキーではなく OAuth クライアント ID に結び付けます。そのため、広範なスコープを持つ委任済みサービスアカウントでキーを生成できる者は、誰でも特権管理者 (super admin) なしに組織全体でのなりすましを取得できます (DeleFriend の手法)。完全な Gmail/Drive/Directory/cloud-platform スコープを持つ委任付与は、この乗っ取りの前提条件となります。", "status": "machine-draft" },
+    "recommendedValue": { "value": "組織全体のなりすましスコープ (完全な Gmail/Drive/Directory/cloud-platform) を委任されたサービスアカウントが存在せず、限定的な読み取り専用スコープのみが付与されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "セキュリティ > API の制御 > ドメイン全体の委任: 完全な mail.google.com、完全な drive、admin.directory、または cloud-platform スコープを持つ付与を削除または縮小し、必要最小限の読み取り専用スコープに制限します。GCP では、委任済みサービスアカウントでのキー作成を拒否します (iam.disableServiceAccountKeyCreation)。", "status": "machine-draft" }
+  },
+  "GTRADE-002": {
+    "name": { "value": "インターネットから閲覧可能な Google Groups", "status": "machine-draft" },
+    "description": { "value": "トピックが「インターネット上の全員」に閲覧可能なグループは、メッセージ履歴全体を密かに漏洩させます。これは、数千の組織の内部メール (財務情報、資格情報、PII) を露出させてきた種類の問題です。Google はこの露出に対するネイティブなアラートを提供していません。", "status": "machine-draft" },
+    "recommendedValue": { "value": "インターネット上の全員が閲覧できるグループが存在しない (whoCanViewGroup が ANYONE_CAN_VIEW ではない)", "status": "machine-draft" },
+    "remediationSteps": { "value": "アプリ > Google Workspace > Groups for Business > 共有設定、およびグループごとのアクセス設定: 「会話を閲覧できるユーザー」を「インターネット上の全員」からメンバー/組織のみに変更します。", "status": "machine-draft" }
+  },
+  "GTRADE-003": {
+    "name": { "value": "自由参加/外部メンバーを許可するグループ", "status": "machine-draft" },
+    "description": { "value": "誰でも (またはドメイン内の誰でも) 参加できるグループや、外部メンバーを許可するグループは、信頼境界を広げ、セルフサービスによるアクセスを可能にします。そのようなグループがリソースまたは IAM アクセスも保持している場合、参加することでそのアクセスを継承します (Google が意図された動作と分類する権限昇格の経路です)。", "status": "machine-draft" },
+    "recommendedValue": { "value": "グループが招待されたメンバーに制限されており、明示的に必要とされない限り、自由参加も外部メンバーも存在しない", "status": "machine-draft" },
+    "remediationSteps": { "value": "アプリ > Google Workspace > Groups for Business: 既定の「参加できるユーザー」を「招待されたユーザーのみ」に設定し、グループが明示的に必要とする場合を除き「外部メンバーを許可する」を無効にします。リソース/IAM アクセスを付与するグループを確認します。", "status": "machine-draft" }
+  },
+  "GTRADE-004": {
+    "name": { "value": "特権管理者の乱立", "status": "machine-draft" },
+    "description": { "value": "特権管理者は SSO とほとんどの制御を回避します。特権管理者が多数存在すると、組織の最も価値の高い攻撃対象領域が拡大します。Google のベストプラクティスは、その数を少なく (5 人未満に) 保ち、日常的な作業は最小権限のロールで行うことです。", "status": "machine-draft" },
+    "recommendedValue": { "value": "アクティブな特権管理者が 5 人未満である", "status": "machine-draft" },
+    "remediationSteps": { "value": "アカウント > 管理者ロール > 特権管理者: メンバーを最小限の緊急アクセス (break-glass) 用に削減し、日常的な業務を最小権限のカスタム/事前構築ロールに移行し、残りのすべての特権管理者にフィッシング耐性のある 2SV を強制します。", "status": "machine-draft" }
+  },
+  "GTRADE-005": {
+    "name": { "value": "特権管理者と同等のカスタムロール", "status": "machine-draft" },
+    "description": { "value": "高い権限 (ユーザー管理、セキュリティ設定、ロール管理、データエクスポート/Takeout) を持つカスタム管理者ロールは、単純な特権管理者の人数集計を逃れつつ、特権管理者に近い能力を持つことができます。これは、目立たない権限集中と永続化の経路です。", "status": "machine-draft" },
+    "recommendedValue": { "value": "緊急アクセス (break-glass) 用途を除き、特権管理者と同等の権限 (ユーザー/セキュリティ/ロール管理またはデータエクスポート) を持つカスタムロールが存在しない", "status": "machine-draft" },
+    "remediationSteps": { "value": "アカウント > 管理者ロール: ユーザー管理、セキュリティ設定、ロール管理、またはデータエクスポート/Takeout の権限を持つカスタムロールを確認し、範囲を狭めたロールに分割して割り当て先を制限します。", "status": "machine-draft" }
+  },
+  "GTRADE-006": {
+    "name": { "value": "永続的/過剰なスコープの OAuth 付与", "status": "machine-draft" },
+    "description": { "value": "完全な Gmail/Drive/admin スコープを持つサードパーティの OAuth 付与は MFA を回避し、パスワードのリセット後も存続します (Apps Script、アプリパスワード、IMAP-OAuth セッションはリセットによって取り消されません)。これは持続的な永続化の経路です。Google は付与をログに記録しますが、既定の悪意ある付与の分類機能は提供していません。", "status": "machine-draft" },
+    "recommendedValue": { "value": "完全な mail/drive/admin スコープを持つサードパーティの OAuth アプリが存在せず、永続的な付与が確認され、明示的に取り消されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "セキュリティ > API の制御 > アプリ アクセス制御: 完全な Gmail/Drive/Directory スコープを持つアプリを確認し、許可リストに登録されたアプリに制限し、不要な付与を明示的に取り消します (パスワードのリセットだけでは OAuth、アプリパスワード、Apps Script のアクセスは取り消されません)。", "status": "machine-draft" }
+  }
+}

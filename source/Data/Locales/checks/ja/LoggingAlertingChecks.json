@@ -1,0 +1,39 @@
+{
+  "_family": "LoggingAlertingChecks.json",
+  "LOG-001": {
+    "name": { "value": "監査ログの保持設定", "status": "machine-draft" },
+    "description": { "value": "インシデント調査およびコンプライアンス要件をサポートするため、監査ログは適切な期間保持する必要があります。既定の保持期間は Workspace のエディションによって異なります", "status": "machine-draft" },
+    "recommendedValue": { "value": "監査ログの保持期間が 12 か月以上であり、長期保持のために BigQuery エクスポートで延長されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > レポート > 監査と調査 > ログの利用可能状況を確認します。長期保持のため、管理コンソール > レポート > BigQuery エクスポートで BigQuery エクスポートを構成します", "status": "machine-draft" }
+  },
+  "LOG-002": {
+    "name": { "value": "アラート センターのルールのインベントリ", "status": "machine-draft" },
+    "description": { "value": "疑わしいログイン、データの持ち出し、ポリシー違反を含むセキュリティに関連するイベントを検出して通知するよう、アラート センターのルールを構成する必要があります", "status": "machine-draft" },
+    "recommendedValue": { "value": "主要なセキュリティイベント (疑わしいログイン、データの持ち出し、権限の変更) に対するアラートルールが構成されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > セキュリティ > アラート センター > 既存のルールを確認します > 不足しているセキュリティイベントのカテゴリに対するルールを作成します", "status": "machine-draft" }
+  },
+  "LOG-003": {
+    "name": { "value": "アクティビティルールのカバレッジ分析", "status": "machine-draft" },
+    "description": { "value": "アクティビティルールは、ログイン、Drive、管理、メールのイベントを含むセキュリティ領域全体にわたって適切なカバレッジを提供する必要があります", "status": "machine-draft" },
+    "recommendedValue": { "value": "ログイン、Drive の共有、管理の変更、メール転送、OAuth のイベントをカバーするアクティビティルール", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > セキュリティ > アラート センター > ルール > イベントのカテゴリ全体のカバレッジを確認します > カバーされていないセキュリティ領域に対するルールを追加します", "status": "machine-draft" }
+  },
+  "LOG-004": {
+    "name": { "value": "データエクスポート設定", "status": "machine-draft" },
+    "description": { "value": "ユーザーが組織のデータをドメイン外に一括エクスポートすることを防ぐため、Google Takeout (データエクスポート) を制御する必要があります", "status": "machine-draft" },
+    "recommendedValue": { "value": "ほとんどのユーザーで Google Takeout が無効化または制限されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > アプリ > その他の Google サービス > Google Takeout > 該当する組織部門で無効化または制限します", "status": "machine-draft" }
+  },
+  "LOG-005": {
+    "name": { "value": "管理者メールアラートの構成", "status": "machine-draft" },
+    "description": { "value": "特権管理者の変更、セキュリティ設定の変更、一括操作を含む重大な管理者アクションに対して、メールアラートを構成する必要があります", "status": "machine-draft" },
+    "recommendedValue": { "value": "重大な管理者アクションおよびセキュリティイベントに対してメールアラートが有効になっている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > セキュリティ > アラート センター > 重大なアラートの種類に対するメール通知の受信者を構成します", "status": "machine-draft" }
+  },
+  "LOG-006": {
+    "name": { "value": "Reporting API へのアクセス", "status": "machine-draft" },
+    "description": { "value": "承認されたサービスアカウントおよびアプリケーションのみが監査データと使用状況データを取得できることを確認するため、Reports API へのアクセスを確認する必要があります", "status": "machine-draft" },
+    "recommendedValue": { "value": "Reports API へのアクセスが承認されたサービスアカウントのみに制限されている", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理コンソール > セキュリティ > API の制御 > ドメイン全体の委任 > Reports API スコープを持つ付与を確認します > 不正なアクセスを削除します", "status": "machine-draft" }
+  }
+}
