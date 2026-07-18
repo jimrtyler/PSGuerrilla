@@ -1,0 +1,27 @@
+{
+  "_family": "EntraAIAgentChecks.json",
+  "AIAGENT-001": {
+    "name": { "value": "Copilot-agenter begrænser, hvem der kan interagere (ingen bred adgang)", "status": "machine-draft" },
+    "description": { "value": "En Copilot Studio-agent, hvis adgangskontrolpolitik er 'Any' eller 'Any multitenant', kan interageres med af enhver bruger i lejeren eller af brugere fra enhver lejer, uden begrænsning. For en agent, der er koblet til organisationsdata og -værktøjer, er det en vej til ugodkendt dataadgang og prompt injection. Denne kontrol markerer agenter, hvis adgangskontrol er sat til Any / Any multitenant. Når agentdata ikke indsamles, er resultatet Ikke vurderet; en lejer uden agenter består (der er intet at styre).", "status": "machine-draft" },
+    "recommendedValue": { "value": "Ingen publiceret agent anvender adgangskontrollen 'Any' eller 'Any multitenant'; adgang er begrænset til specifikke godkendte brugere eller sikkerhedsgrupper", "status": "machine-draft" },
+    "remediationSteps": { "value": "I Copilot Studio skal du åbne Security > Authentication and access settings for hver markeret agent og ændre adgangskontrollen fra 'Any' / 'Any multitenant' til godkendt adgang, der er begrænset til din organisation (og helst til specifikke sikkerhedsgrupper). Publicer agenten igen, når adgangen er strammet.", "status": "machine-draft" }
+  },
+  "AIAGENT-002": {
+    "name": { "value": "Copilot-agenter kræver godkendelse", "status": "machine-draft" },
+    "description": { "value": "En Copilot Studio-agent med brugergodkendelsestypen 'None' accepterer anonym interaktion; en agent, der kun godkender 'As Needed', gør godkendelse valgfri. Begge dele lader ugodkendte brugere nå en agent, der kan vise organisationsdata eller kalde værktøjer, hvilket muliggør misbrug, dataeksfiltrering og prompt injection. Denne kontrol markerer agenter uden godkendelse som FAIL og agenter, hvis godkendelse kun udløses efter behov, som WARN.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Hver publiceret agent kræver godkendelse (brugergodkendelsestypen er ikke 'None', og godkendelse håndhæves altid, ikke 'As Needed')", "status": "machine-draft" },
+    "remediationSteps": { "value": "I Copilot Studio skal du indstille hver agents godkendelse til at kræve login (Microsoft Entra ID-godkendelse) i stedet for 'No authentication' og sikre, at godkendelse altid håndhæves i stedet for kun at blive udløst efter behov. Publicer igen efter ændringen.", "status": "machine-draft" }
+  },
+  "AIAGENT-003": {
+    "name": { "value": "Publicerede Copilot-agenter vedligeholdes (ikke inaktive)", "status": "machine-draft" },
+    "description": { "value": "En publiceret Copilot Studio-agent, der ikke er blevet ændret i lang tid, fortsætter med at eksponere funktionalitet og adgang, mens ingen vedligeholder dens konfiguration, tilladelser eller tilsluttede værktøjer. Inaktive publicerede agenter akkumulerer risiko i det stille. Denne kontrol markerer publicerede agenter, hvis seneste ændring er ældre end tærsklen for inaktivitet (som standard 90 dage), til gennemgang eller nedlæggelse.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Publicerede agenter vedligeholdes aktivt; forældede publicerede agenter gennemgås eller nedlægges", "status": "machine-draft" },
+    "remediationSteps": { "value": "Gennemgå hver inaktiv publiceret agent. Nedlæg agenter, der ikke længere er nødvendige (ophæv publicering og slet), og for agenter, der stadig er i brug, skal du bekræfte, at deres adgangskontroller, godkendelse og tilsluttede værktøjer stadig er passende, og derefter opdatere dem for at nulstille vedligeholdelsesuret.", "status": "machine-draft" }
+  },
+  "AIAGENT-004": {
+    "name": { "value": "Copilot-agentadgang er afgrænset til sikkerhedsgrupper", "status": "machine-draft" },
+    "description": { "value": "En godkendt Copilot Studio-agent uden autoriserede sikkerhedsgrupper kan nås af enhver godkendt bruger i lejeren. At afgrænse en agent til specifikke sikkerhedsgrupper begrænser dens målgruppe til dem med et forretningsmæssigt behov og anvender princippet om færrest mulige rettigheder på, hvem der kan kalde en agent, og de data, den fronter. Denne kontrol markerer godkendte agenter, der ikke har konfigureret nogen autoriserede sikkerhedsgrupper.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Godkendte agenter, der fronter følsomme data, er afgrænset til specifikke autoriserede sikkerhedsgrupper i stedet for alle godkendte brugere", "status": "machine-draft" },
+    "remediationSteps": { "value": "For agenter, der fronter følsomme data, skal du konfigurere autoriserede sikkerhedsgrupper i agentens adgangsindstillinger, så kun medlemmer af disse grupper kan interagere med agenten. Behold kun lejerdækkende adgang for agenter, der bevidst er beregnet til alle medarbejdere.", "status": "machine-draft" }
+  }
+}

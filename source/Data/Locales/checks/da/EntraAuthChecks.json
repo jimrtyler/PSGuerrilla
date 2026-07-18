@@ -1,0 +1,111 @@
+{
+  "_family": "EntraAuthChecks.json",
+  "EIDAUTH-001": {
+    "name": { "value": "Revision af politik for godkendelsesmetoder", "status": "machine-draft" },
+    "description": { "value": "Politikken for godkendelsesmetoder definerer, hvilke metoder der er tilgængelige for brugere til login og MFA. En fejlkonfigureret politik kan tillade svage eller forældede metoder og øge angrebsfladen. Denne kontrol reviderer politikkens aktuelle tilstand i forhold til anerkendte sikkerhedsbaselinjer for Entra ID.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Politik for godkendelsesmetoder gennemgået og tilpasset organisationens sikkerhedsbaselinje", "status": "machine-draft" },
+    "remediationSteps": { "value": "Naviger til Entra ID > Protection > Authentication methods > Policies. Gennemgå hver aktiveret metode, og deaktivér dem, der ikke er nødvendige for din organisation. Sørg for, at phishingresistente metoder som FIDO2 og Microsoft Authenticator prioriteres frem for SMS og opkald.", "status": "machine-draft" }
+  },
+  "EIDAUTH-002": {
+    "name": { "value": "Registreringsstatus for MFA for alle brugere", "status": "machine-draft" },
+    "description": { "value": "Alle brugere bør være registreret til multifaktorgodkendelse for at forhindre kontokompromittering via stjålne eller gættede legitimationsoplysninger. Konti uden MFA-registrering er det primære mål for legitimationsbaserede angreb, herunder password spraying og phishing. Uregistrerede brugere udgør kritiske huller i din identitetssikkerhed.", "status": "machine-draft" },
+    "recommendedValue": { "value": "100 % af de aktive brugere er registreret til MFA", "status": "machine-draft" },
+    "remediationSteps": { "value": "Gennemgå MFA-registreringsstatus via Entra ID > Protection > Authentication methods > User registration details. Håndhæv MFA-registrering via politikker for betinget adgang, der kræver MFA for alle brugere. Fastsæt en registreringsfrist, og kommuniker kravene til uregistrerede brugere.", "status": "machine-draft" }
+  },
+  "EIDAUTH-003": {
+    "name": { "value": "Analyse af fordelingen af MFA-metoder", "status": "machine-draft" },
+    "description": { "value": "At forstå fordelingen af MFA-metoder på tværs af brugere hjælper med at vurdere den samlede styrke af godkendelseskontrollerne. Organisationer bør spore udbredelsen af phishingresistente metoder som FIDO2 og Authenticator-push i forhold til svagere metoder som SMS. Denne indsigt muliggør målrettede kampagner for at migrere brugere til stærkere metoder.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Størstedelen af brugerne er registreret med phishingresistente MFA-metoder (FIDO2, Microsoft Authenticator, Windows Hello)", "status": "machine-draft" },
+    "remediationSteps": { "value": "Gennemgå metodefordelingen via Entra ID > Protection > Authentication methods > User registration details. Identificer brugere, der udelukkende benytter svagere metoder, og udarbejd migreringsplaner. Brug aktivitetsrapporter for godkendelsesmetoder til at spore fremdriften i udbredelsen.", "status": "machine-draft" }
+  },
+  "EIDAUTH-004": {
+    "name": { "value": "Brugere med kun SMS-/opkalds-MFA-metoder", "status": "machine-draft" },
+    "description": { "value": "Brugere, der udelukkende benytter SMS- eller opkaldsbaseret MFA, er sårbare over for SIM swap-angreb, hvor angribere via social engineering får mobiloperatører til at overføre et offers telefonnummer, samt over for angreb på SS7-signaleringsprotokollen, der opsnapper SMS-beskeder under overførsel. Disse metoder giver væsentligt svagere beskyttelse end app-baseret eller hardware token-godkendelse. Organisationer bør identificere og migrere disse brugere til phishingresistente metoder.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Ingen brugere, der udelukkende benytter SMS eller opkald som deres eneste MFA-metode", "status": "machine-draft" },
+    "remediationSteps": { "value": "Identificer brugere med kun SMS-/opkalds-MFA via Entra ID > Protection > Authentication methods > User registration details. Udarbejd en migreringsplan for at flytte disse brugere til Microsoft Authenticator eller FIDO2-sikkerhedsnøgler. Overvej at deaktivere SMS/opkald som tilladte metoder i politikken for godkendelsesmetoder, når migreringen er fuldført.", "status": "machine-draft" }
+  },
+  "EIDAUTH-005": {
+    "name": { "value": "Brugere uden registrerede MFA-metoder", "status": "machine-draft" },
+    "description": { "value": "Brugere uden nogen registrerede MFA-metoder kan ikke opfylde MFA-udfordringer og udgør kritiske sikkerhedshuller. Disse konti er fuldt eksponeret for legitimationsbaserede angreb, herunder password spraying, phishing og brute force-angreb. Øjeblikkelig afhjælpning er nødvendig for at sikre, at alle aktive konti har mindst én MFA-metode tilmeldt.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Nul aktive brugere uden mindst én registreret MFA-metode", "status": "machine-draft" },
+    "remediationSteps": { "value": "Forespørg registreringsoplysninger for brugere via Entra ID > Protection > Authentication methods > User registration details for at identificere brugere uden metoder. Håndhæv MFA-registrering via en politik for betinget adgang, der er rettet mod uregistrerede brugere. Brug Temporary Access Pass til at hjælpe brugere, der har brug for at igangsætte deres MFA-registrering.", "status": "machine-draft" }
+  },
+  "EIDAUTH-006": {
+    "name": { "value": "Optegnelse og revision af FIDO2-sikkerhedsnøgler", "status": "machine-draft" },
+    "description": { "value": "FIDO2-sikkerhedsnøgler giver phishingresistent godkendelse, men skal registreres og administreres gennem hele deres livscyklus. Usporede nøgler kan forblive tilknyttet fratrådte medarbejdere eller bortkomme uden at blive opdaget. Regelmæssige revisioner sikrer, at kun autoriserede nøgler er aktive og korrekt tildelt aktuelle brugere.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alle registrerede FIDO2-nøgler er optegnet med dokumenterede ejertildelinger og regelmæssige attesteringsgennemgange", "status": "machine-draft" },
+    "remediationSteps": { "value": "Gennemgå FIDO2-nøgleregistreringer via Entra ID > Protection > Authentication methods > FIDO2 security key. Krydsreferer registrerede nøgler med din optegnelse over hardwareaktiver, og fjern nøgler for fratrådte brugere. Indfør nøgleregistreringspolitikker, der begrænser tilladte AAGUID-værdier til godkendte leverandørmodeller.", "status": "machine-draft" }
+  },
+  "EIDAUTH-007": {
+    "name": { "value": "Kontrol af FIDO2-nøgler for ROCA-sårbarhed", "status": "machine-draft" },
+    "description": { "value": "ROCA-sårbarheden (Return of Coppersmith's Attack, CVE-2017-15361) påvirker RSA-nøglegenerering i Infineon TPM-firmware, der anvendes i visse FIDO2-sikkerhedsnøgler, og gør det muligt at genskabe den private nøgle ud fra den offentlige nøgle. Berørte nøgler genererer svage RSA-nøglepar, der kan faktoriseres, hvilket fuldstændig underminerer sikkerheden i godkendelseslegitimationen. Nøgler med sårbar firmware skal identificeres og udskiftes omgående.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Ingen FIDO2-nøgler med ROCA-sårbar Infineon TPM-firmware i brug", "status": "machine-draft" },
+    "remediationSteps": { "value": "Identificer FIDO2-nøgler, der anvender Infineon-TPM’er, ved at kontrollere AAGUID-værdierne mod kendte sårbare modeller. Test registrerede nøgler med ROCA-registreringsværktøjer for at bekræfte sårbarhedsstatus. Udskift alle berørte nøgler med firmwareversioner, der er rettet, eller alternativ hardware, og tilbagekald de gamle nøgleregistreringer i Entra ID.", "status": "machine-draft" }
+  },
+  "EIDAUTH-008": {
+    "name": { "value": "Parathed til adgangskodefri godkendelse", "status": "machine-draft" },
+    "description": { "value": "Adgangskodefri godkendelse eliminerer adgangskoder som en angrebsvektor og fjerner risikoen for tyveri af legitimationsoplysninger, phishing og password spraying. Organisationer bør vurdere deres parathed til at udrulle adgangskodefri metoder såsom FIDO2, Windows Hello for Business og telefonlogin med Microsoft Authenticator. Denne kontrol vurderer den aktuelle udbredelse af metoder og identificerer huller, der forhindrer adgangskodefri udrulning.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Organisationen har en plan for adgangskodefri udrulning, hvor mindst 50 % af brugerne er i stand til at logge ind adgangskodefrit", "status": "machine-draft" },
+    "remediationSteps": { "value": "Gennemgå registreringer af godkendelsesmetoder for at fastslå, hvor mange brugere der har tilmeldt adgangskodefri-kompatible metoder. Aktivér adgangskodefrit login med FIDO2 og Microsoft Authenticator i politikken for godkendelsesmetoder. Udarbejd en faseinddelt udrulningsplan, der starter med privilegerede brugere og it-personale, før den udvides til den bredere organisation.", "status": "machine-draft" }
+  },
+  "EIDAUTH-009": {
+    "name": { "value": "Konfiguration af Windows Hello for Business", "status": "machine-draft" },
+    "description": { "value": "Windows Hello for Business giver phishingresistent, hardwarebaseret godkendelse ved hjælp af biometri eller PIN-kode knyttet til enhedens TPM. Fejlkonfigurerede WHfB-udrulninger kan falde tilbage til en svagere bekvemmeligheds-PIN uden korrekt TPM-attestering, hvilket reducerer sikkerhedsgarantierne. Konfigurationen bør håndhæve TPM-baserede nøgler og passende biometriske politikker.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Windows Hello for Business aktiveret med håndhævet TPM-krav og multifaktoroplåsning konfigureret til følsomme roller", "status": "machine-draft" },
+    "remediationSteps": { "value": "Naviger til Entra ID > Protection > Authentication methods > Windows Hello for Business. Aktivér metoden, og konfigurer nøglebegrænsninger til at kræve TPM-baserede nøgler. Udrul WHfB-konfigurationsprofiler via Intune for at håndhæve TPM-attestering og krav til PIN-kompleksitet på tværs af administrerede enheder.", "status": "machine-draft" }
+  },
+  "EIDAUTH-010": {
+    "name": { "value": "Revision af politik for Temporary Access Pass (TAP)", "status": "machine-draft" },
+    "description": { "value": "Temporary Access Pass tillader tidsbegrænsede adgangskoder til at tilmelde brugere til adgangskodefri legitimationsoplysninger, men kan fungere som en bagdør, hvis den ikke er korrekt begrænset. TAP’er, der er konfigureret med lang levetid eller genanvendelige indstillinger, kan udnyttes af angribere, der kompromitterer udstedelsesprocessen. TAP-politikken bør håndhæve kort levetid, begrænsning til engangsbrug og begrænse udstedelse til autoriserede administratorer.", "status": "machine-draft" },
+    "recommendedValue": { "value": "TAP aktiveret med en maksimal levetid på 1 time, kun engangsbrug, begrænset til autoriserede onboarding-administratorer", "status": "machine-draft" },
+    "remediationSteps": { "value": "Gennemgå TAP-politikken i Entra ID > Protection > Authentication methods > Temporary Access Pass. Angiv den mindste og maksimale levetid til den kortest mulige praktiske varighed, og aktivér engangsbrug. Begræns tilladelser til udstedelse af TAP til et begrænset sæt administratorer via rollebaseret adgangskontrol.", "status": "machine-draft" }
+  },
+  "EIDAUTH-011": {
+    "name": { "value": "Konfiguration af selvbetjent nulstilling af adgangskode (SSPR)", "status": "machine-draft" },
+    "description": { "value": "SSPR giver brugere mulighed for selv at nulstille deres adgangskoder uden hjælp fra helpdesk, men skal konfigureres korrekt for at forhindre kontoovertagelse. Fejlkonfigureret SSPR med svage verifikationsmetoder eller utilstrækkeligt antal krævede metoder gør det muligt for angribere at nulstille adgangskoder ved hjælp af kompromitterede personoplysninger. SSPR bør kræve flere stærke verifikationsmetoder og være aktiveret for alle brugere.", "status": "machine-draft" },
+    "recommendedValue": { "value": "SSPR aktiveret for alle brugere med mindst to påkrævede godkendelsesmetoder til nulstilling", "status": "machine-draft" },
+    "remediationSteps": { "value": "Naviger til Entra ID > Protection > Password reset > Properties, og aktivér SSPR for alle brugere. Angiv antallet af metoder, der kræves til nulstilling, til 2. Under Authentication methods skal du sikre, at kun stærke metoder såsom mobilappnotifikation, mobilappkode og e-mail er tilladt, mens sikkerhedsspørgsmål deaktiveres.", "status": "machine-draft" }
+  },
+  "EIDAUTH-012": {
+    "name": { "value": "SSPR-metoder og -krav", "status": "machine-draft" },
+    "description": { "value": "De specifikke metoder, der tillades til SSPR, og det påkrævede antal påvirker direkte sikkerheden i processen for nulstilling af adgangskode. At tillade svage metoder såsom sikkerhedsspørgsmål eller kun kræve en enkelt metode skaber muligheder for, at angribere kan nulstille adgangskoder via social engineering eller OSINT. Organisationer bør kræve mindst to stærke metoder for alle nulstillinger af adgangskoder.", "status": "machine-draft" },
+    "recommendedValue": { "value": "To eller flere stærke godkendelsesmetoder påkrævet til nulstilling af adgangskode, sikkerhedsspørgsmål deaktiveret", "status": "machine-draft" },
+    "remediationSteps": { "value": "Naviger til Entra ID > Protection > Password reset > Authentication methods. Angiv antallet af påkrævede metoder til 2, og fjern sikkerhedsspørgsmål fra listen over tilladte metoder. Prioriter mobilappnotifikation og mobilappkode som de primære SSPR-metoder for at sikre stærk verifikation.", "status": "machine-draft" }
+  },
+  "EIDAUTH-013": {
+    "name": { "value": "Konfiguration af adgangskodebeskyttelse (spærrede adgangskoder)", "status": "machine-draft" },
+    "description": { "value": "Entra ID Password Protection forhindrer brugere i at vælge ofte kompromitterede adgangskoder ved at kontrollere dem mod en global liste over spærrede adgangskoder, der vedligeholdes af Microsoft. Uden aktiveret adgangskodebeskyttelse kan brugere vælge adgangskoder, der optræder i kendte lækdatabaser, hvilket gør konti sårbare over for password spraying og ordbogsangreb. Funktionen bør aktiveres i håndhævet tilstand for både cloud- og lokale miljøer.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Adgangskodebeskyttelse aktiveret i håndhævet (Enforced) tilstand med den globale liste over spærrede adgangskoder aktiv", "status": "machine-draft" },
+    "remediationSteps": { "value": "Naviger til Entra ID > Protection > Authentication methods > Password protection. Angiv tilstanden til Enforced, og sørg for, at den globale liste over spærrede adgangskoder er aktiveret. Hvis du bruger hybrididentitet med lokal Active Directory, skal du udrulle Entra ID Password Protection-proxyen og DC-agenterne for at udvide beskyttelsen til lokale adgangskodeændringer.", "status": "machine-draft" }
+  },
+  "EIDAUTH-014": {
+    "name": { "value": "Status for brugerdefineret liste over spærrede adgangskoder", "status": "machine-draft" },
+    "description": { "value": "Ud over den globale liste over spærrede adgangskoder bør organisationer vedligeholde en brugerdefineret liste over spærrede adgangskoder, der indeholder virksomhedsspecifikke termer, produktnavne, lokationer og andre let gættelige variationer. Uden en brugerdefineret liste kan brugere vælge adgangskoder baseret på organisatorisk kontekst, som angribere let kan gætte via målrettede angreb. Den brugerdefinerede liste understøtter op til 1000 poster og bør opdateres regelmæssigt.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Brugerdefineret liste over spærrede adgangskoder aktiveret med organisationsspecifikke termer, herunder virksomhedsnavn, produkter, lokationer og almindelige variationer", "status": "machine-draft" },
+    "remediationSteps": { "value": "Naviger til Entra ID > Protection > Authentication methods > Password protection. Aktivér den brugerdefinerede liste over spærrede adgangskoder, og tilføj poster for dit organisationsnavn, produktnavne, kontorlokationer og ofte anvendte interne termer. Gennemgå og opdater listen kvartalsvis for at inkludere nye termer og mønstre, der identificeres i adgangskoderevisioner.", "status": "machine-draft" }
+  },
+  "EIDAUTH-015": {
+    "name": { "value": "Brug af ældre godkendelsesprotokoller", "status": "machine-draft" },
+    "description": { "value": "Ældre godkendelsesprotokoller, herunder POP3, IMAP4, SMTP AUTH og Exchange ActiveSync Basic, understøtter ikke moderne godkendelse eller MFA, hvilket gør det muligt for angribere helt at omgå MFA ved hjælp af stjålne legitimationsoplysninger. Disse protokoller overfører legitimationsoplysninger på måder, der er modtagelige for opsnapning, og er den primære vektor for password spray-angreb mod Microsoft 365-lejere. Al ældre godkendelse bør blokeres via politikker for betinget adgang.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alle ældre godkendelsesprotokoller blokeret via betinget adgang uden aktiv brug registreret i loginlogfiler", "status": "machine-draft" },
+    "remediationSteps": { "value": "Gennemgå brugen af ældre godkendelse i Entra ID > Monitoring > Sign-in logs > Filter by client app (legacy protocols). Opret en politik for betinget adgang, der blokerer ældre godkendelse for alle brugere og alle cloudapps. Overvåg for blokerede loginforsøg, og samarbejd med berørte brugere om at migrere til moderne godkendelsesklienter.", "status": "machine-draft" }
+  },
+  "EIDAUTH-016": {
+    "name": { "value": "ROPC-flow (Resource Owner Password Credentials) aktiveret", "status": "machine-draft" },
+    "description": { "value": "ROPC-godkendelsesflowet (Resource Owner Password Credentials) sender brugernavn og adgangskode direkte til token-slutpunktet og omgår fuldstændigt multifaktorgodkendelse og politikker for betinget adgang. Applikationer, der bruger ROPC-tildelingstypen, eksponerer legitimationsoplysninger på en måde, der ikke kan beskyttes af moderne sikkerhedskontroller, og udgør et betydeligt sikkerhedshul. ROPC bør deaktiveres for alle applikationer, medmindre der er et absolut teknisk krav med kompenserende kontroller.", "status": "machine-draft" },
+    "recommendedValue": { "value": "ROPC-flow deaktiveret for alle applikationsregistreringer, ingen applikationer bruger tildelingstypen med adgangskode", "status": "machine-draft" },
+    "remediationSteps": { "value": "Gennemgå applikationsregistreringer i Entra ID > Applications > App registrations for apps, der er konfigureret til at tillade offentlige klientflows. Deaktivér indstillingen 'Allow public client flows' for applikationer, der ikke kræver ROPC. Migrer applikationer, der bruger ROPC, til understøttede interaktive flows såsom authorization code med PKCE eller device code-flow.", "status": "machine-draft" }
+  },
+  "EIDAUTH-017": {
+    "name": { "value": "Registrering af konflikt mellem MFA pr. bruger og MFA via betinget adgang", "status": "machine-draft" },
+    "description": { "value": "Ældre indstillinger for MFA pr. bruger (aktiveret/håndhævet på den enkelte brugers niveau) kan komme i konflikt med MFA-politikker baseret på betinget adgang og skabe uforudsigelig godkendelsesadfærd. Når begge er aktive, kan brugere opleve dobbelte MFA-anmodninger, godkendelsesfejl eller inkonsekvent politikhåndhævelse afhængigt af, hvilken mekanisme der evalueres først. Organisationer bør migrere fuldstændigt til MFA baseret på betinget adgang og deaktivere indstillinger for MFA pr. bruger for at sikre konsekvent politikanvendelse.", "status": "machine-draft" },
+    "recommendedValue": { "value": "MFA pr. bruger deaktiveret for alle brugere, hvor MFA håndhæves udelukkende via politikker for betinget adgang", "status": "machine-draft" },
+    "remediationSteps": { "value": "Kontrollér status for MFA pr. bruger via Entra ID > Users > Per-user MFA, og identificer brugere med MFA pr. bruger aktiveret eller håndhævet. Opret tilsvarende politikker for betinget adgang, der håndhæver MFA for alle brugere, før du deaktiverer MFA pr. bruger. Deaktivér MFA pr. bruger ved at sætte hver brugers status til Disabled, når du har bekræftet, at dækningen af MFA via betinget adgang er fuldstændig.", "status": "machine-draft" }
+  },
+  "EIDAUTH-018": {
+    "name": { "value": "Loginkontekst for Microsoft Authenticator (applikationsnavn og lokation)", "status": "machine-draft" },
+    "description": { "value": "Når godkendelsesmetoden Microsoft Authenticator er aktiveret, giver visning af loginkontekstoplysninger (applikationsnavn og geografisk lokation) i push- og adgangskodefri notifikationer brugeren den situationsforståelse, der er nødvendig for at genkende og afvise MFA-anmodninger, som vedkommende ikke selv har igangsat. Uden denne kontekst er brugere langt mere tilbøjelige til at godkende push-anmodninger igangsat af en angriber under MFA-træthed eller phishingangreb i realtid. Denne indstilling styres af funktionsindstillingerne displayAppInformationRequiredState og displayLocationInformationRequiredState i MicrosoftAuthenticator-metodekonfigurationen.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Hvis Microsoft Authenticator er aktiveret, er displayAppInformationRequiredState aktiveret (applikationsnavn vises); displayLocationInformationRequiredState anbefales også", "status": "machine-draft" },
+    "remediationSteps": { "value": "Naviger til Entra ID > Protection > Authentication methods > Policies > Microsoft Authenticator. Under fanen Configure skal du sætte 'Show application name in push and passwordless notifications' til Enabled for alle brugere og aktivere 'Show geographic location in push and passwordless notifications'. Dette opfylder SCuBA MS.AAD.3.3, som kræver, at Microsoft Authenticator konfigureres til at vise loginkontekst, når den er aktiveret.", "status": "machine-draft" }
+  }
+}
