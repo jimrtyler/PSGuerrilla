@@ -1,0 +1,1476 @@
+{
+  "_language": {
+    "code": "nl",
+    "name": "Nederlands"
+  },
+  "common": {
+    "domain": {
+      "value": "Domein",
+      "status": "machine-draft"
+    },
+    "tenant": {
+      "value": "Tenant",
+      "status": "machine-draft"
+    },
+    "generated": {
+      "value": "Gegenereerd",
+      "status": "machine-draft"
+    },
+    "reportGenerated": {
+      "value": "Rapport gegenereerd",
+      "status": "machine-draft"
+    },
+    "checksSummary": {
+      "value": "{0} controles geëvalueerd &middot; {1} geslaagd, {2} mislukt, {3} waarschuwingen, {4} overgeslagen",
+      "status": "machine-draft"
+    },
+    "summaryCounts": {
+      "value": "{0} controles &middot; G:{1} M:{2} W:{3}",
+      "status": "machine-draft"
+    },
+    "totalChecks": {
+      "value": "Totaal aantal controles",
+      "status": "machine-draft"
+    },
+    "passed": {
+      "value": "Geslaagd",
+      "status": "machine-draft"
+    },
+    "failed": {
+      "value": "Mislukt",
+      "status": "machine-draft"
+    },
+    "warnings": {
+      "value": "Waarschuwingen",
+      "status": "machine-draft"
+    },
+    "skipped": {
+      "value": "Overgeslagen",
+      "status": "machine-draft"
+    },
+    "pass": {
+      "value": "Geslaagd",
+      "status": "machine-draft"
+    },
+    "fail": {
+      "value": "Mislukt",
+      "status": "machine-draft"
+    },
+    "warn": {
+      "value": "Waarschuwing",
+      "status": "machine-draft"
+    },
+    "skip": {
+      "value": "Overgeslagen",
+      "status": "machine-draft"
+    },
+    "passLabel": {
+      "value": "Geslaagd:",
+      "status": "machine-draft"
+    },
+    "failLabel": {
+      "value": "Mislukt:",
+      "status": "machine-draft"
+    },
+    "warnLabel": {
+      "value": "Waarschuwing:",
+      "status": "machine-draft"
+    },
+    "skipLabel": {
+      "value": "Overgeslagen:",
+      "status": "machine-draft"
+    },
+    "critical": {
+      "value": "Kritiek",
+      "status": "machine-draft"
+    },
+    "high": {
+      "value": "Hoog",
+      "status": "machine-draft"
+    },
+    "medium": {
+      "value": "Middel",
+      "status": "machine-draft"
+    },
+    "low": {
+      "value": "Laag",
+      "status": "machine-draft"
+    },
+    "executiveSummary": {
+      "value": "Managementsamenvatting",
+      "status": "machine-draft"
+    },
+    "categoryBreakdown": {
+      "value": "Uitsplitsing per categorie",
+      "status": "machine-draft"
+    },
+    "categoryScores": {
+      "value": "Scores per categorie",
+      "status": "machine-draft"
+    },
+    "detailedByCategory": {
+      "value": "Gedetailleerde bevindingen per categorie",
+      "status": "machine-draft"
+    },
+    "complianceMapping": {
+      "value": "Compliancetoewijzing",
+      "status": "machine-draft"
+    },
+    "complianceCrossReference": {
+      "value": "Compliance-kruisverwijzing",
+      "status": "machine-draft"
+    },
+    "allFindings": {
+      "value": "Alle bevindingen",
+      "status": "machine-draft"
+    },
+    "thId": {
+      "value": "ID",
+      "status": "machine-draft"
+    },
+    "thSeverity": {
+      "value": "Ernst",
+      "status": "machine-draft"
+    },
+    "thStatus": {
+      "value": "Status",
+      "status": "machine-draft"
+    },
+    "thCategory": {
+      "value": "Categorie",
+      "status": "machine-draft"
+    },
+    "thCheck": {
+      "value": "Controle",
+      "status": "machine-draft"
+    },
+    "thCheckName": {
+      "value": "Naam van controle",
+      "status": "machine-draft"
+    },
+    "thCheckId": {
+      "value": "Controle-ID",
+      "status": "machine-draft"
+    },
+    "thFinding": {
+      "value": "Bevinding",
+      "status": "machine-draft"
+    },
+    "thRemediation": {
+      "value": "Herstel",
+      "status": "machine-draft"
+    },
+    "thCurrentValue": {
+      "value": "Huidige waarde",
+      "status": "machine-draft"
+    },
+    "thRecommended": {
+      "value": "Aanbevolen",
+      "status": "machine-draft"
+    },
+    "thRecommendedValue": {
+      "value": "Aanbevolen waarde",
+      "status": "machine-draft"
+    },
+    "thRemediationSteps": {
+      "value": "Herstelstappen",
+      "status": "machine-draft"
+    },
+    "thName": {
+      "value": "Naam",
+      "status": "machine-draft"
+    },
+    "thDescription": {
+      "value": "Beschrijving",
+      "status": "machine-draft"
+    },
+    "thPlatform": {
+      "value": "Platform",
+      "status": "machine-draft"
+    },
+    "thTimestamp": {
+      "value": "Tijdstempel",
+      "status": "machine-draft"
+    },
+    "thScore": {
+      "value": "Score",
+      "status": "machine-draft"
+    },
+    "thLabel": {
+      "value": "Label",
+      "status": "machine-draft"
+    },
+    "thDelta": {
+      "value": "Delta",
+      "status": "machine-draft"
+    },
+    "thProfile": {
+      "value": "Profiel",
+      "status": "machine-draft"
+    },
+    "thMitre": {
+      "value": "MITRE ATT&CK",
+      "status": "machine-draft"
+    },
+    "thNist": {
+      "value": "NIST SP 800-53",
+      "status": "machine-draft"
+    },
+    "thCisAd": {
+      "value": "CIS AD",
+      "status": "machine-draft"
+    },
+    "thCisBenchmark": {
+      "value": "CIS Benchmark",
+      "status": "machine-draft"
+    },
+    "thAnssi": {
+      "value": "ANSSI",
+      "status": "machine-draft"
+    },
+    "accepted": {
+      "value": "GEACCEPTEERD",
+      "status": "machine-draft"
+    }
+  },
+  "sections": {
+    "affectedItems": {
+      "value": "Betrokken items",
+      "status": "machine-draft"
+    }
+  },
+  "maturity": {
+    "heading": {
+      "value": "Beveiligingsvolwassenheid",
+      "status": "machine-draft"
+    },
+    "overall": {
+      "value": "Algehele volwassenheid: Niveau {0} van 5 &middot; {1}",
+      "status": "machine-draft"
+    },
+    "anchorNote": {
+      "value": "De laagste niet-vervulde control bepaalt de beoordeling (CMMI-achtige schaal: 1 Initieel tot 5 Geoptimaliseerd), zodat één enkele kritieke blootstelling de score begrenst totdat deze is opgelost.",
+      "status": "machine-draft"
+    },
+    "toReach": {
+      "value": "Om <strong>Niveau {0}</strong> te bereiken, pak aan:",
+      "status": "machine-draft"
+    },
+    "thCategory": {
+      "value": "Categorie",
+      "status": "machine-draft"
+    },
+    "thLevel": {
+      "value": "Niveau",
+      "status": "machine-draft"
+    },
+    "thMaturity": {
+      "value": "Volwassenheid",
+      "status": "machine-draft"
+    },
+    "levelCell": {
+      "value": "Niveau {0}",
+      "status": "machine-draft"
+    },
+    "na": {
+      "value": "n.v.t.",
+      "status": "machine-draft"
+    }
+  },
+  "ioe": {
+    "heading": {
+      "value": "Blootstellingsindicatoren",
+      "status": "machine-draft"
+    },
+    "note": {
+      "value": "{0} open blootstelling(en), gerangschikt op ernst en impactstraal.",
+      "status": "machine-draft"
+    },
+    "critical": {
+      "value": "Kritiek",
+      "status": "machine-draft"
+    },
+    "high": {
+      "value": "Hoog",
+      "status": "machine-draft"
+    },
+    "medium": {
+      "value": "Middel",
+      "status": "machine-draft"
+    },
+    "low": {
+      "value": "Laag",
+      "status": "machine-draft"
+    },
+    "affected": {
+      "value": "{0} getroffen",
+      "status": "machine-draft"
+    },
+    "warning": {
+      "value": "waarschuwing",
+      "status": "machine-draft"
+    },
+    "more": {
+      "value": "+ {0} extra blootstelling(en) in de gedetailleerde bevindingen hieronder.",
+      "status": "machine-draft"
+    }
+  },
+  "attackpath": {
+    "heading": {
+      "value": "Aanvalspaden naar Tier-0",
+      "status": "machine-draft"
+    },
+    "noneRan": {
+      "value": "Er zijn geen escalatiepaden naar Tier-0 gevonden binnen de verzamelde ACL-scope. Diepe paden met lage rechten vereisen ACL-verzameling voor het volledige domein &middot; voer opnieuw uit met <code>-FullDomainAcl</code> om de dekking te verbreden.",
+      "status": "machine-draft"
+    },
+    "noneNotRun": {
+      "value": "De aanvalspadanalyse is niet uitgevoerd. Schakel de categorieën <code>ACLDelegation</code> + <code>PrivilegedAccounts</code> in (of <code>All</code>) en voeg <code>-FullDomainAcl</code> toe voor diepe transitieve ketens.",
+      "status": "machine-draft"
+    },
+    "summary": {
+      "value": "{0} escalatiepad(en) die Tier-0 bereiken &middot; {1} vanaf NIET-geprivilegieerde principals (eerst getoond, hoogste risico). Elke pijl is een control- of lidmaatschapsrand die een aanvaller kan doorlopen.",
+      "status": "machine-draft"
+    },
+    "hop": {
+      "value": "hop",
+      "status": "machine-draft"
+    },
+    "hops": {
+      "value": "hops",
+      "status": "machine-draft"
+    },
+    "nonPrivSource": {
+      "value": "niet-geprivilegieerde bron",
+      "status": "machine-draft"
+    },
+    "privSource": {
+      "value": "reeds geprivilegieerde bron",
+      "status": "machine-draft"
+    }
+  },
+  "cartography": {
+    "heading": {
+      "value": "Cartografie van aanvalspaden",
+      "status": "machine-draft"
+    },
+    "legend": {
+      "value": "Visuele kaart van escalatieroutes naar Tier-0. <span style='color:var(--g-sev-critical)'>&#9873; Rood</span> = niet-geprivilegieerd startpunt, <span style='color:var(--g-sev-high)'>oranje</span> = reeds geprivilegieerd, <span style='color:var(--g-accent)'>&#9733; blauw</span> = Tier-0-doel. Volg de pijlen van links naar rechts.",
+      "status": "machine-draft"
+    },
+    "showingFirst": {
+      "value": " De eerste {0} paden worden getoond.",
+      "status": "machine-draft"
+    }
+  },
+  "comparison": {
+    "heading": {
+      "value": "Wat er is veranderd sinds de vorige uitvoering",
+      "status": "machine-draft"
+    },
+    "firstRun": {
+      "value": "Dit is de eerste geregistreerde uitvoering voor deze scope. De uitvoeringsgeschiedenis\nbegint met de geïntegreerde vergelijkingsengine van deze versie, dus eerdere\ndeltabestanden worden niet gelezen; de vergelijking begint bij uw volgende\nbeoordeling, wanneer deze uitvoering de basislijn wordt.",
+      "status": "machine-draft"
+    },
+    "previousRun": {
+      "value": "Vorige uitvoering: {0}, moduleversie {1}",
+      "status": "machine-draft"
+    },
+    "versionSkew": {
+      "value": " (deze uitvoering: {0}; de controlecatalogi verschillen, dus NIEUWE en UITGEFASEERDE vermeldingen hieronder zijn te verwachten)",
+      "status": "machine-draft"
+    },
+    "scoreLabel": {
+      "value": "Score (nu {0}, was {1})",
+      "status": "machine-draft"
+    },
+    "notAssessedLabel": {
+      "value": "Aantal Niet beoordeeld",
+      "status": "machine-draft"
+    },
+    "pillarsMoved": {
+      "value": "Zero Trust-pijlers die zijn verschoven:",
+      "status": "machine-draft"
+    },
+    "newlyFailing": {
+      "value": "Nieuw mislukt",
+      "status": "machine-draft"
+    },
+    "lostVisibility": {
+      "value": "Zichtbaarheid verloren (eerder beoordeeld, nu Niet beoordeeld)",
+      "status": "machine-draft"
+    },
+    "stillNotAssessed": {
+      "value": "Nog steeds niet beoordeeld (donker in deze uitvoering en de vorige)",
+      "status": "machine-draft"
+    },
+    "newlyPassing": {
+      "value": "Nieuw geslaagd (herstel bevestigd)",
+      "status": "machine-draft"
+    },
+    "regressed": {
+      "value": "Teruggevallen naar waarschuwing",
+      "status": "machine-draft"
+    },
+    "improved": {
+      "value": "Verbeterd naar waarschuwing (nog niet geslaagd)",
+      "status": "machine-draft"
+    },
+    "restoredVisibility": {
+      "value": "Zichtbaarheid hersteld",
+      "status": "machine-draft"
+    },
+    "newChecks": {
+      "value": "Nieuwe controles in deze uitvoering (geen overgang)",
+      "status": "machine-draft"
+    },
+    "retiredChecks": {
+      "value": "Uitgefaseerde controles (eerder aanwezig, nu afwezig; geen overgang)",
+      "status": "machine-draft"
+    },
+    "noChange": {
+      "value": "Geen enkel oordeel is veranderd sinds de vorige uitvoering. {0} controles zijn ongewijzigd.{1}",
+      "status": "machine-draft"
+    },
+    "unchanged": {
+      "value": "{0} controles ongewijzigd.{1}",
+      "status": "machine-draft"
+    }
+  },
+  "filter": {
+    "status": {
+      "value": "Status",
+      "status": "machine-draft"
+    },
+    "severity": {
+      "value": "Ernst",
+      "status": "machine-draft"
+    },
+    "all": {
+      "value": "Alle",
+      "status": "machine-draft"
+    },
+    "searchPlaceholder": {
+      "value": "Bevindingen zoeken (id, naam, waarde)...",
+      "status": "machine-draft"
+    },
+    "empty": {
+      "value": "Geen bevindingen komen overeen met het huidige filter.",
+      "status": "machine-draft"
+    },
+    "platform": {
+      "value": "Platform",
+      "status": "machine-draft"
+    },
+    "showingAll": {
+      "value": "Alle bevindingen worden getoond",
+      "status": "machine-draft"
+    }
+  },
+  "ad": {
+    "title": {
+      "value": "Active Directory-rapport",
+      "status": "machine-draft"
+    },
+    "topbar": {
+      "value": "Active Directory-beoordeling",
+      "status": "machine-draft"
+    },
+    "htmlTitle": {
+      "value": "Guerrilla Active Directory-rapport",
+      "status": "machine-draft"
+    },
+    "postureDesc": {
+      "value": "Active Directory-beveiligingsscore (0-100)",
+      "status": "machine-draft"
+    },
+    "footer": {
+      "value": "Active Directory-audit",
+      "status": "machine-draft"
+    },
+    "verdict90": {
+      "value": "De Active Directory-omgeving vertoont een sterke beveiligingshouding met minimale bevindingen.",
+      "status": "machine-draft"
+    },
+    "verdict75": {
+      "value": "De AD-omgeving heeft een goede beveiligingshouding, met enkele punten die aandacht vereisen.",
+      "status": "machine-draft"
+    },
+    "verdict60": {
+      "value": "De AD-omgeving heeft een redelijke beveiligingshouding. Diverse belangrijke bevindingen vereisen herstel.",
+      "status": "machine-draft"
+    },
+    "verdict40": {
+      "value": "De AD-omgeving heeft een zwakke beveiligingshouding. Meerdere kritieke en ernstige bevindingen vereisen onmiddellijke aandacht.",
+      "status": "machine-draft"
+    },
+    "verdict0": {
+      "value": "De AD-omgeving heeft kritieke beveiligingstekortkomingen. Onmiddellijk herstel is vereist om compromittering te voorkomen.",
+      "status": "machine-draft"
+    },
+    "sevSummary": {
+      "value": "Kritiek: <strong>{0}</strong> &middot; Hoog: <strong>{1}</strong> &middot;\n     Middel: <strong>{2}</strong> &middot; Laag: <strong>{3}</strong>",
+      "status": "machine-draft"
+    },
+    "bloodhoundHeading": {
+      "value": "BloodHound-export",
+      "status": "machine-draft"
+    },
+    "bloodhoundExport": {
+      "value": "Een OpenGraph-export van de verzamelde AD-aanvalsgrafiek is weggeschreven naar <code>{0}</code>.",
+      "status": "machine-draft"
+    },
+    "bloodhoundImport": {
+      "value": "Importeer in BloodHound CE: <strong>Administration &rarr; File Ingest</strong> &rarr; upload het bestand en voer vervolgens de ingebouwde padzoekqueries uit. Nodes zijn SID-gekoppeld (ze overlappen native SharpHound-gegevens) en edges gebruiken native BloodHound-typen.",
+      "status": "machine-draft"
+    },
+    "findingsByPriority": {
+      "value": "Bevindingen op prioriteit",
+      "status": "machine-draft"
+    }
+  },
+  "entra": {
+    "title": {
+      "value": "Entra ID / M365-rapport",
+      "status": "machine-draft"
+    },
+    "topbar": {
+      "value": "Entra ID / M365-beoordeling",
+      "status": "machine-draft"
+    },
+    "htmlTitle": {
+      "value": "Guerrilla Entra ID / M365-rapport",
+      "status": "machine-draft"
+    },
+    "postureDesc": {
+      "value": "Entra ID / Azure / M365-beveiligingsscore (0-100)",
+      "status": "machine-draft"
+    },
+    "footer": {
+      "value": "Entra ID / M365-audit",
+      "status": "machine-draft"
+    },
+    "zeroTrust": {
+      "value": "Zero Trust-houding",
+      "status": "machine-draft"
+    },
+    "openInPortal": {
+      "value": "Openen in beheerportaal",
+      "status": "machine-draft"
+    }
+  },
+  "gws": {
+    "title": {
+      "value": "Google Workspace-rapport",
+      "status": "machine-draft"
+    },
+    "topbar": {
+      "value": "Google Workspace-beoordeling",
+      "status": "machine-draft"
+    },
+    "htmlTitle": {
+      "value": "Guerrilla Google Workspace-rapport",
+      "status": "machine-draft"
+    },
+    "postureDesc": {
+      "value": "Google Workspace-beveiligingsscore (0-100)",
+      "status": "machine-draft"
+    },
+    "footer": {
+      "value": "Google Workspace-audit",
+      "status": "machine-draft"
+    },
+    "configChecksEvaluated": {
+      "value": "{0} configuratiecontroles geëvalueerd",
+      "status": "machine-draft"
+    },
+    "verdictCrit": {
+      "value": "Onmiddellijke actie vereist. {0} configuratiefout(en) van kritieke ernst gedetecteerd die de tenant blootstellen aan aanzienlijk risico.",
+      "status": "machine-draft"
+    },
+    "verdictHigh": {
+      "value": "Herstel aanbevolen. {0} bevinding(en) van hoge ernst geïdentificeerd die spoedig moeten worden aangepakt.",
+      "status": "machine-draft"
+    },
+    "verdictMed": {
+      "value": "Bewaken en verbeteren. {0} bevinding(en) van gemiddelde ernst verdienen beoordeling en versterking.",
+      "status": "machine-draft"
+    },
+    "verdictLow": {
+      "value": "Kleine tekortkomingen gedetecteerd. {0} bevinding(en) van lage ernst aanwezig. De algehele houding is degelijk.",
+      "status": "machine-draft"
+    },
+    "verdictPass": {
+      "value": "Alle controles geslaagd. De tenantconfiguratie voldoet aan de basisbeveiligingsverwachtingen.",
+      "status": "machine-draft"
+    },
+    "assessmentLabel": {
+      "value": "Beoordeling:",
+      "status": "machine-draft"
+    },
+    "scopeLabel": {
+      "value": "Scope:",
+      "status": "machine-draft"
+    },
+    "resultsLabel": {
+      "value": "Resultaten:",
+      "status": "machine-draft"
+    },
+    "scope": {
+      "value": "{0} configuratiecontroles verdeeld over {1} categorieën.",
+      "status": "machine-draft"
+    },
+    "results": {
+      "value": "{0} geslaagd, {1} mislukt, {2} waarschuwingen, {3} overgeslagen.",
+      "status": "machine-draft"
+    },
+    "criticalRequire": {
+      "value": "{0} kritieke bevinding(en) vereisen onmiddellijk herstel.",
+      "status": "machine-draft"
+    },
+    "priorityCritHigh": {
+      "value": "Prioritaire bevindingen &middot; Kritiek &amp; Hoog",
+      "status": "machine-draft"
+    },
+    "fixInConsole": {
+      "value": "Herstellen in beheerconsole",
+      "status": "machine-draft"
+    },
+    "whyUnsafe": {
+      "value": "Waarom dit onveilig is",
+      "status": "machine-draft"
+    },
+    "whyUnsafeDefault": {
+      "value": "Waarom dit onveilig is",
+      "status": "machine-draft"
+    },
+    "whyUnsafeArticle": {
+      "value": "Waarom dit onveilig is: {0}",
+      "status": "machine-draft"
+    }
+  },
+  "campaign": {
+    "title": {
+      "value": "Campagnerapport",
+      "status": "machine-draft"
+    },
+    "topbar": {
+      "value": "Geïntegreerde campagnebeoordeling",
+      "status": "machine-draft"
+    },
+    "htmlTitle": {
+      "value": "Guerrilla Campagnerapport",
+      "status": "machine-draft"
+    },
+    "footer": {
+      "value": "Geïntegreerde campagne-audit",
+      "status": "machine-draft"
+    },
+    "subtitleLead": {
+      "value": "Geïntegreerde beoordeling van de beveiligingshouding",
+      "status": "machine-draft"
+    },
+    "subtitleChecks": {
+      "value": "{0} controles over {1} platforms ({2})",
+      "status": "machine-draft"
+    },
+    "scanId": {
+      "value": "Scan-ID",
+      "status": "machine-draft"
+    },
+    "duration": {
+      "value": "Duur",
+      "status": "machine-draft"
+    },
+    "scoreDesc": {
+      "value": "Campagnescore (0-100) &middot; gewogen beoordeling van {0} controles over {1} platforms",
+      "status": "machine-draft"
+    },
+    "platformSummary": {
+      "value": "Platformsamenvatting",
+      "status": "machine-draft"
+    },
+    "categoryScoresByPlatform": {
+      "value": "Categoriescores per platform",
+      "status": "machine-draft"
+    },
+    "checksWord": {
+      "value": "controles",
+      "status": "machine-draft"
+    },
+    "categoriesWord": {
+      "value": "categorieën",
+      "status": "machine-draft"
+    },
+    "unknown": {
+      "value": "Onbekend",
+      "status": "machine-draft"
+    },
+    "descriptionLabel": {
+      "value": "Beschrijving",
+      "status": "machine-draft"
+    },
+    "affectedEntities": {
+      "value": "Betrokken entiteiten",
+      "status": "machine-draft"
+    },
+    "currentValueLabel": {
+      "value": "Huidige waarde",
+      "status": "machine-draft"
+    },
+    "recommendedValueLabel": {
+      "value": "Aanbevolen waarde",
+      "status": "machine-draft"
+    },
+    "remediationStepsLabel": {
+      "value": "Herstelstappen",
+      "status": "machine-draft"
+    },
+    "remediationUrlLabel": {
+      "value": "Herstel-URL",
+      "status": "machine-draft"
+    },
+    "complianceMappingsLabel": {
+      "value": "Compliancetoewijzingen",
+      "status": "machine-draft"
+    },
+    "showingAllFindings": {
+      "value": "Alle {0} bevindingen worden getoond",
+      "status": "machine-draft"
+    },
+    "showingSome": {
+      "value": "{0} van {1} bevindingen worden getoond",
+      "status": "machine-draft"
+    }
+  },
+  "technical": {
+    "title": {
+      "value": "Technisch beveiligingsbeoordelingsrapport",
+      "status": "machine-draft"
+    },
+    "topbar": {
+      "value": "Technisch rapport",
+      "status": "machine-draft"
+    },
+    "htmlTitle": {
+      "value": "Technisch beveiligingsrapport",
+      "status": "machine-draft"
+    },
+    "footer": {
+      "value": "Technisch rapport",
+      "status": "machine-draft"
+    },
+    "thTotal": {
+      "value": "Totaal",
+      "status": "machine-draft"
+    },
+    "detailedFindings": {
+      "value": "Gedetailleerde bevindingen ({0})",
+      "status": "machine-draft"
+    },
+    "descriptionLabel": {
+      "value": "Beschrijving",
+      "status": "machine-draft"
+    },
+    "recommendedLabel": {
+      "value": "Aanbevolen",
+      "status": "machine-draft"
+    },
+    "remediationStepsLabel": {
+      "value": "Herstelstappen",
+      "status": "machine-draft"
+    },
+    "referenceLabel": {
+      "value": "Referentie",
+      "status": "machine-draft"
+    },
+    "riskAcceptanceLabel": {
+      "value": "Risicoacceptatie",
+      "status": "machine-draft"
+    },
+    "acceptedBy": {
+      "value": "Geaccepteerd door {0} &middot; {1}",
+      "status": "machine-draft"
+    },
+    "complianceLabel": {
+      "value": "Compliance",
+      "status": "machine-draft"
+    },
+    "noFindings": {
+      "value": "Geen auditbevindingen beschikbaar. Voer eerst een scan uit.",
+      "status": "machine-draft"
+    }
+  },
+  "exec": {
+    "title": {
+      "value": "Beveiligingssamenvatting voor het management",
+      "status": "machine-draft"
+    },
+    "topbar": {
+      "value": "Managementsamenvatting",
+      "status": "machine-draft"
+    },
+    "htmlTitle": {
+      "value": "Guerrilla Managementsamenvatting",
+      "status": "machine-draft"
+    },
+    "footer": {
+      "value": "Managementsamenvatting",
+      "status": "machine-draft"
+    },
+    "profileSuffix": {
+      "value": "Profiel",
+      "status": "machine-draft"
+    },
+    "securityPosture": {
+      "value": "Beveiligingshouding: {0}",
+      "status": "machine-draft"
+    },
+    "verdictNoScore": {
+      "value": "Er kon geen score worden berekend uit de beschikbare bevindingen. Voer een scan uit om een basislijn vast te stellen.",
+      "status": "machine-draft"
+    },
+    "verdict75": {
+      "value": "Uw organisatie heeft een sterke beveiligingsbasis. Blijf monitoren en pak de resterende tekortkomingen aan.",
+      "status": "machine-draft"
+    },
+    "verdict50": {
+      "value": "Uw beveiligingshouding kan worden verbeterd. Prioritaire actie op kritieke bevindingen wordt aanbevolen.",
+      "status": "machine-draft"
+    },
+    "verdict0": {
+      "value": "Onmiddellijke aandacht vereist. Kritieke beveiligingstekortkomingen stellen uw organisatie bloot aan verhoogd risico.",
+      "status": "machine-draft"
+    },
+    "passRate": {
+      "value": "Slagingspercentage",
+      "status": "machine-draft"
+    },
+    "criticalIssues": {
+      "value": "Kritieke problemen",
+      "status": "machine-draft"
+    },
+    "highIssues": {
+      "value": "Hoge problemen",
+      "status": "machine-draft"
+    },
+    "maturityStat": {
+      "value": "Volwassenheid ({0})",
+      "status": "machine-draft"
+    },
+    "maturityHeading": {
+      "value": "Beveiligingsvolwassenheid",
+      "status": "machine-draft"
+    },
+    "maturityOverall": {
+      "value": "Algehele volwassenheid: <strong style=\"color:{0}\">Niveau {1} van 5: {2}</strong>. De laagste niet-vervulde control bepaalt de beoordeling, zodat één enkele kritieke blootstelling de score begrenst totdat deze is opgelost (CMMI-achtige schaal: 1 Initieel tot 5 Geoptimaliseerd).",
+      "status": "machine-draft"
+    },
+    "maturityToReach": {
+      "value": "Om <strong>Niveau {0}</strong> te bereiken, pak aan:",
+      "status": "machine-draft"
+    },
+    "thCategory": {
+      "value": "Categorie",
+      "status": "machine-draft"
+    },
+    "thLevel": {
+      "value": "Niveau",
+      "status": "machine-draft"
+    },
+    "thMaturity": {
+      "value": "Volwassenheid",
+      "status": "machine-draft"
+    },
+    "matLevelCell": {
+      "value": "Niveau {0}",
+      "status": "machine-draft"
+    },
+    "keyFindings": {
+      "value": "Belangrijkste bevindingen die aandacht vereisen",
+      "status": "machine-draft"
+    },
+    "complianceImpact": {
+      "value": "Impact op compliance",
+      "status": "machine-draft"
+    },
+    "complianceIntro": {
+      "value": "De volgende compliancekaders hebben tekortkomingen vastgesteld:",
+      "status": "machine-draft"
+    },
+    "gaps": {
+      "value": "{0} tekortkoming(en)",
+      "status": "machine-draft"
+    },
+    "quickWins": {
+      "value": "Aanbevolen snelle winst (kosteloos)",
+      "status": "machine-draft"
+    },
+    "quickWinsIntro": {
+      "value": "Deze acties kunnen kosteloos worden uitgevoerd met bestaande tools:",
+      "status": "machine-draft"
+    },
+    "quickWinItem": {
+      "value": "({0}, ~{1} u inspanning)",
+      "status": "machine-draft"
+    },
+    "nextSteps": {
+      "value": "Vervolgstappen",
+      "status": "machine-draft"
+    },
+    "nextStep1": {
+      "value": "Pak kritieke bevindingen onmiddellijk aan &middot; deze vormen het hoogste risico voor uw organisatie.",
+      "status": "machine-draft"
+    },
+    "nextStep2": {
+      "value": "Implementeer de bovenstaande snelle winsten om uw beveiligingsscore met minimale inspanning te verbeteren.",
+      "status": "machine-draft"
+    },
+    "nextStep3": {
+      "value": "Raadpleeg het gedetailleerde technische rapport voor volledige herstelrichtlijnen.",
+      "status": "machine-draft"
+    },
+    "nextStep4": {
+      "value": "Plan een vervolgscan over 30 dagen om de verbetering te meten.",
+      "status": "machine-draft"
+    },
+    "disclaimer": {
+      "value": "Dit rapport biedt een momentopname van de beveiliging voor interne planningsdoeleinden. Bevindingen moeten worden gevalideerd en hersteld volgens de risicotolerantie van de organisatie.",
+      "status": "machine-draft"
+    }
+  },
+  "playbook": {
+    "title": {
+      "value": "Herstelplaybook",
+      "status": "machine-draft"
+    },
+    "topbar": {
+      "value": "Herstelplaybook",
+      "status": "machine-draft"
+    },
+    "htmlTitle": {
+      "value": "Guerrilla Herstelplaybook",
+      "status": "machine-draft"
+    },
+    "footer": {
+      "value": "Herstelplaybook",
+      "status": "machine-draft"
+    },
+    "subtitle": {
+      "value": "{0} uitvoerbaar(e) item(s) &middot; Maximale kosten: {1}",
+      "status": "machine-draft"
+    },
+    "phase1": {
+      "value": "Fase 1: Kritieke herstelacties",
+      "status": "machine-draft"
+    },
+    "phase2": {
+      "value": "Fase 2: Hoge prioriteit",
+      "status": "machine-draft"
+    },
+    "phase3": {
+      "value": "Fase 3: Gemiddelde prioriteit",
+      "status": "machine-draft"
+    },
+    "phase4": {
+      "value": "Fase 4: Lage prioriteit",
+      "status": "machine-draft"
+    },
+    "phaseItems": {
+      "value": "{0} ({1} items)",
+      "status": "machine-draft"
+    },
+    "idLabel": {
+      "value": "ID:",
+      "status": "machine-draft"
+    },
+    "costLabel": {
+      "value": "Kosten:",
+      "status": "machine-draft"
+    },
+    "effortLabel": {
+      "value": "Inspanning:",
+      "status": "machine-draft"
+    },
+    "categoryLabel": {
+      "value": "Categorie:",
+      "status": "machine-draft"
+    },
+    "stepsLabel": {
+      "value": "Stappen:",
+      "status": "machine-draft"
+    },
+    "targetLabel": {
+      "value": "Doel:",
+      "status": "machine-draft"
+    },
+    "noteLabel": {
+      "value": "Opmerking:",
+      "status": "machine-draft"
+    },
+    "disclaimer": {
+      "value": "Beoordeel elke herstelstap voordat u deze implementeert. Test wijzigingen eerst in een niet-productieomgeving.",
+      "status": "machine-draft"
+    }
+  },
+  "budget": {
+    "title": {
+      "value": "Onderbouwing van het beveiligingsbudget",
+      "status": "machine-draft"
+    },
+    "topbar": {
+      "value": "Budgetonderbouwing",
+      "status": "machine-draft"
+    },
+    "htmlTitle": {
+      "value": "Guerrilla Budgetonderbouwing",
+      "status": "machine-draft"
+    },
+    "footer": {
+      "value": "Budgetonderbouwing",
+      "status": "machine-draft"
+    },
+    "profileLabel": {
+      "value": "Profiel",
+      "status": "machine-draft"
+    },
+    "executiveSummary": {
+      "value": "Managementsamenvatting",
+      "status": "machine-draft"
+    },
+    "guerrillaScore": {
+      "value": "Guerrilla-score",
+      "status": "machine-draft"
+    },
+    "criticalFailures": {
+      "value": "Kritieke fouten",
+      "status": "machine-draft"
+    },
+    "highFailures": {
+      "value": "Hoge fouten",
+      "status": "machine-draft"
+    },
+    "totalChecksBreakdown": {
+      "value": "Totaal aantal controles ({0} geslaagd / {1} mislukt / {2} waarsch.)",
+      "status": "machine-draft"
+    },
+    "complianceImpact": {
+      "value": "Impact op compliance",
+      "status": "machine-draft"
+    },
+    "complianceIntro": {
+      "value": "De volgende compliancekaders vertonen tekortkomingen op basis van de huidige auditbevindingen:",
+      "status": "machine-draft"
+    },
+    "thFramework": {
+      "value": "Kader",
+      "status": "machine-draft"
+    },
+    "thGapsFound": {
+      "value": "Gevonden tekortkomingen",
+      "status": "machine-draft"
+    },
+    "gaps": {
+      "value": "{0} tekortkoming(en)",
+      "status": "machine-draft"
+    },
+    "investmentPhases": {
+      "value": "Aanbevolen investeringsfasen",
+      "status": "machine-draft"
+    },
+    "phase1Title": {
+      "value": "Fase 1: Snelle winst (kosteloos)",
+      "status": "machine-draft"
+    },
+    "phase1Desc": {
+      "value": "Configuratiewijzigingen met bestaande tools &middot; hoogste rendement, onmiddellijke beveiligingsverbetering.",
+      "status": "machine-draft"
+    },
+    "phase2Title": {
+      "value": "Fase 2: Verbeteringen tegen lage kosten",
+      "status": "machine-draft"
+    },
+    "phase2Desc": {
+      "value": "Kleine aankopen of licentie-uitbreidingen binnen het bestaande budget.",
+      "status": "machine-draft"
+    },
+    "phase3Title": {
+      "value": "Fase 3: Gematigde investering",
+      "status": "machine-draft"
+    },
+    "phase3Desc": {
+      "value": "Licentie-upgrades of aanvullende producten voor verbeterde beveiligingsmogelijkheden.",
+      "status": "machine-draft"
+    },
+    "phase4Title": {
+      "value": "Fase 4: Strategische investering",
+      "status": "machine-draft"
+    },
+    "phase4Desc": {
+      "value": "Grote aankopen of infrastructuurwijzigingen voor verbetering van de beveiligingshouding op lange termijn.",
+      "status": "machine-draft"
+    },
+    "phase4Body": {
+      "value": "<strong>{0} item(s)</strong> geïdentificeerd die een aanzienlijke investering vereisen. Neem contact op met uw beveiligingsadviseur voor een gedetailleerde scoping.",
+      "status": "machine-draft"
+    },
+    "thCheck": {
+      "value": "Controle",
+      "status": "machine-draft"
+    },
+    "thFinding": {
+      "value": "Bevinding",
+      "status": "machine-draft"
+    },
+    "thSeverity": {
+      "value": "Ernst",
+      "status": "machine-draft"
+    },
+    "thEffort": {
+      "value": "Inspanning",
+      "status": "machine-draft"
+    },
+    "thTime": {
+      "value": "Tijd",
+      "status": "machine-draft"
+    },
+    "actions": {
+      "value": "{0} actie(s)",
+      "status": "machine-draft"
+    },
+    "estimatedEffort": {
+      "value": "Geschatte totale inspanning: {0} uur",
+      "status": "machine-draft"
+    },
+    "noFree": {
+      "value": "Geen kosteloze herstelacties geïdentificeerd.",
+      "status": "machine-draft"
+    },
+    "noLow": {
+      "value": "Geen herstelacties tegen lage kosten geïdentificeerd.",
+      "status": "machine-draft"
+    },
+    "noMed": {
+      "value": "Geen herstelacties tegen gemiddelde kosten geïdentificeerd.",
+      "status": "machine-draft"
+    },
+    "disclaimer": {
+      "value": "Dit rapport is bedoeld voor interne planningsdoeleinden.",
+      "status": "machine-draft"
+    }
+  },
+  "dashboard": {
+    "title": {
+      "value": "Beveiligingsdashboard",
+      "status": "machine-draft"
+    },
+    "topbar": {
+      "value": "Dashboard",
+      "status": "machine-draft"
+    },
+    "htmlTitle": {
+      "value": "Beveiligingsdashboard",
+      "status": "machine-draft"
+    },
+    "footer": {
+      "value": "Geïntegreerd dashboard",
+      "status": "machine-draft"
+    },
+    "scoreDesc": {
+      "value": "Guerrilla-score (0-100)",
+      "status": "machine-draft"
+    },
+    "checksSummary": {
+      "value": "{0} controles geëvalueerd &middot; {1} geslaagd, {2} mislukt, {3} waarschuwingen",
+      "status": "machine-draft"
+    },
+    "scoreComponents": {
+      "value": "Scorecomponenten",
+      "status": "machine-draft"
+    },
+    "passRate": {
+      "value": "Slagingspercentage",
+      "status": "machine-draft"
+    },
+    "failures": {
+      "value": "Fouten",
+      "status": "machine-draft"
+    },
+    "platformOverview": {
+      "value": "Platformoverzicht",
+      "status": "machine-draft"
+    },
+    "checks": {
+      "value": "Controles: {0}",
+      "status": "machine-draft"
+    },
+    "failuresLabel": {
+      "value": "Fouten: {0}",
+      "status": "machine-draft"
+    },
+    "notScanned": {
+      "value": "Niet gescand",
+      "status": "machine-draft"
+    },
+    "topFindings": {
+      "value": "Belangrijkste bevindingen",
+      "status": "machine-draft"
+    },
+    "showingTop50": {
+      "value": "De 50 belangrijkste bevindingen worden getoond. Raadpleeg de gedetailleerde rapporten voor de volledige lijst.",
+      "status": "machine-draft"
+    },
+    "posture": {
+      "value": "Houding",
+      "status": "machine-draft"
+    },
+    "threats": {
+      "value": "Bedreigingen",
+      "status": "machine-draft"
+    },
+    "coverage": {
+      "value": "Dekking",
+      "status": "machine-draft"
+    },
+    "trend": {
+      "value": "Trend",
+      "status": "machine-draft"
+    }
+  },
+  "trend": {
+    "title": {
+      "value": "Beveiligingstrendrapport",
+      "status": "machine-draft"
+    },
+    "topbar": {
+      "value": "Scoretrend",
+      "status": "machine-draft"
+    },
+    "htmlTitle": {
+      "value": "Beveiligingstrendrapport",
+      "status": "machine-draft"
+    },
+    "footer": {
+      "value": "Scoretrend",
+      "status": "machine-draft"
+    },
+    "scansCount": {
+      "value": "{0} scan(s)",
+      "status": "machine-draft"
+    },
+    "currentScore": {
+      "value": "Huidige score",
+      "status": "machine-draft"
+    },
+    "averageScore": {
+      "value": "Gemiddelde score",
+      "status": "machine-draft"
+    },
+    "trendLabel": {
+      "value": "Trend ({0})",
+      "status": "machine-draft"
+    },
+    "improving": {
+      "value": "Verbeterend",
+      "status": "machine-draft"
+    },
+    "declining": {
+      "value": "Dalend",
+      "status": "machine-draft"
+    },
+    "stable": {
+      "value": "Stabiel",
+      "status": "machine-draft"
+    },
+    "highestLowest": {
+      "value": "Hoogste / Laagste",
+      "status": "machine-draft"
+    },
+    "scoreHistory": {
+      "value": "Scoregeschiedenis",
+      "status": "machine-draft"
+    },
+    "scanLog": {
+      "value": "Scanlogboek",
+      "status": "machine-draft"
+    },
+    "defaultProfile": {
+      "value": "Standaard",
+      "status": "machine-draft"
+    }
+  },
+  "category": {
+    "adacldelegation": {
+      "value": "AD ACL & delegatie",
+      "status": "machine-draft"
+    },
+    "adadversarytradecraftindicators": {
+      "value": "AD-indicatoren van tegenstandertechnieken",
+      "status": "machine-draft"
+    },
+    "adcertificateservices": {
+      "value": "AD Certificate Services",
+      "status": "machine-draft"
+    },
+    "addomainforestconfiguration": {
+      "value": "AD-domein- & forestconfiguratie",
+      "status": "machine-draft"
+    },
+    "adgrouppolicy": {
+      "value": "AD-groepsbeleid",
+      "status": "machine-draft"
+    },
+    "adkerberossecurity": {
+      "value": "AD Kerberos-beveiliging",
+      "status": "machine-draft"
+    },
+    "adloggingedrposture": {
+      "value": "AD-logging & EDR-houding",
+      "status": "machine-draft"
+    },
+    "adlogonscriptsnetworkshares": {
+      "value": "AD-aanmeldscripts & netwerkshares",
+      "status": "machine-draft"
+    },
+    "adnetworkrelaypreconditions": {
+      "value": "AD-netwerk- & relayvoorwaarden",
+      "status": "machine-draft"
+    },
+    "adpasswordlockoutpolicies": {
+      "value": "AD-wachtwoord- & vergrendelingsbeleid",
+      "status": "machine-draft"
+    },
+    "adprivilegedaccountsecurity": {
+      "value": "AD-beveiliging van geprivilegieerde accounts",
+      "status": "machine-draft"
+    },
+    "adstaleobsoleteobjects": {
+      "value": "AD-verouderde & obsolete objecten",
+      "status": "machine-draft"
+    },
+    "adtrustrelationships": {
+      "value": "AD-vertrouwensrelaties",
+      "status": "machine-draft"
+    },
+    "adminusermanagement": {
+      "value": "Beheer van admins & gebruikers",
+      "status": "machine-draft"
+    },
+    "adversarytradecraft": {
+      "value": "Tegenstandertechnieken",
+      "status": "machine-draft"
+    },
+    "attackpaths": {
+      "value": "Aanvalspaden",
+      "status": "machine-draft"
+    },
+    "authenticationaccesscontrols": {
+      "value": "Authenticatie & toegangscontroles",
+      "status": "machine-draft"
+    },
+    "azureiamresourcesecurity": {
+      "value": "Azure IAM & resourcebeveiliging",
+      "status": "machine-draft"
+    },
+    "collaborationcommunicationsecurity": {
+      "value": "Beveiliging van samenwerking & communicatie",
+      "status": "machine-draft"
+    },
+    "copilotstudioaiagentgovernance": {
+      "value": "Governance van Copilot Studio AI-agents",
+      "status": "machine-draft"
+    },
+    "defenderforoffice365": {
+      "value": "Defender voor Office 365",
+      "status": "machine-draft"
+    },
+    "deviceendpointmanagement": {
+      "value": "Beheer van apparaten & endpoints",
+      "status": "machine-draft"
+    },
+    "drivesecuritydataprotection": {
+      "value": "Drive-beveiliging & gegevensbescherming",
+      "status": "machine-draft"
+    },
+    "eidscabaseline": {
+      "value": "EIDSCA-basislijn",
+      "status": "machine-draft"
+    },
+    "emailsecurity": {
+      "value": "E-mailbeveiliging",
+      "status": "machine-draft"
+    },
+    "entraidapplicationserviceprincipalsecurity": {
+      "value": "Entra ID-beveiliging van applicaties & service principals",
+      "status": "machine-draft"
+    },
+    "entraidauthenticationmethodsmfa": {
+      "value": "Entra ID-authenticatiemethoden & MFA",
+      "status": "machine-draft"
+    },
+    "entraidconditionalaccess": {
+      "value": "Entra ID Conditional Access",
+      "status": "machine-draft"
+    },
+    "entraidfederationhybrididentity": {
+      "value": "Entra ID-federatie & hybride identiteit",
+      "status": "machine-draft"
+    },
+    "entraidgovernance": {
+      "value": "Entra ID-governance",
+      "status": "machine-draft"
+    },
+    "entraidprivilegedidentitymanagement": {
+      "value": "Entra ID Privileged Identity Management",
+      "status": "machine-draft"
+    },
+    "entraidtenantconfiguration": {
+      "value": "Entra ID-tenantconfiguratie",
+      "status": "machine-draft"
+    },
+    "exchangeonlinesecurity": {
+      "value": "Exchange Online-beveiliging",
+      "status": "machine-draft"
+    },
+    "intuneendpointmanagement": {
+      "value": "Intune / endpointbeheer",
+      "status": "machine-draft"
+    },
+    "k12baseline": {
+      "value": "K12-basislijn",
+      "status": "machine-draft"
+    },
+    "loggingalertingmonitoring": {
+      "value": "Logging, alerting & monitoring",
+      "status": "machine-draft"
+    },
+    "microsoftteamssecurity": {
+      "value": "Microsoft Teams-beveiliging",
+      "status": "machine-draft"
+    },
+    "oauthapisecurity": {
+      "value": "OAuth- & API-beveiliging",
+      "status": "machine-draft"
+    },
+    "powerplatformsecurity": {
+      "value": "Power Platform-beveiliging",
+      "status": "machine-draft"
+    },
+    "sharepointonedrivesecurity": {
+      "value": "SharePoint- & OneDrive-beveiliging",
+      "status": "machine-draft"
+    },
+    "tier0hygienehybrididentitysurface": {
+      "value": "Tier-0-hygiëne & hybride identiteitsoppervlak",
+      "status": "machine-draft"
+    },
+    "unifiedauditlogging": {
+      "value": "Geïntegreerde audit & logging",
+      "status": "machine-draft"
+    },
+    "workspaceservicesecuritysitesclassroomgemini": {
+      "value": "Beveiliging van Workspace-services (Sites / Classroom / Gemini)",
+      "status": "machine-draft"
+    }
+  }
+}
