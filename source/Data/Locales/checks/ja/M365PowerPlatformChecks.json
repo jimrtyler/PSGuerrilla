@@ -1,0 +1,21 @@
+{
+  "_family": "M365PowerPlatformChecks.json",
+  "M365PP-001": {
+    "name": { "value": "環境作成の制限", "status": "machine-draft" },
+    "description": { "value": "既定では、Microsoft 365 テナント内のすべてのユーザーが新しい Power Platform 環境を作成でき、これに伴い関連する Dataverse データベースが起動し、組織データにアクセスする Power Apps や Power Automate のフローをホストできます。環境作成を制限しないと、IT のセキュリティ制御を回避するデータ接続を持つ、統制されていないアプリケーションが構築され、シャドー IT が蔓延します。環境作成を管理者に限定することで、適切なガバナンスが確保され、制御されないデータ漏洩を防止できます", "status": "machine-draft" },
+    "recommendedValue": { "value": "環境作成をグローバル管理者および Power Platform 管理者のみに限定する。すべての運用環境を正式なプロビジョニングプロセスを通じて管理する", "status": "machine-draft" },
+    "remediationSteps": { "value": "Power Platform 管理センターに移動し、テナントレベルの設定を構成して環境作成をグローバル管理者および Power Platform 管理者のみに制限します。新しい環境については、作成前にセキュリティレビュー、データ分類、DLP ポリシーの割り当てを含む正式な申請およびプロビジョニングプロセスを導入します。既存の環境を監査し、制限を導入する前に作成された統制されていない環境を特定して廃止します", "status": "machine-draft" }
+  },
+  "M365PP-002": {
+    "name": { "value": "DLP ポリシーの構成", "status": "machine-draft" },
+    "description": { "value": "Power Platform のデータ損失防止 (DLP) ポリシーは、Power Apps および Power Automate のフロー内でどのコネクタを組み合わせて使用できるかを制御し、業務用と業務外のデータソース間での不正なデータ移動を防止します。DLP ポリシーがないと、ユーザーは SharePoint、Dynamics 365、または Azure SQL の企業データを個人用メール、ソーシャルメディア、またはサードパーティのクラウドストレージへ自動的に転送するフローを作成できてしまいます。DLP のコネクタ分類は、市民開発者が作成したアプリケーションを通じたデータ流出を防止するための主要な仕組みです", "status": "machine-draft" },
+    "recommendedValue": { "value": "業務上重要なコネクタ (SharePoint、Outlook、Dataverse) を業務用として分類し、業務外コネクタとの組み合わせをブロックするテナントレベルの DLP ポリシー。特定のユースケースには環境レベルのポリシーを適用する", "status": "machine-draft" },
+    "remediationSteps": { "value": "企業データを含むすべてのコネクタ (SharePoint、Outlook、Dataverse、Azure SQL、OneDrive など) を業務用グループに分類し、既知の業務外コネクタをブロック済みグループに移動するテナントレベルの DLP ポリシーを作成します。既定のコネクタ分類を確認し、新たにリリースされたコネクタがレビューおよび承認されるまで自動的に業務外グループに配置されるようにします。テナントレベルのポリシーを超えて追加のコネクタへのアクセスが必要な環境については、環境固有の DLP ポリシーを作成し、少なくともテナントポリシーと同等の厳格さを持たせます", "status": "machine-draft" }
+  },
+  "M365PP-003": {
+    "name": { "value": "テナント分離の設定", "status": "machine-draft" },
+    "description": { "value": "Power Platform のテナント分離は、テナント内のコネクタが他の Azure AD テナントへの接続を確立できるかどうか、および他のテナントが自テナントへ接続できるかどうかを制御します。テナント分離がないと、ユーザーは外部組織のデータソースに接続するフローやアプリを作成でき、外部組織は自テナントのリソースにアクセスする自動化を構築できてしまいます。テナント分離を有効にすると、データ漏洩やサプライチェーン侵害につながりかねない不正なクロステナントのデータフローを防止できます", "status": "machine-draft" },
+    "recommendedValue": { "value": "受信および送信の制限を伴うテナント分離を有効にする。承認されたパートナーテナントのみを許可リストの例外とする", "status": "machine-draft" },
+    "remediationSteps": { "value": "Power Platform 管理センターで Power Platform のテナント分離を有効にし、既定で受信および送信の両方のクロステナント接続を制限します。正当な業務シナリオでクロステナント接続を必要とする、特定の信頼されたパートナーテナント ID の許可リストを構成します。許可リストを四半期ごとに確認してクロステナントアクセスが不要になったテナントを削除し、分離ポリシーによってブロックされているクロステナント接続の試行がないか監査ログを監視します", "status": "machine-draft" }
+  }
+}
