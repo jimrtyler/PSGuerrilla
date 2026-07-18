@@ -1,0 +1,147 @@
+{
+  "_family": "ADGroupPolicyChecks.json",
+  "ADGPO-001": {
+    "name": { "value": "링크 상태를 포함한 GPO 인벤토리", "status": "machine-draft" },
+    "description": { "value": "링크 상태, 범위, 강제 상태와 함께 모든 그룹 정책 개체를 포괄적으로 열거하면 GPO 보안 분석의 기반이 제공됩니다. 어떤 GPO가 연결되어 있는지, 강제되는지, 비활성화되어 있는지 이해하는 것은 그룹 정책을 통해 전달되는 유효 보안 태세를 평가하는 데 필수적입니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "각 GPO에 대해 링크 상태, 범위, 소유자와 함께 완전한 GPO 인벤토리가 문서화됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-GPO -All 및 Get-GPOReport를 사용하여 전체 GPO 인벤토리를 생성합니다. 각 GPO의 목적, 소유자, 링크 위치, 강제 상태를 문서화합니다. GPO 명명 규칙을 수립하고 모든 GPO가 이를 준수하도록 합니다. GPO 변경 관리 프로세스를 구현합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-002": {
+    "name": { "value": "빈 GPO", "status": "machine-draft" },
+    "description": { "value": "구성된 설정이 없는(컴퓨터 구성과 사용자 구성 섹션이 모두 비어 있는) GPO는 그룹 정책 처리에 불필요한 복잡성을 더하며, 방치된 구성 작업이나 정리되지 않은 테스트 산출물을 나타낼 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "도메인에 빈 GPO가 없으며, 모든 GPO에 하나 이상의 구성된 설정이 포함됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-GPOReport를 XML 형식으로 사용하고 빈 ExtensionData 요소를 확인하여 구성된 설정이 없는 GPO를 식별합니다. 빈 GPO가 향후 사용을 위한 자리 표시자가 아닌지 확인합니다. 자동화나 문서에서 참조되지 않음을 확인한 후 실제로 빈 GPO를 삭제합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-003": {
+    "name": { "value": "연결되지 않은 GPO", "status": "machine-draft" },
+    "description": { "value": "어떤 사이트, 도메인 또는 OU에도 연결되지 않은 GPO는 적용되지 않으며 사용되지 않는 구성을 나타냅니다. 연결되지 않은 GPO에는 민감한 설정, GPP의 자격 증명 또는 스크립트가 포함될 수 있으며, 공격자가 나중에 이를 대상 OU에 연결하면 악용될 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "적절한 접근 제어와 함께 템플릿 또는 백업으로 문서화된 경우가 아니면 연결되지 않은 GPO가 없습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "모든 GPO GUID를 모든 OU, 사이트, 도메인 루트의 gPLink 특성과 비교하여 연결되지 않은 GPO를 식별합니다. 각 연결되지 않은 GPO를 검토하여 연결, 보관 또는 삭제해야 하는지 결정합니다. 템플릿으로 유지되는 연결되지 않은 GPO에서 민감한 콘텐츠를 제거합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-004": {
+    "name": { "value": "콘텐츠가 있는 비활성화된 GPO", "status": "machine-draft" },
+    "description": { "value": "사용자 구성 또는 컴퓨터 구성 섹션이 비활성화되어 있지만 여전히 구성된 설정을 포함하는 GPO는 불완전한 폐기 또는 의도하지 않은 비활성화를 나타낼 수 있습니다. GPO 편집 권한을 가진 공격자가 다시 활성화하면 잠자고 있던 설정이 적용됩니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "구성된 설정을 포함하는 비활성화된 섹션이 있는 GPO가 없으며, 비활성화된 섹션은 비어 있어야 합니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "GpoStatus가 UserSettingsDisabled 또는 ComputerSettingsDisabled인 모든 GPO를 검토합니다. 비활성화된 섹션에 활성 설정이 포함되지 않았는지 확인합니다. 설정이 필요하면 섹션을 다시 활성화하거나, 비활성화된 섹션에서 설정을 제거합니다. 의도적으로 비활성화된 섹션의 이유를 문서화합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-005": {
+    "name": { "value": "중복된 GPO", "status": "machine-draft" },
+    "description": { "value": "실질적으로 유사하거나 동일한 설정을 가진 여러 GPO는 관리 부담을 만들고, 구성 드리프트의 위험을 높이며, 문제 해결을 복잡하게 합니다. 중복 GPO는 또한 예측할 수 없는 동작을 유발하는 충돌하는 설정을 초래할 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "중복 GPO가 없으며, 각 GPO는 고유한 목적과 겹치지 않는 설정을 가집니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "모든 GPO 보고서를 XML 형식으로 내보내고 GPO 간 설정을 비교하여 중복을 식별합니다. 가능한 경우 중복 GPO를 단일 GPO로 통합합니다. 통합된 GPO를 참조하도록 OU 링크를 업데이트합니다. 중복을 제거하기 전에 스테이징 OU에서 통합된 GPO를 테스트합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-006": {
+    "name": { "value": "끊어진 링크가 있는 GPO", "status": "machine-draft" },
+    "description": { "value": "존재하지 않는 GPO 또는 SYSVOL 데이터가 누락된 GPO를 참조하는 GPO 링크는 복제 문제, 부적절한 삭제 또는 손상을 나타냅니다. 끊어진 링크는 그룹 정책 처리 오류를 유발할 수 있으며 의도된 보안 구성의 부재를 가릴 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "끊어진 GPO 링크가 없으며, 모든 gPLink 참조가 SYSVOL 데이터가 온전한 유효 GPO로 해석됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "모든 OU, 사이트, 도메인 루트의 gPLink 특성을 파싱하여 참조된 GPO GUID를 추출합니다. 각 GUID가 GPC(AD) 및 GPT(SYSVOL) 컨테이너에 존재하는지 확인합니다. Set-GPLink를 사용하거나 gPLink 특성을 직접 편집하여 끊어진 링크를 제거합니다. 누락된 GPO 데이터의 근본 원인을 조사합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-007": {
+    "name": { "value": "GPO 권한 불일치", "status": "machine-draft" },
+    "description": { "value": "각 GPO는 AD 권한(GPC 개체)과 NTFS 권한(SYSVOL GPT 폴더)을 모두 가집니다. 이러한 권한 집합 간의 불일치는 GPO 적용을 막거나, 무단 수정을 허용하거나, SYSVOL 콘텐츠가 AD 개체보다 더 관대한 보안 격차를 만들 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 GPO에 대해 AD GPC 개체와 SYSVOL GPT 폴더 간에 일관된 권한이 유지되며, Authenticated Users가 읽기 접근 권한을 가집니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "AD의 각 GPC 개체의 보안 설명자를 SYSVOL의 해당 GPT 폴더의 NTFS ACL과 비교합니다. 둘 다 Authenticated Users에게 읽기 접근 권한(GPO 적용에 필요)을 부여하는지 확인합니다. SYSVOL 권한을 AD 개체와 일치시켜 불일치를 해결합니다. dcdiag /test:sysvolcheck를 실행하여 문제를 식별합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-008": {
+    "name": { "value": "WMI 필터로 인해 적용되지 않는 GPO", "status": "machine-draft" },
+    "description": { "value": "WMI 필터는 WQL 쿼리를 기반으로 GPO가 대상 시스템에 적용되는 것을 막을 수 있습니다. 지나치게 광범위하거나 잘못 구성된 WMI 필터는 보안에 중요한 GPO가 이를 필요로 하는 시스템에 적용되는 것을 의도치 않게 차단하여 의도된 보안 구성에 격차를 만들 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 보안에 중요한 GPO가 의도된 대상에 적용되며, WMI 필터가 실제 환경 조건에 대해 검증됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-GPO를 사용하고 WMI 필터 할당을 검토하여 보안에 중요한 GPO에 연결된 WMI 필터를 검토합니다. 대표적인 대상 시스템에 대해 WMI 필터 쿼리를 테스트하여 올바르게 평가되는지 확인합니다. 샘플 시스템에서 그룹 정책 결과(gpresult)를 사용하여 GPO가 적용되고 있는지 확인합니다. 의도된 적용을 차단하는 WMI 필터를 교체하거나 수정합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-009": {
+    "name": { "value": "적용 권한이 없는 GPO", "status": "machine-draft" },
+    "description": { "value": "그룹 정책 적용(읽기 + 적용) 권한이 적절한 보안 주체에게 부여되지 않으면, 올바른 OU에 연결되어 있더라도 해당 시스템에서 GPO가 처리되지 않습니다. 이는 일반적으로 특정 그룹을 추가하지 않고 GPO 보안 필터링에서 Authenticated Users를 제거할 때 발생합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 GPO가 적절한 보안 그룹에 그룹 정책 적용 권한을 부여하며, 적용 대상이 없는 GPO가 없습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-GPPermission을 사용하여 각 GPO의 그룹 정책 적용 권한을 확인합니다. 멤버가 있는 하나 이상의 보안 그룹이 적용 권한을 갖는지 확인합니다. 특정 그룹에만 적용되어야 하는 GPO의 경우 대상 그룹에 의도된 멤버가 포함되어 있는지 확인합니다. 보안 필터링을 사용하는 경우 읽기 전용 권한(적용 없음)으로 Authenticated Users를 추가합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-010": {
+    "name": { "value": "SYSVOL/AD GPO 버전 불일치", "status": "machine-draft" },
+    "description": { "value": "각 GPO는 AD GPC 개체(versionNumber 특성)와 SYSVOL GPT 폴더(gpt.ini) 모두에 버전 번호를 유지합니다. 이러한 버전 간의 불일치는 복제 실패, SYSVOL 손상 또는 불완전한 GPO 업데이트를 나타냅니다. 버전 불일치는 클라이언트가 오래되거나 불완전한 정책을 적용하게 할 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 도메인 컨트롤러에서 모든 GPO 버전이 AD GPC 개체와 SYSVOL GPT gpt.ini 파일 간에 일치합니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "모든 도메인 컨트롤러에서 각 GPO에 대해 AD의 versionNumber 특성을 SYSVOL gpt.ini의 Version 값과 비교합니다. 불일치를 유발하는 DFSR 또는 FRS 복제 문제를 조사하고 해결합니다. repadmin /syncall 및 DFSRDIAG를 사용하여 복제를 강제합니다. 지속적인 불일치의 경우 SYSVOL에 대한 권한 있는 복원 프로세스를 사용합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-011": {
+    "name": { "value": "GPO 설정 보안 분석", "status": "machine-draft" },
+    "description": { "value": "GPO 설정은 보호 기능을 비활성화하거나, 인증 요구사항을 완화하거나, 안전하지 않은 기본값을 구성하면 보안 태세를 약화시킬 수 있습니다. 이 검사는 암호 정책, 계정 잠금, 사용자 권한 할당, 보안 옵션, 감사 정책을 포함한 모든 GPO의 주요 보안 관련 설정을 분석합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 GPO 설정이 조직의 보안 기준선과 일치하며, 기본 보안 구성을 약화시키는 GPO가 없습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "모든 GPO 보고서를 내보내고 암호 정책, 계정 잠금, 사용자 권한 할당, 제한된 그룹, 보안 옵션, Windows 방화벽 규칙을 포함한 보안 관련 설정을 분석합니다. 설정을 CIS 벤치마크 또는 조직 기준선과 비교합니다. 기준선보다 약한 설정을 구성하는 GPO를 개선합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-012": {
+    "name": { "value": "cPassword/GPP 암호 탐지", "status": "machine-draft" },
+    "description": { "value": "그룹 정책 기본 설정에 저장된 암호(cPassword)는 Microsoft가 게시한 공개적으로 알려진 AES 키(MS14-025)로 암호화됩니다. 모든 도메인 사용자는 이러한 암호가 포함된 SYSVOL의 XML 파일을 읽고 간단하게 복호화할 수 있습니다. 이는 가장 흔하고 쉽게 악용 가능한 Active Directory 취약점 중 하나입니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "SYSVOL의 모든 GPP XML 파일에 cPassword 값이 없습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "모든 SYSVOL GPO 폴더에서 Groups.xml, Services.xml, Scheduledtasks.xml, DataSources.xml, Printers.xml, Drives.xml의 cpassword 특성이 포함된 XML 파일을 검색합니다. 저장된 암호가 포함된 모든 GPP 항목을 제거합니다. 대신 LAPS, gMSA 또는 기타 최신 자격 증명 관리 솔루션을 사용합니다. 새 cPassword 생성을 방지하기 위해 MS14-025 패치를 적용합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-013": {
+    "name": { "value": "GPO의 스크립트 분석", "status": "machine-draft" },
+    "description": { "value": "GPO 시작, 종료, 로그온, 로그오프 스크립트는 시스템 또는 사용자의 권한으로 실행되며 접근 가능한 SYSVOL 공유에 저장됩니다. GPO에 배치된 악성 스크립트는 도메인 전체에 걸쳐 광범위한 코드 실행을 달성할 수 있습니다. 스크립트는 하드코딩된 자격 증명, 안전하지 않은 명령, 비보안 위치 참조를 포함한 보안 문제에 대해 검토해야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 GPO 스크립트가 검토되고, 가능한 경우 서명되며, 하드코딩된 자격 증명이나 안전하지 않은 작업이 없습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "GPO 보고서의 스크립트 섹션에서 GPO에 구성된 모든 스크립트(시작, 종료, 로그온, 로그오프)를 열거합니다. 하드코딩된 자격 증명, LOLBins 사용, 외부 리소스 참조, 안전하지 않은 작업에 대해 스크립트 콘텐츠를 검토합니다. 지원되는 경우 스크립트 서명을 구현합니다. 스크립트 파일 권한이 승인된 관리자로만 수정을 제한하도록 합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-014": {
+    "name": { "value": "GPO의 MSI 패키지", "status": "machine-draft" },
+    "description": { "value": "소프트웨어 설치 GPO 설정은 대상 컴퓨터에 MSI 패키지를 배포합니다. GPO의 침해되거나 무단인 MSI 패키지는 도메인 전체에 맬웨어를 배포할 수 있습니다. MSI 패키지의 소스 위치와 해당 위치의 접근 제어를 검증해야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 GPO 배포 MSI 패키지가 무결성이 검증된 안전하고 접근이 제어된 위치에서 제공됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "GPO의 모든 소프트웨어 설치 설정을 식별합니다. MSI 소스 경로가 적절한 NTFS 및 공유 권한을 가진 보안 공유를 가리키는지 확인합니다. MSI 패키지가 신뢰할 수 있는 공급업체의 것이며 변조되지 않았는지 확인합니다. MSI 설치를 승인된 패키지로 제한하기 위해 WDAC 또는 AppLocker 사용을 고려합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-015": {
+    "name": { "value": "GPO의 예약 작업", "status": "machine-draft" },
+    "description": { "value": "그룹 정책 기본 설정은 지정된 자격 증명으로 또는 SYSTEM으로 대상 컴퓨터에서 실행되는 예약 작업을 만들 수 있습니다. GPO를 통해 배포된 악성 예약 작업은 환경 전반에 걸쳐 지속적인 코드 실행을 제공합니다. 이는 도메인 전체 지속성을 유지하기 위한 일반적인 사후 악용 기법입니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 GPO 배포 예약 작업이 문서화되고, 최소 권한 계정을 사용하며, 승인된 작업만 수행합니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "모든 GPO의 GPO 기본 설정에서 모든 예약 작업 항목을 검토합니다. 각 작업이 최소 필요 권한으로 정당하고 승인된 명령을 실행하는지 확인합니다. 자격 증명을 저장하는 모든 작업을 제거합니다(대신 gMSA 또는 SYSTEM 컨텍스트 사용). 작업 실행 파일이 보호된 위치에 저장되도록 합니다. 각 GPO 배포 예약 작업의 업무상 목적을 문서화합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-016": {
+    "name": { "value": "레지스트리 설정 보안 검토", "status": "machine-draft" },
+    "description": { "value": "GPO는 보안 기능 비활성화, 인증 프로토콜 약화 또는 안전하지 않은 서비스 활성화를 포함한 보안 구성에 영향을 미치는 레지스트리 설정을 배포할 수 있습니다. GPO의 레지스트리 기반 설정은 대상 시스템의 보안 태세를 약화시키지 않는지 검토해야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "보안 기본값을 약화시키는 GPO 레지스트리 설정이 없으며, 모든 레지스트리 수정이 문서화되고 정당화됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "관리 템플릿 및 레지스트리 기본 설정에서 GPO 레지스트리 설정을 내보냅니다. HKLM\\SYSTEM\\CurrentControlSet\\Control\\Lsa, HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies 및 인증 관련 키를 포함한 보안 관련 레지스트리 키에 영향을 미치는 설정을 검토합니다. 보안 태세를 약화시키는 설정을 제거하거나 수정합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-017": {
+    "name": { "value": "제한된 그룹 분석", "status": "machine-draft" },
+    "description": { "value": "제한된 그룹 GPO 설정은 대상 시스템에서 그룹 멤버십을 강제하며, 일반적으로 로컬 Administrators 그룹 멤버십을 관리하는 데 사용됩니다. 잘못 구성된 제한된 그룹은 의도치 않게 무단 사용자에게 로컬 관리자 접근 권한을 부여하거나 권한 있는 로컬 그룹에서 무단 멤버를 제거하지 못할 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "제한된 그룹이 최소 권한 로컬 관리자 멤버십을 강제하도록 구성되며, 로컬 Administrators에는 승인된 그룹만 있습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "모든 GPO의 제한된 그룹 설정을 검토합니다. 로컬 Administrators 그룹이 승인된 관리자 그룹만 포함하도록 관리되는지 확인합니다. 제한된 그룹이 Domain Users 또는 기타 광범위한 그룹을 권한 있는 로컬 그룹에 추가하지 않도록 합니다. 보다 세분화된 제어(전체 멤버십을 대체하지 않고 멤버 추가/제거)를 위해 그룹 정책 기본 설정 사용을 고려합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-018": {
+    "name": { "value": "GPO를 통한 감사 정책 구성", "status": "machine-draft" },
+    "description": { "value": "그룹 정책을 통해 구성된 Windows 감사 정책은 도메인에 조인된 시스템에서 어떤 보안 이벤트가 기록되는지 결정합니다. 불충분한 감사 구성은 공격자가 탐지되지 않고 활동할 수 있는 사각지대를 만듭니다. 주요 감사 범주에는 로그온 이벤트, 계정 관리, 디렉터리 서비스 접근, 개체 접근이 포함됩니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "조직의 탐지 요구사항에 맞춰 모든 중요 범주에 대해 성공 및 실패 감사가 포함된 고급 감사 정책이 GPO를 통해 구성됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "GPO를 통해 고급 감사 정책 구성(레거시 감사 정책이 아님)을 구성합니다. 최소한 다음을 활성화합니다: 계정 로그온(성공/실패), 계정 관리(성공/실패), 디렉터리 서비스 접근(성공/실패), 로그온/로그오프(성공/실패), 개체 접근(민감한 리소스에 대해 성공/실패), 정책 변경(성공), 권한 사용(성공/실패), 시스템(성공/실패). 도메인에 조인된 모든 시스템에 배포합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-019": {
+    "name": { "value": "GPO를 통한 Windows 방화벽 구성", "status": "machine-draft" },
+    "description": { "value": "GPO를 통해 배포된 고급 보안이 포함된 Windows Defender 방화벽 설정은 도메인에 조인된 시스템의 네트워크 접근을 제어합니다. 방화벽을 비활성화하거나, 지나치게 관대한 인바운드 규칙을 허용하거나, 방화벽을 구성하지 못하는 GPO는 시스템을 측면 이동 및 네트워크 기반 공격에 취약하게 만듭니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "GPO를 통해 구성된 기본 거부 인바운드 규칙과 함께 모든 프로필(도메인, 개인, 공용)에 대해 Windows 방화벽이 활성화됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "모든 해당 GPO의 Windows 방화벽 GPO 설정을 검토합니다. 도메인, 개인, 공용 프로필에 대해 방화벽이 활성화되어 있는지 확인합니다. 인바운드 규칙이 필요한 서비스에 대한 특정 허용 규칙과 함께 기본 거부 접근 방식을 따르는지 확인합니다. Windows 방화벽을 비활성화하는 모든 GPO 설정을 제거합니다. 도메인 전체 배포 전에 스테이징 OU에서 방화벽 규칙을 테스트합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-020": {
+    "name": { "value": "GPO를 통한 PowerShell 실행 정책", "status": "machine-draft" },
+    "description": { "value": "PowerShell 실행 정책은 시스템에서 실행할 수 있는 스크립트를 제어합니다. 실행 정책은 보안 경계가 아니지만, GPO를 통해 Unrestricted 또는 Bypass로 설정하면 방어 계층이 제거되어 공격자가 사용자 프롬프트 없이 악성 스크립트를 더 쉽게 실행할 수 있게 됩니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "PowerShell 실행 정책이 GPO를 통해 AllSigned 또는 RemoteSigned로 설정되며, Unrestricted 또는 Bypass로 설정되지 않습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "컴퓨터 구성 > 관리 템플릿 > Windows 구성 요소 > Windows PowerShell > 스크립트 실행 켜기 아래의 GPO 설정을 검토합니다. 고보안 환경에서는 실행 정책을 AllSigned로, 표준 환경에서는 RemoteSigned로 설정합니다. 승인된 PowerShell 스크립트에 대해 코드 서명을 구현합니다. GPO를 통해 Bypass 또는 Unrestricted 설정을 피합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-021": {
+    "name": { "value": "PowerShell 로깅 구성", "status": "machine-draft" },
+    "description": { "value": "PowerShell 모듈 로깅, 스크립트 블록 로깅, 전사는 최신 Active Directory 침해의 대부분에서 사용되는 PowerShell 기반 공격에 대한 중요한 가시성을 제공합니다. 이러한 로깅 기능이 없으면 방어자는 PowerShell 기반 정찰, 자격 증명 탈취 또는 측면 이동을 탐지하거나 조사할 수 없습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 시스템에서 GPO를 통해 모듈 로깅, 스크립트 블록 로깅, 전사가 활성화됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "컴퓨터 구성 > 관리 템플릿 > Windows 구성 요소 > Windows PowerShell 아래의 GPO 설정을 구성합니다. 모든 모듈을 로깅하려면 '*'로 모듈 로깅을 활성화합니다. '스크립트 블록 호출 시작/중지 이벤트 로깅'으로 스크립트 블록 로깅을 활성화합니다. 보안 출력 디렉터리와 함께 PowerShell 전사를 활성화합니다. 도메인에 조인된 모든 시스템에 배포하고 로그 수집을 확인합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-022": {
+    "name": { "value": "AppLocker/WDAC 정책 평가", "status": "machine-draft" },
+    "description": { "value": "AppLocker 및 Windows Defender 응용 프로그램 제어와 같은 응용 프로그램 제어 정책은 관리되는 시스템에서 실행할 수 있는 실행 파일, 스크립트, DLL을 제한합니다. 응용 프로그램 제어가 없으면 공격자는 침해된 시스템에서 임의의 도구와 맬웨어를 실행하여 측면 이동 및 지속성을 촉진할 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "문서화된 기준선과 함께 모든 워크스테이션 및 서버에서 GPO를 통해 강제 모드로 AppLocker 또는 WDAC 정책이 배포됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "감사 모드로 시작하여 GPO를 통해 AppLocker 또는 WDAC 정책을 배포합니다. 감사 로그를 분석하여 승인된 응용 프로그램의 기준선을 구축합니다. 게시자, 경로 또는 해시를 기반으로 허용 목록 규칙을 만듭니다. 기준선을 검증한 후 감사에서 강제 모드로 전환합니다. 차단된 실행 이벤트를 모니터링하고 필요에 따라 규칙을 업데이트합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-023": {
+    "name": { "value": "LAPS GPO 구성", "status": "machine-draft" },
+    "description": { "value": "로컬 관리자 암호 솔루션(LAPS)은 도메인에 조인된 시스템에서 로컬 관리자 암호의 자동 교체를 제공하여 공유 로컬 관리자 자격 증명을 통한 측면 이동을 방지합니다. LAPS는 효과적이려면 GPO를 통해 배포되어야 하며, 그 구성 설정은 암호 복잡성, 교체 빈도, 관리되는 계정을 결정합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "24자 암호와 30일 최대 기간으로 도메인에 조인된 모든 시스템에서 GPO를 통해 LAPS가 활성화됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "GPO 소프트웨어 설치 또는 SCCM을 통해 모든 관리되는 시스템에 LAPS CSE를 설치합니다. LAPS GPO 설정을 구성합니다: 로컬 관리자 암호 관리 활성화, 암호 복잡성을 대문자 + 소문자 + 숫자 + 특수 문자로 설정, 암호 길이를 24자 이상으로 설정, 암호 기간을 30일 이하로 설정. ms-Mcs-AdmPwdExpirationTime 특성을 확인하여 LAPS가 작동하는지 검증합니다.", "status": "machine-draft" }
+  },
+  "ADGPO-024": {
+    "name": { "value": "GPO WMI 필터 검토", "status": "machine-draft" },
+    "description": { "value": "WMI 필터는 대상 시스템에서 평가되는 WQL 쿼리를 기반으로 GPO 적용을 제어합니다. 악성 또는 잘못 구성된 WMI 필터는 특정 시스템에 보안 GPO가 적용되는 것을 선택적으로 막아 표적화된 보안 격차를 만들 수 있습니다. WMI 필터는 정확성, 성능 영향, 잠재적 악용에 대해 검토해야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 WMI 필터가 문서화되고, 테스트되며, 예상 결과를 생성하고, 보안에 중요한 GPO를 차단하는 WMI 필터가 없습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADObject -Filter 'objectClass -eq \"msWMI-Som\"'을 사용하여 모든 WMI 필터의 인벤토리를 작성합니다. 각 필터의 WQL 쿼리를 정확성에 대해 검토하고 대표적인 대상 시스템에 대해 테스트합니다. WMI 필터가 보안에 중요한 GPO의 적용을 차단하지 않는지 확인합니다. 사용되지 않는 WMI 필터를 제거합니다. 각 활성 WMI 필터의 목적과 예상 동작을 문서화합니다.", "status": "machine-draft" }
+  }
+}

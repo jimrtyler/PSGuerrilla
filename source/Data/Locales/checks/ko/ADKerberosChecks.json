@@ -1,0 +1,69 @@
+{
+  "_family": "ADKerberosChecks.json",
+  "ADKERB-001": {
+    "name": { "value": "Kerberoasting에 취약한 계정", "status": "machine-draft" },
+    "description": { "value": "서비스 주체 이름(SPN)이 연결된 사용자 계정은 Kerberoasting에 취약합니다. 인증된 도메인 사용자라면 누구나 계정의 암호 해시로 암호화된 서비스 티켓을 요청하여 오프라인에서 크래킹을 시도할 수 있습니다. 이 공격은 특별한 권한이 필요하지 않으며 탐지하기도 어렵습니다. SPN을 보유한 각 사용자 계정은 잠재적인 자격 증명 노출 경로를 나타냅니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "SPN을 가진 사용자 계정을 최소화합니다. Kerberoasting에 취약한 모든 계정을 식별하고, 업무상 정당성과 함께 문서화하며, 25자 이상의 암호로 보호하거나 gMSA로 마이그레이션합니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADUser -Filter {ServicePrincipalName -ne '$null'} -Properties ServicePrincipalName을 사용하여 Kerberoasting에 취약한 계정을 열거합니다. 각 계정에 대해: (1) SPN이 여전히 필요한지 평가하고, (2) 불필요한 SPN을 제거하며, (3) 가능한 경우 그룹 관리 서비스 계정으로 마이그레이션하고, (4) 남아 있는 계정은 암호가 25자 이상이며 정기적으로 교체되는지 확인합니다. Event ID 4769를 통해 민감한 계정을 대상으로 하는 Kerberos TGS 요청을 모니터링합니다", "status": "machine-draft" }
+  },
+  "ADKERB-002": {
+    "name": { "value": "약한 암호화를 사용하는 Kerberoasting 취약 계정", "status": "machine-draft" },
+    "description": { "value": "RC4 또는 DES 암호화를 사용하도록 구성된 SPN 보유 사용자 계정은 AES를 사용하는 계정보다 Kerberoasting을 통해 훨씬 쉽게 크래킹됩니다. RC4(ARCFOUR-HMAC-MD5) 티켓은 최신 GPU 하드웨어에서 AES 티켓보다 수십 배 빠르게 크래킹될 수 있습니다. 약한 암호화 유형으로 명시적으로 구성되었거나 AES 키가 없는 계정은 최우선 순위의 Kerberoasting 대상입니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 SPN 보유 계정이 AES256 암호화를 지원합니다. RC4 또는 DES 암호화 유형으로 제한된 계정이 없습니다. msDS-SupportedEncryptionTypes에 모든 서비스 계정에 대해 AES 플래그가 포함됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "SPN을 보유한 사용자 계정을 쿼리하여 msDS-SupportedEncryptionTypes 특성을 확인합니다. 값이 0(설정되지 않음)인 계정은 기본적으로 RC4를 사용합니다. RC4(0x4) 또는 DES(0x1, 0x2, 0x3) 플래그만 있는 계정은 취약합니다. 도메인에서 AES 지원을 활성화한 후 영향을 받는 모든 계정의 암호를 교체하여 AES 키를 생성합니다. msDS-SupportedEncryptionTypes를 설정하여 AES128(0x8) 및 AES256(0x10) 플래그를 포함시킵니다", "status": "machine-draft" }
+  },
+  "ADKERB-003": {
+    "name": { "value": "AS-REP Roasting에 취약한 계정", "status": "machine-draft" },
+    "description": { "value": "DONT_REQUIRE_PREAUTH 플래그가 설정된 계정은 사전 인증 없이도 누구나 오프라인에서 크래킹할 수 있는 암호화된 자료가 포함된 AS-REP를 요청할 수 있게 합니다. Kerberoasting과 달리 AS-REP Roasting은 일부 구성에서는 유효한 도메인 계정조차 필요하지 않으므로, 도메인 컨트롤러에 대한 네트워크 접근만 가진 공격자에게 매력적인 초기 접근 기법이 됩니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "'Kerberos 사전 인증 요구 안 함' 플래그가 설정된 계정이 없습니다. AS-REP Roasting에 취약한 계정이 전혀 없습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADUser -Filter {DoesNotRequirePreAuth -eq $true -and Enabled -eq $true}를 사용하여 계정을 식별합니다. 모든 계정에서 Kerberos 사전 인증을 활성화합니다. 최신 환경에서 사전 인증을 비활성화할 정당한 이유는 거의 없습니다. 이전에 취약했던 모든 계정은 이미 표적이 되었을 수 있으므로 암호를 교체합니다. 사전 인증 유형 0인 Event ID 4768을 모니터링합니다", "status": "machine-draft" }
+  },
+  "ADKERB-004": {
+    "name": { "value": "제한 없는 위임 - 컴퓨터", "status": "machine-draft" },
+    "description": { "value": "제한 없는 위임(TrustedForDelegation)이 설정된 컴퓨터 계정은 해당 계정으로 인증하는 모든 사용자의 TGT를 캐시합니다. 공격자가 이러한 컴퓨터를 침해하면 캐시된 TGT를 추출하여 Domain Admins를 포함한 모든 사용자를 가장할 수 있습니다. SpoolSample 또는 PrinterBug 강제 인증 공격과 결합하면 공격자는 도메인 컨트롤러가 인증하도록 강제하여 그 TGT를 탈취할 수 있으며, 이는 전체 도메인 침해로 이어집니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "도메인 컨트롤러(본질적으로 이를 필요로 함)를 제외하고 제한 없는 위임이 설정된 컴퓨터 계정이 없습니다. 그 외 모든 위임은 제한된 위임 또는 리소스 기반 제한된 위임으로 마이그레이션됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADComputer -Filter {TrustedForDelegation -eq $true} -Properties TrustedForDelegation을 사용하여 제한 없는 위임이 설정된 컴퓨터를 식별합니다. 결과에서 도메인 컨트롤러는 제외합니다. 남은 컴퓨터는 위임해야 하는 특정 서비스를 식별한 후 msDS-AllowedToDelegateTo를 구성하여 제한된 위임으로 마이그레이션합니다. 민감한 계정을 Protected Users 그룹에 추가하여 해당 TGT가 캐시되지 않도록 합니다. 고가치 계정은 '계정이 중요하므로 위임할 수 없음'으로 표시합니다", "status": "machine-draft" }
+  },
+  "ADKERB-005": {
+    "name": { "value": "제한 없는 위임 - 사용자", "status": "machine-draft" },
+    "description": { "value": "제한 없는 위임이 설정된 사용자 계정은 동일한 설정을 가진 컴퓨터 계정보다 훨씬 위험합니다. 사용자 계정은 자격 증명 탈취, 피싱 또는 암호 공격을 통해 더 쉽게 침해되기 때문입니다. 제한 없는 위임이 설정된 사용자 계정으로 실행되는 모든 서비스는 해당 계정으로 인증하는 모든 사용자를 가장할 수 있어 도메인 침해로 가는 직접적인 경로를 제공합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "제한 없는 위임이 설정된 사용자 계정이 없습니다. 모든 사용자 계정 위임이 제한된 위임 또는 리소스 기반 제한된 위임으로 마이그레이션됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADUser -Filter {TrustedForDelegation -eq $true} -Properties TrustedForDelegation을 사용하여 제한 없는 위임이 설정된 사용자를 식별합니다. 이는 사용자 계정에 대해 거의 정당한 구성이 아닙니다. 제한 없는 위임 플래그를 제거하고, 위임이 필요한 경우 특정 서비스로의 제한된 위임을 구성합니다. 해당 계정이 표적이 되었을 수 있으므로 즉시 계정 암호를 교체합니다", "status": "machine-draft" }
+  },
+  "ADKERB-006": {
+    "name": { "value": "제한된 위임 분석", "status": "machine-draft" },
+    "description": { "value": "제한된 위임은 msDS-AllowedToDelegateTo 특성을 통해 계정이 위임할 수 있는 서비스를 제한하지만, 잘못된 구성은 여전히 권한 상승을 가능하게 할 수 있습니다. 도메인 컨트롤러의 LDAP, CIFS 또는 HOST 서비스로의 위임은 악용되어 DCSync 공격을 수행하거나 DC 파일 공유에 접근하거나 위임된 사용자로 명령을 실행할 수 있습니다. 각 제한된 위임 항목은 보안 영향을 검토해야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 제한된 위임 항목이 업무상 정당성과 함께 문서화됩니다. 도메인 컨트롤러의 민감한 서비스(LDAP, CIFS, HOST, WSMAN)로의 위임이 없습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADObject -Filter {msDS-AllowedToDelegateTo -ne '$null'} -Properties msDS-AllowedToDelegateTo를 사용하여 제한된 위임을 열거합니다. 각 위임 대상을 검토합니다. DC 서비스(특히 LDAP, CIFS, HOST, HTTP, WSMAN)로의 위임은 높은 위험으로 표시합니다. 불필요한 위임 항목을 제거하고 정당한 항목은 업무상 정당성과 함께 문서화합니다. 보안 강화를 위해 리소스 기반 제한된 위임으로의 마이그레이션을 고려합니다", "status": "machine-draft" }
+  },
+  "ADKERB-007": {
+    "name": { "value": "리소스 기반 제한된 위임", "status": "machine-draft" },
+    "description": { "value": "리소스 기반 제한된 위임(RBCD)은 msDS-AllowedToActOnBehalfOfOtherIdentity 특성을 통해 대상 리소스가 자신에게 위임할 수 있는 계정을 제어할 수 있게 합니다. 설계상 기존의 제한된 위임보다 안전하지만, 공격자가 컴퓨터 개체에 대한 쓰기 접근 권한을 획득하여 무단 위임 경로를 구성하면 RBCD가 악용될 수 있습니다. 이는 일반적인 사후 악용 기법입니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 RBCD 구성이 문서화되고 감사됩니다. msDS-AllowedToActOnBehalfOfOtherIdentity에 무단 항목이 없습니다. 컴퓨터 개체에 대한 쓰기 접근이 승인된 관리자로만 제한됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADComputer -Filter {msDS-AllowedToActOnBehalfOfOtherIdentity -ne '$null'} -Properties msDS-AllowedToActOnBehalfOfOtherIdentity를 사용하여 RBCD 구성을 열거합니다. 각 항목의 업무상 정당성을 검토합니다. AD에서 컴퓨터 개체에 대한 쓰기 접근 권한을 가진 대상을 감사하여 잠재적 RBCD 악용 경로를 식별합니다. 무단 RBCD 항목을 제거합니다. msDS-AllowedToActOnBehalfOfOtherIdentity 특성 변경에 대한 모니터링을 구현합니다", "status": "machine-draft" }
+  },
+  "ADKERB-008": {
+    "name": { "value": "프로토콜 전환 악용 경로", "status": "machine-draft" },
+    "description": { "value": "프로토콜 전환(TrustedToAuthForDelegation / T2A4D 플래그)이 설정된 제한된 위임용 계정은 사용자가 실제로 Kerberos를 통해 인증하지 않아도 그 사용자를 대신하여 서비스 티켓을 획득할 수 있습니다. 이 S4U2Self 기능은 계정이 위임하도록 허용된 서비스에 대해 모든 사용자를 가장할 수 있게 하며, 민감한 서비스로의 위임과 결합될 경우 강력한 권한 상승 경로가 됩니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "명시적으로 요구되고 문서화된 경우가 아니면 모든 계정에서 프로토콜 전환(TrustedToAuthForDelegation)이 비활성화됩니다. 도메인 컨트롤러 서비스로 위임할 수 있는 프로토콜 전환 계정이 없습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADObject -Filter {TrustedToAuthForDelegation -eq $true} -Properties TrustedToAuthForDelegation,msDS-AllowedToDelegateTo를 사용하여 프로토콜 전환이 설정된 계정을 식별합니다. 각 계정에 대해 프로토콜 전환이 실제로 필요한지(초기 인증이 Kerberos를 사용하지 않을 때만 필요) 평가합니다. 필요하지 않은 경우 프로토콜 전환을 비활성화합니다. 남은 계정은 위임 대상을 엄격히 제한하고 DC 서비스가 범위에 포함되지 않도록 합니다", "status": "machine-draft" }
+  },
+  "ADKERB-009": {
+    "name": { "value": "Kerberos 암호화 유형", "status": "machine-draft" },
+    "description": { "value": "Kerberos 암호화 유형은 티켓 암호화의 강도를 결정합니다. DES와 RC4(ARCFOUR-HMAC-MD5)는 암호학적으로 취약하므로 AES128 및 AES256을 위해 비활성화해야 합니다. 특히 RC4는 AES로 암호화된 티켓보다 크래킹 속도가 훨씬 빠르기 때문에 Kerberoasting 공격의 표적이 됩니다. AES 전용 암호화를 강제하면 오프라인 자격 증명 공격의 난이도가 크게 높아집니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "AES256_HMAC_SHA1 및 AES128_HMAC_SHA1을 유일하게 지원되는 암호화 유형으로 사용합니다. 그룹 정책 및 도메인 기능 수준을 통해 DES 및 RC4를 비활성화합니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "그룹 정책을 통해 구성합니다: 컴퓨터 구성 > 정책 > Windows 설정 > 보안 설정 > 로컬 정책 > 보안 옵션 > '네트워크 보안: Kerberos에 허용되는 암호화 유형 구성' = AES128_HMAC_SHA1, AES256_HMAC_SHA1, 향후 암호화 유형. msDS-SupportedEncryptionTypes로 계정을 감사하여 RC4로 제한된 계정을 식별합니다. 도메인 수준에서 AES 지원을 활성화한 후 암호를 교체하여 모든 서비스 계정에 AES 키가 생성되도록 합니다", "status": "machine-draft" }
+  },
+  "ADKERB-010": {
+    "name": { "value": "Kerberos 티켓 수명", "status": "machine-draft" },
+    "description": { "value": "Kerberos 티켓 수명은 인증 티켓이 유효하게 유지되는 기간을 제어합니다. 지나치게 긴 TGT 또는 서비스 티켓 수명은 탈취된 티켓이 pass-the-ticket 공격에 사용될 수 있는 시간 창을 연장합니다. 기본 TGT 수명 10시간과 최대 갱신 7일은 보안과 운영 요구사항의 균형을 맞추기 위해 검토해야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "TGT 최대 수명: 4~10시간. 서비스 티켓 최대 수명: 600분. 최대 티켓 갱신: 7일. 최대 시간 오차: 5분", "status": "machine-draft" },
+    "remediationSteps": { "value": "기본 도메인 정책에서 Kerberos 정책을 구성합니다: 컴퓨터 구성 > 정책 > Windows 설정 > 보안 설정 > 계정 정책 > Kerberos 정책. 서비스 티켓의 최대 수명(600분), 사용자 티켓의 최대 수명(10시간 이하), 사용자 티켓 갱신의 최대 수명(7일)을 설정합니다. Tier 0 계정은 Protected Users 그룹에 추가하며, 이 그룹은 자동으로 4시간 TGT 수명을 강제합니다", "status": "machine-draft" }
+  },
+  "ADKERB-011": {
+    "name": { "value": "컴퓨터 SPN 감사", "status": "machine-draft" },
+    "description": { "value": "컴퓨터 계정의 서비스 주체 이름은 각 컴퓨터에서 실행되도록 등록된 서비스를 정의합니다. 중복 SPN은 Kerberos 인증 실패를 유발하며, 무단 SPN은 악성 서비스나 침해된 컴퓨터를 나타낼 수 있습니다. 깨끗한 SPN 구성은 Kerberos가 올바르게 작동하고 정확한 서비스 인벤토리를 유지하는 데 필수적입니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "도메인 전체에 중복 SPN이 없습니다. 컴퓨터 계정의 모든 SPN이 정당하고 문서화된 서비스에 해당합니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "포리스트에서 setspn -X 또는 Get-ADObject 쿼리를 사용하여 중복 SPN을 검색합니다. 중복 SPN을 제거하거나 올바른 계정에 재할당합니다. 컴퓨터 개체의 SPN을 검토하여 무단 또는 예기치 않은 서비스를 식별합니다. setspn -L <컴퓨터이름>을 사용하여 컴퓨터별 SPN을 나열합니다. 모든 비기본 SPN을 업무상 목적과 함께 문서화합니다", "status": "machine-draft" }
+  }
+}

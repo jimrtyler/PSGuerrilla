@@ -1,0 +1,99 @@
+{
+  "_family": "ADAclDelegationChecks.json",
+  "ADACL-001": {
+    "name": { "value": "중요 개체 ACL 감사", "status": "machine-draft" },
+    "description": { "value": "중요 AD 개체(도메인 루트, AdminSDHolder, 스키마, 구성, Domain Controllers OU)의 액세스 제어 목록은 무단 또는 과도한 권한에 대해 감사해야 합니다. 이러한 개체의 잘못 구성된 ACL은 공격자가 권한을 상승시키거나 디렉터리 서비스를 수정하거나 도메인 전체를 장악하도록 허용할 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "중요 AD 개체에는 기본 및 명시적으로 승인된 ACE만 존재하며, 수정 또는 전체 제어 권한을 가진 예기치 않은 주체가 없습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-Acl 또는 dsacls.exe를 사용하여 중요 개체의 ACL을 검토합니다. 무단 주체에게 쓰기, 수정 또는 전체 제어 권한을 부여하는 비기본 ACE를 제거합니다. AdminSDHolder를 사용하여 보호된 그룹에 일관된 ACL을 강제합니다. 모든 의도적인 위임을 문서화합니다.", "status": "machine-draft" }
+  },
+  "ADACL-002": {
+    "name": { "value": "중요 개체에 대한 GenericAll 권한", "status": "machine-draft" },
+    "description": { "value": "GenericAll은 특성 수정, 암호 재설정, 그룹 멤버십 변경, DACL 수정 기능을 포함하여 AD 개체에 대한 전체 제어 권한을 부여합니다. 도메인 관리자, 도메인 컨트롤러 또는 도메인 루트와 같은 중요 개체에 GenericAll을 가진 비기본 주체는 도메인 침해로 가는 직접적인 경로를 나타냅니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "중요 AD 개체에 GenericAll을 가진 비기본 주체가 없습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "PowerShell 또는 BloodHound를 사용하여 중요 개체의 ACL을 열거합니다. 전체 제어가 필요하지 않은 모든 주체에 대해 GenericAll ACE를 제거합니다. 운영상 필요가 있는 경우 최소 권한 위임 권한으로 대체합니다. Directory Service Changes 감사(Event ID 5136)를 사용하여 ACL 변경을 모니터링합니다.", "status": "machine-draft" }
+  },
+  "ADACL-003": {
+    "name": { "value": "중요 개체에 대한 GenericWrite 권한", "status": "machine-draft" },
+    "description": { "value": "GenericWrite는 개체의 대부분 특성을 수정할 수 있게 하여, 표적 Kerberoasting(SPN 쓰기), 리소스 기반 제한된 위임(msDS-AllowedToActOnBehalfOfOtherIdentity 쓰기), 또는 Shadow Credentials(msDS-KeyCredentialLink 쓰기)와 같은 공격을 가능하게 합니다. 중요 개체에 GenericWrite를 가진 비기본 주체는 조사해야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "중요 AD 개체에 GenericWrite를 가진 비기본 주체가 없습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "사용자, 컴퓨터, 그룹 개체의 ACL에서 GenericWrite 권한을 감사합니다. 불필요한 GenericWrite ACE를 제거하고 특정 특성 수준의 쓰기 권한으로 대체합니다. msDS-AllowedToActOnBehalfOfOtherIdentity, servicePrincipalName, msDS-KeyCredentialLink 특성에 대한 쓰기 접근에 특히 주의를 기울입니다.", "status": "machine-draft" }
+  },
+  "ADACL-004": {
+    "name": { "value": "중요 개체에 대한 WriteDACL 권한", "status": "machine-draft" },
+    "description": { "value": "WriteDACL 권한은 주체가 개체의 임의 액세스 제어 목록을 수정할 수 있게 하여, 사실상 자신 또는 다른 사람에게 GenericAll을 포함한 모든 권한을 할당할 수 있는 능력을 부여합니다. 이는 공격자가 전체 제어 권한을 직접 갖지 않고도 자신에게 부여할 수 있게 하므로 중요한 권한 상승 경로입니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "중요 AD 개체에 WriteDACL을 가진 비기본 주체가 없습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "도메인 루트, AdminSDHolder, GPO 개체, 권한 있는 그룹 개체를 포함한 모든 중요 개체에서 WriteDACL 권한을 열거합니다. 비기본 주체에 대해 WriteDACL을 제거합니다. ACL 변경 감사(Event ID 5136)를 활성화하여 무단 DACL 수정을 탐지합니다. 변경 사항을 정기적으로 검토합니다.", "status": "machine-draft" }
+  },
+  "ADACL-005": {
+    "name": { "value": "중요 개체에 대한 WriteOwner 권한", "status": "machine-draft" },
+    "description": { "value": "WriteOwner 권한은 AD 개체의 소유자를 변경할 수 있게 합니다. 개체의 소유자는 암묵적으로 DACL을 수정할 수 있는 능력을 가지므로, 공격 관점에서 WriteOwner는 기능적으로 WriteDACL과 동등합니다. 공격자는 소유권을 획득한 다음 원하는 모든 권한을 자신에게 부여할 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "중요 AD 개체에 WriteOwner를 가진 비기본 주체가 없습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "중요 개체의 WriteOwner 권한을 감사합니다. 비기본 주체에 대한 WriteOwner ACE를 제거합니다. 개체 소유자가 적절한 권한 있는 계정인지 확인합니다. 소유권 변경 감사를 활성화하고 WriteOwner 작업에 대해 Event ID 4662를 모니터링합니다.", "status": "machine-draft" }
+  },
+  "ADACL-006": {
+    "name": { "value": "ForceChangePassword 권한", "status": "machine-draft" },
+    "description": { "value": "확장 권한 User-Force-Change-Password(암호 재설정이라고도 함)는 주체가 현재 암호를 몰라도 다른 사용자의 암호를 재설정할 수 있게 합니다. 권한 없는 계정이나 광범위한 그룹에 부여될 경우, 이는 일반적인 인증 요구사항을 우회하는 직접적인 계정 탈취 경로를 만듭니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "ForceChangePassword가 승인된 헬프데스크 및 관리자 그룹으로만 제한되며, 권한 없는 계정에는 부여되지 않습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "사용자 개체에 User-Force-Change-Password 확장 권한을 가진 모든 주체를 열거합니다. 각 위임이 의도적이며 적절하게 범위가 지정되었는지 확인합니다. 문서화된 운영상 필요가 없는 모든 주체로부터 권한을 제거합니다. 도메인 전체 부여 대신 OU 범위 위임을 사용합니다.", "status": "machine-draft" }
+  },
+  "ADACL-007": {
+    "name": { "value": "광범위한 그룹에 대한 과도한 위임", "status": "machine-draft" },
+    "description": { "value": "Authenticated Users, Domain Users 또는 Everyone과 같은 광범위한 그룹에 민감한 권한을 위임하면 침해된 계정이라면 무엇이든 위임된 권한을 악용할 수 있는 넓은 공격 표면이 생깁니다. 이는 권한 상승에 필요한 노력을 극적으로 줄이는 일반적인 잘못된 구성입니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "Authenticated Users, Domain Users, Everyone 또는 기타 광범위한 그룹에 민감한 권한이 위임되지 않습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "잘 알려진 광범위한 그룹(S-1-5-11 Authenticated Users, Domain Users, Everyone, Domain Computers)에 부여된 ACE에 대해 모든 ACL을 감사합니다. 광범위한 그룹 위임을 필요한 주체만 포함하는 특정 보안 그룹으로 대체합니다. 가능한 한 가장 좁은 OU 범위에 위임을 적용합니다.", "status": "machine-draft" }
+  },
+  "ADACL-008": {
+    "name": { "value": "OU 위임 분석", "status": "machine-draft" },
+    "description": { "value": "조직 구성 단위 위임은 Active Directory에서 관리 권한을 부여하는 권장 방법이지만, 잘못 구성된 OU 위임은 의도하지 않은 접근 경로를 만들 수 있습니다. 이 검사는 모든 OU 수준의 권한 위임을 분석하여 지나치게 관대한 부여, 의도된 범위 지정을 우회하는 상속 권한, 오래되어 사용되지 않게 된 위임을 식별합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 OU 위임이 문서화되고, 특정 개체 유형으로 범위가 지정되며, 최소 권한 권한을 사용합니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "dsacls.exe 또는 PowerShell을 사용하여 각 OU의 모든 비기본 ACE를 검토합니다. 위임이 InheritedObjectType을 사용하여 특정 개체 클래스로 권한 범위를 지정하는지 확인합니다. 더 이상 필요하지 않은 위임을 제거합니다. 모든 의도적인 위임을 권한 부여 매트릭스에 문서화합니다.", "status": "machine-draft" }
+  },
+  "ADACL-009": {
+    "name": { "value": "컴퓨터 계정 할당량", "status": "machine-draft" },
+    "description": { "value": "도메인 루트의 ms-DS-MachineAccountQuota 특성은 인증된 사용자가 만들 수 있는 컴퓨터 계정 수를 결정합니다. 기본값 10은 모든 도메인 사용자가 컴퓨터를 도메인에 조인할 수 있게 하여, 리소스 기반 제한된 위임 공격, 릴레이 공격 및 기타 권한 상승 기법에 악용될 수 있는 컴퓨터 계정을 만들 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "ms-DS-MachineAccountQuota를 0으로 설정합니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "Set-ADDomain -Identity (Get-ADDomain) -Replace @{'ms-DS-MachineAccountQuota'=0}을 사용하여 도메인 루트에서 ms-DS-MachineAccountQuota를 0으로 설정합니다. 컴퓨터 계정 생성을 특정 관리자 그룹에 위임하거나 사전 준비 워크플로를 사용합니다. 관리자가 아닌 사용자가 만든 기존 컴퓨터 계정을 검토합니다.", "status": "machine-draft" }
+  },
+  "ADACL-010": {
+    "name": { "value": "확장 권한 감사", "status": "machine-draft" },
+    "description": { "value": "Active Directory의 확장 권한에는 DS-Replication-Get-Changes(DCSync), User-Force-Change-Password, DS-Replication-Get-Changes-All과 같은 강력한 작업이 포함됩니다. 이러한 권한의 무단 부여는 자격 증명 탈취 또는 직접적인 계정 탈취를 통해 전체 도메인 침해로 이어질 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "확장 권한이 기본 및 명시적으로 승인된 주체로 제한되며, DCSync 권한은 도메인 컨트롤러에만 부여됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "도메인 루트 및 중요 개체에서 모든 확장 권한 ACE를 열거합니다. DS-Replication-Get-Changes 및 DS-Replication-Get-Changes-All이 도메인 컨트롤러와 승인된 복제 계정에만 부여되었는지 확인합니다. 비기본 확장 권한 부여를 모두 제거합니다. 확장 권한 사용에 대해 Event ID 4662를 모니터링합니다.", "status": "machine-draft" }
+  },
+  "ADACL-011": {
+    "name": { "value": "중요 개체의 소유권", "status": "machine-draft" },
+    "description": { "value": "AD 개체의 소유자는 명시적 ACL 항목과 관계없이 개체의 DACL을 수정할 수 있는 암묵적 권한을 가집니다. 도메인 루트, AdminSDHolder, 권한 있는 그룹 또는 GPO와 같은 중요 개체가 권한 없거나 예기치 않은 계정에 의해 소유될 경우, 해당 계정은 전체 제어로 가는 숨겨진 경로를 갖게 됩니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "중요 개체가 Domain Admins, Enterprise Admins 또는 SYSTEM만 소유합니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "도메인 루트, AdminSDHolder, 스키마 컨테이너, 구성 컨테이너, 권한 있는 그룹 개체, GPO 개체를 포함한 모든 중요 개체의 소유권을 열거합니다. Set-Acl 또는 ADUC의 보안 탭을 사용하여 잘못 소유된 개체의 소유권을 Domain Admins로 이전합니다. 소유권 변경에 대한 감사를 활성화합니다.", "status": "machine-draft" }
+  },
+  "ADACL-012": {
+    "name": { "value": "비기본 도메인 루트 권한", "status": "machine-draft" },
+    "description": { "value": "도메인 루트 개체는 AD 계층의 최상위이며 여기에 설정된 권한은 전체 디렉터리로 상속될 수 있습니다. 예기치 않은 주체에게 쓰기, 수정 또는 확장 권한을 부여하는 도메인 루트의 비기본 ACE는 도메인의 모든 개체에 영향을 미칠 수 있으므로 심각한 위험을 나타냅니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "도메인 루트에는 기본 Microsoft ACE만 존재하며, 모든 사용자 지정 ACE가 문서화되고 정당화됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "현재 도메인 루트 ACL을 해당 도메인 기능 수준의 기본 ACL과 비교합니다. 비기본 ACE를 모두 문서화하고 운영상 필요성을 검증합니다. 더 이상 필요하지 않거나 과도한 권한을 부여하는 ACE를 제거합니다. '이 개체 및 모든 하위 개체'에 적용되는 ACE에 특히 주의를 기울입니다.", "status": "machine-draft" }
+  },
+  "ADACL-013": {
+    "name": { "value": "GPO 링크 권한", "status": "machine-draft" },
+    "description": { "value": "그룹 정책 개체를 사이트, 도메인 또는 OU에 연결하는 기능은 어떤 정책이 어떤 개체에 적용되는지 제어합니다. 무단 GPO 링크 권한은 공격자가 표적 OU에 악성 GPO를 적용하여 잠재적으로 맬웨어를 배포하거나 보안 설정을 수정하거나 영향받는 컴퓨터에 예약 작업을 만들 수 있게 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "GPO 링크 권한이 승인된 그룹 정책 관리자로만 제한됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "모든 OU, 도메인 루트, 사이트 개체에서 gPLink 및 gPOptions 쓰기 권한을 감사합니다. 관리자가 아닌 주체로부터 GPO 링크 권한을 제거합니다. 그룹 정책 모델링을 사용하여 현재 GPO 링크의 영향을 검증합니다. GPO 링크 작업에 대한 변경 통제를 구현합니다.", "status": "machine-draft" }
+  },
+  "ADACL-014": {
+    "name": { "value": "GPO 편집 권한", "status": "machine-draft" },
+    "description": { "value": "그룹 정책 개체를 편집하는 권한은 도메인 전체 보안 설정, 소프트웨어 배포, 로그온 스크립트, 예약 작업의 수정을 허용합니다. 무단 GPO 편집 접근은 환경 전반에 걸쳐 광범위한 코드 실행과 구성 변경을 가능하게 하므로 공격자에게 고가치 표적입니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "GPO 편집 권한이 Group Policy Creator Owners 및 승인된 관리자로만 제한됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "각 GPO의 보안 필터링 및 위임 탭을 검토합니다. 승인된 주체만 설정 편집, 삭제 또는 보안 수정 권한을 갖는지 확인합니다. 관리자가 아닌 그룹으로부터 GPO 편집 권한을 제거합니다. 그룹 정책 관리 콘솔을 사용하여 GPO 권한을 체계적으로 감사합니다.", "status": "machine-draft" }
+  },
+  "ADACL-015": {
+    "name": { "value": "Shadow Admins 탐지", "status": "machine-draft" },
+    "description": { "value": "Shadow Admins는 ACL 체인을 통해 Domain Admin에 준하는 접근으로 가는 간접 경로를 갖지만 어떤 권한 있는 그룹에도 속하지 않은 계정입니다. 이러한 계정은 AdminSDHolder 보호와 기존의 권한 있는 접근 모니터링을 우회합니다. 예를 들어, Domain Admins 그룹에 WriteDACL을 가진 계정은 그룹 멤버십 모니터링에 의해 표시되지 않고도 자신에게 멤버십을 부여할 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "식별된 Shadow Admin 경로가 없으며, 모든 관리자급 접근은 명시적인 권한 있는 그룹 멤버십을 통해 이루어집니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "BloodHound 또는 유사한 도구를 사용하여 Domain Admin에 준하는 접근으로 가는 ACL 기반 공격 경로를 식별합니다. 간접적인 권한 상승 경로를 만드는 불필요한 ACE를 제거합니다. 모든 관리 접근이 보호된 그룹 멤버십을 통해 부여되도록 합니다. 보안 운영의 일부로 정기적인 공격 경로 분석을 구현합니다.", "status": "machine-draft" }
+  },
+  "ADACL-016": {
+    "name": { "value": "공격 경로 열거", "status": "machine-draft" },
+    "description": { "value": "Active Directory 공격 경로는 권한, 그룹 멤버십, 신뢰 관계의 연쇄로, 낮은 권한 계정에서 도메인 관리자로 상승하기 위해 통과할 수 있습니다. 포괄적인 공격 경로 열거는 중간 개체를 거치는 다단계 상승 체인과 같이 개별 ACL 검사가 놓칠 수 있는 위험을 식별합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "권한 없는 사용자로부터 Tier 0 자산으로 가는 실행 가능한 공격 경로가 없으며, 식별된 모든 경로가 개선되거나 수용된 위험으로 문서화됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "BloodHound와 같은 도구를 사용하여 공격 경로 분석을 수행합니다. Domain Users 또는 Authenticated Users에서 Domain Admins, Enterprise Admins, Domain Controllers로 가는 최단 경로에 집중합니다. 각 경로에서 가장 약한 연결 고리를 제거하여 식별된 공격 체인을 끊습니다. 특별한 도구나 상승된 접근 없이 악용할 수 있는 경로를 우선 처리합니다.", "status": "machine-draft" }
+  }
+}

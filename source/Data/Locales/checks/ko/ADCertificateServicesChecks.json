@@ -1,0 +1,117 @@
+{
+  "_family": "ADCertificateServicesChecks.json",
+  "ADCS-001": {
+    "name": { "value": "CA 서버 인벤토리", "status": "machine-draft" },
+    "description": { "value": "환경 내 모든 인증 기관 서버의 인벤토리는 AD CS 보안 평가의 기반을 제공합니다. 여기에는 엔터프라이즈 CA, 독립 실행형 CA, 그 역할(루트 대 하위), 운영 체제 버전, 게시된 인증서 템플릿이 포함됩니다. PKI 계층 구조를 이해하는 것은 공격 표면을 식별하는 데 필수적입니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "각 CA 서버에 대해 CA 유형, 역할, OS 버전, 게시된 템플릿과 함께 완전한 CA 인벤토리가 문서화됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "AD의 PKI 등록 서비스 컨테이너(CN=Enrollment Services,CN=Public Key Services,CN=Services,CN=Configuration)를 쿼리하여 모든 CA 서버를 열거합니다. 각 CA의 유형(엔터프라이즈/독립 실행형), 역할(루트/하위), 호스트 이름, 운영 체제 버전, 게시된 인증서 템플릿을 문서화합니다. 모든 CA 서버가 지원되는 OS 버전을 실행하며 최신 패치가 적용되었는지 확인합니다.", "status": "machine-draft" }
+  },
+  "ADCS-002": {
+    "name": { "value": "ESC1 - 등록자가 주체 대체 이름 제공", "status": "machine-draft" },
+    "description": { "value": "ESC1은 인증서 템플릿이 등록자가 인증서 요청에서 주체 대체 이름(SAN)을 지정하도록 허용하고, 클라이언트 인증 또는 인증을 허용하는 EKU를 가지며, 낮은 권한 사용자의 등록을 허용할 때 발생합니다. 공격자는 Domain Admins를 포함한 모든 도메인 사용자에 대한 SAN이 포함된 인증서를 요청한 다음, 그 인증서를 사용하여 해당 사용자로 인증할 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "낮은 권한 등록을 허용하고 인증 EKU를 가진, CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT가 있는 인증서 템플릿이 없습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "msPKI-Certificate-Name-Flag에 CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT(0x1)가 포함되고, 템플릿이 클라이언트 인증 또는 스마트 카드 로그온 EKU를 가지며, 관리자가 아닌 사용자에게 등록이 허용된 템플릿을 식별합니다. CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT 플래그를 제거하거나, 등록 권한을 권한 있는 그룹으로 제한하거나, 인증 EKU를 제거합니다. SAN 지정이 운영상 필요한 경우 CA 관리자 승인을 구현합니다.", "status": "machine-draft" }
+  },
+  "ADCS-003": {
+    "name": { "value": "ESC2 - 모든 용도 확장 키 사용", "status": "machine-draft" },
+    "description": { "value": "ESC2는 인증서 템플릿이 모든 용도 EKU(OID 2.5.29.37.0)를 지정하거나 EKU가 전혀 없을 때(SubCA 템플릿에 해당) 발생합니다. 모든 용도 EKU를 가진 인증서는 클라이언트 인증, 서버 인증, 코드 서명을 포함한 모든 용도로 사용될 수 있습니다. 등록자가 제어하는 SAN 또는 낮은 등록 요구사항과 결합되면 도메인 침해가 가능해집니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "낮은 권한 등록을 허용하는 모든 용도 EKU 또는 빈 EKU를 가진 인증서 템플릿이 없습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "pKIExtendedKeyUsage에 모든 용도 OID(2.5.29.37.0)가 포함되거나 비어 있고, 관리자가 아닌 사용자에게 등록이 허용된 템플릿을 식별합니다. 모든 용도 EKU를 특정 필수 EKU(예: 클라이언트 인증만)로 대체합니다. SubCA 템플릿인 경우 등록을 Enterprise Admins로만 제한합니다. 광범위한 EKU를 가진 나머지 템플릿에 대해 CA 관리자 승인을 구현합니다.", "status": "machine-draft" }
+  },
+  "ADCS-004": {
+    "name": { "value": "ESC3 - 등록 에이전트 템플릿 악용 조건 1", "status": "machine-draft" },
+    "description": { "value": "ESC3 조건 1은 인증서 요청 에이전트 EKU(OID 1.3.6.1.4.1.311.20.2.1)를 가지며 낮은 권한 사용자의 등록을 허용하는 인증서 템플릿을 식별합니다. 등록 에이전트 인증서는 그 보유자가 모든 사용자를 대신하여 다른 템플릿에 등록할 수 있게 하며, 여기에는 일반적으로 CA 관리자 승인이 필요한 인증 EKU를 가진 템플릿이 포함될 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "인증서 요청 에이전트 템플릿이 승인된 등록 에이전트로만 제한되며, 낮은 권한 사용자가 등록할 수 없습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "관리자가 아닌 사용자의 등록을 허용하는 인증서 요청 에이전트 EKU를 가진 템플릿을 식별합니다. 이러한 템플릿의 등록 권한을 전용 등록 에이전트 보안 그룹으로 제한합니다. CA에서 등록 에이전트 제한을 구성하여 등록 에이전트가 등록할 수 있는 템플릿과 사용자를 제한합니다. 인증서 요청 에이전트 인증서 발급을 모니터링합니다.", "status": "machine-draft" }
+  },
+  "ADCS-005": {
+    "name": { "value": "ESC3 - 등록 에이전트 템플릿 악용 조건 2", "status": "machine-draft" },
+    "description": { "value": "ESC3 조건 2는 다른 사용자를 대신하는 등록을 수락하고(등록 에이전트 서명 필요) 인증 EKU를 가진 인증서 템플릿을 식별합니다. ESC3 조건 1과 결합되면, 등록 에이전트 인증서를 획득한 공격자는 Domain Admins를 포함한 모든 사용자를 대신하여 인증 인증서에 등록할 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "등록 에이전트 서명을 요구하는 템플릿이 CA의 등록 에이전트 제한을 통해 특정 대상 사용자로 제한됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "인증서 요청 에이전트 응용 프로그램 정책으로 승인된 서명을 요구하며 클라이언트 인증 또는 스마트 카드 로그온 EKU를 가진 템플릿을 식별합니다. CA에서 등록 에이전트 제한을 구성하여 이러한 등록 에이전트가 등록할 수 있는 템플릿과 대신 등록할 수 있는 사용자를 제한합니다. 이는 CA 속성의 등록 에이전트 제한에서 구성됩니다.", "status": "machine-draft" }
+  },
+  "ADCS-006": {
+    "name": { "value": "ESC4 - 취약한 인증서 템플릿 ACL", "status": "machine-draft" },
+    "description": { "value": "ESC4는 낮은 권한 사용자가 AD의 인증서 템플릿 개체에 쓰기 권한을 가져서 템플릿 특성을 수정하여 ESC1, ESC2 또는 ESC3 조건을 만들 수 있을 때 발생합니다. 쓰기 접근 권한을 가진 공격자는 CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT를 추가하거나, EKU를 변경하거나, 등록 권한을 수정하거나, 기타 보안 관련 특성을 변경하여 인증서 기반 권한 상승을 가능하게 할 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "관리자가 아닌 주체에 대해 인증서 템플릿 개체에 쓰기 권한이 없습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration의 모든 인증서 템플릿 개체에서 ACL을 열거합니다. 관리자가 아닌 주체에 대한 WriteDACL, WriteOwner, WriteProperty, GenericAll/GenericWrite ACE를 제거합니다. Enterprise Admins와 지정된 PKI 관리자만 템플릿 개체에 쓰기 접근 권한을 가져야 합니다. 인증서 템플릿 개체의 ACL 변경을 모니터링합니다.", "status": "machine-draft" }
+  },
+  "ADCS-007": {
+    "name": { "value": "ESC4 - 취약한 인증서 템플릿 소유권", "status": "machine-draft" },
+    "description": { "value": "인증서 템플릿 개체가 관리자가 아닌 주체에 의해 소유되면, 그 주체는 템플릿의 DACL을 수정하여 자신에게 쓰기 접근 권한을 부여한 다음 템플릿을 수정하여 악용 가능한 조건을 만들 수 있습니다. 템플릿 소유권은 Enterprise Admins 또는 도메인의 PKI 관리 그룹으로 제한해야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 인증서 템플릿 개체가 Enterprise Admins 또는 지정된 PKI 관리자에 의해 소유됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration의 모든 인증서 템플릿 개체에서 소유자 필드를 확인합니다. Set-Acl 또는 adsiedit.msc의 보안 탭을 사용하여 잘못 소유된 템플릿의 소유권을 Enterprise Admins로 이전합니다. 재발을 방지하기 위해 관리자가 아닌 계정이 어떻게 소유자가 되었는지 조사합니다.", "status": "machine-draft" }
+  },
+  "ADCS-008": {
+    "name": { "value": "ESC5 - 취약한 PKI 개체 ACL", "status": "machine-draft" },
+    "description": { "value": "ESC5는 인증서 템플릿을 넘어 CA 서버의 AD 개체, NTAuthCertificates 개체, 등록 서비스 컨테이너, 인증서 템플릿 컨테이너를 포함한 기타 PKI 관련 AD 개체에 대한 쓰기 권한을 다룹니다. 이러한 개체에 대한 쓰기 접근은 공격자가 악성 CA를 추가하거나, 등록 설정을 수정하거나, 악성 템플릿을 게시할 수 있게 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "관리자가 아닌 주체에 대해 PKI 컨테이너 개체에 쓰기 권한이 없으며, 쓰기 접근이 Enterprise Admins로 제한됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "등록 서비스 컨테이너, AIA 컨테이너, NTAuthCertificates 개체, 인증서 템플릿 컨테이너를 포함한 CN=Public Key Services,CN=Services,CN=Configuration 아래의 모든 개체에서 ACL을 감사합니다. 관리자가 아닌 주체에 대한 쓰기 권한을 제거합니다. AD의 CA 컴퓨터 개체가 광범위한 그룹에 대한 쓰기 권한을 갖지 않도록 합니다. 이러한 개체의 무단 변경을 모니터링합니다.", "status": "machine-draft" }
+  },
+  "ADCS-009": {
+    "name": { "value": "ESC6 - EDITF_ATTRIBUTESUBJECTALTNAME2 플래그", "status": "machine-draft" },
+    "description": { "value": "CA에서 EDITF_ATTRIBUTESUBJECTALTNAME2 플래그가 활성화되면, 템플릿 구성과 관계없이 모든 인증서 요청에 사용자 정의 주체 대체 이름을 포함할 수 있습니다. 이는 사실상 CA의 모든 템플릿을 공격자가 권한 있는 사용자에 대한 SAN을 지정하는 ESC1 방식 공격에 취약하게 만듭니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 CA 서버에서 EDITF_ATTRIBUTESUBJECTALTNAME2 플래그가 비활성화됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "각 CA 서버에서 certutil -getreg policy\\EditFlags를 사용하여 CA 구성을 확인합니다. EDITF_ATTRIBUTESUBJECTALTNAME2 플래그(0x00040000)가 설정된 경우 certutil -setreg policy\\EditFlags -EDITF_ATTRIBUTESUBJECTALTNAME2를 사용하여 제거합니다. 변경 후 CertSvc 서비스를 다시 시작합니다. 이전 악용을 나타낼 수 있는 예기치 않은 SAN에 대해 최근 발급된 모든 인증서를 검토합니다.", "status": "machine-draft" }
+  },
+  "ADCS-010": {
+    "name": { "value": "ESC7 - 취약한 CA ACL", "status": "machine-draft" },
+    "description": { "value": "ESC7은 관리자가 아닌 주체가 CA에서 ManageCA 또는 ManageCertificates 권한을 가질 때 발생합니다. ManageCA는 EDITF_ATTRIBUTESUBJECTALTNAME2 활성화(ESC6 조건 생성)를 포함한 CA 구성 수정을 허용합니다. ManageCertificates는 보류 중인 인증서 요청 승인을 허용하여 민감한 템플릿의 CA 관리자 승인 요구사항을 우회합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "ManageCA 및 ManageCertificates 권한이 지정된 CA 관리자로만 제한됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "certsrv.msc > 속성 > 보안 탭 또는 certutil -getacl을 사용하여 CA 보안 권한을 검토합니다. 관리자가 아닌 주체로부터 ManageCA 권한을 제거합니다. 승인된 인증서 관리자가 아닌 모든 주체로부터 ManageCertificates를 제거합니다. CA 관리 권한을 가진 모든 주체를 문서화합니다. CA 관리자와 인증서 관리자 간에 직무 분리를 구현합니다.", "status": "machine-draft" }
+  },
+  "ADCS-011": {
+    "name": { "value": "ESC8 - AD CS HTTP 엔드포인트로의 NTLM 릴레이", "status": "machine-draft" },
+    "description": { "value": "ESC8은 NTLM 인증을 수락하는 AD CS 웹 등록(certsrv) 및 인증서 등록 서비스(CES) HTTP 엔드포인트를 악용합니다. 공격자는 도메인 컨트롤러 또는 권한 있는 계정으로부터 인증을 강제한 다음 NTLM 인증을 CA HTTP 엔드포인트로 릴레이하여 릴레이된 신원으로 인증서를 요청할 수 있으며, 이는 도메인 침해로 이어집니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "HTTP 기반 등록 엔드포인트가 없으며, 필요한 경우 인증 확장 보호(EPA)가 활성화된 HTTPS를 강제합니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-CertificateEnrollmentService를 사용하고 IIS 바인딩을 확인하여 모든 CA 웹 등록 엔드포인트를 식별합니다. HTTP 기반 등록 엔드포인트를 비활성화하고 HTTPS를 요구합니다. NTLM 릴레이를 방지하기 위해 IIS에서 인증 확장 보호를 활성화합니다. 또는 웹 등록 역할을 완전히 비활성화하고 DCOM 기반 등록 인터페이스만 사용합니다. 가능한 경우 CA 서버에서 NTLM 인증을 비활성화합니다.", "status": "machine-draft" }
+  },
+  "ADCS-012": {
+    "name": { "value": "ESC9 - 보안 확장 없음", "status": "machine-draft" },
+    "description": { "value": "ESC9는 발급된 인증서에 szOID_NTDS_CA_SECURITY_EXT 보안 확장이 없는 것을 악용합니다. 이 확장이 없고 StrongCertificateBindingEnforcement가 2로 설정되지 않은 경우, 사용자 개체에 대한 GenericWrite를 통해 사용자의 UPN 특성을 수정할 수 있는 공격자는 인증서를 요청하고, UPN을 원래대로 되돌린 다음, 그 인증서를 사용하여 수정된 신원으로 인증할 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 도메인 컨트롤러에서 StrongCertificateBindingEnforcement가 2로 설정되며, 인증 템플릿에 CT_FLAG_NO_SECURITY_EXTENSION이 설정되지 않습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "msPKI-Enrollment-Flag에 CT_FLAG_NO_SECURITY_EXTENSION(0x80000)이 있는 템플릿을 확인합니다. 인증 가능한 모든 템플릿에서 이 플래그를 제거합니다. 강력한 인증서 매핑을 강제하기 위해 모든 도메인 컨트롤러의 HKLM\\SYSTEM\\CurrentControlSet\\Services\\Kdc 아래에서 레지스트리 값 StrongCertificateBindingEnforcement를 2로 설정합니다. 강제를 활성화한 후 인증서 기반 인증을 테스트합니다.", "status": "machine-draft" }
+  },
+  "ADCS-013": {
+    "name": { "value": "ESC11 - 암호화 없는 RPC 릴레이", "status": "machine-draft" },
+    "description": { "value": "ESC11은 CA가 RPC 연결에 암호화를 강제하지 않을 때 AD CS RPC 등록 인터페이스(ICertPassage)를 표적으로 합니다. HTTP에 대한 ESC8과 유사하게, 공격자는 NTLM 인증을 암호화되지 않은 RPC 엔드포인트로 릴레이하여 릴레이된 신원으로 인증서를 요청할 수 있습니다. 이는 기본 DCOM 기반 등록 인터페이스에 영향을 미칩니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "RPC 암호화를 요구하기 위해 모든 CA 서버에서 IF_ENFORCEENCRYPTICERTREQUEST 플래그가 활성화됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "certutil -getreg CA\\InterfaceFlags를 사용하여 CA 인터페이스 플래그를 확인합니다. certutil -setreg CA\\InterfaceFlags +IF_ENFORCEENCRYPTICERTREQUEST를 사용하여 IF_ENFORCEENCRYPTICERTREQUEST 플래그를 활성화합니다. CertSvc 서비스를 다시 시작합니다. 암호화 강제를 활성화한 후 도메인에 조인된 클라이언트에서 인증서 등록이 여전히 올바르게 작동하는지 확인합니다.", "status": "machine-draft" }
+  },
+  "ADCS-014": {
+    "name": { "value": "ESC13 - 발급 정책 OID 그룹 링크", "status": "machine-draft" },
+    "description": { "value": "ESC13은 msDS-OIDToGroupLink 특성을 통해 인증서 발급 정책 OID와 AD 보안 그룹 간의 연결을 악용합니다. 인증서 템플릿이 보안 그룹에 매핑되는 발급 정책을 가질 때, 해당 템플릿에 등록하는 모든 사람은 인증서 기반 인증이 지속되는 동안 사실상 연결된 그룹의 멤버십을 얻게 됩니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "권한 있는 보안 그룹에 연결된 발급 정책 OID가 없으며, msDS-OIDToGroupLink는 민감하지 않은 그룹에만 존재합니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "CN=OID,CN=Public Key Services,CN=Services,CN=Configuration의 모든 OID 개체에서 msDS-OIDToGroupLink 특성을 쿼리합니다. 권한 있는 그룹(Domain Admins, Enterprise Admins 등)에 연결된 OID를 식별합니다. 민감한 그룹에 연결된 OID에서 msDS-OIDToGroupLink 특성을 제거합니다. 연결이 운영상 필요한 경우 발급 정책을 사용하는 템플릿의 등록을 승인된 주체로만 제한합니다.", "status": "machine-draft" }
+  },
+  "ADCS-015": {
+    "name": { "value": "ESC15 - 스키마 v1 템플릿의 응용 프로그램 정책", "status": "machine-draft" },
+    "description": { "value": "ESC15(EKUwu라고도 함)는 등록자가 인증서 요청에서 응용 프로그램 정책 확장을 지정할 수 있는 스키마 버전 1 인증서 템플릿을 악용합니다. 스키마 v1 템플릿은 템플릿의 응용 프로그램 정책을 강제하지 않기 때문에, 공격자는 템플릿 구성과 관계없이 발급된 인증서에 클라이언트 인증 또는 기타 EKU를 추가할 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "낮은 권한 등록을 허용하는 스키마 v1 템플릿이 게시되지 않으며, 필요한 모든 템플릿이 스키마 v2 이상으로 마이그레이션됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "엔터프라이즈 CA에 게시된 모든 스키마 v1 템플릿(msPKI-Template-Schema-Version = 1)을 식별합니다. v1 템플릿을 기반으로 명시적 EKU 강제가 있는 새 템플릿을 만들어 스키마 v1 템플릿을 스키마 v2 이상으로 마이그레이션합니다. 남은 v1 템플릿의 등록을 관리 계정으로만 제한합니다. 더 이상 필요하지 않은 v1 템플릿의 게시를 취소합니다.", "status": "machine-draft" }
+  },
+  "ADCS-016": {
+    "name": { "value": "ESC16 - UPN SAN 잘못된 구성", "status": "machine-draft" },
+    "description": { "value": "ESC16은 StrongCertificateBindingEnforcement가 1(호환 모드)로 설정되고, CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT 또는 CT_FLAG_SUBJECT_ALT_REQUIRE_UPN을 가진 인증서 템플릿이 등록자가 SAN에 UPN을 설정하도록 허용하는 잘못된 구성을 악용합니다. 약한 바인딩은 OID 보안 확장 없이 UPN만으로 인증서가 사용자에게 매핑되도록 허용하여 가장을 가능하게 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "StrongCertificateBindingEnforcement가 2로 설정되며, 낮은 권한 등록으로 등록자가 지정한 UPN SAN을 허용하는 템플릿이 없습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "모든 도메인 컨트롤러의 HKLM\\SYSTEM\\CurrentControlSet\\Services\\Kdc 아래에서 StrongCertificateBindingEnforcement를 2로 설정합니다. 등록자가 지정한 주체를 허용하거나 SAN에 UPN을 요구하는 모든 템플릿을 검토합니다. 이러한 템플릿의 등록을 승인된 주체로 제한합니다. 강력한 바인딩을 강제한 후 인증서 기반 인증을 테스트하여 전체 배포 전에 비호환성을 식별합니다.", "status": "machine-draft" }
+  },
+  "ADCS-017": {
+    "name": { "value": "EKEUwu - 확장 키 사용 악용", "status": "machine-draft" },
+    "description": { "value": "EKEUwu 공격은 등록자가 인증서 요청을 통해 확장 키 사용 필드에 영향을 미칠 수 있는 인증서 템플릿을 표적으로 합니다. 이는 EKU가 템플릿에 의해 엄격하게 강제되지 않는 특정 템플릿 구성에서 발생하며, 공격자가 인증 목적으로 의도되지 않은 인증서에 인증 EKU를 추가할 수 있게 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 인증서 템플릿이 템플릿 정의의 EKU를 엄격하게 강제하며, 등록자가 제어할 수 있는 EKU가 없습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "모든 인증서 템플릿의 EKU 강제를 검토합니다. EKU 강제가 더 견고한 스키마 v2 이상인지 확인합니다. EKU를 엄격하게 정의하고 강제하지 않는 불필요한 템플릿을 제거합니다. 인증서 요청을 테스트하여 발급된 인증서 EKU가 템플릿 정의와 일치하는지 확인합니다. 요청의 EKU를 검증하는 CA 발급 정책 모듈을 구현합니다.", "status": "machine-draft" }
+  },
+  "ADCS-018": {
+    "name": { "value": "CA 감사 구성", "status": "machine-draft" },
+    "description": { "value": "AD CS 인증 기관 감사는 인증서 요청, 발급, 취소, CA 구성 변경을 포함하여 어떤 인증서 관련 이벤트가 기록되는지 제어합니다. 적절한 CA 감사가 없으면 인증서 기반 공격 경로(ESC1-ESC16)의 악용을 탐지하거나 조사할 수 없으며, 무단 인증서 발급이 눈에 띄지 않게 됩니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 CA 감사 범주 활성화: 시작/중지, 백업/복원, 인증서 발급, 인증서 취소, 인증서 요청, CA 보안, CA 구성 변경", "status": "machine-draft" },
+    "remediationSteps": { "value": "certsrv.msc > CA 속성 > 감사 탭을 사용하여 CA 감사를 구성합니다. 모든 감사 범주를 활성화합니다: CA 데이터베이스 백업 및 복원, CA 구성 변경, CA 보안 설정 변경, 인증서 요청 발급 및 관리, 인증서 취소 및 CRL 게시, 보관된 키 저장 및 검색, AD CS 시작 및 중지. Windows 보안 이벤트 로그의 크기와 보존 설정이 충분한지 확인합니다.", "status": "machine-draft" }
+  },
+  "ADCS-019": {
+    "name": { "value": "인증서 템플릿 열거", "status": "machine-draft" },
+    "description": { "value": "보안 관련 특성과 함께 모든 인증서 템플릿을 포괄적으로 열거하면 ESC 취약성 평가의 기준선이 제공됩니다. 여기에는 템플릿 스키마 버전, 등록 권한, EKU 구성, 이름 플래그, 등록 플래그, 승인된 서명 요구사항, 유효 기간이 포함됩니다. 이 정보는 모든 ESC별 검사에 반영됩니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "보안 특성과 함께 완전한 템플릿 인벤토리가 문서화되며, 모든 템플릿이 최소 권한 등록과 적절한 EKU에 대해 검토됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "certutil -template 또는 PowerShell을 사용하여 CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration에서 모든 인증서 템플릿을 열거합니다. 각 템플릿에 대해 표시 이름, 스키마 버전, 등록 권한, EKU, 이름 플래그(ENROLLEE_SUPPLIES_SUBJECT), 등록 플래그, 승인된 서명 요구사항, 유효 기간, 갱신 기간을 문서화합니다. 각 CA에 게시된 템플릿을 교차 참조합니다.", "status": "machine-draft" }
+  }
+}

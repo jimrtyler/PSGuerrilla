@@ -1,0 +1,123 @@
+{
+  "_family": "ADDomainForestChecks.json",
+  "ADDOM-001": {
+    "name": { "value": "포리스트 기능 수준", "status": "machine-draft" },
+    "description": { "value": "Active Directory 포리스트 기능 수준은 권한 있는 액세스 관리 및 개선된 Kerberos 보호와 같은 최신 보안 기능을 활성화하기 위해 Windows Server 2016 이상이어야 합니다. 이전 기능 수준을 실행하면 레거시 프로토콜의 약점을 이용하는 공격에 환경이 노출됩니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "Windows Server 2016 이상", "status": "machine-draft" },
+    "remediationSteps": { "value": "Active Directory 도메인 및 트러스트 > 포리스트 루트를 마우스 오른쪽 단추로 클릭 > 포리스트 기능 수준 올리기를 통해 포리스트 기능 수준을 올립니다. 수준을 올리기 전에 모든 도메인 컨트롤러가 지원되는 OS 버전을 실행하는지 확인합니다", "status": "machine-draft" }
+  },
+  "ADDOM-002": {
+    "name": { "value": "도메인 기능 수준", "status": "machine-draft" },
+    "description": { "value": "Active Directory 도메인 기능 수준은 Windows Server 2016 이상이어야 합니다. 더 낮은 기능 수준은 Protected Users 그룹 기능, 인증 정책, 최신 Kerberos 아모링을 포함한 중요 보안 기능의 사용을 막습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "Windows Server 2016 이상", "status": "machine-draft" },
+    "remediationSteps": { "value": "Active Directory 도메인 및 트러스트 > 도메인을 마우스 오른쪽 단추로 클릭 > 도메인 기능 수준 올리기를 통해 도메인 기능 수준을 올립니다. 먼저 도메인의 모든 DC가 호환되는 OS 버전을 실행하는지 확인합니다", "status": "machine-draft" }
+  },
+  "ADDOM-003": {
+    "name": { "value": "스키마 버전 식별", "status": "machine-draft" },
+    "description": { "value": "AD 스키마 버전은 문서화되어야 하며 지원되는 최신 버전에 해당해야 합니다. 오래된 스키마는 최신 보안 기능 및 응용 프로그램에 필요한 특성이 없을 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "Windows Server 2022(버전 88) 이상에 해당하는 스키마 버전", "status": "machine-draft" },
+    "remediationSteps": { "value": "스키마를 업데이트하려면 최신 Windows Server 설치 미디어에서 adprep /forestprep 및 adprep /domainprep를 실행합니다. CN=Schema,CN=Configuration,DC=domain에서 objectVersion 특성을 확인합니다", "status": "machine-draft" }
+  },
+  "ADDOM-004": {
+    "name": { "value": "도메인 컨트롤러 인벤토리", "status": "machine-draft" },
+    "description": { "value": "모든 도메인 컨트롤러는 OS 버전, 패치 수준, 위치와 함께 인벤토리에 포함되어야 합니다. 추적되지 않는 도메인 컨트롤러는 패치를 놓치거나 탐지되지 않고 침해될 수 있으므로 심각한 보안 위험을 나타냅니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 도메인 컨트롤러가 최신 OS 버전, 사이트 멤버십, 패치 상태와 함께 문서화됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "Domain Controllers OU에서 모든 DC 컴퓨터 개체를 쿼리합니다. 각 DC가 파악되고, 지원되는 OS를 실행하며, 정기적으로 패치를 받는지 확인합니다. 무단 DC를 즉시 제거하거나 강등합니다", "status": "machine-draft" }
+  },
+  "ADDOM-005": {
+    "name": { "value": "도메인 컨트롤러의 사용 중지된 OS", "status": "machine-draft" },
+    "description": { "value": "수명이 종료된 운영 체제(Windows Server 2012 R2 이하)를 실행하는 도메인 컨트롤러는 보안 업데이트를 받지 못하며 알려진 익스플로잇에 취약합니다. DC를 침해하면 전체 도메인 제어권을 얻게 되므로 이는 중요한 인프라 위험을 나타냅니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 도메인 컨트롤러가 최신 패치가 적용된 Windows Server 2019 이상을 실행합니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "사용 중지된 OS 버전을 실행하는 DC의 마이그레이션을 계획합니다. Windows Server 2022에 새 DC를 구축하고, 필요한 경우 FSMO 역할을 이전하고, 복제한 다음, 이전 DC를 강등하고 폐기합니다. 레거시 DC는 적극적으로 표적이 되므로 이 개선을 우선 처리합니다", "status": "machine-draft" }
+  },
+  "ADDOM-006": {
+    "name": { "value": "FSMO 역할 소유자 식별", "status": "machine-draft" },
+    "description": { "value": "다섯 가지 FSMO 역할(스키마 마스터, 도메인 명명 마스터, RID 마스터, PDC 에뮬레이터, 인프라 마스터)은 문서화되어 적절한 도메인 컨트롤러에 배치되어야 합니다. 역할 배치를 아는 것은 재해 복구와 운영 인식에 필수적입니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 FSMO 역할이 문서화되고, 신뢰할 수 있는 DC에 배치되며, DR 계획에 포함됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "'netdom query fsmo'를 실행하거나 AD 스키마 및 도메인 파티션을 쿼리하여 역할 소유자를 식별합니다. 역할을 문서화하고 고가용성 DC에 있는지 확인합니다. 현재 소유자가 부적절한 경우 역할을 이전합니다", "status": "machine-draft" }
+  },
+  "ADDOM-007": {
+    "name": { "value": "AD 복제 상태", "status": "machine-draft" },
+    "description": { "value": "Active Directory 복제 실패는 일관되지 않은 보안 정책 적용, 유효하게 남아 있는 오래된 자격 증명, 스플릿 브레인 시나리오로 이어질 수 있습니다. 지속적인 복제 실패는 침해되었거나 무단인 DC를 나타낼 수도 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 도메인 컨트롤러가 지난 24시간 동안 오류 없이 성공적으로 복제됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "'repadmin /replsummary' 및 'repadmin /showrepl'을 실행하여 실패를 식별합니다. DNS 문제, 네트워크 연결 문제 또는 USN 롤백 상황을 조사하고 해결합니다. 일상 운영의 일부로 복제 상태를 모니터링합니다", "status": "machine-draft" }
+  },
+  "ADDOM-008": {
+    "name": { "value": "톰스톤 수명 구성", "status": "machine-draft" },
+    "description": { "value": "톰스톤 수명은 삭제된 개체가 영구 제거되기 전에 유지되는 기간을 정의하며, DC가 재구축되어야 하기 전까지의 최대 오프라인 시간을 결정합니다. 값이 너무 낮으면 잔류 개체가 발생할 수 있으며, 기본값 60일은 최신 환경에서는 180일로 늘려야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "180일", "status": "machine-draft" },
+    "remediationSteps": { "value": "CN=Directory Service,CN=Windows NT,CN=Services,CN=Configuration,DC=domain에서 tombstoneLifetime 특성을 수정합니다. ADSIEdit 또는 PowerShell을 사용하여 180으로 설정합니다. 수정하기 전에 AD 휴지통이 활성화되어 있는지 확인합니다", "status": "machine-draft" }
+  },
+  "ADDOM-009": {
+    "name": { "value": "AD 휴지통 상태", "status": "machine-draft" },
+    "description": { "value": "Active Directory 휴지통은 삭제된 개체를 모든 특성이 그대로 유지된 상태로 복구할 수 있게 합니다. 이것이 없으면 실수로 또는 악의적으로 삭제된 개체를 복원하려면 백업에서 권한 있는 복원이 필요하며, 이는 상당한 다운타임을 유발합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "활성화됨", "status": "machine-draft" },
+    "remediationSteps": { "value": "Active Directory 관리 센터 > 도메인을 마우스 오른쪽 단추로 클릭 > 휴지통 활성화를 통해 AD 휴지통을 활성화하거나, PowerShell에서 Enable-ADOptionalFeature 'Recycle Bin Feature'를 실행합니다. 참고: 이 작업은 되돌릴 수 없습니다", "status": "machine-draft" }
+  },
+  "ADDOM-010": {
+    "name": { "value": "사이트 및 서브넷 구성", "status": "machine-draft" },
+    "description": { "value": "사용 중인 모든 IP 서브넷은 AD 사이트에 할당되어야 합니다. 서브넷 대 사이트 매핑이 누락되면 클라이언트가 최적이 아닌 DC에 대해 인증하게 되어, 잠재적으로 WAN 링크를 통해 자격 증명을 평문으로 전송하고 보안 태세를 저하시킬 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 IP 서브넷이 적절한 AD 사이트에 매핑되며 고아 서브넷이 없습니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "AD 사이트 및 서비스 > 서브넷 컨테이너를 검토합니다. 네트워크 문서와 교차 참조하여 매핑되지 않은 서브넷을 식별합니다. 모든 프로덕션 네트워크에 대한 서브넷 개체를 만들고 올바른 사이트와 연결합니다", "status": "machine-draft" }
+  },
+  "ADDOM-011": {
+    "name": { "value": "사이트 링크 구성", "status": "machine-draft" },
+    "description": { "value": "AD 사이트 링크는 네트워크 제약을 존중하면서 적시 복제를 보장하기 위해 적절한 비용, 복제 간격, 일정으로 구성되어야 합니다. 잘못 구성된 사이트 링크는 보안 정책 전파를 지연시킬 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "사이트 링크가 적절한 비용과 링크 용량에 따라 15~60분의 복제 간격으로 구성됩니다", "status": "machine-draft" },
+    "remediationSteps": { "value": "AD 사이트 및 서비스 > 사이트 간 전송 > IP를 검토합니다. 각 사이트 링크가 적절한 비용 값, 복제 간격(기본값 180분은 종종 너무 김), 일정을 갖는지 확인합니다. 네트워크 토폴로지에 따라 조정합니다", "status": "machine-draft" }
+  },
+  "ADDOM-012": {
+    "name": { "value": "DNS 영역 보안", "status": "machine-draft" },
+    "description": { "value": "AD 통합 DNS 영역은 보안 동적 업데이트만 사용해야 합니다. 비보안 업데이트를 허용하면 공격자가 DNS 레코드를 오염시키고, 인증 트래픽을 리디렉션하며, 도메인에 조인된 시스템에 대해 중간자 공격을 수행할 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 AD 통합 DNS 영역에서 보안 동적 업데이트만 허용", "status": "machine-draft" },
+    "remediationSteps": { "value": "DNS 관리자를 엽니다 > 각 AD 통합 영역을 마우스 오른쪽 단추로 클릭 > 속성 > 일반 탭 > 동적 업데이트를 '보안 전용'으로 변경합니다. 모든 정방향 및 역방향 조회 영역을 검토합니다. 해당하는 경우 DNSSEC 서명을 확인합니다", "status": "machine-draft" }
+  },
+  "ADDOM-013": {
+    "name": { "value": "LDAP 서명 요구사항", "status": "machine-draft" },
+    "description": { "value": "LDAP 트래픽에 대한 중간자 공격을 방지하기 위해 모든 도메인 컨트롤러에서 LDAP 서명이 요구되어야 합니다. 서명이 없으면 공격자가 LDAP 쿼리와 응답을 가로채고 수정하여 잠재적으로 권한을 상승시키거나 데이터를 유출할 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 DC에서 LDAP 서버 서명 요구사항을 '서명 필요'로 설정", "status": "machine-draft" },
+    "remediationSteps": { "value": "그룹 정책을 통해 구성합니다: 컴퓨터 구성 > 정책 > Windows 설정 > 보안 설정 > 로컬 정책 > 보안 옵션 > '도메인 컨트롤러: LDAP 서버 서명 요구사항' = '서명 필요'. Domain Controllers OU에 적용합니다", "status": "machine-draft" }
+  },
+  "ADDOM-014": {
+    "name": { "value": "LDAP 채널 바인딩", "status": "machine-draft" },
+    "description": { "value": "LDAP 채널 바인딩 토큰은 LDAP 세션을 TLS 채널에 암호학적으로 바인딩하여 릴레이 공격을 방지합니다. 채널 바인딩이 없으면 공격자가 LDAP 인증을 릴레이하여 무단 접근을 얻을 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 도메인 컨트롤러에서 LDAP 채널 바인딩을 '항상'으로 설정", "status": "machine-draft" },
+    "remediationSteps": { "value": "모든 DC의 HKLM\\System\\CurrentControlSet\\Services\\NTDS\\Parameters에서 레지스트리 값 LdapEnforceChannelBinding을 2(항상)로 설정합니다. 호환되지 않는 클라이언트를 식별하기 위해 먼저 값 1(지원되는 경우)로 테스트합니다", "status": "machine-draft" }
+  },
+  "ADDOM-015": {
+    "name": { "value": "SMB 서명 요구사항", "status": "machine-draft" },
+    "description": { "value": "SMB 트래픽에 대한 중간자 및 릴레이 공격을 방지하기 위해 모든 도메인 컨트롤러에서 SMB 서명이 요구되어야 합니다. SMB 릴레이 공격은 도메인 컨트롤러에서 SYSTEM 수준 접근을 얻는 데 사용될 수 있으며, 이는 전체 도메인 침해로 이어집니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 도메인 컨트롤러 및 멤버 서버에서 SMB 서명 필요", "status": "machine-draft" },
+    "remediationSteps": { "value": "그룹 정책을 통해 구성합니다: 컴퓨터 구성 > 정책 > Windows 설정 > 보안 설정 > 로컬 정책 > 보안 옵션 > 'Microsoft 네트워크 서버: 통신에 디지털 서명(항상)' = 사용. Domain Controllers OU 및 모든 서버 OU에 적용합니다", "status": "machine-draft" }
+  },
+  "ADDOM-016": {
+    "name": { "value": "NTLMv1 사용 탐지", "status": "machine-draft" },
+    "description": { "value": "NTLMv1은 최신 하드웨어로 몇 초 만에 크래킹될 수 있는 심각하게 약화된 인증 프로토콜입니다. 환경 내의 모든 NTLMv1 사용은 자격 증명을 간단한 오프라인 공격에 노출시키므로 식별하고 제거해야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "NTLMv1 인증 이벤트가 전혀 탐지되지 않으며, LAN Manager 인증 수준이 NTLMv1을 거부하도록 설정됨", "status": "machine-draft" },
+    "remediationSteps": { "value": "그룹 정책을 통해 NTLM 감사를 활성화합니다: 컴퓨터 구성 > 정책 > Windows 설정 > 보안 설정 > 로컬 정책 > 보안 옵션 > '네트워크 보안: NTLM 제한' 설정. 이벤트 로그에서 NTLMv1 사용을 검토하고 응용 프로그램을 개선한 다음, '네트워크 보안: LAN Manager 인증 수준'을 'NTLMv2 응답만 보냄. LM 및 NTLM 거부'로 설정합니다", "status": "machine-draft" }
+  },
+  "ADDOM-017": {
+    "name": { "value": "NTLMv2 강제", "status": "machine-draft" },
+    "description": { "value": "LAN Manager 인증 수준은 NTLMv2 응답만 보내고 LM 및 NTLMv1을 거부하도록 구성되어야 합니다. NTLMv2는 여전히 Kerberos보다 덜 안전하지만 NTLMv1보다 훨씬 강력하며 최소 NTLM 표준이어야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "LAN Manager 인증 수준을 'NTLMv2 응답만 보냄. LM 및 NTLM 거부'(수준 5)로 설정", "status": "machine-draft" },
+    "remediationSteps": { "value": "그룹 정책을 통해 구성합니다: 컴퓨터 구성 > 정책 > Windows 설정 > 보안 설정 > 로컬 정책 > 보안 옵션 > '네트워크 보안: LAN Manager 인증 수준' = 'NTLMv2 응답만 보냄. LM 및 NTLM 거부'. 강제하기 전에 철저히 테스트합니다", "status": "machine-draft" }
+  },
+  "ADDOM-018": {
+    "name": { "value": "Null 세션 열거", "status": "machine-draft" },
+    "description": { "value": "Active Directory에 대한 익명(null 세션) 접근은 인증되지 않은 공격자가 사용자, 그룹, 공유, 도메인 정보를 열거할 수 있게 합니다. 이 정찰 데이터는 자격 증명 공격과 측면 이동을 계획하는 데 사용됩니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "Null 세션 열거가 비활성화되며, 익명 접근을 방지하도록 RestrictAnonymous 및 RestrictAnonymousSAM이 설정됨", "status": "machine-draft" },
+    "remediationSteps": { "value": "그룹 정책을 통해 구성합니다: 컴퓨터 구성 > 정책 > Windows 설정 > 보안 설정 > 로컬 정책 > 보안 옵션 > '네트워크 접근: 명명된 파이프 및 공유에 대한 익명 접근 제한' = 사용, '네트워크 접근: SAM 계정의 익명 열거 허용 안 함' = 사용, '네트워크 접근: SAM 계정 및 공유의 익명 열거 허용 안 함' = 사용으로 설정합니다", "status": "machine-draft" }
+  },
+  "ADDOM-019": {
+    "name": { "value": "도메인 컨트롤러의 Print Spooler", "status": "machine-draft" },
+    "description": { "value": "도메인 컨트롤러의 Print Spooler 서비스는 PrintNightmare(CVE-2021-34527) 및 SpoolSample/PrinterBug 공격을 가능하게 합니다. 공격자는 DC가 공격자가 제어하는 서버에 인증하도록 강제하여 자격 증명 릴레이와 제한 없는 위임 악용을 가능하게 할 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 도메인 컨트롤러에서 Print Spooler 서비스가 비활성화됨", "status": "machine-draft" },
+    "remediationSteps": { "value": "그룹 정책을 통해 모든 도메인 컨트롤러에서 Print Spooler 서비스를 비활성화합니다: 컴퓨터 구성 > 정책 > Windows 설정 > 보안 설정 > 시스템 서비스 > Print Spooler > 시작 모드 = 사용 안 함. Domain Controllers OU에 적용합니다. DC에 의존하는 인쇄 기능이 없는지 확인합니다", "status": "machine-draft" }
+  },
+  "ADDOM-020": {
+    "name": { "value": "DSRM 암호 구성", "status": "machine-draft" },
+    "description": { "value": "디렉터리 서비스 복원 모드(DSRM) 암호는 도메인 컨트롤러가 복구 모드로 부팅될 때 로컬 관리자 접근을 제공합니다. DSRM 암호를 아는 물리적 또는 원격 접근을 가진 공격자는 전체 AD 데이터베이스를 추출할 수 있습니다. DSRM 암호는 DC마다 고유해야 하며 정기적으로 교체해야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "DSRM 암호가 DC마다 고유하고, 매년 교체되며, 안전하게 저장됨. 네트워크 DSRM 로그온을 방지하기 위해 DsrmAdminLogonBehavior를 0으로 설정", "status": "machine-draft" },
+    "remediationSteps": { "value": "각 DC에서 'ntdsutil > set dsrm password'를 사용하여 DSRM 암호를 재설정합니다. DSRM 계정이 네트워크 로그온에 사용되는 것을 방지하기 위해 HKLM\\System\\CurrentControlSet\\Control\\Lsa에서 레지스트리 값 DsrmAdminLogonBehavior를 0으로 설정합니다. 암호를 문서화하고 안전하게 저장합니다", "status": "machine-draft" }
+  }
+}
