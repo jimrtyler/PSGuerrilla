@@ -1,0 +1,111 @@
+{
+  "_family": "EntraCAChecks.json",
+  "EIDCA-001": {
+    "name": { "value": "完整的 CA 策略清单", "status": "machine-draft" },
+    "description": { "value": "应维护一份包含所有条件访问策略及其设置的完整清单。这可提供安全态势的可见性，并支持在整个租户范围内进行差距分析、变更跟踪和合规性审计。", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有条件访问策略均记录了状态、条件、授予控制和会话控制", "status": "machine-draft" },
+    "remediationSteps": { "value": "导航到 Entra 管理中心的条件访问边栏，导出所有策略。审查每个策略的命名约定、描述和适当的状态（已启用、已禁用或仅报告）是否正确。为审计目的维护所有策略配置的版本化记录。", "status": "machine-draft" }
+  },
+  "EIDCA-002": {
+    "name": { "value": "CA 策略覆盖差距分析", "status": "machine-draft" },
+    "description": { "value": "所有用户和应用程序都应至少被一条条件访问策略覆盖。覆盖上的差距会使用户或应用程序缺乏诸如 MFA、设备合规或位置限制等安全控制，从而为未经授权的访问创造攻击途径。", "status": "machine-draft" },
+    "recommendedValue": { "value": "100% 的活动用户和关键应用程序至少被一条 CA 策略覆盖", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查所有条件访问策略，以识别未被任何策略瞄准的用户和应用程序。为未覆盖的用户和应用程序创建带有适当授予控制和会话控制的策略。优先为特权账户和业务关键应用程序提供覆盖。", "status": "machine-draft" }
+  },
+  "EIDCA-003": {
+    "name": { "value": "处于仅报告模式的 CA 策略", "status": "machine-draft" },
+    "description": { "value": "保留在仅报告模式的条件访问策略不会强制执行安全控制，仅记录本应发生的情况。已完成测试的策略应切换到已启用状态，以主动保护环境。", "status": "machine-draft" },
+    "recommendedValue": { "value": "没有策略处于仅报告模式，除非正在主动测试并有明确的转换时间表", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查当前处于仅报告模式的所有条件访问策略，并评估其登录日志影响数据。对于已经过验证且显示可接受影响的策略，将状态从仅报告更改为已启用。建立一个策略生命周期流程，定义在强制执行前的最长仅报告持续时间。", "status": "machine-draft" }
+  },
+  "EIDCA-004": {
+    "name": { "value": "CA 排除组分析", "status": "machine-draft" },
+    "description": { "value": "从条件访问策略中排除的用户和组会绕过关键安全控制。排除应最小化、以业务理由记录在案，并定期审查以防止权限蔓延和未经授权的访问。", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有排除均以业务理由记录在案并每季度审查", "status": "machine-draft" },
+    "remediationSteps": { "value": "审计所有条件访问策略，以识别被排除的用户和组。记录每项排除的业务理由，并指定负责定期审查的负责人。删除任何不再具有有效业务需求的排除，并在需要排除的情况下实施补偿性控制。", "status": "machine-draft" }
+  },
+  "EIDCA-005": {
+    "name": { "value": "CA 排除中的未受保护组", "status": "machine-draft" },
+    "description": { "value": "用于条件访问排除、但缺乏所有权、成员资格审查或访问限制的组，可能被攻击者利用来绕过安全策略。将自己添加到未受保护排除组的攻击者，可有效绕过针对该组的所有 CA 控制。", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有 CA 排除组都有指定负责人、受限的成员资格管理，并已启用定期访问审查", "status": "machine-draft" },
+    "remediationSteps": { "value": "识别 CA 策略排除中引用的所有组，并验证每个组都有指定负责人、受限的加入/离开设置和活动的访问审查计划。启用特权访问组功能，或将组成员资格更改限制为仅授权管理员可执行。立即从 CA 排除中删除任何无人管理或孤立的组。", "status": "machine-draft" }
+  },
+  "EIDCA-006": {
+    "name": { "value": "紧急访问账户 CA 排除验证", "status": "machine-draft" },
+    "description": { "value": "紧急访问（break-glass）账户必须从条件访问策略中排除，以确保在中断或配置错误期间的访问，但这些排除必须受到严格控制。未能正确配置 break-glass 排除，可能导致在关键事件期间被完全锁定，或造成不受监视的后门账户。", "status": "machine-draft" },
+    "recommendedValue": { "value": "恰好有两个 break-glass 账户从所有 CA 策略中排除，并配有监视、告警和定期验证", "status": "machine-draft" },
+    "remediationSteps": { "value": "验证存在专用的 break-glass 账户，它们从所有条件访问策略中排除，且不用于日常运营。配置 Azure Monitor 告警，以在 break-glass 账户的任何登录活动时触发。每季度测试 break-glass 账户访问，并将凭据安全存储在物理保险箱或硬件安全模块中。", "status": "machine-draft" }
+  },
+  "EIDCA-007": {
+    "name": { "value": "通过条件访问强制执行 MFA", "status": "machine-draft" },
+    "description": { "value": "应通过条件访问策略要求所有用户使用多重身份验证，以防范基于凭据的攻击。如果不强制执行 MFA，仅凭被攻陷的密码即可完全访问组织资源，这使其成为对抗账户接管的单项最具影响力的控制。", "status": "machine-draft" },
+    "recommendedValue": { "value": "通过条件访问对所有云应用程序中 100% 的用户要求 MFA", "status": "machine-draft" },
+    "remediationSteps": { "value": "创建一条针对所有用户和所有云应用程序的条件访问策略，并设置要求多重身份验证的授予控制。验证该策略覆盖所有用户类型，包括来宾和外部协作者。监视登录日志以确认正在提示 MFA，并审查 CA 见解工作簿以查找覆盖差距。", "status": "machine-draft" }
+  },
+  "EIDCA-008": {
+    "name": { "value": "通过 CA 阻止旧版身份验证", "status": "machine-draft" },
+    "description": { "value": "IMAP、POP3、SMTP 和 ActiveSync 等旧版身份验证协议不支持新式身份验证或 MFA，使其成为密码喷洒和暴力破解攻击的主要攻击途径。通过条件访问阻止旧版身份验证对于防止这些协议绕过 MFA 控制至关重要。", "status": "machine-draft" },
+    "recommendedValue": { "value": "通过条件访问为所有用户阻止所有旧版身份验证协议", "status": "machine-draft" },
+    "remediationSteps": { "value": "创建一条针对所有用户和所有云应用程序的条件访问策略，将客户端应用条件设置为 Exchange ActiveSync 客户端和其他客户端，然后将授予控制设置为阻止访问。验证该策略处于已启用状态，并监视登录日志以查找任何残留的旧版身份验证尝试。与应用程序负责人协调，将任何残留的旧版协议依赖迁移到新式身份验证。", "status": "machine-draft" }
+  },
+  "EIDCA-009": {
+    "name": { "value": "CA 中的设备合规要求", "status": "machine-draft" },
+    "description": { "value": "条件访问策略应要求设备合规，以确保只有受管理且运行状况良好的设备才能访问组织资源。如果没有设备合规要求，无人管理或被攻陷的设备可以访问敏感数据，从而增加数据外泄和恶意软件传播的风险。", "status": "machine-draft" },
+    "recommendedValue": { "value": "访问所有云应用程序均要求设备合规或混合 Azure AD 联接", "status": "machine-draft" },
+    "remediationSteps": { "value": "创建或更新条件访问策略，将设备合规或混合 Azure AD 联接作为所有云应用程序的授予控制来要求。在强制执行此要求之前，确保已使用适当的安全基线配置 Intune 设备合规策略。最初使用仅报告模式评估影响，在确认受管理设备覆盖充分后再转为强制执行。", "status": "machine-draft" }
+  },
+  "EIDCA-010": {
+    "name": { "value": "基于位置的 CA 策略审计", "status": "machine-draft" },
+    "description": { "value": "基于位置的条件访问策略根据 IP 地址范围、国家/地区或命名位置来限制访问。如果没有位置控制，攻击者可以从任何地理位置进行身份验证，从而更难以检测和防止来自可疑或高风险地区的未经授权访问。", "status": "machine-draft" },
+    "recommendedValue": { "value": "配置基于位置的策略，以阻止来自不受信任位置的访问或对其要求额外的控制", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查现有的命名位置，确保受信任的企业 IP 范围和国家/地区已准确定义。创建条件访问策略，对来自不受信任位置的访问要求 MFA 或阻止访问，尤其是针对特权账户和敏感应用程序。随着企业网络基础设施的变化，定期更新命名位置定义。", "status": "machine-draft" }
+  },
+  "EIDCA-011": {
+    "name": { "value": "命名位置配置审查", "status": "machine-draft" },
+    "description": { "value": "命名位置定义了条件访问策略使用的受信任和不受信任网络边界。配置错误的命名位置可能导致来自不受信任网络的访问过于宽松，或对来自合法企业位置的访问施加不必要的限制。", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有命名位置均准确反映当前的企业网络边界，并适当标记受信任位置", "status": "machine-draft" },
+    "remediationSteps": { "value": "导航到 Entra 管理中心的“命名位置”边栏，审查所有已配置位置的准确性。验证受信任的企业 IP 范围是最新的，且基于国家/地区的位置与组织存在情况一致。删除任何过时或未使用的命名位置，并确保仅对经过验证的企业网络应用受信任位置标志。", "status": "machine-draft" }
+  },
+  "EIDCA-012": {
+    "name": { "value": "基于登录风险的 CA 策略", "status": "machine-draft" },
+    "description": { "value": "基于登录风险的条件访问策略使用 Azure AD Identity Protection 信号来检测异常登录行为，例如不可能的旅行、匿名 IP 使用和凭据泄露检测。如果没有基于风险的策略，被攻陷的凭据可以从可疑位置或以可疑模式使用，而不会触发额外的验证。", "status": "machine-draft" },
+    "recommendedValue": { "value": "配置 CA 策略，对中级和高级登录风险要求 MFA 或阻止访问", "status": "machine-draft" },
+    "remediationSteps": { "value": "创建针对所有用户、将登录风险条件设置为中级和高级的条件访问策略，并将多重身份验证作为授予控制来要求。确保已启用 Azure AD Identity Protection 并获得适当许可（需要 Entra ID P2）。定期监视风险登录报告，并根据组织模式调整风险检测灵敏度。", "status": "machine-draft" }
+  },
+  "EIDCA-013": {
+    "name": { "value": "基于用户风险的 CA 策略", "status": "machine-draft" },
+    "description": { "value": "基于用户风险的条件访问策略响应表明用户账户可能已被攻陷的累积风险信号，例如凭据泄露或异常活动模式。如果没有用户风险策略，被 Identity Protection 标记为已攻陷的账户会继续正常运行，而不要求更改密码或进行额外验证。", "status": "machine-draft" },
+    "recommendedValue": { "value": "配置 CA 策略，对高级用户风险要求更改密码，对中级用户风险要求 MFA", "status": "machine-draft" },
+    "remediationSteps": { "value": "创建针对所有用户、将用户风险条件设置为中级和高级的条件访问策略，对高风险将安全更改密码作为授予控制来要求，对中风险则要求 MFA。确保已为所有用户启用并注册自助密码重置（SSPR），以支持自动修复。定期审查风险用户报告，并调查仍处于较高风险级别的账户。", "status": "machine-draft" }
+  },
+  "EIDCA-014": {
+    "name": { "value": "会话控制审计", "status": "machine-draft" },
+    "description": { "value": "条件访问会话控制管理登录频率和浏览器会话持久性。如果没有适当的会话控制，用户可能会无限期地保持身份验证状态，从而增加会话劫持和令牌盗窃攻击的机会窗口。", "status": "machine-draft" },
+    "recommendedValue": { "value": "敏感应用程序的登录频率设置为不超过 24 小时，并禁用持久浏览器会话", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查条件访问策略的会话控制配置，包括登录频率和持久浏览器会话设置。根据应用程序的敏感度将登录频率配置为适当的间隔，对特权访问使用更短的间隔。为敏感应用程序禁用持久浏览器会话，以确保令牌过期并要求重新身份验证。", "status": "machine-draft" }
+  },
+  "EIDCA-015": {
+    "name": { "value": "针对攻击场景的 CA What-If 模拟", "status": "machine-draft" },
+    "description": { "value": "条件访问 What-If 工具允许模拟登录场景，以对照常见攻击模式验证策略行为。如果没有定期的 what-if 测试，策略配置错误或差距可能在被攻击者利用之前一直不被发现。", "status": "machine-draft" },
+    "recommendedValue": { "value": "每季度进行 what-if 模拟，涵盖常见攻击场景，包括外部攻击者、被攻陷设备和旧版身份验证尝试", "status": "machine-draft" },
+    "remediationSteps": { "value": "使用条件访问 What-If 工具模拟常见攻击模式的登录场景，例如外部 MFA 绕过、旧版身份验证尝试、无人管理设备访问和被攻陷凭据的使用。记录每次模拟的结果，并修复任何未能阻止模拟攻击的策略。将 what-if 测试纳入所有 CA 策略修改的变更管理流程中。", "status": "machine-draft" }
+  },
+  "EIDCA-016": {
+    "name": { "value": "CA 策略文档导出", "status": "machine-draft" },
+    "description": { "value": "应生成所有条件访问策略的完整导出，用于文档记录、灾难恢复和合规性审计目的。如果没有已记录的策略导出，在租户被攻陷或意外删除后重建 CA 策略需要付出大量努力，并可能导致安全缺口。", "status": "machine-draft" },
+    "recommendedValue": { "value": "生成完整的 CA 策略导出，并存储在安全的、版本化的存储库中，在每次策略更改后更新", "status": "machine-draft" },
+    "remediationSteps": { "value": "使用 Microsoft Graph API 或 Entra 管理中心导出所有条件访问策略，并将输出存储在安全的、受版本控制的存储库中。建立一个自动化流程，按固定计划或在策略修改时触发捕获策略快照。将该导出纳入租户灾难恢复计划，并验证可以从导出中恢复策略。", "status": "machine-draft" }
+  },
+  "EIDCA-017": {
+    "name": { "value": "向管理员发送高风险用户通知", "status": "machine-draft" },
+    "description": { "value": "当用户被标记为高风险时，Identity Protection 可以向管理员发送电子邮件，从而在很可能发生账户攻陷时主动进行调查和遏制。SCuBA 建议在检测到高风险用户时向管理员发送此类通知。Identity Protection 的“检测到有风险的用户”通知接收者配置未通过稳定的只读 Microsoft Graph 终结点公开，因此无代理评估无法肯定地确认它；本检查如实呈现该要求，并报告租户中是否有支持性的风险检测遥测数据可用，而不是断言其无法验证的合规性。", "status": "machine-draft" },
+    "recommendedValue": { "value": "配置 Identity Protection，以在检测到高风险用户时向管理员发送电子邮件", "status": "machine-draft" },
+    "remediationSteps": { "value": "配置高风险用户通知，满足 SCuBA MS.AAD.2.2。在 Entra ID 中转到 Protection > Identity Protection > Notifications，将“Users at risk detected”告警设置为向适当的安全管理员或受监视的安全运营通讯组发送电子邮件。此控制需要 Entra ID P2（Identity Protection）。由于通知接收者列表无法通过 Microsoft Graph 以无代理方式读取，请在门户中手动验证该设置。", "status": "machine-draft" }
+  },
+  "EIDCA-018": {
+    "name": { "value": "MFA 注册需要受管理设备", "status": "machine-draft" },
+    "description": { "value": "要求为安全信息注册操作使用机构管理的（合规或混合 Entra 联接）设备，可降低攻击者使用被盗凭据注册自己的 MFA 方法并建立持久性的风险。SCuBA 建议 MFA 注册需要受管理设备。这通过一条条件访问策略实现，该策略针对“注册安全信息”用户操作，并将合规设备或混合 Entra ID 联接设备作为授予控制来要求。本检查审视已启用的条件访问策略是否有该配置。", "status": "machine-draft" },
+    "recommendedValue": { "value": "有一条已启用的条件访问策略针对安全信息注册用户操作，并要求合规或混合 Entra ID 联接设备", "status": "machine-draft" },
+    "remediationSteps": { "value": "创建一条条件访问策略，要求 MFA 注册使用受管理设备，满足 SCuBA MS.AAD.3.8。针对用户操作“Register security information”，将其范围限定为所有用户（排除 break-glass 账户），并将授予控制设置为要求合规设备或混合 Entra ID 联接设备。先在仅报告模式下试点，确保为新设备存在引导路径（例如临时访问通行证 Temporary Access Pass），然后启用强制执行。", "status": "machine-draft" }
+  }
+}

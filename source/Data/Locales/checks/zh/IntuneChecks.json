@@ -1,0 +1,141 @@
+{
+  "_family": "IntuneChecks.json",
+  "INTUNE-001": {
+    "name": { "value": "设备合规策略清单", "status": "machine-draft" },
+    "description": { "value": "设备合规策略定义了已注册设备必须满足的安全基线要求，例如操作系统版本、加密和密码复杂性。如果没有对这些策略的全面清点，组织就无法验证所有设备平台和用户组都具有足够的合规要求。缺失或不完整的策略会使设备不受治理，并可能不合规。", "status": "machine-draft" },
+    "recommendedValue": { "value": "每个受支持的平台（Windows、iOS、Android、macOS）至少有一条合规策略", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Intune 管理中心审查当前的设备合规策略清单，验证每个受支持的平台至少分配了一条策略。为任何缺乏覆盖的平台创建合规策略，为操作系统版本、加密和设备运行状况定义适当的要求。将策略分配给适当的用户或设备组，并确保没有设备落在策略范围之外。", "status": "machine-draft" }
+  },
+  "INTUNE-002": {
+    "name": { "value": "设备合规状态概览", "status": "machine-draft" },
+    "description": { "value": "整体设备合规状态表明已注册设备是否满足其分配的合规策略要求。不合规或未评估设备的高百分比预示着强制执行差距，可能允许不安全的设备访问公司资源。持续监视合规状态对于维护设备群的安全态势至关重要。", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有已注册设备的合规率达到 95% 或更高", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查设备合规概览仪表板，以识别合规、不合规和未评估设备的分布。调查处于未评估状态的设备，以确定它们是否缺少分配的策略或存在阻止评估的同步问题。设置合规状态通知，并与条件访问集成以阻止不合规的设备访问公司资源。", "status": "machine-draft" }
+  },
+  "INTUNE-003": {
+    "name": { "value": "不合规设备枚举", "status": "machine-draft" },
+    "description": { "value": "未通过合规策略评估的设备会对组织构成直接风险，因为它们可能缺乏加密、运行过时的操作系统或禁用了安全功能。枚举不合规设备并了解具体的合规失败原因，可实现有针对性的修复。如果没有这种可见性，不安全的设备可能会在不被发现的情况下继续访问公司数据。", "status": "machine-draft" },
+    "recommendedValue": { "value": "零个不合规设备可访问公司资源；所有不合规设备都应被阻止或处于修复中", "status": "machine-draft" },
+    "remediationSteps": { "value": "生成不合规设备的详细报告，包括每台设备失败的具体合规设置。优先修复未通过关键合规检查（例如加密或防病毒要求）的设备，并与设备所有者合作解决问题。在每条合规策略中配置不合规操作，以在宽限期后将设备标记为不合规，并与条件访问集成以限制资源访问。", "status": "machine-draft" }
+  },
+  "INTUNE-004": {
+    "name": { "value": "配置文件清单", "status": "machine-draft" },
+    "description": { "value": "配置文件将安全设置、限制和功能配置推送到已注册设备。配置文件清单不完整可能导致安全缺口，使诸如屏幕锁定、Wi-Fi 安全或证书部署等关键设置未被应用。了解配置文件的完整范围对于识别整个设备群的覆盖差距是必要的。", "status": "machine-draft" },
+    "recommendedValue": { "value": "记录所有配置文件的清单，采用清晰的命名约定和分配文档", "status": "machine-draft" },
+    "remediationSteps": { "value": "从 Intune 导出配置文件的完整列表，并审查每个配置文件的用途、目标平台和当前分配状态。识别任何未分配、冲突或冗余的配置文件，并在适当情况下进行整合。为所有配置文件建立命名约定和文档标准，以便持续管理和审计。", "status": "machine-draft" }
+  },
+  "INTUNE-005": {
+    "name": { "value": "配置文件分配分析", "status": "machine-draft" },
+    "description": { "value": "配置文件只有在正确分配给正确的设备或用户组时才有效。分配给过于宽泛组的配置文件可能导致冲突或将设置应用于不适当的设备，而分配范围过窄的配置文件可能使设备未被配置。分析分配覆盖可确保安全配置在没有冲突的情况下到达所有预期终结点。", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有安全关键配置文件均分配给适当的组，没有未分配的关键配置文件，也没有冲突的分配", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查每个配置文件的分配状态和目标组，特别注意存在错误或冲突的配置文件。通过调整分配、合并相似的配置文件或使用筛选器来针对特定设备特性，解决任何配置文件冲突。确保安全关键的配置文件（例如 BitLocker、防火墙和防病毒设置）通过全面的组成员资格分配给所有适用的设备。", "status": "machine-draft" }
+  },
+  "INTUNE-006": {
+    "name": { "value": "Windows Update for Business 环配置", "status": "machine-draft" },
+    "description": { "value": "Windows Update for Business 环控制受管理 Windows 设备上质量更新和功能更新的节奏和延迟期。配置错误的更新环可能导致设备长期运行具有已知漏洞的过时版本。正确分阶段的更新环可在运营稳定性与及时安全修补之间取得平衡。", "status": "machine-draft" },
+    "recommendedValue": { "value": "质量更新延迟不超过 7 天；功能更新延迟不超过 60 天；所有环均已分配并主动交付更新", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查所有 Windows Update for Business 环配置，验证安全关键环的质量更新延迟期不超过 7 天。确保至少存在一个试点部署环和一个广泛部署环，并具有适当的延迟分阶段。监视更新合规报告以识别尚未安装最近更新的设备，并调查任何更新失败或停滞的安装。", "status": "machine-draft" }
+  },
+  "INTUNE-007": {
+    "name": { "value": "BitLocker 加密策略审计", "status": "machine-draft" },
+    "description": { "value": "BitLocker 驱动器加密保护 Windows 设备上的静态数据，防止在设备丢失或被盗时对硬盘内容的未经授权访问。如果没有正确配置的 BitLocker 策略，设备可能以未加密方式存储公司数据，从而暴露敏感信息。该策略必须对操作系统驱动器和固定数据驱动器强制加密，并配有安全的密钥恢复选项。", "status": "machine-draft" },
+    "recommendedValue": { "value": "在所有操作系统驱动器和固定数据驱动器上启用 BitLocker，使用 XTS-AES 256 位加密和 Azure AD 密钥托管", "status": "machine-draft" },
+    "remediationSteps": { "value": "创建或更新 Intune 终结点保护配置文件，要求在操作系统驱动器和固定数据驱动器上使用 XTS-AES 256 位加密的 BitLocker 加密。配置密钥恢复托管到 Azure AD，以确保可以进行密钥恢复，并将策略设置为无需用户交互即可静默启用加密。监视加密状态报告以识别尚未完成加密的设备，并修复任何失败。", "status": "machine-draft" }
+  },
+  "INTUNE-008": {
+    "name": { "value": "Windows Defender/防病毒策略审计", "status": "machine-draft" },
+    "description": { "value": "Windows Defender Antivirus 是 Windows 设备上的主要终结点保护代理，必须正确配置以提供实时保护、云交付保护和样本提交。禁用或削弱的防病毒设置会使设备易受恶意软件感染，从而可能导致数据盗窃、勒索软件和横向移动。攻击者经常试图篡改或禁用防病毒软件，将其作为攻击链的第一步。", "status": "machine-draft" },
+    "recommendedValue": { "value": "启用实时保护、启用云交付保护、启用自动样本提交、启用篡改保护", "status": "machine-draft" },
+    "remediationSteps": { "value": "部署一条 Intune 防病毒策略，在所有受管理 Windows 设备上强制执行实时保护、云交付保护、自动样本提交和篡改保护。验证已启用 PUA（潜在有害应用程序）保护，并已配置计划扫描以进行至少每周一次的完整扫描。监视整个设备群的 Defender 防病毒代理状态，并调查任何报告保护被禁用或定义过时的设备。", "status": "machine-draft" }
+  },
+  "INTUNE-009": {
+    "name": { "value": "攻击面减少规则配置", "status": "machine-draft" },
+    "description": { "value": "Microsoft Defender 中的攻击面减少（ASR）规则可阻止常见的攻击技术，例如混淆脚本、Office 宏利用和从 LSASS 窃取凭据。如果未配置和强制执行 ASR 规则，终结点仍易受商品恶意软件和攻击者常规利用的知名攻击模式的攻击。正确配置的 ASR 规则可显著减少 Windows 终结点的攻击面。", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有推荐的 ASR 规则均以阻止模式启用；新部署的规则在测试期间采用审核模式", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查 Intune 终结点安全中当前的 ASR 规则配置，并至少以审核模式启用所有 Microsoft 推荐的规则。经过一段监视期以识别误报后，从高影响规则（例如阻止 Office 应用程序创建子进程和阻止从 LSASS 窃取凭据）开始，将规则转换为阻止模式。谨慎配置 ASR 规则排除，仅针对已记录的业务关键应用程序，并监视 ASR 事件报告以持续保持有效性。", "status": "machine-draft" }
+  },
+  "INTUNE-010": {
+    "name": { "value": "终结点检测和响应配置", "status": "machine-draft" },
+    "description": { "value": "Microsoft Defender for Endpoint 提供的终结点检测和响应（EDR）功能可在受管理设备上实现高级威胁检测、调查和自动响应。如果没有 EDR 载入和正确的传感器配置，安全团队将缺乏对绕过传统防病毒的复杂攻击的可见性。EDR 对于检测无文件恶意软件、离地攻击技术和高级持续性威胁至关重要。", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有受管理设备均已载入 Defender for Endpoint，EDR 处于阻止模式；启用样本共享和云保护", "status": "machine-draft" },
+    "remediationSteps": { "value": "验证所有受管理 Windows 设备均已通过 Intune EDR 策略载入 Microsoft Defender for Endpoint，且传感器运行状况状态显示为活动。启用阻止模式的 EDR，以便即使在第三方防病毒为主要引擎时也能提供额外的阻止能力。在 Defender 门户中审查设备清单，以识别存在传感器运行状况问题的设备，并修复阻止成功载入的连接或配置问题。", "status": "machine-draft" }
+  },
+  "INTUNE-011": {
+    "name": { "value": "应用程序保护策略（MAM）", "status": "machine-draft" },
+    "description": { "value": "应用程序保护策略（移动应用程序管理）控制在已注册和未注册设备上的受管理应用程序内如何处理公司数据。如果没有这些策略，用户可以将公司数据复制到个人应用程序、通过不受管理的渠道共享文件，或将公司数据备份到个人云存储。MAM 策略对于防止移动设备上的数据泄露至关重要。", "status": "machine-draft" },
+    "recommendedValue": { "value": "在所有 iOS 和 Android 受管理应用上应用应用保护策略；剪切/复制/粘贴限制在受管理应用之间；阻止备份到不受管理的服务", "status": "machine-draft" },
+    "remediationSteps": { "value": "为 iOS 和 Android 平台创建应用程序保护策略，针对处理公司数据的所有 Microsoft 365 和业务线应用程序。配置数据保护设置，以防止剪切/复制/粘贴到不受管理的应用程序、阻止备份到个人云服务，并要求应用级 PIN 或生物识别身份验证。将策略分配给所有在移动设备上访问公司数据的用户，并监视应用保护状态报告以查找不合规的应用程序。", "status": "machine-draft" }
+  },
+  "INTUNE-012": {
+    "name": { "value": "条件启动设置", "status": "machine-draft" },
+    "description": { "value": "应用程序保护策略中的条件启动设置定义了受管理应用程序可以启动的条件，例如最低操作系统版本、允许的最大威胁级别或越狱/获取 root 检测。如果没有这些设置，即使设备本身不安全，被攻陷或过时的设备也能通过受管理应用程序访问公司数据。这些控制为数据保护提供了关键的最后一道防线。", "status": "machine-draft" },
+    "recommendedValue": { "value": "在越狱/获取 root 的设备上阻止访问；要求最低操作系统版本；当设备威胁级别高时阻止访问", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查并更新每条应用程序保护策略中的条件启动设置，以在越狱或获取 root 的设备上阻止应用访问。配置与供应商支持版本一致的最低操作系统版本要求，并设置与您的移动威胁防御解决方案集成的最大设备威胁级别阈值。在广泛部署之前，使用试点组测试条件启动设置，以确保合法用户不会被意外阻止。", "status": "machine-draft" }
+  },
+  "INTUNE-013": {
+    "name": { "value": "设备注册限制", "status": "machine-draft" },
+    "description": { "value": "设备注册限制控制哪些设备类型、平台和操作系统版本被允许在 Intune 管理中注册。如果没有适当的限制，用户可能会注册运行不受支持或易受攻击的操作系统版本的个人设备，从而扩大攻击面。注册限制还可防止未经授权的设备类型通过设备管理获得对公司资源的访问权限。", "status": "machine-draft" },
+    "recommendedValue": { "value": "阻止个人拥有的设备或限制为特定平台；强制执行最低操作系统版本要求；限制每用户设备注册数量", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查 Intune 中的设备注册限制，并配置与组织受支持设备策略一致的特定平台限制。为每个平台设置最低操作系统版本要求，并配置单个用户可注册的最大设备数量以防止滥用。如果更倾向于公司拥有的设备注册，请阻止个人拥有的设备注册，并引导用户在 BYOD 场景中使用应用程序保护策略。", "status": "machine-draft" }
+  },
+  "INTUNE-014": {
+    "name": { "value": "Autopilot 配置", "status": "machine-draft" },
+    "description": { "value": "Windows Autopilot 提供零接触部署体验，确保新设备从首次启动就配置正确的安全基线。配置不当或缺失的 Autopilot 部署配置文件意味着新设备可能在没有关键安全设置的情况下被预配置，从而造成漏洞窗口。审查 Autopilot 配置可确保一致且安全的设备预配置。", "status": "machine-draft" },
+    "recommendedValue": { "value": "为所有公司设备配置 Autopilot 部署配置文件，采用用户驱动或自部署模式以及 Azure AD 联接", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查现有的 Autopilot 部署配置文件，验证它们已配置为使用 Azure AD 联接以及适当的用户驱动或自部署模式设置。确保已启用注册状态页，以防止用户在所有关键策略和应用程序安装完成之前访问桌面。验证所有公司设备的硬件哈希已在 Autopilot 服务中注册，并分配给适当的部署配置文件。", "status": "machine-draft" }
+  },
+  "INTUNE-015": {
+    "name": { "value": "磁盘加密状态", "status": "machine-draft" },
+    "description": { "value": "全盘加密确保存储在设备驱动器上的数据在物理设备丢失、被盗或退役时受到保护。未启用加密的设备会将公司数据（包括缓存的凭据、文档和电子邮件）暴露于物理盗窃攻击。监视整个设备群的加密状态可识别加密失败或尚未加密的设备。", "status": "machine-draft" },
+    "recommendedValue": { "value": "100% 的受管理设备报告所有驱动器均已启用加密", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查 Intune 加密报告，以识别所有未报告已启用全盘加密的设备。调查加密失败原因（可能由不受支持的硬件、TPM 问题或策略冲突引起）并解决根本原因。对于无法支持加密的设备，评估是否应允许它们访问公司资源，并考虑通过条件访问策略阻止它们。", "status": "machine-draft" }
+  },
+  "INTUNE-016": {
+    "name": { "value": "防火墙策略配置", "status": "machine-draft" },
+    "description": { "value": "Windows Defender 防火墙提供基于主机的网络保护，可阻止未经授权的入站和出站连接。如果没有通过 Intune 集中管理的防火墙策略，各个设备可能具有不一致或禁用的防火墙设置，使其易受基于网络的攻击。集中式防火墙管理可确保所有受管理终结点无论网络位置如何都受到一致的保护。", "status": "machine-draft" },
+    "recommendedValue": { "value": "为所有配置文件（域、专用、公用）启用 Windows Defender 防火墙；默认阻止入站连接；记录丢弃的数据包", "status": "machine-draft" },
+    "remediationSteps": { "value": "部署一条 Intune 终结点安全防火墙策略，为域、专用和公用网络配置文件启用 Windows Defender 防火墙，并默认阻止入站连接。为任何所需的应用程序例外配置防火墙规则，并为丢弃和成功的连接启用日志记录。监视防火墙策略部署状态，并调查任何报告策略应用错误或防火墙被禁用状态的设备。", "status": "machine-draft" }
+  },
+  "INTUNE-017": {
+    "name": { "value": "安全基线合规性", "status": "machine-draft" },
+    "description": { "value": "Intune 中的 Microsoft 安全基线提供由 Microsoft 安全团队推荐的预配置 Windows 设置组，涵盖凭据保护、浏览器安全和攻击面减少等领域。偏离安全基线的设备安全态势会被削弱，并可能易受已知攻击途径的攻击。监视基线合规性可识别配置漂移，并有助于维持一致的安全态势。", "status": "machine-draft" },
+    "recommendedValue": { "value": "对已分配的安全基线的合规性达到 90% 或更高；解决所有冲突和错误状态", "status": "machine-draft" },
+    "remediationSteps": { "value": "将最新的 Windows 和 Defender for Endpoint Microsoft 安全基线配置文件部署到所有受管理设备，并监视每项设置的合规状态。调查报告冲突或错误状态的设置，因为这些通常表明存在需要协调的竞争策略。通过评估偏差是由于需要记录例外的合法业务需求，还是应予纠正的配置问题，来处理不合规的设置。", "status": "machine-draft" }
+  },
+  "INTUNE-018": {
+    "name": { "value": "PowerShell 脚本部署审计", "status": "machine-draft" },
+    "description": { "value": "Intune 允许管理员将 PowerShell 脚本部署到受管理 Windows 设备，这些脚本默认以 SYSTEM 级权限执行。通过此渠道部署的恶意或编写不当的脚本，可能危及设备安全、外泄数据或在整个设备群中安装未经授权的软件。每个已部署的脚本都必须审查其安全影响，并跟踪授权部署。", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有已部署脚本均经过变更管理审查和批准；脚本尽可能在用户上下文中运行；记录脚本内容", "status": "machine-draft" },
+    "remediationSteps": { "value": "审计当前通过 Intune 部署的所有 PowerShell 脚本，并审查其内容以查找安全风险，例如硬编码凭据、不受限制的远程下载或过度的权限更改。确保脚本尽可能在用户上下文而非 SYSTEM 上下文中运行，且脚本执行限制在所需的最小设备范围内。为脚本部署实施变更管理流程，包括脚本内容的同行评审和生产部署前的正式批准。", "status": "machine-draft" }
+  },
+  "INTUNE-019": {
+    "name": { "value": "Win32 应用部署安全审查", "status": "machine-draft" },
+    "description": { "value": "通过 Intune 部署的 Win32 应用程序会将传统桌面应用程序打包并分发到受管理设备。审查不当的应用程序可能包含漏洞、捆绑的恶意软件或削弱设备安全的过度系统修改。审查 Win32 应用部署目录可确保仅将已批准且安全的应用程序分发到受管理设备群。", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有 Win32 应用均来自受信任的供应商并有已记录的批准；审查安装命令的安全影响", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查通过 Intune 部署的所有 Win32 应用程序，验证每个应用程序都来自受信任的供应商，并已通过您的软件批准流程获得批准。检查安装和卸载命令行是否有任何可疑的参数、脚本执行或可能削弱安全的注册表修改。实施应用程序审查流程，在部署到生产设备组之前评估新的 Win32 应用包的安全风险。", "status": "machine-draft" }
+  },
+  "INTUNE-020": {
+    "name": { "value": "设备类别和分组", "status": "machine-draft" },
+    "description": { "value": "Intune 中的设备类别和动态组用于组织受管理设备，以进行有针对性的策略和应用程序部署。如果没有结构化的分类方案，策略可能会被不一致地应用，且关键安全配置可能遗漏整个设备群体。正确的设备分组可为不同的设备角色和用户群体启用差异化的安全态势。", "status": "machine-draft" },
+    "recommendedValue": { "value": "定义与组织需求一致的设备类别；基于设备属性的动态组以实现自动策略定向", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查并建立与组织设备角色一致的设备类别，例如高管、标准用户、自助服务终端或共享设备。基于设备属性（包括类别、操作系统、所有权类型和合规状态）创建动态设备组，以实现自动策略和应用程序定向。验证所有策略分配都引用适当的组，且没有设备落在分组结构之外。", "status": "machine-draft" }
+  },
+  "INTUNE-021": {
+    "name": { "value": "远程操作审计（擦除、停用、锁定）", "status": "machine-draft" },
+    "description": { "value": "擦除、停用和远程锁定等 Intune 远程操作是强大的设备管理能力，如果被滥用，可能导致数据丢失或对合法用户的拒绝服务。未经授权或意外的远程擦除可能破坏设备上的业务关键数据，而未经审计的远程锁定操作可能表明账户被攻陷。所有远程操作都必须记录并审查授权使用情况。", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有远程操作均记录操作员身份；擦除操作需要已记录的批准；每周审查审核日志", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查 Intune 审核日志中的所有远程操作事件，包括擦除、停用、远程锁定和密码重置，以识别任何未经授权或异常的活动。为破坏性远程操作（例如完全擦除）实施审批工作流，要求提供已记录的理由和二次批准。为远程擦除操作配置告警通知，以确保安全团队在设备被擦除时立即知晓。", "status": "machine-draft" }
+  },
+  "INTUNE-022": {
+    "name": { "value": "OneDrive 同步限制", "status": "machine-draft" },
+    "description": { "value": "OneDrive 同步客户端设置控制公司文件如何在云存储和受管理设备之间同步，不受限制的同步可能导致公司数据存储在不受管理或不合规的设备上。如果没有对同步客户端的域限制，用户可能会将公司 SharePoint 和 OneDrive 内容同步到 IT 控制之外的个人设备。适当的同步限制可防止通过不受管理的文件同步导致数据泄露。", "status": "machine-draft" },
+    "recommendedValue": { "value": "OneDrive 同步限制为域联接或 Intune 管理的设备；启用已知文件夹移动以进行备份；启用按需文件", "status": "machine-draft" },
+    "remediationSteps": { "value": "通过 Intune 配置 OneDrive 同步客户端，使用租户允许列表将同步限制为 Azure AD 联接或 Intune 管理的设备。启用已知文件夹移动以自动将桌面、文档和图片重定向到 OneDrive 以进行数据保护，并启用按需文件以最大限度减少本地数据存储。如果组织策略允许，在公司设备上阻止个人 OneDrive 账户的同步，以防止数据混杂。", "status": "machine-draft" }
+  },
+  "INTUNE-023": {
+    "name": { "value": "破坏性设备操作的多管理员批准", "status": "machine-draft" },
+    "description": { "value": "Microsoft Intune 支持多管理员批准策略，要求在执行诸如批量设备擦除、批量设备停用和脚本部署等高影响操作之前，由第二位管理员批准。如果没有多管理员批准，单个被攻陷的管理员账户可以在整个组织中触发大规模设备擦除。本检查验证已配置操作审批策略，以防范由被攻陷或流氓管理员账户执行的破坏性操作。", "status": "machine-draft" },
+    "recommendedValue": { "value": "为破坏性操作（包括批量设备擦除、批量设备停用和脚本部署操作）启用多管理员批准", "status": "machine-draft" },
+    "remediationSteps": { "value": "导航到 Microsoft Intune 管理中心 > Tenant administration > Multi-admin approval。创建一条审批策略，要求第二位管理员批准破坏性操作。至少为以下操作启用批准：批量设备操作（Wipe、Retire、Delete）、向大型组部署应用，以及脚本部署。分配一个包含受信任的高级管理员的审批组，由他们审查和批准这些请求。考虑为紧急场景实施加急审批流程。", "status": "machine-draft" }
+  }
+}

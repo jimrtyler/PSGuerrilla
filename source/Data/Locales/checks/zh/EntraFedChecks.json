@@ -1,0 +1,81 @@
+{
+  "_family": "EntraFedChecks.json",
+  "EIDFED-001": {
+    "name": { "value": "联合域枚举", "status": "machine-draft" },
+    "description": { "value": "对租户中所有联合域的完整清点，可提供每个域身份验证配置方式的可见性。联合域将身份验证重定向到外部身份提供者，必须对其进行妥善保护和监视。这份基线清单能够评估联合攻击面，并识别可能被攻击者配置为 Golden SAML 或后门联合攻击一部分的域。", "status": "machine-draft" },
+    "recommendedValue": { "value": "已清点所有联合域，并记录身份提供者终结点、签名证书和业务理由", "status": "machine-draft" },
+    "remediationSteps": { "value": "使用 Microsoft Graph 枚举租户中的所有域，并识别其中已配置联合身份验证的域。记录每个联合域的身份提供者终结点、签名证书详细信息和联合协议。验证每一个联合信任都是经过授权的，且对应于组织控制之下的已知合法身份提供者。", "status": "machine-draft" }
+  },
+  "EIDFED-002": {
+    "name": { "value": "联合签名证书有效期", "status": "machine-draft" },
+    "description": { "value": "有效期过长的联合签名证书，为获取私钥的攻击者提供了一个较长的时间窗口来伪造 SAML 令牌并维持持久的未授权访问。有效期超过 3 年的证书偏离了安全最佳实践，并可能表明证书已被攻陷或为攻击者所创建。短期证书可在私钥泄露时限制潜在滥用的持续时间。", "status": "machine-draft" },
+    "recommendedValue": { "value": "联合签名证书的有效期不超过 1 年，并已建立自动轮换程序", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查所有联合域的签名证书，并检查其 NotBefore 和 NotAfter 日期以确定有效期。将任何有效期超过 3 年的证书替换为使用更短生命周期、符合组织证书策略的新证书。实施自动证书轮换程序，并为即将到期的证书配置监视告警。", "status": "machine-draft" }
+  },
+  "EIDFED-003": {
+    "name": { "value": "联合签名证书颁发者/使用者不匹配", "status": "machine-draft" },
+    "description": { "value": "联合签名证书的颁发者字段与使用者字段之间的不匹配，是潜在 Golden SAML 攻击的强烈指标，即攻击者已将合法签名证书替换为其控制的证书。在 Golden SAML 攻击中，攻击者生成一个具有任意颁发者/使用者值的自签名证书，并将其配置为联合信任签名证书，从而能够为任何用户伪造 SAML 令牌。任何与预期证书颁发机构链不一致的颁发者/使用者不匹配都需要立即调查。", "status": "machine-draft" },
+    "recommendedValue": { "value": "联合签名证书的颁发者和使用者字段与预期的组织 PKI 链匹配，没有意外的自签名证书", "status": "machine-draft" },
+    "remediationSteps": { "value": "从每个联合域信任中提取签名证书，并将颁发者和使用者字段与您预期的组织 PKI 层次结构进行比对。调查任何颁发者与您已知证书颁发机构不匹配、或使用者包含意外值的证书。如果检测到不匹配，请将其视为潜在安全事件，立即轮换联合签名证书，并审查审核日志以查找未经授权的联合配置更改。", "status": "machine-draft" }
+  },
+  "EIDFED-004": {
+    "name": { "value": "联合信任元数据分析", "status": "machine-draft" },
+    "description": { "value": "联合信任元数据定义了用于联合身份验证的身份提供者终结点、支持的协议和令牌签名配置。被篡改的元数据可将身份验证流重定向到攻击者控制的终结点，或引入恶意签名证书，从而实现令牌伪造和冒充攻击。元数据终结点 URL、被动和主动终结点以及签名算法配置都应对照已知良好值进行验证。", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有联合信任元数据均已对照已知良好基线进行验证，且元数据刷新 URL 指向组织控制的终结点", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查每个联合域的联合配置，包括元数据交换 URI、被动登录终结点、颁发者 URI 和签名证书详细信息。将当前值与已记录的基线配置进行比对，以识别任何未经授权的修改。确保元数据刷新终结点使用 HTTPS 并指向组织控制的基础设施，并验证签名算法使用 SHA-256 或更强的算法。", "status": "machine-draft" }
+  },
+  "EIDFED-005": {
+    "name": { "value": "Azure AD Connect 配置审查", "status": "machine-draft" },
+    "description": { "value": "Azure AD Connect 将本地 Active Directory 对象同步到 Entra ID，是混合身份体系结构的关键组件。配置错误的 Azure AD Connect 设置可能会将敏感属性暴露到云端、创建意外的权限提升路径，或允许具有本地访问权限的攻击者操纵云身份。应对照安全最佳实践审查连接器账户权限、同步规则和功能配置。", "status": "machine-draft" },
+    "recommendedValue": { "value": "Azure AD Connect 配置为使用最小权限的连接器账户、加固的同步规则，并启用所有安全功能", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查 Azure AD Connect 配置，包括连接器账户权限、同步规则和已启用的功能。确保 AD DS 连接器账户使用所需的最小权限，且 Entra ID 连接器账户是专用的仅云服务账户。验证 Azure AD Connect 服务器被视为 Tier 0 资产，具有受限的管理访问权限和全面的监视。", "status": "machine-draft" }
+  },
+  "EIDFED-006": {
+    "name": { "value": "Azure AD Connect 同步范围审计", "status": "machine-draft" },
+    "description": { "value": "Azure AD Connect 中的同步范围决定了哪些本地组织单位、组和属性被复制到 Entra ID。过于宽泛的同步范围可能会复制本应仅保留在本地的敏感服务账户、管理账户或安全组。反之，限制不当的范围可能无法同步需要云访问的账户，从而导致身份验证失败。", "status": "machine-draft" },
+    "recommendedValue": { "value": "同步范围仅限于所需的组织单位和对象，并排除敏感的服务账户和管理对象", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查 Azure AD Connect 同步范围，包括 OU 筛选、基于组的筛选和属性级筛选规则。验证同步范围仅包含需要云访问的用户账户所在的 OU。排除不需要云表示的敏感本地服务账户、管理账户和安全组，并记录纳入每个 OU 的理由。", "status": "machine-draft" }
+  },
+  "EIDFED-007": {
+    "name": { "value": "密码哈希同步启用状态", "status": "machine-draft" },
+    "description": { "value": "密码哈希同步（PHS）将本地密码哈希的哈希值复制到 Entra ID，当联合或直通身份验证不可用时，作为备用启用云身份验证。虽然 PHS 提供了韧性并可通过 Entra ID Identity Protection 实现泄露凭据检测，但组织必须了解在云端存储密码派生值的安全影响。应对照组织的安全要求和风险容忍度评估 PHS。", "status": "machine-draft" },
+    "recommendedValue": { "value": "启用 PHS 作为备用身份验证方法，并通过 Entra ID Identity Protection 激活泄露凭据检测", "status": "machine-draft" },
+    "remediationSteps": { "value": "检查 Azure AD Connect 配置以确定是否已启用密码哈希同步。如果 PHS 被禁用，请评估将其作为备用身份验证方法启用，并支持 Entra ID Identity Protection 泄露凭据检测。如果 PHS 已启用，请验证 Entra ID Identity Protection 已配置为利用密码哈希对被攻陷凭据进行基于风险的检测。", "status": "machine-draft" }
+  },
+  "EIDFED-008": {
+    "name": { "value": "直通身份验证代理状态", "status": "machine-draft" },
+    "description": { "value": "直通身份验证（PTA）实时对照本地 Active Directory 验证用户密码，而不在云端存储密码哈希。运行在本地服务器上的 PTA 代理必须得到妥善保护、监视并保持最新，因为被攻陷的 PTA 代理可能被操纵以接受任何密码，或在身份验证过程中拦截凭据。代理运行状况、版本时效性和服务器安全态势对于维护身份验证完整性至关重要。", "status": "machine-draft" },
+    "recommendedValue": { "value": "在加固的服务器上部署至少 2 个 PTA 代理，代理版本为最新且已启用运行状况监视", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Entra ID > Hybrid management > Azure AD Connect > Pass-through authentication 中审查 PTA 代理状态。验证已部署至少两个代理以实现冗余，且所有代理均显示运行状况良好并使用最新软件版本。确保 PTA 代理服务器被视为 Tier 0 资产，具有受限的管理访问权限、最新的安全补丁和全面的事件日志监视。", "status": "machine-draft" }
+  },
+  "EIDFED-009": {
+    "name": { "value": "AD FS 服务器配置评估", "status": "machine-draft" },
+    "description": { "value": "Active Directory 联合身份验证服务（AD FS）服务器处理联合域的身份验证并处理对安全敏感的 SAML 令牌。配置错误的 AD FS 设置（例如弱令牌签名算法、禁用的审核日志、过于宽松的外部网络访问或过时的声明规则）可能被利用来进行令牌伪造、凭据窃取或未经授权的访问。应定期对照 Microsoft 安全基线和加固指南评估 AD FS 配置。", "status": "machine-draft" },
+    "recommendedValue": { "value": "AD FS 服务器按 Microsoft 安全基线配置，使用 SHA-256 签名、全面的审核日志和最新的 Windows Server 补丁", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查 AD FS 服务器配置，包括令牌签名算法（应为 SHA-256）、审核日志设置（应捕获成功和失败事件）、外部网络访问策略和声明规则复杂性。确保 AD FS 服务器运行最新的 Windows Server 补丁，且 AD FS 场配置有冗余服务器。验证 AD FS 服务账户遵循最小权限原则，且令牌签名证书私钥受到妥善保护。", "status": "machine-draft" }
+  },
+  "EIDFED-010": {
+    "name": { "value": "AD FS 外部网络锁定设置", "status": "machine-draft" },
+    "description": { "value": "AD FS 外部网络锁定可防范针对暴露于互联网的 AD FS 终结点的暴力破解和密码喷洒攻击。如果没有正确的外部网络锁定配置，攻击者可以通过 AD FS 代理对任何联合账户进行无限次密码猜测，从而可能攻陷使用弱密码或常用密码的账户。AD FS 中的智能锁定功能在提供保护的同时最大限度减少对合法用户的锁定影响。", "status": "machine-draft" },
+    "recommendedValue": { "value": "启用外部网络智能锁定，并配置适当的阈值和观察窗口以防范暴力破解攻击", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 AD FS 服务器上使用 PowerShell 中的 Get-AdfsProperties 审查 AD FS 外部网络锁定配置。如果尚未激活，请启用外部网络智能锁定，并根据组织的身份验证模式配置适当的锁定阈值和观察窗口。监视 AD FS 安全日志中的外部网络锁定事件，如果合法用户被锁定或暴力破解尝试成功，则调整阈值。", "status": "machine-draft" }
+  },
+  "EIDFED-011": {
+    "name": { "value": "混合联接配置", "status": "machine-draft" },
+    "description": { "value": "混合 Azure AD 联接将本地域联接设备注册到 Entra ID，从而支持要求设备合规或域联接状态的条件访问策略。配置错误的混合联接设置可能导致设备无法注册，进而阻止用户满足基于设备的条件访问要求；或者，如果服务连接点未得到妥善保护，可能允许未经授权的设备注册。应对该配置进行端到端验证。", "status": "machine-draft" },
+    "recommendedValue": { "value": "混合 Azure AD 联接已配置且功能正常，服务连接点受到妥善保护，且已针对所有目标 OU 验证设备注册", "status": "machine-draft" },
+    "remediationSteps": { "value": "验证 Active Directory 中的服务连接点（SCP）配置，并确保其指向正确的 Entra ID 租户。检查 Azure AD Connect 中的混合联接配置是否包含正确的域，且客户端设备可访问所需的企业注册终结点。通过审查 Entra ID 中的设备列表来验证设备正在成功注册，并对任何显示挂起状态的设备进行故障排除。", "status": "machine-draft" }
+  },
+  "EIDFED-012": {
+    "name": { "value": "仅云账户与已同步账户分析", "status": "machine-draft" },
+    "description": { "value": "了解仅云账户与本地同步账户的分布情况，可提供混合身份格局的可见性，并有助于识别潜在的安全缺口。仅云账户完全在 Entra ID 中管理，而已同步账户源自本地 Active Directory 并继承其安全态势。此分析有助于识别本应是仅云但却被同步的账户（反之亦然），并为身份验证方法选择和安全控制布置的决策提供信息。", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有账户均归类为仅云或已同步，并记录了每种账户类型和角色的预期状态", "status": "machine-draft" },
+    "remediationSteps": { "value": "从 Entra ID 导出所有用户账户，并按 onPremisesSyncEnabled 属性对其分类，以确定哪些账户是从本地同步的、哪些是仅云的。验证特权管理账户为仅云账户，以防止本地攻陷影响云管理。记录每种账户类型的预期身份源，并调查任何实际来源与预期配置不符的账户。", "status": "machine-draft" }
+  },
+  "EIDFED-013": {
+    "name": { "value": "Entra Connect 同步客户端版本时效性", "status": "machine-draft" },
+    "description": { "value": "Microsoft Entra Connect（前身为 Azure AD Connect）是将本地 Active Directory 身份复制到 Entra ID 的同步客户端，是一个 Tier-0 混合组件：Connect 服务器被攻陷可能导致伪造或被操纵的云身份以及租户范围的影响。Microsoft 会定期发布包含未公开安全修复的 Entra Connect 版本，并附带加急的“立即更新”指导。运行低于最低安全基线版本的 Connect 服务器是一个暴露于已知但未公开漏洞的未打补丁 Tier-0 资产。由于版本是本地 Connect 服务器的属性，而非云目录属性，因此版本时效性必须在 Connect 主机上权威地确认；当无法读取时，必须将其提交人工验证，而不能假定其合规。", "status": "machine-draft" },
+    "recommendedValue": { "value": "Entra Connect 更新到最新可用版本（达到或高于最低安全基线），在支持的情况下启用自动升级，并将 Connect 服务器作为 Tier-0 资产进行管理", "status": "machine-draft" },
+    "remediationSteps": { "value": "使用注册表项 HKLM\\SOFTWARE\\Microsoft\\Azure AD Connect 或 Get-ADSyncGlobalSettings 识别同步服务器上已安装的 Entra Connect 版本，并将其与 Microsoft 发布的最新版本进行比对。将 Entra Connect 更新到最新版本以应用安全修复，并在部署支持的情况下启用自动升级。将 Entra Connect 服务器视为 Tier-0 资产：限制管理访问权限、应用最新的操作系统补丁并启用全面的监视。制定一个周期性流程来跟踪 Microsoft Entra Connect 发行说明并及时应用安全版本。", "status": "machine-draft" }
+  }
+}

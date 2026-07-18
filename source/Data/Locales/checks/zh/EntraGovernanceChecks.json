@@ -1,0 +1,33 @@
+{
+  "_family": "EntraGovernanceChecks.json",
+  "EIDGOV-001": {
+    "name": { "value": "访问包分配策略要求审批", "status": "machine-draft" },
+    "description": { "value": "Entra ID Governance 权利管理分配策略控制用户如何获取访问包（组、应用程序和 SharePoint 访问权限的捆绑包）。请求审批设置被禁用的策略会在没有人工审核的情况下授予捆绑的访问权限，从而将访问包变成自助式的常设访问。本检查审视每一条分配策略，并标记那些不要求审批的策略，以便进行审核。仅当收集成功时，空结果才被视为“未使用权利管理”（无可治理的内容）；收集失败则记为“未评估”。", "status": "machine-draft" },
+    "recommendedValue": { "value": "每一条访问包分配策略都要求审批，或者自动审批的访问包仅授予经过审慎审核的低风险、面向内部范围的访问", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Microsoft Entra 管理中心 > Identity Governance > Entitlement management > Access packages 中，打开每个访问包的策略，并为授予敏感或面向外部范围访问的策略启用“Require approval”。将自动审批保留给低风险、面向内部范围的自助式访问包，并记录该决定。将审批与访问审查配对，以便对常设授权重新进行论证。", "status": "machine-draft" }
+  },
+  "EIDGOV-002": {
+    "name": { "value": "访问包分配策略强制执行访问审查", "status": "machine-draft" },
+    "description": { "value": "没有访问审查的访问包分配策略授予的访问权限永远不会被定期重新论证，随着时间推移会累积常设权限。Entra ID Governance 可以为每条策略附加周期性访问审查，使被分配者（或其经理）必须重新确认需求。本检查标记那些访问审查设置未启用的分配策略。", "status": "machine-draft" },
+    "recommendedValue": { "value": "每一条访问包分配策略都已启用周期性访问审查", "status": "machine-draft" },
+    "remediationSteps": { "value": "对每一条访问包分配策略，在策略的生命周期设置中启用访问审查：选择一个周期（例如每季度）、审查者（本人、经理或指定审查者），以及对被拒绝或未经审查的分配自动移除的操作，从而自动撤销未使用的访问权限。", "status": "machine-draft" }
+  },
+  "EIDGOV-003": {
+    "name": { "value": "访问包分配设有时间限制", "status": "machine-draft" },
+    "description": { "value": "配置为无过期的访问包分配策略授予永久访问权限，这与即时（just-in-time）访问背道而驰。为分配设置时间限制会强制重新请求和重新审批，从而限制任何授权在未经审查的情况下存续多久。本检查标记那些过期设置为“永不”的分配策略。", "status": "machine-draft" },
+    "recommendedValue": { "value": "访问包分配策略在一段有限期限后使分配过期，而不是授予永久访问权限", "status": "machine-draft" },
+    "remediationSteps": { "value": "在每条分配策略的生命周期设置中，设置分配过期时间（一定天数或固定结束日期），而不是选择“Assignments never expire”。当用户仍需要该访问权限时，通过访问包流程重新请求，从而使授权保持审慎。", "status": "machine-draft" }
+  },
+  "EIDGOV-004": {
+    "name": { "value": "外部访问包资格受到控制", "status": "machine-draft" },
+    "description": { "value": "权利管理可以将访问包扩展给租户外部的用户（来宾和来自已连接组织的用户）。既允许外部目标又不要求审批的策略，会让外部用户自助配置内部访问权限，这是一条直接的外部暴露途径。当策略允许外部资格且不要求审批时，本检查判定为 FAIL；当外部资格设有审批关卡时判定为 WARN；当策略仅面向内部范围时判定为通过。", "status": "machine-draft" },
+    "recommendedValue": { "value": "没有分配策略在不要求审批的情况下允许外部或全体用户资格；外部资格限定于特定的已连接组织并设有审批关卡", "status": "machine-draft" },
+    "remediationSteps": { "value": "对于允许目标范围包含外部或全体用户的策略，要么将范围收窄到特定的已连接组织，要么在策略上要求审批（最好还包括访问审查）。切勿让范围宽泛的外部资格策略保持自动审批。", "status": "machine-draft" }
+  },
+  "EIDGOV-005": {
+    "name": { "value": "已审查访问包目录的外部可见性", "status": "machine-draft" },
+    "description": { "value": "被标记为外部可见的权利管理目录，可以在“我的访问”门户中向租户外部的用户展示其访问包。外部可见的目录适用于经过审慎考虑的 B2B 协作，但值得加以确认，因为它扩大了可以发现和请求访问权限的对象范围。本检查标记外部可见的目录以供审查。", "status": "machine-draft" },
+    "recommendedValue": { "value": "外部可见的目录是有意为之的，并仅限于 B2B 协作所需的那些", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Identity Governance > Entitlement management > Catalogs 中，审查每个已启用外部可见性的目录。对仅服务于内部访问包的目录禁用外部可见性，将外部可发现性限定于专为合作伙伴或来宾协作而刻意构建的目录。", "status": "machine-draft" }
+  }
+}

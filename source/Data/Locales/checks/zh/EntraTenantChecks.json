@@ -1,0 +1,99 @@
+{
+  "_family": "EntraTenantChecks.json",
+  "EIDTNT-001": {
+    "name": { "value": "租户范围设置导出", "status": "machine-draft" },
+    "description": { "value": "对所有租户范围配置设置的全面导出，为变更检测和灾难恢复建立了已知良好基线。如果没有已记录的基线，就无法确定当前设置是否已偏离其预期状态，或攻击者是否修改了租户配置以削弱安全控制。此基线应在初始配置时捕获，并在进行授权更改时更新。", "status": "machine-draft" },
+    "recommendedValue": { "value": "导出完整的租户配置基线，并存储在受版本控制的存储库中，定期进行快照", "status": "machine-draft" },
+    "remediationSteps": { "value": "使用 Microsoft Graph API 导出所有租户范围设置，包括授权策略、身份验证方法策略、同意策略、跨租户访问设置和目录设置。将导出存储在安全的、受版本控制的存储库中，并建立按计划捕获定期快照的流程。定期将当前设置与基线进行比对，以检测未经授权或意外的配置漂移。", "status": "machine-draft" }
+  },
+  "EIDTNT-002": {
+    "name": { "value": "用户设置审查", "status": "machine-draft" },
+    "description": { "value": "租户范围的用户设置控制标准用户是否可以注册应用程序、同意应用程序访问公司数据、创建安全组以及读取其他用户的目录信息。过于宽松的用户设置会助长影子 IT、未经授权的应用程序集成和组蔓延，从而扩大攻击面。这些设置应受到限制，以防止标准用户执行本应需要管理监督的操作。", "status": "machine-draft" },
+    "recommendedValue": { "value": "用户不能注册应用程序，用户同意限制为已验证的发布者，组创建限制为授权用户", "status": "machine-draft" },
+    "remediationSteps": { "value": "导航到 Entra ID > User settings，审查每项设置。禁用“Users can register applications”，以防止不受控制的应用注册蔓延。将用户同意设置限制为仅允许对来自已验证发布者、具有低风险权限的应用同意。将谁可以创建 Microsoft 365 组和安全组限制为指定的管理员或组所有者。", "status": "machine-draft" }
+  },
+  "EIDTNT-003": {
+    "name": { "value": "来宾用户访问限制", "status": "machine-draft" },
+    "description": { "value": "来宾用户是受邀与组织协作的外部身份。默认情况下，来宾用户可能对目录具有过于宽泛的可见性，包括枚举用户、组和应用程序的能力。不受限制的来宾访问允许外部方绘制组织的身份结构、识别高价值目标并为后续攻击收集情报。来宾权限应限制为协作所需的最低限度。", "status": "machine-draft" },
+    "recommendedValue": { "value": "来宾用户访问仅限于其自身目录对象的属性和成员资格", "status": "machine-draft" },
+    "remediationSteps": { "value": "导航到 Entra ID > External Identities > External collaboration settings，审查来宾用户访问限制。将来宾用户访问设置为最严格的选项，将来宾限制为仅可访问其自身目录对象的属性和成员资格。通过使用来宾账户测试，验证来宾无法枚举完整的用户列表、组成员资格或应用程序注册。", "status": "machine-draft" }
+  },
+  "EIDTNT-004": {
+    "name": { "value": "来宾邀请限制", "status": "machine-draft" },
+    "description": { "value": "来宾邀请设置控制谁可以邀请外部用户加入租户，范围从允许任何用户邀请来宾，到将邀请限制为仅管理员。宽松的邀请设置允许标准用户在没有监督的情况下邀请外部方，从而可能引入能够访问组织资源的未经审查的外部身份。邀请限制应与组织的外部协作治理要求保持一致。", "status": "machine-draft" },
+    "recommendedValue": { "value": "来宾邀请限制为具有特定管理员角色或来宾邀请者角色的用户，且不启用自助来宾访问", "status": "machine-draft" },
+    "remediationSteps": { "value": "导航到 Entra ID > External Identities > External collaboration settings，审查来宾邀请设置。将来宾邀请限制为被分配了 Guest Inviter 角色或特定管理员角色的用户，而不是允许所有成员邀请。禁用来宾邀请其他来宾的选项，以防止不受控制的邀请链，并为来宾邀请请求建立审批工作流。", "status": "machine-draft" }
+  },
+  "EIDTNT-005": {
+    "name": { "value": "外部协作设置", "status": "machine-draft" },
+    "description": { "value": "外部协作设置定义了可从中邀请来宾用户的域范围，以及哪些外部组织可以与租户协作。如果没有域限制，可以从任何外部组织邀请来宾，包括竞争对手、受制裁实体或攻击者控制的租户。应配置域允许列表或阻止列表，以将协作限制在已批准的合作伙伴组织，并防止未经授权的外部访问。", "status": "machine-draft" },
+    "recommendedValue": { "value": "外部协作限制为特定的允许域，并对已知的高风险域设有拒绝列表", "status": "machine-draft" },
+    "remediationSteps": { "value": "导航到 Entra ID > External Identities > External collaboration settings，配置协作限制。根据组织的协作模型，实施已批准合作伙伴域的允许列表，或已知高风险和竞争对手域的阻止列表。每季度审查并更新域列表以反映合作伙伴关系的变化，并确保协作限制与数据分类和信息共享策略保持一致。", "status": "machine-draft" }
+  },
+  "EIDTNT-006": {
+    "name": { "value": "Azure B2B 跨租户访问策略", "status": "machine-draft" },
+    "description": { "value": "跨租户访问策略在与外部 Entra ID 租户协作时，对用户如何进行身份验证和访问资源提供精细控制。默认跨租户访问设置可能允许过于宽泛的入站和出站访问，而这与组织的安全要求不一致。正确配置的跨租户访问策略可实现受信任的 B2B 协作，同时防止来自不受信任租户的未经授权访问，并控制哪些用户可以访问外部资源。", "status": "machine-draft" },
+    "recommendedValue": { "value": "默认跨租户访问策略设置为阻止，仅对已批准的合作伙伴租户设有显式允许规则", "status": "machine-draft" },
+    "remediationSteps": { "value": "导航到 Entra ID > External Identities > Cross-tenant access settings，审查默认的入站和出站访问设置。将默认策略配置为限制入站和出站访问，然后为已批准的合作伙伴租户创建具有适当访问控制的组织特定策略。在适当情况下为合作伙伴租户启用信任设置，以接受其 MFA 声明和设备合规，从而为受信任的协作减少身份验证摩擦。", "status": "machine-draft" }
+  },
+  "EIDTNT-007": {
+    "name": { "value": "安全默认值启用/禁用状态", "status": "machine-draft" },
+    "description": { "value": "安全默认值提供一套基线的身份安全机制，包括 MFA 注册要求、对管理员的 MFA 质询以及阻止旧版身份验证。使用条件访问策略的组织应禁用安全默认值以避免冲突，但没有条件访问且同时禁用了安全默认值的租户，则缺乏针对常见身份攻击的基线保护。本检查验证安全默认值或等效的条件访问策略正在主动保护租户。", "status": "machine-draft" },
+    "recommendedValue": { "value": "对没有条件访问的租户启用安全默认值。对具有条件访问的租户，禁用安全默认值并采用等效或更强的 CA 策略", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Entra ID > Properties > Manage security defaults 中检查是否启用了安全默认值。如果安全默认值被禁用，请验证条件访问策略提供了等效或更强的保护，包括对所有用户的 MFA、旧版身份验证阻止和对管理操作的 MFA。如果既没有安全默认值也没有等效的条件访问策略，请立即启用安全默认值作为基线保护措施。", "status": "machine-draft" }
+  },
+  "EIDTNT-008": {
+    "name": { "value": "许可证清单和利用率", "status": "machine-draft" },
+    "description": { "value": "对已分配许可证及其利用率的全面清点，可提供可用安全功能的可见性，并识别已获许可的能力未被使用的潜在差距。组织可能正在为未完全部署或配置的高级安全功能（例如 Entra ID P2、Microsoft Defender for Identity 或 Microsoft Sentinel）付费。了解许可证格局可确保所有已购买的安全能力都被激活和利用。", "status": "machine-draft" },
+    "recommendedValue": { "value": "清点所有许可证并跟踪利用率，所有与安全相关的已获许可功能都已完全部署和配置", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Microsoft 365 管理中心或 Entra ID > Licenses > Overview 中审查许可证分配摘要。识别与安全相关的许可证，例如 Entra ID P1/P2、Microsoft Defender for Identity 和 Microsoft 365 E5 Security。验证每个许可证中包含的功能都已主动配置和部署，并制定计划来激活任何已获许可但未使用的安全能力。", "status": "machine-draft" }
+  },
+  "EIDTNT-009": {
+    "name": { "value": "管理单元配置", "status": "machine-draft" },
+    "description": { "value": "管理单元通过将用户、组和设备分组到具有特定管理员的逻辑容器中，提供委派的管理范围，指定的管理员仅管理这些对象。如果没有管理单元，被委派的管理员可能拥有超出预期的更广泛访问权限，或者管理边界可能与组织结构不一致。正确配置的管理单元可强制执行最小权限委派并防止管理越权。", "status": "machine-draft" },
+    "recommendedValue": { "value": "配置管理单元以与组织委派模型保持一致，并使用受限管理的管理单元来管理敏感对象", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Entra ID > Roles and administrators > Administrative units 中审查现有的管理单元配置。评估当前结构是否与您的组织委派要求一致，以及敏感对象（例如特权账户）是否受到受限管理的管理单元保护。根据需要创建或修改管理单元，以确保管理员只能管理其指定范围内的对象。", "status": "machine-draft" }
+  },
+  "EIDTNT-010": {
+    "name": { "value": "自定义域配置", "status": "machine-draft" },
+    "description": { "value": "在租户中注册的自定义域定义了组织使用的电子邮件地址和登录后缀。未验证或未经授权的域可能表明配置错误，或攻击者试图在租户中建立存在。每个自定义域都应通过 DNS 记录进行验证并定期审查，以确保所有域仍归组织所有且 DNS 验证记录保持完好。", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有自定义域均已验证、受到主动管理，且 DNS 验证记录完好", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Entra ID > Custom domain names 中审查所有已注册的自定义域，验证每个域仍归组织所有且 DNS 验证记录已正确配置。删除任何不再使用或无法验证为组织所有的域。确保域 DNS 注册受到注册商锁定的保护，并监视域到期日期以防止意外的域丢失。", "status": "machine-draft" }
+  },
+  "EIDTNT-011": {
+    "name": { "value": "审核日志和登录日志的诊断设置", "status": "machine-draft" },
+    "description": { "value": "Entra ID 生成的审核日志和登录日志对于安全监视、事件调查和合规性报告至关重要。如果没有配置将这些日志导出到持久存储位置（例如 Log Analytics 工作区、Azure 存储账户或 SIEM）的诊断设置，日志在 Entra ID 中仅保留有限的时间，可能在事件调查期间不可用。攻击者会主动瞄准日志配置以禁用或规避检测。", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有 Entra ID 日志类别（审核、登录、非交互式登录、服务主体登录、托管标识登录、预配置）均导出到 Log Analytics 工作区或 SIEM", "status": "machine-draft" },
+    "remediationSteps": { "value": "导航到 Entra ID > Monitoring > Diagnostic settings，创建或验证一个诊断设置，将所有日志类别导出到 Log Analytics 工作区、Azure 存储账户或 Event Hub 以供 SIEM 摄取。确保选中所有可用的日志类别，包括审核日志、登录日志、非交互式登录日志、服务主体登录日志、托管标识登录日志和预配置日志。验证目标存储配置了适当的保留策略和访问控制。", "status": "machine-draft" }
+  },
+  "EIDTNT-012": {
+    "name": { "value": "审核日志保留设置", "status": "machine-draft" },
+    "description": { "value": "审核日志保留决定了历史安全事件可供调查、合规性报告和取证分析使用的时间。保留期不足可能导致在调查初始攻陷后数周或数月才发现的事件时，关键证据不可用。组织应将审核日志保留至少 1 年，以支持事件响应时间线并满足常见的法规要求。", "status": "machine-draft" },
+    "recommendedValue": { "value": "审核日志在不可变存储位置保留至少 1 年，其中至少 90 天可立即查询", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查导出 Entra ID 日志的 Log Analytics 工作区、Azure 存储账户或 SIEM 目标的保留设置。为所有 Entra ID 日志类别配置至少 365 天的保留，以支持事件调查和合规性要求。确保至少 90 天的日志无需还原操作即可立即查询，并实施不可变存储或写入一次策略以防止篡改历史日志数据。", "status": "machine-draft" }
+  },
+  "EIDTNT-013": {
+    "name": { "value": "通知设置审计", "status": "machine-draft" },
+    "description": { "value": "Entra ID 通知设置控制谁接收关键安全事件的告警，例如有风险的用户、每周摘要报告和管理通知。配置错误的通知设置可能导致安全告警被发送到非活动邮箱、前员工，或根本不发送。正确的通知路由可确保与安全相关的事件到达适当的人员，以便及时调查和响应。", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有安全通知均路由到属于当前安全运营人员的活动、受监视邮箱", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查 Entra ID 中的通知设置，包括 Identity Protection 通知接收者、密码重置通知设置和技术通知联系人。验证所有通知接收者都是拥有受主动监视邮箱的当前员工，并更新任何对前员工或非活动通讯组的引用。将通知配置为发送到安全运营通讯组而非个人用户，以确保在人员变动时的连续性。", "status": "machine-draft" }
+  },
+  "EIDTNT-014": {
+    "name": { "value": "已禁用用户密码到期（密码永不过期）", "status": "machine-draft" },
+    "description": { "value": "强制性的定期密码轮换会促使用户使用可预测、更弱和重复使用的密码，且在已部署 MFA 和新式凭据保护时几乎没有防御价值。与 NIST SP 800-63B 和 OMB M-22-09 指导保持一致，用户密码应配置为永不过期。在 Entra ID 中，这由每个已验证域的 passwordValidityPeriodInDays 属性管理；值 2147483647 表示密码设置为永不过期。本检查审视每个受管理的域，并标记任何仍强制执行有限密码到期期限的域。", "status": "machine-draft" },
+    "recommendedValue": { "value": "在所有受管理域上将 passwordValidityPeriodInDays 设置为 2147483647（永不过期）", "status": "machine-draft" },
+    "remediationSteps": { "value": "设置密码到期策略使密码永不过期，满足 SCuBA MS.AAD.6.1。在 Microsoft 365 管理中心转到 Settings > Org settings > Security & privacy > Password expiration policy，选择“Set passwords to never expire”。等效地，对每个受管理域将 passwordValidityPeriodInDays 设置为 2147483647（永不过期）。确保补偿性控制仍然到位：强制执行的 MFA、禁用密码保护和基于风险的凭据修复。", "status": "machine-draft" }
+  },
+  "EIDTNT-015": {
+    "name": { "value": "特权合作伙伴委派管理访问（GDAP）", "status": "machine-draft" },
+    "description": { "value": "精细委派管理特权（GDAP）让 CSP 或托管服务合作伙伴在您的租户中持有常设管理角色。这种关系在大多数日常管理视图中不可见、很少被审查，并且是一条 Kaseya 级的传播路径：攻陷一个合作伙伴的攻击者会同时在每个下游客户租户中继承委派管理。携带 Tier-0/高影响目录角色（Global Administrator、Privileged Role Administrator、Privileged/Authentication Administrator、Security Administrator、User/Password/Application/Cloud Application Administrator）的合作伙伴关系，实际上是一套通向王国的外部钥匙。本检查清点活动的 delegatedAdminRelationships，当任何活动关系授予上述特权角色之一时判定为 FAIL；当存在非特权合作伙伴访问时发出警告，以便对其确认和界定范围；仅当不存在活动的合作伙伴委派管理时才通过。仅当收集成功时，空结果才被视为“无关系”；调用失败则呈现为“未评估”，绝不视为干净的通过。", "status": "machine-draft" },
+    "recommendedValue": { "value": "没有活动的 GDAP 关系授予特权目录角色；合作伙伴访问为最小权限、有时限且经过审查", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Microsoft Entra 管理中心 > Identity > External Identities > Cross-tenant access（合作伙伴主导）以及 Microsoft 365 管理中心 > Settings > Partner relationships 中审查每一个活动的合作伙伴委派管理（GDAP）关系。对每个关系，除非有已记录的、有时限的需求，否则删除 Tier-0/高影响角色（Global Administrator、Privileged Role Administrator、Privileged Authentication Administrator、Security Administrator、User/Password/Application/Cloud Application Administrator）。用最小权限角色替换常设特权委派，尽可能通过合作伙伴自己的 PIM 请求即时提升，并终止任何不再需要的关系。确认合作伙伴自己的租户为行使此访问权限的管理员强制执行抗钓鱼 MFA。", "status": "machine-draft" }
+  },
+  "EIDTNT-016": {
+    "name": { "value": "合作伙伴委派管理授权卫生（长期 GDAP）", "status": "machine-draft" },
+    "description": { "value": "GDAP 关系的持续时间就是其自动延期窗口：当它失效时会在无任何人工审查的情况下自我续订该期限。因此，较长的自动延期（超过一年）是对合作伙伴管理访问的一种常设、自我续订的授权，与即时访问背道而驰，恰恰是那种存续时间超过其创建初衷的被遗忘关系。本检查审视活动的 delegatedAdminRelationships，当任何关系自动延期超过 365 天时发出警告；对于无法确定持续时间的关系，保守地视为长期而非假定无碍。仅当所有活动关系都在一年内自动延期时才通过。这是一个卫生/治理信号，用于补充 EIDTNT-015（后者评定合作伙伴所持权限的级别）；此处关注的是授权在未经审查的情况下存续多久。", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有活动的 GDAP 关系都在 365 天内自动延期，并在每次续订时进行审查", "status": "machine-draft" },
+    "remediationSteps": { "value": "对每一个活动的合作伙伴委派管理（GDAP）关系，设置适合该业务的最短自动延期持续时间（避免多年的常设授权），并安排在每次续订时进行审查。在 Microsoft 365 管理中心的 Settings > Partner relationships 下，确认每个关系仍然需要，并终止过时的关系。优先选择短期、可续订的委派，而非长期自动延期的访问，以便合作伙伴管理是经过审慎重新授权的，而不是默认延续的。", "status": "machine-draft" }
+  }
+}

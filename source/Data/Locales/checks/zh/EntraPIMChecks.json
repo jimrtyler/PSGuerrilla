@@ -1,0 +1,87 @@
+{
+  "_family": "EntraPIMChecks.json",
+  "EIDPIM-001": {
+    "name": { "value": "全局管理员枚举", "status": "machine-draft" },
+    "description": { "value": "全局管理员角色授予对所有 Microsoft 365 和 Entra ID 服务的不受限访问权限，使其成为租户中最高权限的角色。组织应维持最少 2 个、最多 4 个全局管理员，以在运营韧性与最小权限原则之间取得平衡。过多的全局管理员分配会大幅扩大凭据窃取和租户范围攻陷的攻击面", "status": "machine-draft" },
+    "recommendedValue": { "value": "最多 2 至 4 个全局管理员", "status": "machine-draft" },
+    "remediationSteps": { "value": "导航到 Entra ID > Roles and administrators > Global Administrator，审查所有已分配的用户。删除不必要的永久分配，并确保持有此角色的账户不超过 4 个。在可能的情况下将永久分配转换为 PIM 符合条件的分配", "status": "machine-draft" }
+  },
+  "EIDPIM-002": {
+    "name": { "value": "所有特权角色分配", "status": "machine-draft" },
+    "description": { "value": "对所有特权角色分配（包括永久（活动）和符合条件（即时）分配）的全面清点，对于了解特权访问格局至关重要。此枚举提供了有多少用户持有提升权限、以及分配是否遵循最小权限原则的可见性。定期审查此清单有助于识别角色蔓延和权限过度分配的账户", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有特权角色分配均记录在案并每季度审查。符合条件的分配优先于永久分配", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Entra ID > Roles and administrators 中审查每个特权角色的所有角色分配。以业务理由记录所有永久和符合条件的分配。建立季度访问审查流程，以验证每项分配的持续需求", "status": "machine-draft" }
+  },
+  "EIDPIM-003": {
+    "name": { "value": "永久特权角色分配", "status": "machine-draft" },
+    "description": { "value": "永久（活动）特权角色分配提供无时间限制或激活要求的常设管理访问权限。这些永久分配应通过 PIM 转换为符合条件（即时）的分配，后者要求带有理由、审批和有时限访问窗口的显式激活。常设特权访问增加了凭据攻陷的风险和影响，因为攻击者无需任何额外关卡即可立即获得提升的访问权限", "status": "machine-draft" },
+    "recommendedValue": { "value": "除 break-glass 账户外，没有永久特权角色分配。所有其他特权分配都应为 PIM 符合条件", "status": "machine-draft" },
+    "remediationSteps": { "value": "导航到 Entra ID > Roles and administrators，识别所有永久角色分配。通过删除活动分配并创建相应的符合条件分配，将每项永久分配通过 PIM 转换为符合条件的分配。只有 break-glass 账户才应保留永久的全局管理员分配", "status": "machine-draft" }
+  },
+  "EIDPIM-004": {
+    "name": { "value": "向来宾用户分配特权角色", "status": "machine-draft" },
+    "description": { "value": "持有特权 Entra ID 角色分配的来宾或外部用户带来了重大的供应链和第三方风险。这些账户源自外部组织，不受与内部账户相同的安全控制、密码策略或监视的约束。具有管理权限的被攻陷来宾账户可能导致整个租户被攻陷，同时又难以通过正常的内部安全监视检测到", "status": "machine-draft" },
+    "recommendedValue": { "value": "没有来宾或外部用户被分配任何特权 Entra ID 角色", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查所有特权角色分配，识别任何 userType 为 Guest 的成员。立即从所有来宾账户中删除特权角色分配。如果需要外部管理访问权限，请在租户内预配置完全由组织控制的专用仅云账户，而不是使用来宾邀请", "status": "machine-draft" }
+  },
+  "EIDPIM-005": {
+    "name": { "value": "向已同步账户分配特权角色", "status": "machine-draft" },
+    "description": { "value": "通过 Entra Connect 从本地 Active Directory 同步、且持有特权云角色的账户，会创建一条危险的混合攻击路径。如果本地环境被攻陷，攻击者可以操纵已同步账户的凭据或属性，从而获得对云租户的管理访问权限。云特权角色应仅分配给仅云账户，以维护本地环境与云环境之间的安全边界", "status": "machine-draft" },
+    "recommendedValue": { "value": "没有已同步（混合）账户被分配特权 Entra ID 角色。所有特权账户都应为仅云账户", "status": "machine-draft" },
+    "remediationSteps": { "value": "识别所有 onPremisesSyncEnabled 属性为 true 的特权角色成员。为每位管理员创建专用的仅云管理账户，并将所需的特权角色分配给这些新账户。从所有已同步账户中删除特权角色分配，以消除从本地到云的提升路径", "status": "machine-draft" }
+  },
+  "EIDPIM-006": {
+    "name": { "value": "没有 MFA 的特权用户", "status": "machine-draft" },
+    "description": { "value": "没有注册多重身份验证的特权账户会暴露于基于凭据的攻击，包括密码喷洒、钓鱼和暴力破解。没有 MFA 的被攻陷特权账户，仅凭被盗密码即可为攻击者提供即时的管理访问权限。所有具有特权角色分配的账户都必须注册强 MFA 方法，并通过条件访问策略强制执行", "status": "machine-draft" },
+    "recommendedValue": { "value": "100% 的特权用户已注册 MFA 并通过条件访问强制执行", "status": "machine-draft" },
+    "remediationSteps": { "value": "通过 Entra ID > Users > Per-user MFA 或身份验证方法活动报告审查所有特权用户的 MFA 注册状态。确保有一条条件访问策略对所有目录角色分配要求 MFA。联系任何缺少 MFA 注册的特权用户，并在规定的期限内强制注册", "status": "machine-draft" }
+  },
+  "EIDPIM-007": {
+    "name": { "value": "使用弱身份验证方法的特权用户", "status": "machine-draft" },
+    "description": { "value": "依赖 SMS、语音呼叫或电子邮件 OTP 等弱身份验证方法的特权账户，容易受到 SIM 卡交换、呼叫拦截和电子邮件攻陷攻击。这些旧版 MFA 方法无法提供与抗钓鱼方法（如 FIDO2 安全密钥、Windows Hello for Business 或基于证书的身份验证）相同的保障级别。特权账户应被要求专门使用抗钓鱼身份验证方法", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有特权用户均使用抗钓鱼 MFA 方法（FIDO2、Windows Hello for Business 或基于证书的身份验证）。不使用 SMS、语音或电子邮件 OTP", "status": "machine-draft" },
+    "remediationSteps": { "value": "通过 Entra ID > Authentication methods > Activity 审查每个特权用户注册的身份验证方法。创建一条针对特权角色的条件访问策略，要求抗钓鱼 MFA 的身份验证强度。为所有特权用户预配置 FIDO2 安全密钥或配置 Windows Hello for Business，并删除弱方法", "status": "machine-draft" }
+  },
+  "EIDPIM-008": {
+    "name": { "value": "特权角色中的已禁用账户", "status": "machine-draft" },
+    "description": { "value": "保留特权角色分配的已禁用用户账户会造成潜在的安全风险。如果账户通过管理操作或攻陷被重新启用，它会立即重新获得完整的特权访问权限。作为离职或账户取消预配置流程的一部分，应及时从所有特权角色中删除已禁用的账户，以消除这种重新激活风险", "status": "machine-draft" },
+    "recommendedValue": { "value": "没有已禁用账户具有活动或符合条件的特权角色分配", "status": "machine-draft" },
+    "remediationSteps": { "value": "枚举所有特权角色成员，并筛选出 accountEnabled 为 false 的账户。立即从已禁用账户中删除所有特权角色分配。实施自动化流程或访问审查，以在账户被禁用时检测并删除角色分配", "status": "machine-draft" }
+  },
+  "EIDPIM-009": {
+    "name": { "value": "从未登录但具有活动特权角色的账户", "status": "machine-draft" },
+    "description": { "value": "持有特权角色分配但从未登录过的账户，可能代表已预配置但未认领的账户、测试账户或迁移遗留物。这些休眠的特权账户是高风险目标，因为它们可能具有默认或弱凭据，且不太可能受到其预期所有者的监视。发现并作为这些账户之一进行身份验证的攻击者可立即获得特权访问权限", "status": "machine-draft" },
+    "recommendedValue": { "value": "从未登录过的账户没有特权角色分配", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查所有特权角色成员，识别 lastSignInDateTime 为 null 或空的账户。调查每个账户以确定是否仍然需要它。从休眠账户中删除特权角色分配，并禁用任何没有有效业务用途的账户", "status": "machine-draft" }
+  },
+  "EIDPIM-010": {
+    "name": { "value": "PIM 配置审计", "status": "machine-draft" },
+    "description": { "value": "特权身份管理角色设置控制激活工作流，包括是否需要审批、是否必须提供理由、最大激活持续时间和通知接收者。配置错误的 PIM 设置可能允许在没有监督的情况下激活特权角色，从而有效抵消即时访问的安全益处。每个特权角色都应要求来自指定审批者的审批、强制要求激活理由，并向安全人员发送通知", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有特权角色均配置为：需要审批、需要理由、最大激活持续时间为 8 小时或更短，并为角色激活启用通知", "status": "machine-draft" },
+    "remediationSteps": { "value": "导航到 Entra ID > Roles and administrators > Settings，审查每个特权角色的配置。启用带指定审批者的审批要求，要求激活理由，将最大激活持续时间设置为 8 小时或更短，并为激活事件配置通知接收者。特别注意 Global Administrator、Privileged Role Administrator 和 Exchange Administrator 角色", "status": "machine-draft" }
+  },
+  "EIDPIM-011": {
+    "name": { "value": "PIM 符合条件角色激活历史", "status": "machine-draft" },
+    "description": { "value": "审查 PIM 激活历史可深入了解特权角色被激活的频率、激活者、使用的理由以及持续时间。此审计跟踪对于检测异常特权访问模式至关重要，例如非工作时间激活、无有效理由激活，或可能表明账户被攻陷或内部威胁的过度激活频率", "status": "machine-draft" },
+    "recommendedValue": { "value": "定期审查 PIM 激活日志。所有激活均已记录有效的业务理由", "status": "machine-draft" },
+    "remediationSteps": { "value": "通过 Entra ID > Roles and administrators > Audit logs（筛选 PIM 操作）审查 PIM 激活历史。调查任何具有异常模式的激活，包括非工作时间激活、不熟悉账户的激活或理由含糊的激活。将 PIM 审核日志的定期审查作为安全运营的一部分建立固定的审查节奏", "status": "machine-draft" }
+  },
+  "EIDPIM-012": {
+    "name": { "value": "紧急访问账户验证", "status": "machine-draft" },
+    "description": { "value": "紧急访问（break-glass）账户是关键保障措施，可确保在正常身份验证机制失效时（例如 MFA 中断、条件访问配置错误或身份提供者故障）仍能对租户进行管理访问。应至少存在 2 个 break-glass 账户，它们为仅云账户、从所有条件访问策略中排除，并使用强身份验证（例如安全存储的 FIDO2 密钥）加以保护。如果没有正确配置的 break-glass 账户，组织将面临被永久锁定于自己租户之外的风险", "status": "machine-draft" },
+    "recommendedValue": { "value": "至少 2 个紧急访问账户，它们为仅云账户、永久分配全局管理员、从所有条件访问策略中排除，并使用安全存储的 FIDO2 或超长复杂密码", "status": "machine-draft" },
+    "remediationSteps": { "value": "创建至少 2 个专用的紧急访问账户，它们为仅云账户（非同步），分配永久的全局管理员角色，从所有条件访问策略中排除，并配置 FIDO2 安全密钥或存储在物理保险箱中的超长复杂密码。为这些账户的任何登录活动配置监视告警，并每季度测试 break-glass 程序", "status": "machine-draft" }
+  },
+  "EIDPIM-013": {
+    "name": { "value": "独立管理账户强制执行", "status": "machine-draft" },
+    "description": { "value": "管理操作应从专用的管理账户执行，而不是从用于电子邮件、网页浏览和协作等日常活动的相同账户执行。将单个账户同时用于管理和日常任务，会使特权凭据暴露于日常工作中遇到的钓鱼、路过式下载和其他威胁。独立的管理账户可显著降低通过正常用户活动导致特权凭据攻陷的可能性", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有管理员均使用与其日常使用账户分开的专用管理账户。管理账户不应分配邮箱或生产力许可证", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查所有特权角色成员，识别同时分配了生产力许可证（Exchange Online、SharePoint、Teams）的账户，这表明存在双重用途。为每位管理员创建遵循命名约定（例如 adm-username）的专用管理账户。仅将特权角色分配给专用管理账户，并从日常使用账户中删除特权角色", "status": "machine-draft" }
+  },
+  "EIDPIM-014": {
+    "name": { "value": "特权角色分配通知设置", "status": "machine-draft" },
+    "description": { "value": "应配置通知，以在激活或永久分配特权角色时向安全人员发出告警。如果没有适当的通知设置，未经授权的权限提升或角色激活可能不被察觉，从而允许攻击者或恶意内部人员以提升的权限运作而不触发任何告警。通知设置是一项关键的检测性控制，可补充预防性的 PIM 配置", "status": "machine-draft" },
+    "recommendedValue": { "value": "为所有特权角色激活和新的永久分配启用通知，并发送给指定的安全运营联系人", "status": "machine-draft" },
+    "remediationSteps": { "value": "导航到 Entra ID > Roles and administrators > Settings 中每个特权角色的设置。在 Notification 选项卡下，确保为角色激活、永久分配和符合条件分配事件启用通知。配置通知接收者以纳入安全运营团队通讯组。通过执行一次测试激活来验证正在接收通知", "status": "machine-draft" }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "_family": "M365AuditChecks.json",
+  "M365AUDIT-001": {
+    "name": { "value": "已启用统一审核日志", "status": "machine-draft" },
+    "description": { "value": "Microsoft 365 统一审核日志记录 Exchange Online、SharePoint Online、OneDrive、Azure AD、Microsoft Teams 及其他服务中的用户和管理员活动，为安全调查提供基础数据源。如果禁用了统一审核，组织将失去对关键活动的可见性，例如邮箱访问、文件共享、权限更改和管理操作。禁用审核日志是一种已知的攻击者技术，用于在攻陷租户后掩盖踪迹。", "status": "machine-draft" },
+    "recommendedValue": { "value": "在整个组织范围内启用统一审核日志，且没有任何按用户或按邮箱的替代设置禁用审核", "status": "machine-draft" },
+    "remediationSteps": { "value": "通过运行 Get-AdminAuditLogConfig 并确认 UnifiedAuditLogIngestionEnabled 设置为 True，验证统一审核日志已启用。如果审核被禁用，请立即启用它并调查审核历史，以确定它是在何时、由何人禁用的，因为这可能表明发生了安全攻陷。设置监视告警以检测任何未来禁用统一审核日志的尝试，并将修改审核日志设置所需的权限限制为最小的一组受信任管理员。", "status": "machine-draft" }
+  },
+  "M365AUDIT-002": {
+    "name": { "value": "审核日志保留策略", "status": "machine-draft" },
+    "description": { "value": "默认情况下，Microsoft 365 审核日志记录保留 180 天（标准许可证为 90 天），这可能不足以检测长期运行的攻击或满足法规合规性要求。高级持续性威胁可能在环境中潜伏数月才被检测到，如果没有足够的日志保留，调查所需的取证证据可能已被清除。延长审核日志保留期可确保在需要时能够获取历史活动数据。", "status": "machine-draft" },
+    "recommendedValue": { "value": "审核日志保留期至少设置为 365 天；优先活动类型保留更长时间；日志导出到外部 SIEM 以进行长期存储", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Microsoft Purview 合规门户中配置审核日志保留策略，将所有审核日志记录保留至少 365 天，并为高优先级记录类型（例如 MailItemsAccessed、FileAccessed 和 UserLoggedIn）延长保留期。对于拥有 Microsoft 365 E5 或同等许可的组织，为关键审核记录类型配置 10 年保留策略，以支持长期取证调查。实现将日志导出到外部 SIEM 或日志分析平台（例如 Microsoft Sentinel），以进行超出原生保留期的长期存储和高级关联分析。", "status": "machine-draft" }
+  },
+  "M365AUDIT-003": {
+    "name": { "value": "审核日志搜索能力", "status": "machine-draft" },
+    "description": { "value": "有效搜索和分析审核日志数据的能力对于安全调查、合规性审计和事件响应活动至关重要。如果没有经过验证的搜索能力和受过培训的人员，即使存在审核日志数据，也无法在时间紧迫的安全事件中加以利用。组织必须确保审核日志搜索工具可访问、功能正常，并且响应流程包含审核日志分析。", "status": "machine-draft" },
+    "recommendedValue": { "value": "安全团队可访问审核日志搜索；针对常见调查场景测试并记录搜索查询；SIEM 集成正常运行", "status": "machine-draft" },
+    "remediationSteps": { "value": "验证安全运营和事件响应团队的成员拥有适当的角色分配（Audit Logs 或 View-Only Audit Logs 角色），以搜索统一审核日志。为常见调查场景（例如邮箱攻陷、未经授权的文件访问和管理权限提升）创建并记录标准搜索查询。定期测试审核日志搜索功能，并验证 SIEM 集成正确摄取和索引审核事件，以支持自动化检测和关联。", "status": "machine-draft" }
+  }
+}

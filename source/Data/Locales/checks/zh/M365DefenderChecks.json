@@ -1,0 +1,21 @@
+{
+  "_family": "M365DefenderChecks.json",
+  "M365DEF-001": {
+    "name": { "value": "预设安全策略审计", "status": "machine-draft" },
+    "description": { "value": "Microsoft Defender for Office 365 中的预设安全策略以统一的策略捆绑包形式，为反垃圾邮件、反钓鱼、反恶意软件、Safe Attachments 和 Safe Links 提供 Microsoft 推荐的配置。未利用预设策略或等效自定义配置的组织，其各项威胁防护功能之间的防护级别可能不一致。验证已应用标准或严格预设策略可确保建立全面且始终如一维护的基线。", "status": "machine-draft" },
+    "recommendedValue": { "value": "至少将标准防护（Standard Protection）预设策略应用于所有用户；将严格防护（Strict Protection）应用于优先账户和高管", "status": "machine-draft" },
+    "remediationSteps": { "value": "启用标准防护（Standard Protection）预设安全策略并将其分配给所有用户，为电子邮件威胁防护建立 Microsoft 推荐的安全基线。将严格防护（Strict Protection）预设策略应用于最有可能成为复杂攻击目标的优先账户、高管和高价值目标。如果相比预设更倾向于使用自定义策略，请验证每个自定义策略达到或超过标准或严格预设配置中定义的设置。", "status": "machine-draft" }
+  },
+  "M365DEF-002": {
+    "name": { "value": "告警策略清单", "status": "machine-draft" },
+    "description": { "value": "Microsoft 365 Defender 中的告警策略会在检测到特定安全事件或可疑活动时生成通知，从而实现及时的事件响应。如果没有一套全面的告警策略，诸如大规模文件删除、不可能的旅行或恶意软件活动等关键安全事件可能会在很长时间内不被察觉。审查告警策略清单可确保所有重要威胁类别都有相应的检测和通知机制。", "status": "machine-draft" },
+    "recommendedValue": { "value": "启用所有默认告警策略；为组织特定威胁配置自定义告警策略；为安全团队配置告警接收者", "status": "machine-draft" },
+    "remediationSteps": { "value": "审查 Microsoft 365 Defender 门户中的所有默认和自定义告警策略，确保默认安全告警策略未被禁用或修改以致降低其有效性。配置告警通知接收者以纳入安全运营团队，并验证电子邮件通知正在送达并受到监视。为组织特定的威胁场景（例如异常邮件流模式、批量权限更改或来自被阻止地理区域的访问）创建自定义告警策略。", "status": "machine-draft" }
+  },
+  "M365DEF-003": {
+    "name": { "value": "威胁情报配置", "status": "machine-draft" },
+    "description": { "value": "Microsoft Defender for Office 365 中的威胁情报功能提供了针对组织的威胁态势的可见性，包括活动视图、威胁分析和威胁跟踪器洞察。如果不利用威胁情报功能，安全团队将缺乏所需的背景信息来了解其组织是否正被特定威胁行为者或攻击活动瞄准。适当的威胁情报配置可实现主动防御和明智的安全决策。", "status": "machine-draft" },
+    "recommendedValue": { "value": "主动监视 Threat Explorer 和实时检测；为优先威胁配置威胁跟踪器；启用自动调查和响应", "status": "machine-draft" },
+    "remediationSteps": { "value": "确保安全分析师能够访问 Threat Explorer 或实时检测视图，并接受过使用它们调查基于电子邮件的威胁和活动的培训。配置威胁跟踪器以监视与您所在行业和组织概况相关的特定威胁类别。启用自动调查和响应（AIR）功能，以自动调查和修复检测到的威胁，缩短常见威胁模式从检测到响应之间的时间。", "status": "machine-draft" }
+  }
+}
