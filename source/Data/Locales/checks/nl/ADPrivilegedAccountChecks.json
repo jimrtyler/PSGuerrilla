@@ -1,0 +1,183 @@
+{
+  "_family": "ADPrivilegedAccountChecks.json",
+  "ADPRIV-001": {
+    "name": { "value": "Inventarisatie van Domain Admins", "status": "machine-draft" },
+    "description": { "value": "De groep Domain Admins biedt volledige administratieve controle over alle aan het domein gekoppelde systemen. Het lidmaatschap moet strikt beperkt zijn en elk lid moet een gedocumenteerde zakelijke rechtvaardiging hebben. Buitensporig lidmaatschap vergroot het aanvalsoppervlak voor referentiediefstal en laterale verplaatsing drastisch", "status": "machine-draft" },
+    "recommendedValue": { "value": "Minimaal lidmaatschap (idealiter maximaal 2-3 accounts) met gedocumenteerde rechtvaardiging voor elk lid. Geen dagelijkse gebruikersaccounts", "status": "machine-draft" },
+    "remediationSteps": { "value": "Inventariseer het lidmaatschap van Domain Admins inclusief geneste groepen met Get-ADGroupMember -Identity 'Domain Admins' -Recursive. Beoordeel elk lid op zakelijke behoefte. Verwijder onnodige leden en migreer naar modellen voor gedelegeerd beheer. Zorg dat er geen reguliere gebruikersaccounts lid zijn", "status": "machine-draft" }
+  },
+  "ADPRIV-002": {
+    "name": { "value": "Inventarisatie van Enterprise Admins", "status": "machine-draft" },
+    "description": { "value": "De groep Enterprise Admins heeft forestbrede administratieve rechten over alle domeinen. Deze groep zou tijdens de normale bedrijfsvoering leeg moeten zijn en alleen tijdelijk moeten worden gevuld voor wijzigingen op forestniveau. Een gecompromitteerd Enterprise Admin-account leidt tot volledige compromittering van het forest", "status": "machine-draft" },
+    "recommendedValue": { "value": "Leeg tijdens de normale bedrijfsvoering. Leden alleen tijdelijk toegevoegd voor wijzigingen op forestniveau met gedocumenteerde goedkeuring", "status": "machine-draft" },
+    "remediationSteps": { "value": "Inventariseer het lidmaatschap van Enterprise Admins met Get-ADGroupMember -Identity 'Enterprise Admins' -Recursive. Verwijder alle permanente leden. Implementeer een just-in-time-toegangsproces voor bewerkingen op forestniveau dat leden tijdelijk toevoegt en verwijdert met volledige auditregistratie", "status": "machine-draft" }
+  },
+  "ADPRIV-003": {
+    "name": { "value": "Inventarisatie van Schema Admins", "status": "machine-draft" },
+    "description": { "value": "De groep Schema Admins kan het AD-schema wijzigen, wat onomkeerbaar is en het hele forest beïnvloedt. Deze groep zou tijdens de normale bedrijfsvoering leeg moeten zijn, aangezien schemawijzigingen zeldzaam en zeer ingrijpend zijn", "status": "machine-draft" },
+    "recommendedValue": { "value": "Leeg tijdens de normale bedrijfsvoering. Leden alleen tijdelijk toegevoegd voor schemawijzigingen met goedkeuring van wijzigingsbeheer", "status": "machine-draft" },
+    "remediationSteps": { "value": "Inventariseer het lidmaatschap van Schema Admins met Get-ADGroupMember -Identity 'Schema Admins'. Verwijder alle permanente leden. Voeg leden alleen toe wanneer schemawijzigingen vereist zijn via een formeel wijzigingsbeheerproces", "status": "machine-draft" }
+  },
+  "ADPRIV-004": {
+    "name": { "value": "Inventarisatie van Account Operators", "status": "machine-draft" },
+    "description": { "value": "Account Operators kunnen de meeste gebruikers- en groepsaccounts in het domein aanmaken en wijzigen, waaronder het aanmaken van accounts in bevoorrechte OU's. Deze groep wordt vaak over het hoofd gezien, maar biedt een aanzienlijk potentieel voor rechtenescalatie", "status": "machine-draft" },
+    "recommendedValue": { "value": "Leeg. Gebruik gedelegeerde machtigingen op OU-niveau in plaats van lidmaatschap van de groep Account Operators", "status": "machine-draft" },
+    "remediationSteps": { "value": "Inventariseer het lidmaatschap van Account Operators met Get-ADGroupMember -Identity 'Account Operators'. Verwijder alle leden en vervang door OU-gebonden delegatie met de wizard voor delegatie van beheer in Active Directory. Documenteer alle gedelegeerde machtigingen", "status": "machine-draft" }
+  },
+  "ADPRIV-005": {
+    "name": { "value": "Inventarisatie van Server Operators", "status": "machine-draft" },
+    "description": { "value": "Server Operators kunnen aanmelden op domeincontrollers, services beheren en gedeelde resources wijzigen. Deze groep kan worden misbruikt om rechten op DC's te escaleren door services te manipuleren zodat ze willekeurige code als SYSTEM uitvoeren", "status": "machine-draft" },
+    "recommendedValue": { "value": "Leeg. Gebruik in plaats daarvan specifieke servicebeheeraccounts met specifieke delegatie", "status": "machine-draft" },
+    "remediationSteps": { "value": "Inventariseer het lidmaatschap van Server Operators met Get-ADGroupMember -Identity 'Server Operators'. Verwijder alle leden en implementeer gerichte delegatie voor eventueel vereiste serverbeheertaken. Audit de aanmeldingsrechten op DC's afzonderlijk", "status": "machine-draft" }
+  },
+  "ADPRIV-006": {
+    "name": { "value": "Inventarisatie van Backup Operators", "status": "machine-draft" },
+    "description": { "value": "Backup Operators kunnen bestanden op domeincontrollers back-uppen en terugzetten, waaronder de AD-database (ntds.dit). Dit maakt extractie van alle wachtwoordhashes in het domein mogelijk, waardoor lidmaatschap van Backup Operators voor een bekwame aanvaller gelijkstaat aan Domain Admin-toegang", "status": "machine-draft" },
+    "recommendedValue": { "value": "Leeg of beperkt tot uitsluitend specifieke back-upserviceaccounts. Geen gebruikersaccounts", "status": "machine-draft" },
+    "remediationSteps": { "value": "Inventariseer het lidmaatschap van Backup Operators met Get-ADGroupMember -Identity 'Backup Operators'. Verwijder alle gebruikersaccounts. Als back-upserviceaccounts lidmaatschap vereisen, zorg dan dat ze specifiek zijn, sterke wachtwoorden hebben en worden bewaakt. Overweeg agentgebaseerde back-upoplossingen die geen lidmaatschap van Backup Operators vereisen", "status": "machine-draft" }
+  },
+  "ADPRIV-007": {
+    "name": { "value": "Inventarisatie van Print Operators", "status": "machine-draft" },
+    "description": { "value": "Print Operators kunnen printers beheren en printerstuurprogramma's laden op domeincontrollers. Kwaadaardige printerstuurprogramma's kunnen willekeurige code als SYSTEM op DC's uitvoeren, wat een pad naar volledige compromittering van het domein biedt", "status": "machine-draft" },
+    "recommendedValue": { "value": "Leeg. Beheer printers met specifieke printservers, niet met domeincontrollers", "status": "machine-draft" },
+    "remediationSteps": { "value": "Inventariseer het lidmaatschap van Print Operators met Get-ADGroupMember -Identity 'Print Operators'. Verwijder alle leden. Implementeer printservices op specifieke lidservers in plaats van op domeincontrollers. Beperk de installatie van printerstuurprogramma's via groepsbeleid", "status": "machine-draft" }
+  },
+  "ADPRIV-008": {
+    "name": { "value": "Groepslidmaatschap van DnsAdmins", "status": "machine-draft" },
+    "description": { "value": "Leden van de groep DnsAdmins kunnen de DNS-service op domeincontrollers configureren om een willekeurige DLL te laden, die als SYSTEM wordt uitgevoerd. Dit bekende pad voor rechtenescalatie kan leiden tot volledige compromittering van het domein vanuit een schijnbaar laag geprivilegieerd groepslidmaatschap", "status": "machine-draft" },
+    "recommendedValue": { "value": "Leeg of beperkt tot uitsluitend specifieke DNS-beheeraccounts. Lidmaatschap behandeld als Tier 0-bevoorrecht", "status": "machine-draft" },
+    "remediationSteps": { "value": "Inventariseer het lidmaatschap van DnsAdmins met Get-ADGroupMember -Identity 'DnsAdmins'. Verwijder onnodige leden. Behandel DnsAdmins als een Tier 0-bevoorrechte groep in uw laagindelingsmodel. Bewaak op wijzigingen aan de DNS-serverconfiguratie en de registerwaarde ServerLevelPluginDll", "status": "machine-draft" }
+  },
+  "ADPRIV-009": {
+    "name": { "value": "Analyse van genest groepslidmaatschap", "status": "machine-draft" },
+    "description": { "value": "Genest groepslidmaatschap kan effectieve rechten verhullen door bevoorrechte toegang te verbergen achter ketens van groepsnesting. Gebruikers kunnen Domain Admin-equivalente toegang hebben via diep geneste groepen die niet zichtbaar zijn via eenvoudige groepsinventarisatie", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alle geneste groepspaden naar bevoorrechte groepen gedocumenteerd. Maximale nestingdiepte van 2 niveaus. Geen circulaire nesting", "status": "machine-draft" },
+    "remediationSteps": { "value": "Inventariseer recursief alle bevoorrechte groepslidmaatschappen met Get-ADGroupMember -Recursive. Breng alle nestingpaden in kaart en identificeer gebruikers die rechten verkrijgen via indirect lidmaatschap. Vlak onnodige nesting af en documenteer alle resterende geneste paden met zakelijke rechtvaardiging", "status": "machine-draft" }
+  },
+  "ADPRIV-010": {
+    "name": { "value": "Bevoorrechte gebruikers met Wachtwoord verloopt nooit", "status": "machine-draft" },
+    "description": { "value": "Bevoorrechte accounts met de vlag 'Wachtwoord verloopt nooit' ingesteld zijn vrijgesteld van beleid voor wachtwoordrotatie. Als zo'n account wordt gecompromitteerd, behoudt de aanvaller voor onbepaalde tijd persistente toegang, aangezien het wachtwoord nooit gedwongen wordt gewijzigd", "status": "machine-draft" },
+    "recommendedValue": { "value": "Geen bevoorrechte accounts met de vlag Wachtwoord verloopt nooit ingesteld. Alle bevoorrechte accounts onderworpen aan een wachtwoordrotatiebeleid van 60 dagen of minder", "status": "machine-draft" },
+    "remediationSteps": { "value": "Identificeer bevoorrechte accounts met PasswordNeverExpires met Get-ADUser -Filter {PasswordNeverExpires -eq $true -and AdminCount -eq 1}. Wis de vlag en zorg dat deze accounts worden gedekt door een passend wachtwoordbeleid. Implementeer een FGPP voor bevoorrechte accounts met een maximale wachtwoordleeftijd van 60 dagen", "status": "machine-draft" }
+  },
+  "ADPRIV-011": {
+    "name": { "value": "Bevoorrechte gebruikers met Wachtwoord niet vereist", "status": "machine-draft" },
+    "description": { "value": "De vlag PASSWD_NOTREQD staat een account toe een leeg wachtwoord te hebben, waarmee het wachtwoordbeleid volledig wordt omzeild. Op bevoorrechte accounts is dit catastrofaal, aangezien het niet-geauthenticeerde toegang tot zeer bevoorrechte resources mogelijk maakt", "status": "machine-draft" },
+    "recommendedValue": { "value": "Geen bevoorrechte accounts met de vlag PASSWD_NOTREQD ingesteld", "status": "machine-draft" },
+    "remediationSteps": { "value": "Identificeer accounts met Get-ADUser -Filter {PasswordNotRequired -eq $true -and AdminCount -eq 1}. Wis de vlag PASSWD_NOTREQD onmiddellijk en stel een sterk wachtwoord in op alle geïdentificeerde accounts. Onderzoek hoe deze vlag is ingesteld, aangezien dit op compromittering kan wijzen", "status": "machine-draft" }
+  },
+  "ADPRIV-012": {
+    "name": { "value": "Bevoorrechte gebruikers zonder Kerberos-preauthenticatie", "status": "machine-draft" },
+    "description": { "value": "Accounts met Kerberos-preauthenticatie uitgeschakeld zijn kwetsbaar voor AS-REP Roasting, waarbij een aanvaller versleuteld materiaal offline kan aanvragen zonder enige authenticatie en dit kan kraken om het accountwachtwoord te herstellen. Op bevoorrechte accounts biedt dit een direct pad naar compromittering van het domein", "status": "machine-draft" },
+    "recommendedValue": { "value": "Geen bevoorrechte accounts met de vlag 'Kerberos-preauthenticatie niet vereisen' ingesteld", "status": "machine-draft" },
+    "remediationSteps": { "value": "Identificeer accounts met Get-ADUser -Filter {DoesNotRequirePreAuth -eq $true -and AdminCount -eq 1}. Schakel Kerberos-preauthenticatie onmiddellijk in op alle bevoorrechte accounts. Roteer de wachtwoorden van betrokken accounts, aangezien ze mogelijk al via AS-REP Roasting zijn gecompromitteerd", "status": "machine-draft" }
+  },
+  "ADPRIV-013": {
+    "name": { "value": "Bevoorrechte gebruikers met omkeerbare versleuteling", "status": "machine-draft" },
+    "description": { "value": "Accounts met 'Wachtwoord opslaan met omkeerbare versleuteling' ingeschakeld slaan wachtwoorden op in een indeling die kan worden ontsleuteld tot leesbare tekst. Dit staat gelijk aan het opslaan van wachtwoorden in leesbare tekst en stelt elke aanvaller met toegang tot de AD-database in staat het werkelijke wachtwoord op te halen", "status": "machine-draft" },
+    "recommendedValue": { "value": "Geen accounts met omkeerbare versleuteling ingeschakeld, en zeker geen bevoorrechte accounts", "status": "machine-draft" },
+    "remediationSteps": { "value": "Identificeer accounts met Get-ADUser -Filter {AllowReversiblePasswordEncryption -eq $true -and AdminCount -eq 1}. Wis de vlag en forceer een onmiddellijke wachtwoordwijziging op alle betrokken accounts. Beoordeel het wachtwoordbeleid om te garanderen dat het geen omkeerbare versleuteling vereist", "status": "machine-draft" }
+  },
+  "ADPRIV-014": {
+    "name": { "value": "Bevoorrechte gebruikers met alleen DES-Kerberos", "status": "machine-draft" },
+    "description": { "value": "Accounts die zijn geconfigureerd voor uitsluitend DES-Kerberos-versleuteling gebruiken een cryptografisch gebroken algoritme. DES-sleutels kunnen snel worden gebruteforced, waardoor aanvallers Kerberos-tickets voor de betrokken accounts kunnen vervalsen of ontsleutelen", "status": "machine-draft" },
+    "recommendedValue": { "value": "Geen accounts met de vlag 'Kerberos-DES-versleutelingstypen voor dit account gebruiken' ingesteld", "status": "machine-draft" },
+    "remediationSteps": { "value": "Identificeer accounts met Get-ADUser -Filter {UseDESKeyOnly -eq $true -and AdminCount -eq 1}. Wis de vlag voor uitsluitend DES en zorg dat accounts AES256-versleuteling ondersteunen. Roteer de wachtwoorden van betrokken accounts om nieuwe AES-gebaseerde Kerberos-sleutels te genereren", "status": "machine-draft" }
+  },
+  "ADPRIV-015": {
+    "name": { "value": "Bevoorrechte accounts zonder MFA-indicator", "status": "machine-draft" },
+    "description": { "value": "Bevoorrechte accounts moeten worden beschermd door multi-factor-authenticatie voor alle interactieve en externe aanmeldingen. Zonder MFA is een gestolen wachtwoord alleen al voldoende om volledige administratieve toegang tot het domein te verkrijgen", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alle bevoorrechte accounts verplicht MFA via smartcard, Windows Hello voor Bedrijven of FIDO2. Vlag 'Smartcard is vereist voor interactieve aanmelding' ingesteld waar van toepassing", "status": "machine-draft" },
+    "remediationSteps": { "value": "Beoordeel bevoorrechte accounts op de vereiste voor smartcardaanmelding met Get-ADUser -Filter {SmartcardLogonRequired -eq $false -and AdminCount -eq 1}. Rol smartcard- of Windows Hello voor Bedrijven-authenticatie uit voor alle bevoorrechte accounts. Schakel de vlag 'Smartcard is vereist voor interactieve aanmelding' in op Tier 0-accounts", "status": "machine-draft" }
+  },
+  "ADPRIV-016": {
+    "name": { "value": "Bevoorrechte accounts met zwakke wachtwoorden", "status": "machine-draft" },
+    "description": { "value": "Bevoorrechte accounts met zwakke of veelgebruikte wachtwoorden worden triviaal gecompromitteerd via password spraying, woordenboekaanvallen of credential stuffing. Een zwak wachtwoord op een Domain Admin-account kan binnen enkele minuten leiden tot volledige compromittering van het domein", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alle wachtwoorden van bevoorrechte accounts voldoen aan een minimum van 25 tekens en komen niet voor in veelvoorkomende wachtwoordwoordenboeken", "status": "machine-draft" },
+    "remediationSteps": { "value": "Test de wachtwoordsterkte van bevoorrechte accounts door NT-hashes te vergelijken met lijsten van bekende zwakke wachtwoorden (met tools zoals DSInternals). Forceer onmiddellijke wachtwoordwijzigingen op accounts met zwakke wachtwoorden. Implementeer een FGPP dat wachtwoorden van 25+ tekens vereist voor bevoorrechte accounts", "status": "machine-draft" }
+  },
+  "ADPRIV-017": {
+    "name": { "value": "Bevoorrechte accounts met oude wachtwoorden", "status": "machine-draft" },
+    "description": { "value": "Bevoorrechte accounts met wachtwoorden die al meer dan 90 dagen niet zijn gewijzigd, hebben een verlengd blootstellingsvenster. Als referenties zijn gecompromitteerd, behoudt de aanvaller toegang gedurende de hele periode dat het wachtwoord ongewijzigd blijft", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alle wachtwoorden van bevoorrechte accounts gewijzigd binnen de afgelopen 60 dagen", "status": "machine-draft" },
+    "remediationSteps": { "value": "Identificeer bevoorrechte accounts met oude wachtwoorden met Get-ADUser -Filter {AdminCount -eq 1} -Properties PasswordLastSet | Where-Object {$_.PasswordLastSet -lt (Get-Date).AddDays(-90)}. Forceer wachtwoordrotatie op alle geïdentificeerde accounts. Implementeer een FGPP met een maximale wachtwoordleeftijd van 60 dagen voor bevoorrechte accounts", "status": "machine-draft" }
+  },
+  "ADPRIV-018": {
+    "name": { "value": "Bevoorrechte accounts die nooit hebben aangemeld", "status": "machine-draft" },
+    "description": { "value": "Bevoorrechte accounts die nooit hebben aangemeld kunnen geprovisioneerde accounts zijn die nooit zijn opgeëist, testaccounts of migratieartefacten. Deze onbeheerde accounts in bevoorrechte groepen vormen een aanzienlijk risico, aangezien ze standaard- of zwakke wachtwoorden kunnen hebben", "status": "machine-draft" },
+    "recommendedValue": { "value": "Geen bevoorrechte accounts met een lege LastLogonTimestamp. Alle bevoorrechte accounts actief gebruikt door hun toegewezen eigenaren", "status": "machine-draft" },
+    "remediationSteps": { "value": "Identificeer bevoorrechte accounts die nooit hebben aangemeld met Get-ADUser -Filter {AdminCount -eq 1} -Properties LastLogonTimestamp | Where-Object {$_.LastLogonTimestamp -eq $null}. Onderzoek elk account om te bepalen of het nodig is. Schakel onnodige accounts uit of verwijder ze uit bevoorrechte groepen", "status": "machine-draft" }
+  },
+  "ADPRIV-019": {
+    "name": { "value": "Uitgeschakelde accounts in bevoorrechte groepen", "status": "machine-draft" },
+    "description": { "value": "Uitgeschakelde accounts die in bevoorrechte groepen blijven, creëren risico omdat het opnieuw inschakelen van het account (bewust of via compromittering) onmiddellijk volledige bevoorrechte toegang verleent. Uitgeschakelde accounts moeten uit alle bevoorrechte groepen worden verwijderd", "status": "machine-draft" },
+    "recommendedValue": { "value": "Geen uitgeschakelde accounts in enige bevoorrechte groep", "status": "machine-draft" },
+    "remediationSteps": { "value": "Identificeer uitgeschakelde accounts in bevoorrechte groepen met Get-ADGroupMember 'Domain Admins' -Recursive | Get-ADUser | Where-Object {$_.Enabled -eq $false}. Herhaal dit voor alle bevoorrechte groepen. Verwijder uitgeschakelde accounts onmiddellijk uit alle bevoorrechte groepslidmaatschappen", "status": "machine-draft" }
+  },
+  "ADPRIV-020": {
+    "name": { "value": "Audit van door AdminSDHolder beschermde objecten", "status": "machine-draft" },
+    "description": { "value": "AdminSDHolder is een beveiligingsmechanisme dat de ACL's op beschermde objecten (bevoorrechte gebruikers en groepen) elke 60 minuten overschrijft via SDProp. Wijzigingen aan de ACL van AdminSDHolder propageren naar alle beschermde objecten, wat het een waardevol doelwit voor persistentie maakt. Ongeautoriseerde ACE's op AdminSDHolder verlenen backdoortoegang tot alle bevoorrechte accounts", "status": "machine-draft" },
+    "recommendedValue": { "value": "De ACL van AdminSDHolder bevat alleen standaardvermeldingen zonder ongeautoriseerde of onverwachte ACE's", "status": "machine-draft" },
+    "remediationSteps": { "value": "Beoordeel de ACL van AdminSDHolder op CN=AdminSDHolder,CN=System,DC=domain met Get-ACL of ADSIEdit. Vergelijk met de gedocumenteerde baseline. Verwijder alle niet-standaard ACE's onmiddellijk. Bewaak op wijzigingen aan AdminSDHolder als onderdeel van doorlopende beveiligingsbewaking", "status": "machine-draft" }
+  },
+  "ADPRIV-021": {
+    "name": { "value": "AdminCount-wezen", "status": "machine-draft" },
+    "description": { "value": "Wanneer objecten uit beschermde groepen worden verwijderd, blijft het kenmerk AdminCount op 1 ingesteld en blijft de overgeërfde overname van machtigingen geblokkeerd. Deze 'AdminCount-wezen' hebben een verbroken overname van machtigingen, wat kan voorkomen dat beveiligingsbeleid correct wordt toegepast en rechtenescalatie kan maskeren", "status": "machine-draft" },
+    "recommendedValue": { "value": "Geen accounts met AdminCount=1 die geen lid zijn van enige beschermde groep", "status": "machine-draft" },
+    "remediationSteps": { "value": "Identificeer verweesde accounts met Get-ADUser -Filter {AdminCount -eq 1} en kruisverwijs met het huidige lidmaatschap van beschermde groepen. Wis voor de wezen het kenmerk AdminCount en schakel de overname op de ACL van het object weer in. Gebruik PowerShell of ADSIEdit om de overgeërfde machtigingen te herstellen", "status": "machine-draft" }
+  },
+  "ADPRIV-022": {
+    "name": { "value": "Leeftijd van het krbtgt-wachtwoord", "status": "machine-draft" },
+    "description": { "value": "Het wachtwoord van het krbtgt-account wordt gebruikt om alle Kerberos-tickets in het domein te versleutelen en te ondertekenen. Bij compromittering kan een aanvaller Golden Tickets aanmaken die onbeperkte toegang tot elke resource voor elke duur verlenen. Het krbtgt-wachtwoord moet ten minste elke 180 dagen worden geroteerd en onmiddellijk na een vermoedelijke compromittering", "status": "machine-draft" },
+    "recommendedValue": { "value": "krbtgt-wachtwoord gewijzigd binnen de afgelopen 180 dagen. Tweemaal geroteerd (om alle bestaande tickets ongeldig te maken) na een vermoedelijke compromittering", "status": "machine-draft" },
+    "remediationSteps": { "value": "Controleer de leeftijd van het krbtgt-wachtwoord met Get-ADUser krbtgt -Properties PasswordLastSet. Stel het wachtwoord tweemaal opnieuw in (met voldoende tijd tussen de resets zodat de replicatie kan worden voltooid) om alle bestaande tickets ongeldig te maken. Gebruik het krbtgt-resetscript van Microsoft om de rotatie veilig uit te voeren. Plan regelmatige rotatie elke 180 dagen", "status": "machine-draft" }
+  },
+  "ADPRIV-023": {
+    "name": { "value": "Beoordeling van krbtgt-accountblootstelling", "status": "machine-draft" },
+    "description": { "value": "De configuratie van het krbtgt-account moet worden beoordeeld op blootstellingsindicatoren, waaronder ondersteunde versleutelingstypen, delegatie-instellingen en SPN's. Elke verkeerde configuratie verhoogt het risico op Golden Ticket- en andere Kerberos-gebaseerde aanvallen", "status": "machine-draft" },
+    "recommendedValue": { "value": "krbtgt-account geconfigureerd met uitsluitend AES256-versleuteling, geen delegatie en geen aanvullende SPN's naast de standaard kadmin/changepw", "status": "machine-draft" },
+    "remediationSteps": { "value": "Beoordeel de eigenschappen van het krbtgt-account, waaronder msDS-SupportedEncryptionTypes, delegatie-instellingen en SPN's. Zorg dat AES256 het primaire versleutelingstype is. Verifieer dat er geen delegatievlaggen zijn ingesteld. Controleer op onverwachte SPN's die op compromittering of verkeerde configuratie kunnen wijzen", "status": "machine-draft" }
+  },
+  "ADPRIV-024": {
+    "name": { "value": "Serviceaccounts in bevoorrechte groepen", "status": "machine-draft" },
+    "description": { "value": "Serviceaccounts in bevoorrechte groepen vormen een verhoogd risico omdat ze doorgaans wachtwoorden hebben die niet verlopen, worden gedeeld tussen beheerders, mogelijk in scripts of configuratiebestanden worden opgeslagen en op meerdere servers draaien waar referenties kunnen worden verzameld", "status": "machine-draft" },
+    "recommendedValue": { "value": "Geen serviceaccounts in bevoorrechte groepen. Serviceaccounts zouden gedelegeerde machtigingen moeten gebruiken die zijn beperkt tot de minimaal vereiste toegang", "status": "machine-draft" },
+    "remediationSteps": { "value": "Identificeer serviceaccounts in bevoorrechte groepen door alle leden te beoordelen en te controleren op accounts die worden gebruikt als service-aanmeldingsidentiteiten. Verwijder serviceaccounts uit bevoorrechte groepen en verleen via delegatie alleen de specifiek benodigde machtigingen. Migreer waar mogelijk naar Group Managed Service Accounts (gMSA)", "status": "machine-draft" }
+  },
+  "ADPRIV-025": {
+    "name": { "value": "Computeraccounts in bevoorrechte groepen", "status": "machine-draft" },
+    "description": { "value": "Computeraccounts in bevoorrechte groepen verlenen elk proces dat als SYSTEM op die computers draait de rechten van de groep. Een aanvaller die zo'n machine compromitteert, verkrijgt Domain Admin-equivalente toegang, wat het aanvalsoppervlak voor laterale verplaatsing aanzienlijk vergroot", "status": "machine-draft" },
+    "recommendedValue": { "value": "Geen computeraccounts in enige bevoorrechte groep", "status": "machine-draft" },
+    "remediationSteps": { "value": "Inventariseer de leden van bevoorrechte groepen en identificeer computeraccounts met Get-ADGroupMember 'Domain Admins' | Where-Object {$_.objectClass -eq 'computer'}. Herhaal dit voor alle bevoorrechte groepen. Verwijder computeraccounts onmiddellijk en onderzoek waarom ze zijn toegevoegd", "status": "machine-draft" }
+  },
+  "ADPRIV-026": {
+    "name": { "value": "Bevoorrechte gebruikers met lokale aanmelding op DC's", "status": "machine-draft" },
+    "description": { "value": "Alleen aangewezen Tier 0-beheeraccounts zouden lokaal op domeincontrollers mogen aanmelden. Toestaan dat niet-Tier 0-accounts op DC's aanmelden, stelt bevoorrechte referenties bloot aan aanvallen voor het verzamelen van referenties op minder beveiligde werkstations", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alleen Domain Admins en aangewezen Tier 0-accounts mogen lokaal aanmelden op DC's. 'Lokaal aanmelden toestaan' beperkt via GPO op de OU Domain Controllers", "status": "machine-draft" },
+    "remediationSteps": { "value": "Configureer via groepsbeleid toegepast op de OU Domain Controllers: Computerconfiguratie > Beleid > Windows-instellingen > Beveiligingsinstellingen > Lokaal beleid > Toewijzing van gebruikersrechten > 'Lokaal aanmelden toestaan' = uitsluitend Administrators, Domain Admins. Verwijder alle overige vermeldingen en test grondig", "status": "machine-draft" }
+  },
+  "ADPRIV-027": {
+    "name": { "value": "Bevoorrechte gebruikers met RDP op DC's", "status": "machine-draft" },
+    "description": { "value": "Extern bureaublad-toegang tot domeincontrollers moet strikt worden beperkt tot aangewezen Tier 0-beheerders. RDP-sessies cachen referenties die kunnen worden verzameld, en buitensporige RDP-toegang vergroot het aanvalsoppervlak voor referentiediefstal en laterale verplaatsing naar DC's", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alleen aangewezen Tier 0-beheeraccounts mogen RDP-toegang tot DC's hebben. 'Aanmelden via Extern bureaublad-services toestaan' beperkt via GPO", "status": "machine-draft" },
+    "remediationSteps": { "value": "Configureer via groepsbeleid toegepast op de OU Domain Controllers: Computerconfiguratie > Beleid > Windows-instellingen > Beveiligingsinstellingen > Lokaal beleid > Toewijzing van gebruikersrechten > 'Aanmelden via Extern bureaublad-services toestaan' = uitsluitend Administrators. Overweeg het gebruik van Remote Credential Guard of de modus Restricted Admin voor RDP-sessies", "status": "machine-draft" }
+  },
+  "ADPRIV-028": {
+    "name": { "value": "Gebruikers met DCSync-rechten", "status": "machine-draft" },
+    "description": { "value": "DCSync maakt replicatie van wachtwoordgegevens uit Active Directory mogelijk, inclusief alle gebruikershashes. Accounts met de rechten 'Replicating Directory Changes All' en 'Replicating Directory Changes' kunnen elke wachtwoordhash in het domein extraheren zonder een DC aan te raken. Alleen computeraccounts van domeincontrollers en het standaardbeheerdersaccount zouden deze rechten mogen hebben", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alleen computeraccounts van domeincontrollers en het standaardbeheerdersaccount hebben replicatierechten. Geen aanvullende gebruikers of groepen met DCSync-machtigingen", "status": "machine-draft" },
+    "remediationSteps": { "value": "Audit de ACL van de domeinroot op 'Replicating Directory Changes' en 'Replicating Directory Changes All' met (Get-ACL 'AD:\\DC=domain,DC=com').Access | Where-Object {$_.ObjectType -match '1131f6a[a-d]'}. Verwijder ongeautoriseerde vermeldingen onmiddellijk. Onderzoek of ongeautoriseerde accounts al DCSync hebben uitgevoerd", "status": "machine-draft" }
+  },
+  "ADPRIV-029": {
+    "name": { "value": "Audit van de groep Protected Users", "status": "machine-draft" },
+    "description": { "value": "De beveiligingsgroep Protected Users biedt geharde authenticatiebeschermingen, waaronder het uitschakelen van NTLM-authenticatie, het afdwingen van AES-Kerberos-versleuteling, het voorkomen van het cachen van referenties en het instellen van korte TGT-levensduren. Alle Tier 0-bevoorrechte accounts zouden lid moeten zijn", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alle Tier 0-bevoorrechte gebruikersaccounts zijn lid van de groep Protected Users", "status": "machine-draft" },
+    "remediationSteps": { "value": "Voeg alle Tier 0-accounts toe aan de groep Protected Users met Add-ADGroupMember -Identity 'Protected Users' -Members <account>. Test elk account eerst, aangezien Protected Users NTLM en referentiedelegatie uitschakelt, wat verouderde toepassingen kan verstoren. Let op: serviceaccounts en computeraccounts mogen NIET worden toegevoegd", "status": "machine-draft" }
+  },
+  "ADPRIV-030": {
+    "name": { "value": "Bevoorrechte gebruikers niet in Protected Users", "status": "machine-draft" },
+    "description": { "value": "Bevoorrechte accounts die geen lid zijn van de groep Protected Users missen geharde authenticatiebeschermingen en blijven kwetsbaar voor technieken voor referentiediefstal, waaronder NTLM-relay, het cachen van referenties en langlevende Kerberos-tickets. Elk in aanmerking komend bevoorrecht account zou beschermd moeten zijn", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alle in aanmerking komende bevoorrechte gebruikersaccounts opgenomen in de groep Protected Users. Uitzonderingen gedocumenteerd met compenserende maatregelen", "status": "machine-draft" },
+    "remediationSteps": { "value": "Vergelijk de leden van bevoorrechte groepen met het lidmaatschap van Protected Users. Evalueer voor elk bevoorrecht account dat niet in Protected Users zit de compatibiliteit (NTLM-afhankelijkheden, delegatievereisten) en voeg het toe aan de groep. Documenteer eventuele uitzonderingen met specifieke technische redenen en compenserende maatregelen", "status": "machine-draft" }
+  }
+}

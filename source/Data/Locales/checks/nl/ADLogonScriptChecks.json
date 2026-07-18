@@ -1,0 +1,69 @@
+{
+  "_family": "ADLogonScriptChecks.json",
+  "ADSCRIPT-001": {
+    "name": { "value": "Machtigingen op de NETLOGON-share", "status": "machine-draft" },
+    "description": { "value": "De NETLOGON-share host aanmeldingsscripts die op elk aan het domein gekoppeld systeem worden uitgevoerd tijdens gebruikersaanmelding. Te ruime NTFS- of sharemachtigingen op NETLOGON stellen elke geauthenticeerde gebruiker in staat scripts te wijzigen, wat wijdverspreide code-uitvoering mogelijk maakt. Alleen Domain Admins en geautoriseerde beheerders zouden schrijftoegang mogen hebben", "status": "machine-draft" },
+    "recommendedValue": { "value": "NETLOGON-share: Authenticated Users alleen Lezen; schrijftoegang beperkt tot Domain Admins en geautoriseerde GPO-beheerders", "status": "machine-draft" },
+    "remediationSteps": { "value": "Beoordeel de NTFS-machtigingen op de NETLOGON-map (doorgaans %SystemRoot%\\SYSVOL\\sysvol\\<domain>\\Scripts) op elke domeincontroller. Verwijder machtigingen voor schrijven, wijzigen of volledig beheer voor niet-administratieve groepen. Verifieer dat de sharemachtigingen overeenkomen met de NTFS-machtigingen. Zorg dat de machtigingen consistent zijn op alle domeincontrollers via DFSR-replicatie.", "status": "machine-draft" }
+  },
+  "ADSCRIPT-002": {
+    "name": { "value": "Machtigingen op de SYSVOL-share", "status": "machine-draft" },
+    "description": { "value": "De SYSVOL-share bevat groepsbeleidssjablonen, scripts en configuratiebestanden die op alle aan het domein gekoppelde systemen worden toegepast. Onjuiste SYSVOL-machtigingen kunnen ongeautoriseerde gebruikers in staat stellen groepsbeleidsinstellingen te wijzigen, kwaadaardige scripts uit te rollen of beveiligingsconfiguraties te manipuleren die het hele domein beïnvloeden", "status": "machine-draft" },
+    "recommendedValue": { "value": "SYSVOL-share: Authenticated Users alleen Lezen; schrijftoegang beperkt tot Domain Admins en SYSTEM", "status": "machine-draft" },
+    "remediationSteps": { "value": "Audit de NTFS-machtigingen op de SYSVOL-mapstructuur op elke domeincontroller. De SYSVOL-hoofdmap zou Authenticated Users Lezen en Uitvoeren moeten verlenen. GPO-submappen zouden overeen moeten komen met de machtigingen die zijn gedefinieerd op het bijbehorende GPC-object in AD. Voer dcdiag /test:sysvolcheck uit om machtigingsproblemen te identificeren. Herstel de machtigingen indien nodig met icacls.", "status": "machine-draft" }
+  },
+  "ADSCRIPT-003": {
+    "name": { "value": "Inventarisatie van aanmeldingsscripts", "status": "machine-draft" },
+    "description": { "value": "Een inventaris van alle aanmeldingsscripts waarnaar gebruikersaccounts verwijzen (kenmerk scriptPath), aanmeldings-/afmeldingsscripts van groepsbeleid en opstart-/afsluitscripts biedt inzicht in alle code die automatisch in de omgeving wordt uitgevoerd. Scripts die in NETLOGON bestaan maar waarnaar niet wordt verwezen, kunnen verweesd zijn of indicatoren van eerdere compromittering", "status": "machine-draft" },
+    "recommendedValue": { "value": "Volledige inventaris van alle aanmeldingsscripts met gedocumenteerd doel, eigenaar en datum van laatste wijziging", "status": "machine-draft" },
+    "remediationSteps": { "value": "Inventariseer alle scriptPath-kenmerken van gebruikers met Get-ADUser -Filter {scriptPath -like '*'} -Properties scriptPath. Lijst alle door GPO geconfigureerde scripts op uit GPO-rapporten. Inventariseer alle bestanden in de NETLOGON-share. Kruisverwijs om verweesde scripts, ongebruikte scripts en scripts te identificeren waarnaar gebruikersaccounts verwijzen maar die ontbreken in NETLOGON. Documenteer het doel en de eigenaar van elk script.", "status": "machine-draft" }
+  },
+  "ADSCRIPT-004": {
+    "name": { "value": "Hardgecodeerde referenties in scripts", "status": "machine-draft" },
+    "description": { "value": "Aanmeldingsscripts bevatten vaak hardgecodeerde referenties, waaronder wachtwoorden voor het koppelen van netwerkstations, serviceaccounts, databaseverbindingen en API-sleutels. Deze referenties zijn leesbaar voor alle geauthenticeerde gebruikers via de NETLOGON-share en vormen een triviale kans voor het verzamelen van referenties voor aanvallers", "status": "machine-draft" },
+    "recommendedValue": { "value": "Geen hardgecodeerde referenties, wachtwoorden of API-sleutels in enig NETLOGON- of SYSVOL-script", "status": "machine-draft" },
+    "remediationSteps": { "value": "Scan alle scripts in NETLOGON en SYSVOL op patronen die op referenties duiden: password, passwd, pwd, credential, secret, apikey, token, connectionstring en soortgelijke trefwoorden. Vervang hardgecodeerde referenties door veilige alternatieven zoals Windows Credential Manager, gMSA-accounts of versleutelde configuratiebestanden met beperkte toegang. Roteer alle in scripts aangetroffen referenties onmiddellijk.", "status": "machine-draft" }
+  },
+  "ADSCRIPT-005": {
+    "name": { "value": "Gebruik van LOLBins in scripts", "status": "machine-draft" },
+    "description": { "value": "Living Off The Land Binaries (LOLBins) zijn legitieme Windows-uitvoerbare bestanden die voor kwaadaardige doeleinden kunnen worden misbruikt. Hun aanwezigheid in aanmeldingsscripts kan erop wijzen dat een aanvaller kwaadaardige opdrachten heeft geïnjecteerd die opgaan in de normale bedrijfsvoering. Veelvoorkomende LOLBins zijn certutil, bitsadmin, mshta, regsvr32, rundll32 en wscript, gebruikt voor het downloaden of uitvoeren van payloads", "status": "machine-draft" },
+    "recommendedValue": { "value": "Geen gebruik van LOLBins in aanmeldingsscripts, tenzij gedocumenteerd en operationeel gerechtvaardigd", "status": "machine-draft" },
+    "remediationSteps": { "value": "Scan alle scripts op verwijzingen naar bekende LOLBins, waaronder certutil, bitsadmin, mshta, regsvr32, rundll32, wscript, cscript, msiexec, installutil, regasm, regsvcs, msconfig en control. Beoordeel elk voorkomen om te bepalen of het gebruik legitiem is. Vervang LOLBins waar mogelijk door veiligere alternatieven. Documenteer elk operationeel vereist gebruik van LOLBins.", "status": "machine-draft" }
+  },
+  "ADSCRIPT-006": {
+    "name": { "value": "Wachtwoorden in leesbare tekst in scripts", "status": "machine-draft" },
+    "description": { "value": "Scripts die wachtwoorden in leesbare tekst bevatten in net use-opdrachten, databaseverbindingsreeksen of variabeletoewijzingen stellen referenties bloot aan elke geauthenticeerde domeingebruiker die de NETLOGON-share kan lezen. Dit omvat wachtwoorden voor serviceaccounts, databaseaccounts en netwerkresources die paden voor laterale verplaatsing kunnen bieden", "status": "machine-draft" },
+    "recommendedValue": { "value": "Geen wachtwoorden in leesbare tekst in enig scriptbestand; alle authenticatie gebruikt geïntegreerde beveiliging of veilige referentieopslag", "status": "machine-draft" },
+    "remediationSteps": { "value": "Zoek in alle scriptbestanden naar patronen zoals 'net use * /user:', wachtwoordtoewijzingen in PowerShell of batch, verbindingsreeksen met Password= of Pwd=, en WScript.Network.MapNetworkDrive-aanroepen met referenties. Vervang alle gebruik van referenties in leesbare tekst door Windows-geïntegreerde authenticatie, Credential Manager of gMSA-accounts. Roteer alle blootgestelde wachtwoorden onmiddellijk.", "status": "machine-draft" }
+  },
+  "ADSCRIPT-007": {
+    "name": { "value": "Voor iedereen beschrijfbare scriptmachtigingen", "status": "machine-draft" },
+    "description": { "value": "Afzonderlijke scriptbestanden in NETLOGON of SYSVOL die schrijf- of wijzigingsmachtigingen verlenen aan niet-administratieve gebruikers kunnen door elke aanvaller met domeinreferenties worden gewijzigd. Zelfs als de machtigingen op shareniveau correct zijn, creëren te ruime NTFS-machtigingen op bestandsniveau voor afzonderlijke scripts een kans voor code-uitvoering", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alle scriptbestanden in NETLOGON en SYSVOL uitsluitend beschrijfbaar door Domain Admins en SYSTEM; geen schrijftoegang voor Domain Users of Authenticated Users", "status": "machine-draft" },
+    "remediationSteps": { "value": "Inventariseer de NTFS-machtigingen op elk bestand in de NETLOGON-share en de SYSVOL-scriptmappen. Identificeer bestanden waar Domain Users, Authenticated Users, Everyone of andere brede groepen machtigingen hebben voor Schrijven, Wijzigen of Volledig beheer. Herstel de machtigingen met icacls om Lezen en Uitvoeren te verlenen aan Authenticated Users en Volledig beheer uitsluitend aan Domain Admins en SYSTEM.", "status": "machine-draft" }
+  },
+  "ADSCRIPT-008": {
+    "name": { "value": "Verwijzingen naar externe resources", "status": "machine-draft" },
+    "description": { "value": "Aanmeldingsscripts die verwijzen naar externe resources zoals internet-URL's, niet-domein-UNC-paden of cloudopslaglocaties introduceren supply-chainrisico. Als de externe resource wordt gecompromitteerd, downloaden en voeren alle systemen die het script uitvoeren kwaadaardige inhoud uit. Externe verwijzingen creëren ook kansen voor data-exfiltratie", "status": "machine-draft" },
+    "recommendedValue": { "value": "Geen verwijzingen naar externe URL's, internetresources of niet-domein-UNC-paden in aanmeldingsscripts", "status": "machine-draft" },
+    "remediationSteps": { "value": "Scan alle scripts op HTTP/HTTPS-URL's, FTP-verwijzingen, niet-domein-UNC-paden en cloudopslag-URL's (OneDrive, SharePoint Online, Azure Blob, AWS S3). Vervang externe verwijzingen door lokaal gehoste kopieën op interne bestandsshares. Als externe resources vereist zijn, implementeer integriteitsverificatie (hashcontroles) vóór uitvoering. Documenteer alle goedgekeurde afhankelijkheden van externe resources.", "status": "machine-draft" }
+  },
+  "ADSCRIPT-009": {
+    "name": { "value": "Onjuist gevormde scripts", "status": "machine-draft" },
+    "description": { "value": "Scripts met syntaxisfouten, coderingsproblemen of beschadigde inhoud kunnen tijdens de uitvoering stilzwijgend mislukken, wat resulteert in een onvolledige beveiligingsconfiguratie of ontbrekende stationskoppelingen. Onjuist gevormde scripts kunnen ook wijzen op manipulatie waarbij een aanvaller een script heeft gewijzigd maar fouten heeft geïntroduceerd, of waarbij coderingsproblemen geïnjecteerde kwaadaardige inhoud maskeren", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alle scripts doorstaan syntaxisvalidatie zonder coderingsanomalieën of structurele fouten", "status": "machine-draft" },
+    "remediationSteps": { "value": "Valideer de scriptsyntaxis met geschikte tools: PowerShell-scripts met Test-ScriptFileInfo of PSScriptAnalyzer, batchbestanden met handmatige beoordeling op niet-gesloten blokken en ongeldige opdrachten, VBScript met WSH-syntaxiscontrole. Controleer de bestandscodering op onverwachte bytereeksen of gemengde codering. Beoordeel scripts met ongebruikelijke codering (UTF-16 met BOM in batchbestanden, null-bytes) op mogelijke injectie.", "status": "machine-draft" }
+  },
+  "ADSCRIPT-010": {
+    "name": { "value": "UNC-paden naar niet-DC-locaties", "status": "machine-draft" },
+    "description": { "value": "Aanmeldingsscripts die verwijzen naar UNC-paden die wijzen naar bestandsshares die geen domeincontroller zijn, creëren afhankelijkheid van aanvullende systemen en vergroten het aanvalsoppervlak. Als de verwezen bestandsserver wordt gecompromitteerd, kan een aanvaller de gedeelde resources wijzigen om kwaadaardige payloads te leveren via het vertrouwde aanmeldingsscriptmechanisme. UNC-paden kunnen ook worden misbruikt voor NTLM-relayaanvallen", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alle UNC-paden in scripts verwijzen naar SYSVOL of NETLOGON op domeincontrollers; geen verwijzingen naar niet-DC-bestandsshares voor scriptinhoud", "status": "machine-draft" },
+    "remediationSteps": { "value": "Scan alle scripts op UNC-paden (\\\\server\\share-patronen). Identificeer paden die niet wijzen naar de SYSVOL- of NETLOGON-shares van het domein. Migreer verwezen resources waar passend naar de NETLOGON-share. Zorg voor legitieme verwijzingen naar bestandsshares dat de doelservers Tier 0- of Tier 1-assets zijn met passende harding. Documenteer alle goedgekeurde afhankelijkheden van niet-DC-UNC-paden.", "status": "machine-draft" }
+  },
+  "ADSCRIPT-011": {
+    "name": { "value": "Analyse van scriptinhoud", "status": "machine-draft" },
+    "description": { "value": "Uitgebreide inhoudsanalyse van alle aanmeldingsscripts kan verdachte patronen aan het licht brengen die verder gaan dan specifieke controles, zoals versluierde code, base64-gecodeerde opdrachten, PowerShell-download-cradles, gecodeerde uitvoerbare bestanden en anti-analysetechnieken. Deze patronen zijn sterke indicatoren van kwaadaardige scriptinjectie of door aanvallers geplaatste backdoors", "status": "machine-draft" },
+    "recommendedValue": { "value": "Geen versluierde code, gecodeerde payloads, download-cradles of anti-analysetechnieken aanwezig in enig aanmeldingsscript", "status": "machine-draft" },
+    "remediationSteps": { "value": "Analyseer alle scripts op verdachte patronen, waaronder base64-codering (Convert-FromBase64, certutil -decode), download-cradles (Invoke-WebRequest, Net.WebClient, BitsTransfer), versluieringstechnieken (samenvoeging van tekenreeksen, tekencodes, variabelesubstitutie om opdrachten te verbergen) en anti-analysetechnieken (slaaptimers, omgevingscontroles). Onderzoek en vervang alle scripts die verdachte patronen bevatten.", "status": "machine-draft" }
+  }
+}

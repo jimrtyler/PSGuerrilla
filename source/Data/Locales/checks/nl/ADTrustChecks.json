@@ -1,0 +1,69 @@
+{
+  "_family": "ADTrustChecks.json",
+  "ADTRUST-001": {
+    "name": { "value": "Inventarisatie van vertrouwensrelaties", "status": "machine-draft" },
+    "description": { "value": "Alle vertrouwensrelaties moeten worden geïnventariseerd om een volledig beeld van de authenticatiegrens te verkrijgen. Ongedocumenteerde vertrouwensrelaties vergroten het aanvalsoppervlak doordat ze gebruikers uit externe domeinen toegang tot resources verlenen", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alle vertrouwensrelaties gedocumenteerd met zakelijke rechtvaardiging, richting, type en eigenaar", "status": "machine-draft" },
+    "remediationSteps": { "value": "Voer Get-ADTrust -Filter * uit om alle vertrouwensrelaties te inventariseren. Documenteer elke vertrouwensrelatie met de richting, het type (forest, extern, snelkoppeling, realm), de transitiviteit en de zakelijke rechtvaardiging. Beoordeel en verwijder vertrouwensrelaties die geen zakelijk doel meer dienen", "status": "machine-draft" }
+  },
+  "ADTRUST-002": {
+    "name": { "value": "Analyse van vertrouwensrichting", "status": "machine-draft" },
+    "description": { "value": "Inkomende vertrouwensrelaties stellen gebruikers uit externe domeinen in staat zich in uw domein te authenticeren. Elke inkomende of bidirectionele vertrouwensrelatie moet worden beoordeeld om te garanderen dat het vertrouwde domein adequate beveiligingsmaatregelen handhaaft. Een gecompromitteerd vertrouwd domein kan worden gebruikt om uw omgeving aan te vallen", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alle vertrouwensrichtingen gerechtvaardigd en gedocumenteerd. Bidirectionele vertrouwensrelaties waar mogelijk omgezet naar eenrichting om het aanvalsoppervlak te verkleinen", "status": "machine-draft" },
+    "remediationSteps": { "value": "Beoordeel elke vertrouwensrichting met Get-ADTrust -Filter *. Evalueer voor bidirectionele vertrouwensrelaties of beide richtingen vereist zijn. Zet om naar eenrichtingsvertrouwensrelaties waar de zakelijke behoefte slechts één richting vereist. Documenteer de rechtvaardiging voor alle inkomende vertrouwenspaden", "status": "machine-draft" }
+  },
+  "ADTRUST-003": {
+    "name": { "value": "Analyse van vertrouwenstransitiviteit", "status": "machine-draft" },
+    "description": { "value": "Transitieve vertrouwensrelaties breiden authenticatiepaden uit tot buiten de directe vertrouwenspartners, waardoor mogelijk onbedoelde toegangspaden ontstaan via ketens van vertrouwde domeinen. Elke transitieve vertrouwensrelatie moet worden geëvalueerd op het uitgebreide aanvalsoppervlak dat zij creëert", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alle transitieve vertrouwensrelaties gedocumenteerd met een volledige analyse van het transitiviteitspad. Externe vertrouwensrelaties hebben de voorkeur boven forest-vertrouwensrelaties wanneer transitiviteit niet vereist is", "status": "machine-draft" },
+    "remediationSteps": { "value": "Breng alle transitieve vertrouwenspaden in kaart om indirecte authenticatieroutes te identificeren. Begrijp bij forest-vertrouwensrelaties dat alle onderliggende domeinen transitief worden vertrouwd. Overweeg het gebruik van externe (niet-transitieve) vertrouwensrelaties wanneer alleen toegang tot een specifiek domein nodig is", "status": "machine-draft" }
+  },
+  "ADTRUST-004": {
+    "name": { "value": "Status van SID-filtering", "status": "machine-draft" },
+    "description": { "value": "SID-filtering verwijdert SID's uit vreemde domeinen in authenticatietokens, waardoor aanvallen met SID-history-injectie worden voorkomen. Zonder SID-filtering kan een aanvaller die een vertrouwd domein compromitteert tickets vervaardigen die bevoorrechte SID's (zoals Enterprise Admins) uit uw domein bevatten, waarmee volledige compromittering wordt bereikt", "status": "machine-draft" },
+    "recommendedValue": { "value": "SID-filtering (quarantaine) ingeschakeld op alle externe en forest-vertrouwensrelaties", "status": "machine-draft" },
+    "remediationSteps": { "value": "Verifieer de status van SID-filtering met 'netdom trust /domain:trusted.domain /Quarantine'. Schakel SID-filtering in met 'netdom trust /domain:trusted.domain /Quarantine:Yes'. Let op: SID-filtering is standaard ingeschakeld op externe vertrouwensrelaties, maar moet worden geverifieerd op forest-vertrouwensrelaties waar het mogelijk bewust is uitgeschakeld", "status": "machine-draft" }
+  },
+  "ADTRUST-005": {
+    "name": { "value": "Detectie van misbruik van SID-history", "status": "machine-draft" },
+    "description": { "value": "SID-history is bedoeld voor domeinmigraties, maar kan worden misbruikt om bevoorrechte SID's in gebruikerstokens te injecteren over vertrouwensgrenzen heen. Aanvallers die een vertrouwd domein compromitteren kunnen SID's van Enterprise Admin of Domain Admin toevoegen aan de SID-history van elk account dat zij beheren", "status": "machine-draft" },
+    "recommendedValue": { "value": "Geen accounts met SID-history-waarden die verwijzen naar bevoorrechte groepen. SID-history opgeschoond nadat alle migraties zijn voltooid", "status": "machine-draft" },
+    "remediationSteps": { "value": "Zoek naar accounts met SID-history met Get-ADUser -Filter {SIDHistory -like '*'} -Properties SIDHistory. Identificeer SID-history-vermeldingen die verwijzen naar bevoorrechte groepen (Domain Admins, Enterprise Admins, enzovoort). Ruim SID-history na migratie op met Remove-ADUser met de parameter SIDHistory. Schakel SID-filtering in op vertrouwensrelaties", "status": "machine-draft" }
+  },
+  "ADTRUST-006": {
+    "name": { "value": "Status van selectieve authenticatie", "status": "machine-draft" },
+    "description": { "value": "Selectieve authenticatie beperkt welke gebruikers uit een vertrouwd domein zich kunnen authenticeren tot resources in uw domein door expliciete machtigingen op elke resource te vereisen. Zonder deze functie kunnen alle geauthenticeerde gebruikers uit het vertrouwde domein elke resource benaderen waarvoor zij machtigingen hebben, wat het aanvalsoppervlak aanzienlijk vergroot", "status": "machine-draft" },
+    "recommendedValue": { "value": "Selectieve authenticatie ingeschakeld op alle forest-vertrouwensrelaties. Machtigingen 'Toegestaan voor authenticatie' alleen verleend op vereiste resources", "status": "machine-draft" },
+    "remediationSteps": { "value": "Schakel selectieve authenticatie op forest-vertrouwensrelaties in via Active Directory-domeinen en -vertrouwensrelaties > Eigenschappen van de vertrouwensrelatie > tabblad Authenticatie > selecteer 'Selectieve authenticatie'. Verleen vervolgens de machtiging 'Toegestaan voor authenticatie' op specifieke computerobjecten die externe gebruikers moeten benaderen", "status": "machine-draft" }
+  },
+  "ADTRUST-007": {
+    "name": { "value": "Beveiliging van hybride Azure AD-vertrouwensrelatie", "status": "machine-draft" },
+    "description": { "value": "Hybride identiteitsconfiguraties die on-premises AD met Azure AD verbinden, creëren aanvullende aanvalspaden. Azure AD Connect, agents voor pass-through-authenticatie en federatieservices kunnen worden aangevallen om te pivoteren tussen cloud- en on-premises-omgevingen", "status": "machine-draft" },
+    "recommendedValue": { "value": "Azure AD Connect draait de nieuwste versie op een geharde, toegewijde server. PHS heeft de voorkeur boven PTA/federatie. Naadloze SSO uitgeschakeld indien niet vereist. Cloud-only break-glass-accounts geconfigureerd", "status": "machine-draft" },
+    "remediationSteps": { "value": "Beoordeel de configuratie van Azure AD Connect en zorg dat deze op een geharde Tier 0-server draait. Evalueer een overstap van federatie of PTA naar Password Hash Sync (PHS) voor een kleiner aanvalsoppervlak. Zorg bij gebruik van naadloze SSO dat het wachtwoord van het computeraccount AZUREADSSOACC wordt vernieuwd. Verifieer dat er cloud-only noodtoegangsaccounts bestaan", "status": "machine-draft" }
+  },
+  "ADTRUST-008": {
+    "name": { "value": "Inventarisatie van vertrouwensrelaties met vreemde domeinen", "status": "machine-draft" },
+    "description": { "value": "Vertrouwensrelaties met domeinen buiten de organisatie breiden de beveiligingsgrens uit naar entiteiten met mogelijk andere beveiligingsstandaarden. Vertrouwensrelaties met vreemde domeinen moeten aanvullende aandacht krijgen omdat de vertrouwende organisatie de beveiligingshouding van het externe domein niet kan beheersen", "status": "machine-draft" },
+    "recommendedValue": { "value": "Alle vertrouwensrelaties met vreemde domeinen gedocumenteerd met externe beveiligingsbeoordeling, contractuele beveiligingsvereisten en jaarlijkse herziening", "status": "machine-draft" },
+    "remediationSteps": { "value": "Identificeer vertrouwensrelaties met domeinen buiten de organisatie met Get-ADTrust -Filter *. Verifieer voor elke externe vertrouwensrelatie dat er een beveiligingsovereenkomst van kracht is, dat SID-filtering is ingeschakeld, dat selectieve authenticatie is geconfigureerd en dat de vertrouwensrelatie jaarlijks wordt herzien", "status": "machine-draft" }
+  },
+  "ADTRUST-009": {
+    "name": { "value": "Detectie van verweesde vertrouwensrelaties", "status": "machine-draft" },
+    "description": { "value": "Verweesde vertrouwensrelaties verwijzen naar domeinen die niet langer bestaan of niet langer bereikbaar zijn. Deze verouderde vertrouwensobjecten kunnen referenties behouden en verwarring veroorzaken tijdens beveiligingsaudits. Ze moeten worden verwijderd om onnodig aanvalsoppervlak te verkleinen en een schone vertrouwenstopologie te behouden", "status": "machine-draft" },
+    "recommendedValue": { "value": "Geen verweesde of niet-oplosbare vertrouwensrelaties aanwezig", "status": "machine-draft" },
+    "remediationSteps": { "value": "Inventariseer alle vertrouwensrelaties en probeer elke te valideren door de naam van het vertrouwde domein op te lossen en de vertrouwensrelatie te testen met 'netdom trust /verify'. Verwijder verweesde vertrouwensrelaties waar het partnerdomein niet langer bestaat of onbereikbaar is met 'netdom trust /Remove' of Active Directory-domeinen en -vertrouwensrelaties", "status": "machine-draft" }
+  },
+  "ADTRUST-010": {
+    "name": { "value": "Leeftijd en rotatie van vertrouwenssleutels", "status": "machine-draft" },
+    "description": { "value": "Vertrouwenswachtwoorden (inter-realm-sleutels) moeten regelmatig worden geroteerd. Verouderde vertrouwenssleutels vergroten het venster voor referentiegebaseerde aanvallen. Standaard roteren vertrouwenswachtwoorden elke 30 dagen, maar dit moet worden geverifieerd omdat mislukte rotaties onopgemerkt kunnen blijven", "status": "machine-draft" },
+    "recommendedValue": { "value": "Vertrouwenswachtwoorden geroteerd binnen de afgelopen 30 dagen. Automatische rotatie van vertrouwenswachtwoorden niet uitgeschakeld", "status": "machine-draft" },
+    "remediationSteps": { "value": "Controleer de datum waarop het vertrouwenswachtwoord voor het laatst is ingesteld door het kenmerk trustAuthOutgoing te onderzoeken of 'netdom trust /domain:trusted.domain /verify' uit te voeren. Als het vertrouwenswachtwoord verouderd is, stel het opnieuw in met 'netdom trust /domain:trusted.domain /Reset'. Verifieer dat geen GPO- of registerinstelling de automatische rotatie van vertrouwenswachtwoorden heeft uitgeschakeld", "status": "machine-draft" }
+  },
+  "ADTRUST-011": {
+    "name": { "value": "Visualisatie van vertrouwenshiërarchie", "status": "machine-draft" },
+    "description": { "value": "Er moet een volledige kaart van de vertrouwenstopologie worden bijgehouden die alle vertrouwensrelaties, richtingen, typen en transitiviteitspaden toont. Deze visualisatie is essentieel om de volledige authenticatiegrens te begrijpen en onverwachte toegangspaden te identificeren", "status": "machine-draft" },
+    "recommendedValue": { "value": "Actueel diagram van de vertrouwenstopologie bijgehouden en elk kwartaal herzien", "status": "machine-draft" },
+    "remediationSteps": { "value": "Genereer een kaart van de vertrouwenstopologie met geautomatiseerde tools of documenteer handmatig alle vertrouwensrelaties inclusief richting, type, transitiviteit, status van SID-filtering en status van selectieve authenticatie. Werk het diagram bij telkens wanneer vertrouwensrelaties worden toegevoegd, gewijzigd of verwijderd. Neem de kaart op in de beveiligingsdocumentatie en herzie deze elk kwartaal", "status": "machine-draft" }
+  }
+}
