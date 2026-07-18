@@ -1,0 +1,105 @@
+{
+  "_family": "DriveSecurityChecks.json",
+  "DRIVE-001": {
+    "name": { "value": "ברירות מחדל לשיתוף חיצוני", "status": "machine-draft" },
+    "description": { "value": "יש להגביל או להשבית כברירת מחדל שיתוף מחוץ לארגון כדי למנוע חשיפת נתונים בשוגג לגורמים חיצוניים", "status": "machine-draft" },
+    "recommendedValue": { "value": "שיתוף חיצוני מוגבל לדומיינים ברשימת היתר או מושבת", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Drive and Docs > Sharing settings, הגדר את השיתוף מחוץ לארגון ל-'Off' או ל-'Allowlisted domains'", "status": "machine-draft" }
+  },
+  "DRIVE-002": {
+    "name": { "value": "הגדרות ברירת מחדל לשיתוף קישורים", "status": "machine-draft" },
+    "description": { "value": "ברירת המחדל לשיתוף קישורים צריכה להיות מוגדרת ל-'Restricted' (אנשים מסוימים) ולא לגישה רחבה כדי למנוע חשיפת נתונים בלתי מכוונת", "status": "machine-draft" },
+    "recommendedValue": { "value": "ברירת המחדל לשיתוף קישורים מוגדרת ל-'Restricted' (אנשים מסוימים בלבד)", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Drive and Docs > Sharing settings, הגדר את ברירת המחדל לשיתוף קישורים ל-'Restricted'", "status": "machine-draft" }
+  },
+  "DRIVE-003": {
+    "name": { "value": "ביקורת שיתוף 'לכל מי שיש את הקישור'", "status": "machine-draft" },
+    "description": { "value": "קבצים המשותפים עם 'Anyone with the link' נגישים לכל אחד באינטרנט ומהווים סיכון משמעותי לחשיפת נתונים", "status": "machine-draft" },
+    "recommendedValue": { "value": "שיתוף מסוג 'Anyone with the link' מושבת או מבוקר בקפידה", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Drive and Docs > Sharing settings, השבת את האפשרות 'Anyone with the link' או הגבל ל-'Domain users with the link'", "status": "machine-draft" }
+  },
+  "DRIVE-004": {
+    "name": { "value": "הגבלות על יצירת Shared Drive", "status": "machine-draft" },
+    "description": { "value": "יש להגביל את יצירת Shared Drive כדי למנוע ריבוי בלתי מבוקר ולהבטיח ממשל תקין של מאגרי נתונים משותפים", "status": "machine-draft" },
+    "recommendedValue": { "value": "יצירת Shared Drive מוגבלת לקבוצות מסוימות או למנהלים", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Drive and Docs > Sharing settings > Shared drive creation, הגבל מי יכול ליצור Shared Drive", "status": "machine-draft" }
+  },
+  "DRIVE-005": {
+    "name": { "value": "ניהול חברים ב-Shared Drive", "status": "machine-draft" },
+    "description": { "value": "יש לשלוט בניהול החברים ב-Shared Drive כדי למנוע הוספת משתמשים בלתי מורשים או הסלמת הרשאות", "status": "machine-draft" },
+    "recommendedValue": { "value": "רק מנהלים יכולים להוסיף חברים ולשנות רמות גישה", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Drive and Docs > Sharing settings > Shared drive settings, הגדר הרשאות לניהול חברים", "status": "machine-draft" }
+  },
+  "DRIVE-006": {
+    "name": { "value": "שיתוף חיצוני ב-Shared Drive", "status": "machine-draft" },
+    "description": { "value": "יש להגביל שיתוף חיצוני ב-Shared Drive כדי למנוע שיתוף נתונים ארגוניים רגישים מחוץ לדומיין", "status": "machine-draft" },
+    "recommendedValue": { "value": "שיתוף חיצוני ב-Shared Drive מושבת או מוגבל לדומיינים ברשימת היתר", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Drive and Docs > Sharing settings > Shared drive sharing, הגבל שיתוף חיצוני", "status": "machine-draft" }
+  },
+  "DRIVE-007": {
+    "name": { "value": "הגדרות העברת בעלות על קבצים", "status": "machine-draft" },
+    "description": { "value": "יש לשלוט בהעברת הבעלות על קבצים כדי למנוע העברת נתונים בלתי מורשית ולשמור על שרשראות ממשל נתונים תקינות", "status": "machine-draft" },
+    "recommendedValue": { "value": "העברת בעלות על קבצים מוגבלת למנהלים או לתהליך מבוקר", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Drive and Docs > Transfer ownership settings, הגדר הגבלות", "status": "machine-draft" }
+  },
+  "DRIVE-008": {
+    "name": { "value": "Drive for Desktop מותר/חסום", "status": "machine-draft" },
+    "description": { "value": "Drive for Desktop מסנכרן קבצים מקומית ויש לשלוט בו כדי למנוע אחסון נתונים בנקודות קצה בלתי מנוהלות", "status": "machine-draft" },
+    "recommendedValue": { "value": "Drive for Desktop מוגבל למכשירים מנוהלים או מושבת", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Drive and Docs > Features and Applications > Drive for Desktop, הגדר גישה", "status": "machine-draft" }
+  },
+  "DRIVE-009": {
+    "name": { "value": "גישת אפליקציות צד שלישי ל-Drive", "status": "machine-draft" },
+    "description": { "value": "יש לבחון ולהגביל אפליקציות צד שלישי בעלות גישה לנתוני Drive כדי למנוע חילוץ נתונים בלתי מורשה", "status": "machine-draft" },
+    "recommendedValue": { "value": "גישת אפליקציות צד שלישי לנתוני Drive מוגבלת ונבחנת", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Security > API controls > Third-party app access, בחן והגבל אפליקציות בעלות גישה ל-Drive", "status": "machine-draft" }
+  },
+  "DRIVE-010": {
+    "name": { "value": "ביקורת כללי DLP ב-Drive", "status": "machine-draft" },
+    "description": { "value": "יש להגדיר כללי מניעת אובדן נתונים (DLP) כדי לזהות ולמנוע שיתוף נתונים רגישים דרך Google Drive", "status": "machine-draft" },
+    "recommendedValue": { "value": "כללי DLP מוגדרים עבור סוגי נתונים רגישים (מידע אישי מזהה, נתונים פיננסיים, נתוני בריאות)", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Security > Data protection > Manage rules, צור כללים עבור סוגי נתונים רגישים ב-Drive", "status": "machine-draft" }
+  },
+  "DRIVE-011": {
+    "name": { "value": "הגדרות קהל יעד", "status": "machine-draft" },
+    "description": { "value": "הגדרות קהל היעד קובעות מי יכול להיות מוצע בעת שיתוף קבצים ויש להגדירן כדי לצמצם שיתוף בשוגג", "status": "machine-draft" },
+    "recommendedValue": { "value": "קהלי יעד מוגדרים כדי להגביל כראוי את הצעות השיתוף", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Directory > Target audiences, בחן והגדר קבוצות קהל יעד", "status": "machine-draft" }
+  },
+  "DRIVE-012": {
+    "name": { "value": "הגדרות תוספי Drive", "status": "machine-draft" },
+    "description": { "value": "תוספי Drive יכולים לגשת לתוכן הקבצים ויש לשלוט בהם כדי למנוע חשיפת נתונים באמצעות תוספים בלתי מהימנים", "status": "machine-draft" },
+    "recommendedValue": { "value": "התקנת תוספי Drive מוגבלת לתוספים שאושרו על ידי מנהל", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Drive and Docs > Features and Applications > Add-ons, הגדר הגבלות התקנה", "status": "machine-draft" }
+  },
+  "DRIVE-013": {
+    "name": { "value": "הגדרות גישה במצב לא מקוון", "status": "machine-draft" },
+    "description": { "value": "גישה במצב לא מקוון מאפשרת שמירת קבצי Drive במטמון מקומי במכשירים ויש לשלוט בה כדי למנוע חשיפת נתונים במכשירים משותפים או בלתי מנוהלים", "status": "machine-draft" },
+    "recommendedValue": { "value": "גישה במצב לא מקוון מושבתת או מוגבלת למכשירים מנוהלים", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Drive and Docs > Features and Applications > Offline, השבת או הגבל גישה במצב לא מקוון", "status": "machine-draft" }
+  },
+  "DRIVE-014": {
+    "name": { "value": "גישת Drive SDK API מושבתת (GWS.DRIVEDOCS.4.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.DRIVEDOCS.4.1: ה-Drive SDK מאפשר לאפליקציות צד שלישי לקרוא ולכתוב תוכן Drive באמצעות API, ערוץ ישיר לחילוץ נתונים כאשר הוא מופעל באופן רחב. קורא את drive_and_docs.drive_sdk; נכשל כאשר enableDriveSdkApiAccess מופעל.", "status": "machine-draft" },
+    "recommendedValue": { "value": "גישת Drive SDK API מושבתת", "status": "machine-draft" },
+    "remediationSteps": { "value": "ב-Admin Console > Apps > Google Workspace > Drive and Docs > Features and Applications, השבת את Drive SDK אלא אם ממשקים מסוימים שנבחנו מחייבים זאת.", "status": "machine-draft" }
+  },
+  "DRIVE-015": {
+    "name": { "value": "אזהרת קובץ חיצוני ב-Drive מופעלת (GWS.DRIVEDOCS.1.9)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.DRIVEDOCS.1.9: אזהרת משתמשים בעת שיתוף קבצים חיצוני מהווה בקרת מניעת אובדן נתונים בעלת חיכוך נמוך. קורא את drive_and_docs.external_file_warning; מתריע כאשר highlightingEnabled כבוי.", "status": "machine-draft" },
+    "recommendedValue": { "value": "אזהרה על שיתוף קבצים חיצוני מופעלת", "status": "machine-draft" },
+    "remediationSteps": { "value": "בהגדרות השיתוף של Drive, הפעל אזהרות כאשר משתמשים משתפים קבצים עם אנשים מחוץ לארגון.", "status": "machine-draft" }
+  },
+  "DRIVE-016": {
+    "name": { "value": "עדכון אבטחת קבצים ב-Drive נאכף (GWS.DRIVEDOCS.3.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.DRIVEDOCS.3.1: עדכון אבטחת הקבצים מהדק את שיתוף הקישורים בקבצים המושפעים; מתן אפשרות למשתמשים להסירו פותח מחדש את הגישה. קורא את drive_and_docs.file_security_update; מתריע כאשר מותר למשתמשים להסיר או לנהל את עדכון האבטחה.", "status": "machine-draft" },
+    "recommendedValue": { "value": "עדכון האבטחה מוחל ומשתמשים אינם יכולים להסירו", "status": "machine-draft" },
+    "remediationSteps": { "value": "בהגדרות Drive, החל את עדכון אבטחת הקבצים ואל תאפשר למשתמשים להסירו מקבצים שבבעלותם.", "status": "machine-draft" }
+  },
+  "DRIVE-017": {
+    "name": { "value": "גישת ברירת מחדל לקבצים מוגדרת לפרטית לבעלים (GWS.DRIVEDOCS.1.8)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.DRIVEDOCS.1.8 דורש ש'פרטי לבעלים' יהיה רמת גישת ברירת המחדל לפריטי Drive חדשים שנוצרים, כך שקבצים לא ישותפו באופן רחב מהמתוכנן בעת יצירתם. בדיקה זו קוראת את מדיניות Cloud Identity שבנתיב drive_and_docs.general_access_default ומסמנת כל יחידה ארגונית שבה גישת ברירת המחדל לקבצים אינה PRIVATE_TO_OWNER.", "status": "machine-draft" },
+    "recommendedValue": { "value": "רמת גישת ברירת המחדל לקבצים חדשים מוגדרת ל-PRIVATE_TO_OWNER (defaultFileAccess) בכל היחידות הארגוניות.", "status": "machine-draft" },
+    "remediationSteps": { "value": "ב-Google Admin Console, תחת Apps > Google Workspace > Drive and Docs > Sharing settings > General access default, הגדר את ברירת המחדל ל-'Private to owner' כך שקבצים חדשים יתחילו כפרטיים וישותפו רק בפעולה מכוונת.", "status": "machine-draft" }
+  }
+}

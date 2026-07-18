@@ -1,0 +1,111 @@
+{
+  "_family": "AuthenticationChecks.json",
+  "AUTH-001": {
+    "name": { "value": "אכיפת 2SV", "status": "machine-draft" },
+    "description": { "value": "יש לאכוף אימות דו-שלבי (2SV/MFA) על כל המשתמשים כדי למנוע השתלטות על חשבונות באמצעות פרטי הזדהות גנובים", "status": "machine-draft" },
+    "recommendedValue": { "value": "נאכף בכל היחידות הארגוניות", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Security > Authentication > 2-step verification, הגדר את האכיפה ל-'On'", "status": "machine-draft" }
+  },
+  "AUTH-002": {
+    "name": { "value": "שיעור הרשמה ל-2SV", "status": "machine-draft" },
+    "description": { "value": "כל המשתמשים הפעילים צריכים להיות רשומים ל-2SV. שיעורי הרשמה נמוכים מותירים חשבונות פגיעים להתקפות המבוססות על פרטי הזדהות", "status": "machine-draft" },
+    "recommendedValue": { "value": "שיעור הרשמה של 95% ומעלה בקרב משתמשים פעילים", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Reporting > User Reports > Security, בחן משתמשים ללא 2SV. הגדר מועד אחרון להרשמה דרך Security > 2-Step Verification", "status": "machine-draft" }
+  },
+  "AUTH-003": {
+    "name": { "value": "חוזק שיטת 2SV", "status": "machine-draft" },
+    "description": { "value": "מפתחות אבטחה צריכים להיות שיטת 2SV הראשית. 2SV מבוסס SMS וקול פגיע להתקפות החלפת SIM ויירוט", "status": "machine-draft" },
+    "recommendedValue": { "value": "מפתחות אבטחה נאכפים כשיטה הראשית", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Security > Authentication > 2-step verification, הגדר את השיטות המותרות ל-'Security key only'", "status": "machine-draft" }
+  },
+  "AUTH-004": {
+    "name": { "value": "אורך מזערי לסיסמה", "status": "machine-draft" },
+    "description": { "value": "האורך המזערי של הסיסמה צריך להיות 12 תווים לפחות כדי לעמוד בפני התקפות ניחוש גס והתקפות מילון", "status": "machine-draft" },
+    "recommendedValue": { "value": "12 תווים לפחות", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Security > Authentication > Password management, הגדר את האורך המזערי ל-12 ומעלה", "status": "machine-draft" }
+  },
+  "AUTH-005": {
+    "name": { "value": "הגבלת שימוש חוזר בסיסמאות", "status": "machine-draft" },
+    "description": { "value": "משתמשים לא צריכים להיות מסוגלים לעשות שימוש חוזר בסיסמאות אחרונות, וכך למנוע התקפות מיחזור פרטי הזדהות", "status": "machine-draft" },
+    "recommendedValue": { "value": "שימוש חוזר בסיסמה אינו מותר", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Security > Authentication > Password management, הפעל את 'Enforce password policy at next sign-in' והגבל שימוש חוזר", "status": "machine-draft" }
+  },
+  "AUTH-006": {
+    "name": { "value": "משך הפעלה", "status": "machine-draft" },
+    "description": { "value": "יש להגביל את משך הפעלת האינטרנט כדי לצמצם את חלון הזמן לחטיפת הפעלה ולגישה בלתי מורשית ממכשירים משותפים", "status": "machine-draft" },
+    "recommendedValue": { "value": "משך הפעלה של 12 שעות או פחות", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Security > Google Session Control, הגדר את משך הפעלת האינטרנט", "status": "machine-draft" }
+  },
+  "AUTH-007": {
+    "name": { "value": "תצורת SSO", "status": "machine-draft" },
+    "description": { "value": "אם SSO מוגדר, עליו להשתמש בפרוטוקולים מאובטחים ובספקי זהות מהימנים", "status": "machine-draft" },
+    "recommendedValue": { "value": "SSO מסוג SAML מוגדר כראוי עם IdP מהימן", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Security > Authentication > SSO with third-party IdP, אמת את התצורה", "status": "machine-draft" }
+  },
+  "AUTH-008": {
+    "name": { "value": "גישת אפליקציות פחות מאובטחות", "status": "machine-draft" },
+    "description": { "value": "יש לחסום אפליקציות פחות מאובטחות (אפליקציות שאינן תומכות באימות מודרני) כדי למנוע חשיפת פרטי הזדהות", "status": "machine-draft" },
+    "recommendedValue": { "value": "מושבת עבור כל המשתמשים", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Security > Authentication > Less secure apps, הגדר ל-'Disable access to less secure apps'", "status": "machine-draft" }
+  },
+  "AUTH-009": {
+    "name": { "value": "מדיניות סיסמאות אפליקציה", "status": "machine-draft" },
+    "description": { "value": "סיסמאות ייעודיות לאפליקציה עוקפות את 2SV ויש לשלוט בהן. אם הן מותרות, יש לחייב תחילה הרשמה ל-2SV", "status": "machine-draft" },
+    "recommendedValue": { "value": "סיסמאות אפליקציה מוגבלות או מושבתות", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Security > Authentication > 2-step verification, בחן את הגדרות סיסמאות האפליקציה", "status": "machine-draft" }
+  },
+  "AUTH-010": {
+    "name": { "value": "תצורת אפשרויות שחזור", "status": "machine-draft" },
+    "description": { "value": "יש להגדיר כראוי שחזור עצמי בשירות עצמי למשתמשים. למנהלי על לא צריכות להיות אפשרויות שחזור אישיות כדי למנוע הנדסה חברתית", "status": "machine-draft" },
+    "recommendedValue": { "value": "מנהלי על: ללא שחזור אישי. משתמשים רגילים: אפשרויות שחזור מותרות עם עקיפה של מנהל", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Security > Authentication > Account recovery, השבת שחזור אישי עבור היחידה הארגונית של מנהלי העל", "status": "machine-draft" }
+  },
+  "AUTH-011": {
+    "name": { "value": "הגדרות אתגרי כניסה", "status": "machine-draft" },
+    "description": { "value": "יש להפעיל אתגרי כניסה כדי לספק אימות נוסף כאשר מזוהים ניסיונות כניסה חשודים", "status": "machine-draft" },
+    "recommendedValue": { "value": "אתגרי כניסה מופעלים עם מזהה עובד או אימות אחר", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Security > Authentication > Login challenges, הפעל", "status": "machine-draft" }
+  },
+  "AUTH-012": {
+    "name": { "value": "הרשמת מנהלי על ל-2SV", "status": "machine-draft" },
+    "description": { "value": "כל חשבונות מנהל העל חייבים להיות רשומים ל-2SV. למנהלי על יש גישה בלתי מוגבלת לכל ההגדרות והנתונים", "status": "machine-draft" },
+    "recommendedValue": { "value": "100% ממנהלי העל רשומים ל-2SV", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Reporting > User Reports > Security, סנן לפי סטטוס מנהל וודא שכל מנהלי העל רשומים ל-2SV", "status": "machine-draft" }
+  },
+  "AUTH-013": {
+    "name": { "value": "חשבונות מנהל על מיושנים", "status": "machine-draft" },
+    "description": { "value": "חשבונות מנהל על שלא בוצעה בהם כניסה לאחרונה עשויים להיות נטושים ובסיכון לפריצה. יש לנהל באופן פעיל את כל חשבונות מנהל העל", "status": "machine-draft" },
+    "recommendedValue": { "value": "אין חשבונות מנהל על הלא פעילים למעלה מ-90 ימים", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Directory > Users > Filter by admin role, בחן והסר או השהה חשבונות מנהל על לא פעילים", "status": "machine-draft" }
+  },
+  "AUTH-014": {
+    "name": { "value": "הרשמה ל-2SV מותרת", "status": "machine-draft" },
+    "description": { "value": "יש לאפשר למשתמשים להירשם לאימות דו-שלבי. השבתת ההרשמה ל-2SV חוסמת את אימוץ ה-MFA ומותירה חשבונות מוגנים בסיסמאות בלבד", "status": "machine-draft" },
+    "recommendedValue": { "value": "הרשמה ל-2SV מותרת בכל היחידות הארגוניות", "status": "machine-draft" },
+    "remediationSteps": { "value": "Security > Authentication > 2-step verification, הגדר את 'Allow users to turn on 2-Step Verification' ל-On עבור כל היחידות הארגוניות", "status": "machine-draft" }
+  },
+  "AUTH-015": {
+    "name": { "value": "תקופת חסד להרשמה ל-2SV", "status": "machine-draft" },
+    "description": { "value": "תקופת החסד שלפני חיוב משתמשים חדשים להירשם ל-2SV צריכה להיות קצרה. תקופת חסד ארוכה מותירה חשבונות בלתי מוגנים ב-MFA למשך חלון זמן ממושך לאחר יצירתם", "status": "machine-draft" },
+    "recommendedValue": { "value": "תקופת חסד של 7 ימים (168 שעות) או פחות", "status": "machine-draft" },
+    "remediationSteps": { "value": "Security > Authentication > 2-step verification, הגדר את תקופת החסד להרשמת משתמשים חדשים ל-7 ימים או פחות", "status": "machine-draft" }
+  },
+  "AUTH-016": {
+    "name": { "value": "הרשמה עצמית לתוכנית ההגנה המתקדמת", "status": "machine-draft" },
+    "description": { "value": "מתן אפשרות להרשמה עצמית לתוכנית ההגנה המתקדמת (Advanced Protection Program) מאפשר למשתמשים בסיכון גבוה לאמץ את אמצעי ההגנה החזקים ביותר הזמינים לחשבון ללא התערבות מנהל", "status": "machine-draft" },
+    "recommendedValue": { "value": "הרשמה עצמית להגנה המתקדמת מותרת בכל היחידות הארגוניות", "status": "machine-draft" },
+    "remediationSteps": { "value": "Security > Authentication > Advanced Protection Program, אפשר למשתמשים להירשם באופן עצמאי להגנה המתקדמת", "status": "machine-draft" }
+  },
+  "AUTH-017": {
+    "name": { "value": "שחזור עצמי של חשבון מנהל על", "status": "machine-draft" },
+    "description": { "value": "שחזור חשבון בשירות עצמי עבור מנהלי על מהווה נתיב להשתלטות על חשבון באמצעות הנדסה חברתית ויש לכבותו. שחזור מנהלי על צריך להתבצע רק על ידי מנהל אחר", "status": "machine-draft" },
+    "recommendedValue": { "value": "שחזור עצמי של מנהל על מושבת בכל היחידות הארגוניות", "status": "machine-draft" },
+    "remediationSteps": { "value": "Security > Authentication > Account recovery, כבה את 'Allow super admins to recover their account' עבור כל היחידות הארגוניות", "status": "machine-draft" }
+  },
+  "AUTH-018": {
+    "name": { "value": "שחזור עצמי של חשבון מושבת עבור משתמשים ומנהלים שאינם מנהלי על (GWS.COMMONCONTROLS.8.2)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.COMMONCONTROLS.8.2 דורש ששחזור עצמי של חשבון יושבת עבור משתמשים וחשבונות שאינם מנהלי על. שחזור בשירות עצמי מהווה וקטור להשתלטות על חשבון: תוקף השולט בערוץ שחזור יכול להשתלט על החשבון ללא מעורבות מוקד התמיכה. בדיקה זו קוראת את מדיניות Cloud Identity שבנתיב security.user_account_recovery ומסמנת כל יחידה ארגונית שבה השחזור העצמי מופעל.", "status": "machine-draft" },
+    "recommendedValue": { "value": "שחזור עצמי של חשבון מושבת (enableAccountRecovery = false) עבור משתמשים ומנהלים שאינם מנהלי על בכל היחידות הארגוניות.", "status": "machine-draft" },
+    "remediationSteps": { "value": "ב-Google Admin Console, תחת Security > Account recovery, השבת שחזור עצמי עבור משתמשים (ומנהלים שאינם מנהלי על), כך ששחזור החשבון יטופל באמצעות מנהל או תהליך מוקד תמיכה במקום בערוץ בשליטת המשתמש.", "status": "machine-draft" }
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "_family": "AdminManagementChecks.json",
+  "ADMIN-001": {
+    "name": { "value": "מצאי חשבונות מנהל על", "status": "machine-draft" },
+    "description": { "value": "יש לתעד ולבחון את כל חשבונות מנהל העל. למנהלי על יש גישה בלתי מוגבלת לכל ההגדרות והנתונים של הארגון", "status": "machine-draft" },
+    "recommendedValue": { "value": "כל חשבונות מנהל העל מתועדים ומנומקים בצורך עסקי ברור", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Directory > Users > Filter by admin role, ולאחר מכן בחן את כל חשבונות מנהל העל והסר הקצאות מיותרות", "status": "machine-draft" }
+  },
+  "ADMIN-002": {
+    "name": { "value": "ביקורת הקצאות תפקידי מנהל", "status": "machine-draft" },
+    "description": { "value": "הקצאות תפקידי ניהול צריכות לפעול לפי עקרון ההרשאה המזערית. יש להשתמש בתפקידים מותאמים אישית במקום בתפקידים מובנים רחבים", "status": "machine-draft" },
+    "recommendedValue": { "value": "כל הקצאות תפקידי המנהל נבחנות, תוך שימוש בתפקידים מותאמים אישית בעלי הרשאה מזערית במידת האפשר", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Account > Admin roles, בחן כל הקצאת תפקיד והחלף תפקידים רחבים בתפקידים מותאמים אישית בעלי היקף מוגבל", "status": "machine-draft" }
+  },
+  "ADMIN-003": {
+    "name": { "value": "בחינת הרשאות מנהל שהואצלו", "status": "machine-draft" },
+    "description": { "value": "יש לבחון תפקידי מנהל מותאמים אישית כדי לוודא שההרשאות שהואצלו מוגבלות בהיקף מתאים ואינן מעניקות גישה מופרזת", "status": "machine-draft" },
+    "recommendedValue": { "value": "תפקידי מנהל מותאמים אישית מוגבלים להרשאות המזעריות ההכרחיות", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Account > Admin roles, בחן כל תפקיד מותאם אישית וודא שההרשאות מוגבלות בהיקף מתאים", "status": "machine-draft" }
+  },
+  "ADMIN-004": {
+    "name": { "value": "חשבונות מנהל לא פעילים או מושהים", "status": "machine-draft" },
+    "description": { "value": "משתמשים מושהים או לא פעילים לא צריכים לשמור על הקצאות תפקידי מנהל. חשבונות אלה עלולים להיות יעד להתקפות הפעלה מחדש", "status": "machine-draft" },
+    "recommendedValue": { "value": "אין משתמשים מושהים או לא פעילים בעלי הקצאות תפקידי מנהל", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Directory > Users, סנן משתמשים מושהים והסר תפקידי מנהל מכל חשבון מושהה", "status": "machine-draft" }
+  },
+  "ADMIN-005": {
+    "name": { "value": "מצאי חשבונות משתמש", "status": "machine-draft" },
+    "description": { "value": "יש לתחזק מצאי חשבונות משתמש עם ספירה ברורה של חשבונות פעילים, מושהים ובארכיון לצורכי ממשל", "status": "machine-draft" },
+    "recommendedValue": { "value": "מצאי משתמשים מלא שבו כל החשבונות במצב מתאים של פעיל, מושהה או בארכיון", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Directory > Users, בחן את רשימת המשתמשים והשהה או העבר לארכיון חשבונות שאין בהם עוד צורך", "status": "machine-draft" }
+  },
+  "ADMIN-006": {
+    "name": { "value": "חשבונות משתמש מיושנים", "status": "machine-draft" },
+    "description": { "value": "חשבונות משתמש שלא בוצעה בהם כניסה במשך 90 ימים ומעלה עשויים להיות נטושים ויש לבחון אותם לצורך השהיה או מחיקה", "status": "machine-draft" },
+    "recommendedValue": { "value": "אין חשבונות משתמש הלא פעילים למעלה מ-90 ימים ללא הצדקה מתועדת", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Directory > Users, מיין לפי כניסה אחרונה ובחן והשהה חשבונות הלא פעילים 90 ימים ומעלה", "status": "machine-draft" }
+  },
+  "ADMIN-007": {
+    "name": { "value": "בחינת מבנה יחידות ארגוניות", "status": "machine-draft" },
+    "description": { "value": "יש לבחון את מבנה היחידות הארגוניות כדי לוודא שניתן להחיל מדיניות ביעילות בהיקף המתאים", "status": "machine-draft" },
+    "recommendedValue": { "value": "מבנה היחידות הארגוניות מתועד עם מיפוי מדיניות ברור", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Directory > Organizational units, בחן את היררכיית היחידות הארגוניות וודא שהיא תואמת את צורכי החלת המדיניות", "status": "machine-draft" }
+  },
+  "ADMIN-008": {
+    "name": { "value": "הגדרות שיתוף מדריך", "status": "machine-draft" },
+    "description": { "value": "שיתוף המדריך קובע מי יכול לצפות באנשי הקשר ובפרופילים של הארגון. יש להגביל שיתוף מדריך חיצוני", "status": "machine-draft" },
+    "recommendedValue": { "value": "שיתוף המדריך מוגבל למשתמשים פנימיים בלבד", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Directory > Directory settings > Sharing settings, הגבל את שיתוף אנשי הקשר למשתמשי הדומיין", "status": "machine-draft" }
+  },
+  "ADMIN-009": {
+    "name": { "value": "נראות פרופיל משתמש", "status": "machine-draft" },
+    "description": { "value": "יש לשלוט בנראות של פרטי פרופיל המשתמש כדי לצמצם את פוטנציאל האיסוף המודיעיני של גורמים חיצוניים", "status": "machine-draft" },
+    "recommendedValue": { "value": "נראות פרופיל המשתמש מוגבלת למשתמשים פנימיים", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Directory > Directory settings > Profile sharing, הגבל את נראות הפרופיל", "status": "machine-draft" }
+  },
+  "ADMIN-010": {
+    "name": { "value": "הגדרות קבוצות וחברות חיצונית", "status": "machine-draft" },
+    "description": { "value": "קבוצות Google Groups המתירות חברים חיצוניים עלולות לחשוף תקשורת ונתונים פנימיים לגורמים בלתי מורשים", "status": "machine-draft" },
+    "recommendedValue": { "value": "חברות חיצונית בקבוצות מושבתת או מוגבלת לקבוצות מסוימות עם הצדקה מתועדת", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Groups for Business > Sharing settings, הגבל חברות חיצונית", "status": "machine-draft" }
+  },
+  "ADMIN-011": {
+    "name": { "value": "הגבלות על יצירת קבוצות", "status": "machine-draft" },
+    "description": { "value": "יש להגביל את יצירת הקבוצות כדי למנוע ריבוי של קבוצות בלתי מנוהלות העלולות לחשוף נתונים ארגוניים", "status": "machine-draft" },
+    "recommendedValue": { "value": "יצירת קבוצות מוגבלת למנהלים או לתפקידים מואצלים מסוימים", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Groups for Business > Sharing settings, הגבל מי יכול ליצור קבוצות", "status": "machine-draft" }
+  },
+  "ADMIN-012": {
+    "name": { "value": "הגדרות Groups for Business", "status": "machine-draft" },
+    "description": { "value": "הגדרות Groups for Business שולטות בתכונות הקבוצה, לרבות פרסום חיצוני, נראות חברים ושיתוף תוכן", "status": "machine-draft" },
+    "recommendedValue": { "value": "Groups for Business מוגדר עם גישה ופרסום חיצוניים מוגבלים", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Groups for Business > Sharing settings, בחן את כל ההגדרות", "status": "machine-draft" }
+  },
+  "ADMIN-013": {
+    "name": { "value": "מספר חשבונות מנהל על", "status": "machine-draft" },
+    "description": { "value": "מספר חשבונות מנהל העל צריך להיות בין 2 ל-4. מעט מדי יוצר נקודת כשל יחידה; רבים מדי מגדילים את משטח התקיפה", "status": "machine-draft" },
+    "recommendedValue": { "value": "2 עד 4 חשבונות מנהל על", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Directory > Users > Filter by super admin role, התאם את המספר ל-2 עד 4 על ידי הסרת מנהלי על מיותרים או הוספת גיבוי", "status": "machine-draft" }
+  },
+  "ADMIN-014": {
+    "name": { "value": "Assured Controls - אישורי גישה מופעלים", "status": "machine-draft" },
+    "description": { "value": "יש להפעיל את אישורי הגישה כך שאנשי התמיכה של Google יידרשו לבקש ולקבל אישור ארגוני לפני גישה לנתונים מוגנים, ובכך לצמצם את הסיכון לגישה בלתי מורשית מצד הספק.", "status": "machine-draft" },
+    "recommendedValue": { "value": "אישורי גישה מופעלים (אנשי Google נדרשים לאישור הלקוח לפני גישה לנתונים)", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Data > Compliance > Access Management / Access Approvals, הפעל את הדרישה שאנשי התמיכה של Google יבקשו אישור לפני גישה לנתוני הארגון. דורש Assured Controls.", "status": "machine-draft" }
+  },
+  "ADMIN-015": {
+    "name": { "value": "Assured Controls - גישת תמיכה מוגבלת לאנשי צוות בארצות הברית", "status": "machine-draft" },
+    "description": { "value": "יש להגביל את גישת התמיכה לאנשי Google הממוקמים בארצות הברית כדי לשמור על ריבונות הנתונים ולמנוע טיפול בנתונים מוגנים על ידי אנשי צוות שאינם בארצות הברית.", "status": "machine-draft" },
+    "recommendedValue": { "value": "קהל גישת התמיכה מוגבל לאנשי Google בארצות הברית", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Data > Compliance > Access Management, הגדר את קהל התמיכה המורשה לאנשי Google בארצות הברית בלבד. דורש Assured Controls.", "status": "machine-draft" }
+  },
+  "ADMIN-016": {
+    "name": { "value": "Assured Controls - עיבוד נתונים רב-אזורי מושבת", "status": "machine-draft" },
+    "description": { "value": "יש להשבית עיבוד נתונים בין אזורים מרובים בכל מוצרי Google Workspace, כך שנתונים מוגנים יעובדו רק בתוך אזור האחסון הייעודי שלהם, תוך שמירה על ריבונות הנתונים.", "status": "machine-draft" },
+    "recommendedValue": { "value": "עיבוד הנתונים מוגבל לאזור האחסון (עיבוד רב-אזורי מושבת)", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Data > Compliance > Data regions, הפעל את 'Limit data processing to the chosen storage region' עבור Calendar, Drive and Docs, Gmail, Chat, Meet ו-Gemini. דורש Assured Controls / Data Regions.", "status": "machine-draft" }
+  },
+  "ADMIN-017": {
+    "name": { "value": "אפליקציות פנימיות אינן מהימנות אוטומטית (GWS.COMMONCONTROLS.10.3)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.COMMONCONTROLS.10.3: מתן אמון אוטומטי באפליקציות OAuth פנימיות (בבעלות הדומיין) מעניק להן גישה ללא בחינה, נתיב גישה לנתונים פנימי או רוחבי. קורא את api_controls.internal_apps; מתריע כאשר trustInternalApps מופעל.", "status": "machine-draft" },
+    "recommendedValue": { "value": "אפליקציות פנימיות אינן מהימנות באופן אוטומטי", "status": "machine-draft" },
+    "remediationSteps": { "value": "ב-Admin Console > Security > API controls, השבת את האמון האוטומטי באפליקציות פנימיות כך שיעברו את אותה בחינה כמו אפליקציות צד שלישי.", "status": "machine-draft" }
+  },
+  "ADMIN-018": {
+    "name": { "value": "אזור נתונים במנוחה מוגדר (GWS.COMMONCONTROLS.15.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.COMMONCONTROLS.15.1: הגדרת אזור לנתונים במנוחה אוכפת היכן מאוחסנים נתוני הארגון (מיקום גאוגרפי או תאימות). קורא את data_regions.data_at_rest_region; מתריע כאשר לא הוגדרה העדפת אזור.", "status": "machine-draft" },
+    "recommendedValue": { "value": "אזור מסוים לנתונים במנוחה מוגדר בהתאם למדיניות הארגון", "status": "machine-draft" },
+    "remediationSteps": { "value": "ב-Admin Console > Data > Data regions, הגדר את אזור הנתונים במנוחה הנדרש על פי מדיניות המיקום הגאוגרפי של הארגון במקום להשאירו לא מוגדר.", "status": "machine-draft" }
+  },
+  "ADMIN-019": {
+    "name": { "value": "עיבוד נתונים מוגבל לאזור האחסון (GWS.COMMONCONTROLS.15.2)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.COMMONCONTROLS.15.2 דורש שהנתונים יעובדו באותו אזור שנבחר לנתונים במנוחה, כך שהעיבוד לא יעביר נתונים מוגנים אל מחוץ לתחום השיפוט הנבחר. בדיקה זו קוראת את מדיניות Cloud Identity שבנתיב data_regions.data_processing_region ומסמנת כל יחידה ארגונית שבה העיבוד אינו מוגבל לאזור האחסון.", "status": "machine-draft" },
+    "recommendedValue": { "value": "עיבוד הנתונים מוגבל לאזור האחסון (limitToStorageRegion = true) בכל היחידות הארגוניות.", "status": "machine-draft" },
+    "remediationSteps": { "value": "ב-Google Admin Console, תחת Account > Data regions, הפעל את 'Process data only in the selected region' כך שהעיבוד יישאר בתוך האזור שנבחר לנתונים במנוחה.", "status": "machine-draft" }
+  },
+  "ADMIN-020": {
+    "name": { "value": "גישה לאפליקציות צד שלישי לא מוגדרות חסומה (GWS.COMMONCONTROLS.10.4)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.COMMONCONTROLS.10.4 דורש שלמשתמשים לא תותר גישה לאפליקציות צד שלישי לא מוגדרות, משום שאפליקציה שלא נבחנה במפורש יכולה לבקש היקפי OAuth רחבים ולהפוך לנתיב לחילוץ נתונים או להשתלטות על חשבון. בדיקה זו קוראת את מדיניות Cloud Identity שבנתיב api_controls.unconfigured_third_party_apps ומסמנת כל יחידה ארגונית שרמת הגישה שלה אינה BLOCK_ALL_SCOPES (הערך החוסם כל גישה לאפליקציות לא מוגדרות).", "status": "machine-draft" },
+    "recommendedValue": { "value": "רמת הגישה לאפליקציות צד שלישי לא מוגדרות מוגדרת ל-BLOCK_ALL_SCOPES בכל היחידות הארגוניות.", "status": "machine-draft" },
+    "remediationSteps": { "value": "ב-Google Admin Console, תחת Security > API controls > App access control, הגדר אפליקציות צד שלישי לא מוגדרות ל'Blocked', כך שמשתמשים לא יוכלו להעניק גישה כלשהי לאפליקציות שלא הוגדרו ונבחנו במפורש.", "status": "machine-draft" }
+  },
+  "ADMIN-021": {
+    "name": { "value": "שירותי Google נוספים ללא בקרה נפרדת מוגבלים (GWS.COMMONCONTROLS.16.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.COMMONCONTROLS.16.1 ממליץ ששירותי Google שאין להם בקרת מנהל נפרדת משלהם יכובו עבור כולם. Google מייצגת זאת בסמנטיקה הפוכה: יש להפעיל את השירות enterprise_service_restrictions כדי שאותם שירותים נוספים יוגבלו (ייחסמו). בדיקה זו קוראת את מדיניות Cloud Identity שבנתיב enterprise_service_restrictions.service_status ומסמנת כל יחידה ארגונית שבה serviceState אינו ENABLED, כלומר משתמשים עדיין יכולים להגיע לשירותים נוספים לא מוגדרים.", "status": "machine-draft" },
+    "recommendedValue": { "value": "serviceState של enterprise_service_restrictions מוגדר ל-ENABLED (שירותים נוספים מוגבלים) בכל היחידות הארגוניות.", "status": "machine-draft" },
+    "remediationSteps": { "value": "ב-Google Admin Console, תחת Apps > Additional Google services, הגדר את הגדרת הגישה עבור שירותים ללא בקרה נפרדת ל-OFF עבור כולם. פעולה זו מפעילה את הגבלת השירותים הארגונית כך שמשתמשים לא יוכלו לגשת לאותם שירותים נוספים.", "status": "machine-draft" }
+  },
+  "ADMIN-022": {
+    "name": { "value": "אפליקציות Early Access מושבתות (GWS.COMMONCONTROLS.16.2)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.COMMONCONTROLS.16.2 ממליץ להשבית את גישת המשתמשים לאפליקציות Early Access, שהן תכונות טרום-הפצה שלא השלימו את הבחינה המלאה של Google ועלולות לשאת סיכון בלתי מוערך. בדיקה זו קוראת את מדיניות Cloud Identity שבנתיב early_access_apps.service_status ומסמנת כל יחידה ארגונית שבה serviceState הוא ENABLED.", "status": "machine-draft" },
+    "recommendedValue": { "value": "serviceState של early_access_apps אינו ENABLED (אפליקציות Early Access מושבתות) בכל היחידות הארגוניות.", "status": "machine-draft" },
+    "remediationSteps": { "value": "ב-Google Admin Console, תחת Apps > Additional Google services > Early Access Apps, כבה את השירות עבור כולם כך שמשתמשים לא יוכלו להפעיל אפליקציות Early Access טרום-הפצה.", "status": "machine-draft" }
+  }
+}

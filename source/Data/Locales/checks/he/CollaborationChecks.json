@@ -1,0 +1,153 @@
+{
+  "_family": "CollaborationChecks.json",
+  "COLLAB-001": {
+    "name": { "value": "הגדרות הקלטה של Meet", "status": "machine-draft" },
+    "description": { "value": "יש לשלוט בהגדרות הקלטת הפגישות כדי למנוע לכידה בלתי מורשית של דיונים רגישים", "status": "machine-draft" },
+    "recommendedValue": { "value": "הקלטה מוגבלת למארגני הפגישה או מושבתת עבור יחידות ארגוניות רגישות", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Google Meet > Meet video settings > Recording, הגדר את הרשאות ההקלטה", "status": "machine-draft" }
+  },
+  "COLLAB-002": {
+    "name": { "value": "הגדרות משתתפים חיצוניים ב-Meet", "status": "machine-draft" },
+    "description": { "value": "יש לשלוט בגישת משתתפים חיצוניים לפגישות כדי למנוע נוכחות בלתי מורשית וחשיפת מידע", "status": "machine-draft" },
+    "recommendedValue": { "value": "משתתפים חיצוניים נדרשים לאישור או להקשה בדלת כדי להצטרף", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Google Meet > Meet video settings > Participants, חייב אישור עבור משתתפים חיצוניים", "status": "machine-draft" }
+  },
+  "COLLAB-003": {
+    "name": { "value": "הגדרות הצטרפות אנונימית ל-Meet", "status": "machine-draft" },
+    "description": { "value": "משתמשים אנונימיים (ללא חשבונות Google) לא צריכים להיות מסוגלים להצטרף לפגישות ללא אישור מפורש של המארח", "status": "machine-draft" },
+    "recommendedValue": { "value": "הצטרפות אנונימית מושבתת או דורשת אישור מארח", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Google Meet > Meet video settings > Participants, השבת הצטרפות אנונימית או חייב הקשה בדלת", "status": "machine-draft" }
+  },
+  "COLLAB-004": {
+    "name": { "value": "תקשורת חיצונית ב-Chat", "status": "machine-draft" },
+    "description": { "value": "יש להגביל תקשורת Chat חיצונית כדי למנוע דליפת נתונים באמצעות הודעות ישירות עם משתמשים חיצוניים", "status": "machine-draft" },
+    "recommendedValue": { "value": "Chat חיצוני מוגבל או מושבת עבור מרבית המשתמשים", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Google Chat > Chat settings > External chat, הגבל Chat חיצוני ליחידות ארגוניות מסוימות", "status": "machine-draft" }
+  },
+  "COLLAB-005": {
+    "name": { "value": "הגדרות היסטוריית Chat", "status": "machine-draft" },
+    "description": { "value": "יש להפעיל ולשמור את היסטוריית Chat לצורכי תאימות וביקורת. השבתת ההיסטוריה עלולה להסתיר תקשורת זדונית", "status": "machine-draft" },
+    "recommendedValue": { "value": "היסטוריית Chat מופעלת ונשמרת בהתאם למדיניות השמירה", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Google Chat > Chat settings > History, הפעל היסטוריה והגדר שמירה", "status": "machine-draft" }
+  },
+  "COLLAB-006": {
+    "name": { "value": "גישה חיצונית למרחבי Chat", "status": "machine-draft" },
+    "description": { "value": "מרחבי Chat (חדרים) המתירים חברים חיצוניים עלולים לחשוף תקשורת פנימית וקבצים משותפים לגורמים בלתי מורשים", "status": "machine-draft" },
+    "recommendedValue": { "value": "גישה חיצונית למרחבי Chat מוגבלת או מושבתת", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Google Chat > Chat settings > Spaces, הגבל גישה חיצונית למרחבים", "status": "machine-draft" }
+  },
+  "COLLAB-007": {
+    "name": { "value": "הגדרות התקנת אפליקציות Chat", "status": "machine-draft" },
+    "description": { "value": "יש לשלוט בהתקנת אפליקציות Chat (בוטים) כדי למנוע ממשקים בלתי מורשים מלגשת לנתוני השיחות", "status": "machine-draft" },
+    "recommendedValue": { "value": "התקנת אפליקציות Chat מוגבלת לאפליקציות שאושרו על ידי מנהל", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Google Chat > Chat settings > Apps, הגבל התקנת אפליקציות לאפליקציות מאושרות", "status": "machine-draft" }
+  },
+  "COLLAB-008": {
+    "name": { "value": "שיתוף חיצוני ב-Calendar", "status": "machine-draft" },
+    "description": { "value": "יש להגביל את שיתוף היומן עם משתמשים חיצוניים למידע פנוי/עסוק בלבד כדי למנוע חשיפה של פרטי פגישות ומשתתפים", "status": "machine-draft" },
+    "recommendedValue": { "value": "שיתוף יומן חיצוני מוגבל למידע פנוי/עסוק בלבד", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Calendar > Sharing settings > External sharing options, הגדר ל-'Only free/busy information'", "status": "machine-draft" }
+  },
+  "COLLAB-009": {
+    "name": { "value": "הזמנות חיצוניות ב-Calendar", "status": "machine-draft" },
+    "description": { "value": "יש להזהיר או להגביל משתמשים בעת שליחת הזמנות יומן לנמענים חיצוניים כדי למנוע חשיפת מידע בשוגג", "status": "machine-draft" },
+    "recommendedValue": { "value": "אזהרות על הזמנות חיצוניות מופעלות", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Calendar > Sharing settings, הפעל אזהרות על הזמנות חיצוניות", "status": "machine-draft" }
+  },
+  "COLLAB-010": {
+    "name": { "value": "נראות חיצונית של משבצות פגישה ב-Calendar", "status": "machine-draft" },
+    "description": { "value": "יש לשלוט בנראות של משבצות הפגישות ביומן כדי לצמצם חשיפה חיצונית של זמינות ופרטי תזמון", "status": "machine-draft" },
+    "recommendedValue": { "value": "נראות חיצונית של משבצות פגישה מוגבלת", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Apps > Google Workspace > Calendar > Sharing settings, בחן את הגדרות נראות משבצות הפגישה", "status": "machine-draft" }
+  },
+  "COLLAB-011": {
+    "name": { "value": "סימון משתתפים חיצוניים ב-Meet", "status": "machine-draft" },
+    "description": { "value": "יש לסמן באופן גלוי משתתפים חיצוניים בפגישות כדי שמארחים ומשתתפים יוכלו לזהות בקלות גורמים חיצוניים ולהימנע מחשיפת מידע רגיש", "status": "machine-draft" },
+    "recommendedValue": { "value": "סימון משתתפים חיצוניים מופעל", "status": "machine-draft" },
+    "remediationSteps": { "value": "Apps > Google Workspace > Google Meet > Meet safety settings > External participants, הפעל סימון של משתתפים חיצוניים", "status": "machine-draft" }
+  },
+  "COLLAB-012": {
+    "name": { "value": "ניהול מארח ב-Meet", "status": "machine-draft" },
+    "description": { "value": "יש להפעיל ניהול מארח כדי שמארחי הפגישות ישמרו על בקרות ניהול כגון השתקה, הסרה ונעילה למניעת חטיפת פגישות ושיבושן", "status": "machine-draft" },
+    "recommendedValue": { "value": "ניהול מארח מופעל", "status": "machine-draft" },
+    "remediationSteps": { "value": "Apps > Google Workspace > Google Meet > Meet safety settings > Host management, הפעל את בקרות ניהול המארח", "status": "machine-draft" }
+  },
+  "GROUP-001": {
+    "name": { "value": "גישה חיצונית ל-Google Groups מוגבלת (GWS.GROUPS.1.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GROUPS.1.1 דורש שהשיתוף ב-Groups for Business יוגבל כך שקבוצות לא יהיו נגישות לאנשים מחוץ לארגון. כאשר יכולת שיתוף הפעולה של הקבוצות אינה מוגדרת למשתמשי הדומיין בלבד, תוכן הקבוצה, שבבית ספר עשוי לכלול נתוני תלמידים ואנשי צוות, נעשה נגיש לגורמים חיצוניים. בדיקה זו קוראת את מדיניות groups_for_business.groups_sharing מ-Cloud Identity Policy API ומסמנת כל יחידה ארגונית שיכולת שיתוף הפעולה שלה אינה DOMAIN_USERS_ONLY.", "status": "machine-draft" },
+    "recommendedValue": { "value": "יכולת שיתוף הפעולה של שיתוף הקבוצות מוגדרת ל-DOMAIN_USERS_ONLY עבור כל היחידות הארגוניות", "status": "machine-draft" },
+    "remediationSteps": { "value": "ב-Google Admin Console, תחת Apps > Google Workspace > Groups for Business > Sharing settings, הגדר את גישת הקבוצה כך שתוגבל למשתמשים בארגון (ולא 'Anyone on the internet'), כך שגורמים חיצוניים לא יוכלו לגשת לתוכן הקבוצה.", "status": "machine-draft" }
+  },
+  "GROUP-002": {
+    "name": { "value": "בעלי קבוצות אינם יכולים להוסיף חברים חיצוניים (GWS.GROUPS.1.2)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GROUPS.1.2 דורש שלבעלי קבוצות לא תותר הוספת חברים מחוץ לארגון. חברים חיצוניים מקבלים גישה לכל מה ששותף עם הקבוצה. בדיקה זו מסמנת יחידות ארגוניות שבהן בעלים יכולים להתיר חברים חיצוניים (ownersCanAllowExternalMembers מופעל).", "status": "machine-draft" },
+    "recommendedValue": { "value": "בעלי קבוצות אינם יכולים להתיר חברים חיצוניים (ownersCanAllowExternalMembers מושבת)", "status": "machine-draft" },
+    "remediationSteps": { "value": "בהגדרות השיתוף של Groups for Business, השבת את האפשרות המתירה לבעלי קבוצות להוסיף חברים מחוץ לארגון, כך שחברות חיצונית תדרוש פעולה ניהולית.", "status": "machine-draft" }
+  },
+  "GROUP-003": {
+    "name": { "value": "קבוצות אינן יכולות לקבל דואר מחוץ לארגון (GWS.GROUPS.1.3)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GROUPS.1.3 דורש שלבעלי קבוצות לא תותר קבלת דואר נכנס מחוץ לארגון. התרת דואר נכנס ציבורי לקבוצות מהווה וקטור לדיוג ולדואר זבל נכנס. בדיקה זו מסמנת יחידות ארגוניות שבהן בעלים יכולים להתיר דואר נכנס מהציבור (ownersCanAllowIncomingMailFromPublic מופעל).", "status": "machine-draft" },
+    "recommendedValue": { "value": "בעלי קבוצות אינם יכולים להתיר דואר נכנס מהציבור (ownersCanAllowIncomingMailFromPublic מושבת)", "status": "machine-draft" },
+    "remediationSteps": { "value": "בהגדרות השיתוף של Groups for Business, השבת את האפשרות המתירה לבעלי קבוצות לקבל דואר נכנס מחוץ לארגון, ובכך הגבל את דואר הקבוצה לשולחים פנימיים אלא אם הוגדר אחרת במפורש.", "status": "machine-draft" }
+  },
+  "GROUP-004": {
+    "name": { "value": "יצירת קבוצות מוגבלת למנהלים (GWS.GROUPS.2.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GROUPS.2.1 ממליץ להגביל למנהלים את מי שיכול ליצור קבוצות Groups for Business. כאשר כל משתמש יכול ליצור קבוצות, ריבוי הקבוצות עוקף את הממשל ותצורות ברירת המחדל של שיתוף חיצוני עשויות להיות מוחלות ללא בחינה. בדיקה זו מסמנת יחידות ארגוניות שבהן רמת הגישה ליצירת קבוצות אינה ADMIN_ONLY.", "status": "machine-draft" },
+    "recommendedValue": { "value": "רמת הגישה ליצירת קבוצות מוגדרת ל-ADMIN_ONLY", "status": "machine-draft" },
+    "remediationSteps": { "value": "בהגדרות Groups for Business, הגדר את 'who can create groups' למנהלים בלבד, כך שקבוצות חדשות ייווצרו במכוון ויירשו הגדרות שיתוף שנבחנו.", "status": "machine-draft" }
+  },
+  "GROUP-005": {
+    "name": { "value": "נראות שיחות הקבוצה כברירת מחדל לחברים (GWS.GROUPS.3.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GROUPS.3.1 דורש שהרשאת ברירת המחדל לצפייה בשיחות הקבוצה תוגבל לחברי הקבוצה ולא לכל הדומיין או לציבור. נראות שיחות פתוחה מדי חושפת ארכיוני דיונים, שעלולים להכיל מידע רגיש של תלמידים ואנשי צוות. בדיקה זו קוראת את viewTopicsDefaultAccessLevel ממדיניות groups_for_business.groups_sharing ומתריעה כאשר ברירת המחדל רחבה יותר מחברי הקבוצה.", "status": "machine-draft" },
+    "recommendedValue": { "value": "גישת ברירת המחדל לצפייה בשיחות מוגדרת ל-GROUP_MEMBERS", "status": "machine-draft" },
+    "remediationSteps": { "value": "בהגדרות Groups for Business, הגדר את הרשאת ברירת המחדל 'who can view conversations' לחברי הקבוצה.", "status": "machine-draft" }
+  },
+  "COLLAB-013": {
+    "name": { "value": "שיתוף קבצים חיצוני ב-Chat מושבת (GWS.CHAT.2.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.CHAT.2.1 דורש ששיתוף קבצים חיצוני ב-Google Chat יושבת (יוגדר ללא קבצים). התרת שיתוף קבצים עם משתמשים חיצוניים דרך Chat מהווה נתיב ישיר לחילוץ נתונים. בדיקה זו קוראת את chat.chat_file_sharing ונכשלת בכל יחידה ארגונית שבה שיתוף קבצים חיצוני אינו מוגדר ל-NO_FILES.", "status": "machine-draft" },
+    "recommendedValue": { "value": "שיתוף קבצים חיצוני ב-Chat מוגדר ל-NO_FILES", "status": "machine-draft" },
+    "remediationSteps": { "value": "ב-Admin Console, תחת Apps > Google Workspace > Google Chat > External file sharing, הגדר את שיתוף הקבצים החיצוני ל-'No files' כך שלא ניתן יהיה לשתף קבצים עם אנשים מחוץ לארגון דרך Chat.", "status": "machine-draft" }
+  },
+  "COLLAB-014": {
+    "name": { "value": "היסטוריית מרחבי Chat מופעלת (GWS.CHAT.3.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.CHAT.3.1 דורש שההיסטוריה של מרחבי Chat תהיה מופעלת תמיד כדי שהשיחות יישמרו לצורכי פיקוח, חקירה ו-eDiscovery. בדיקה זו קוראת את chat.space_history ומתריעה בכל יחידה ארגונית שבה היסטוריית המרחבים אינה מוגדרת ל-HISTORY_ALWAYS_ON.", "status": "machine-draft" },
+    "recommendedValue": { "value": "היסטוריית מרחבי Chat מוגדרת ל-HISTORY_ALWAYS_ON", "status": "machine-draft" },
+    "remediationSteps": { "value": "בהגדרות Google Chat, הגדר את היסטוריית המרחבים למופעלת תמיד כך שהשיחות יישמרו ויהיו זמינות לפיקוח ול-eDiscovery.", "status": "machine-draft" }
+  },
+  "COLLAB-015": {
+    "name": { "value": "הצטרפות לפגישות מוגבלת לארגון (GWS.MEET.2.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.MEET.2.1 דורש שהגישה לפגישות תוגבל כך שרק משתמשים בארגון (או ארגוני Workspace מהימנים) יוכלו להצטרף. השארת הפגישות פתוחות לכל אחד מאפשרת לגורמים חיצוניים ובלתי מאומתים להיכנס להפעלות שעשויות לכלול תלמידים. בדיקה זו קוראת את meet.safety_access ונכשלת בכל יחידה ארגונית שבה meetingsAllowedToJoin רחב יותר מ-SAME_ORGANIZATION_ONLY / ANY_WORKSPACE_ORGANIZATION.", "status": "machine-draft" },
+    "recommendedValue": { "value": "meetingsAllowedToJoin מוגדר ל-SAME_ORGANIZATION_ONLY (או ANY_WORKSPACE_ORGANIZATION)", "status": "machine-draft" },
+    "remediationSteps": { "value": "בהגדרות הבטיחות של Google Meet, הגבל את מי שיכול להצטרף לפגישות למשתמשים בארגון שלך, כך שמשתתפים חיצוניים או בלתי מאומתים לא יוכלו להצטרף כברירת מחדל.", "status": "machine-draft" }
+  },
+  "COLLAB-016": {
+    "name": { "value": "תמלול אוטומטי ב-Meet כבוי כברירת מחדל (GWS.MEET.5.2)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.MEET.5.2 ממליץ שהתמלול האוטומטי ב-Google Meet יהיה כבוי כברירת מחדל. תמלול אוטומטי של פגישות לוכד ומאחסן את תוכן השיחה, רגיש כאשר תלמידים נוכחים, ללא החלטה מכוונת. בדיקה זו קוראת את meet.automatic_transcription ומתריעה בכל יחידה ארגונית שבה הוא מופעל כברירת מחדל.", "status": "machine-draft" },
+    "recommendedValue": { "value": "תמלול אוטומטי מושבת כברירת מחדל", "status": "machine-draft" },
+    "remediationSteps": { "value": "בהגדרות Google Meet, השבת את התמלול האוטומטי כברירת מחדל כך שתוכן הפגישה יילכד רק כאשר מארח מפעיל זאת במכוון.", "status": "machine-draft" }
+  },
+  "COLLAB-017": {
+    "name": { "value": "יכולת פעולה הדדית חיצונית של Calendar מנוהלת (GWS.CALENDAR.3.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.CALENDAR.3.1 דורש ש-Calendar Interop (שיתוף מידע פנוי/עסוק ונתוני יומן עם מערכת חיצונית כגון Microsoft Exchange) יהיה כבוי אלא אם הוא מנוהל במכוון. Interop מגשר נתוני יומן לפלטפורמה חיצונית. בדיקה זו קוראת את calendar.interoperability ומתריעה בכל יחידה ארגונית שבה enableInteroperability מופעל.", "status": "machine-draft" },
+    "recommendedValue": { "value": "יכולת הפעולה ההדדית של Calendar מושבתת אלא אם היא מנוהלת במכוון", "status": "machine-draft" },
+    "remediationSteps": { "value": "ב-Admin Console, תחת Apps > Google Workspace > Calendar > Calendar Interop management, השבת את יכולת הפעולה ההדדית אלא אם ממשק שנבחן מחייב זאת.", "status": "machine-draft" }
+  },
+  "COLLAB-018": {
+    "name": { "value": "תשלומים עבור פגישות ב-Calendar מושבתים (GWS.CALENDAR.4.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.CALENDAR.4.1 ממליץ להשבית לוחות פגישות בתשלום. בדיקה זו קוראת את calendar.appointment_schedules ומתריעה בכל יחידה ארגונית שבה enablePayments מופעל.", "status": "machine-draft" },
+    "recommendedValue": { "value": "לוחות פגישות בתשלום מושבתים", "status": "machine-draft" },
+    "remediationSteps": { "value": "בהגדרות לוחות הפגישות של Google Calendar, השבת תשלומים אלא אם הארגון משתמש במכוון בפגישות בתשלום.", "status": "machine-draft" }
+  },
+  "COLLAB-019": {
+    "name": { "value": "הקלטה אוטומטית ב-Meet כבויה כברירת מחדל (GWS.MEET.5.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.MEET.5.1 ממליץ שההקלטה האוטומטית ב-Google Meet תהיה כבויה כברירת מחדל. הקלטה אוטומטית לוכדת ומאחסנת וידאו/אודיו של הפגישה, רגיש כאשר תלמידים נוכחים, ללא החלטה מכוונת. בדיקה זו קוראת את meet.automatic_recording ומתריעה בכל יחידה ארגונית שבה היא מופעלת כברירת מחדל.", "status": "machine-draft" },
+    "recommendedValue": { "value": "הקלטה אוטומטית מושבתת כברירת מחדל", "status": "machine-draft" },
+    "remediationSteps": { "value": "בהגדרות Google Meet, השבת את ההקלטה האוטומטית כברירת מחדל כך שפגישות יוקלטו רק כאשר מארח מתחיל הקלטה במכוון.", "status": "machine-draft" }
+  },
+  "GROUP-006": {
+    "name": { "value": "קבוצות גלויות במדריך (GWS.GROUPS.4.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GROUPS.4.1 דורש שלא ניתן יהיה להסתיר קבוצות מהמדריך, שכן קבוצות מוסתרות פוגעות בשקיפות ובפיקוח על מי ניתן להשיג ואילו הרשאות קיימות. בדיקה זו קוראת את מדיניות groups_for_business.groups_sharing ומתריעה בכל יחידה ארגונית שבה בעלים יכולים להסתיר קבוצות (ownersCanHideGroups) או שקבוצות חדשות מוסתרות כברירת מחדל (newGroupsAreHidden).", "status": "machine-draft" },
+    "recommendedValue": { "value": "בעלים אינם יכולים להסתיר קבוצות וקבוצות חדשות אינן מוסתרות כברירת מחדל", "status": "machine-draft" },
+    "remediationSteps": { "value": "בהגדרות Groups for Business, מנע מבעלי קבוצות להסתיר קבוצות מהמדריך וודא שקבוצות חדשות אינן מוסתרות כברירת מחדל, תוך שמירה על שקיפות המדריך.", "status": "machine-draft" }
+  }
+}

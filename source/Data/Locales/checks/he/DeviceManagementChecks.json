@@ -1,0 +1,69 @@
+{
+  "_family": "DeviceManagementChecks.json",
+  "DEVICE-001": {
+    "name": { "value": "ביקורת מדיניות MDM", "status": "machine-draft" },
+    "description": { "value": "יש לנהל מכשירים ניידים הניגשים לנתוני הארגון באמצעות מדיניות MDM לאכיפת בקרות אבטחה", "status": "machine-draft" },
+    "recommendedValue": { "value": "כל המכשירים הניידים תחת ניהול MDM עם מדיניות אבטחה נאכפת", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Devices > Mobile devices, בחן את סטטוס ניהול המכשירים והפעל MDM מתקדם עבור מכשירים בלתי מנוהלים", "status": "machine-draft" }
+  },
+  "DEVICE-002": {
+    "name": { "value": "דרישות אישור מכשיר", "status": "machine-draft" },
+    "description": { "value": "מכשירים ניידים צריכים לדרוש אישור מנהל לפני גישה לנתוני הארגון כדי למנוע גישת מכשירים בלתי מורשית", "status": "machine-draft" },
+    "recommendedValue": { "value": "נדרש אישור מכשיר לפני גישה לנתוני הארגון", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Devices > Mobile & endpoints > Settings > General, חייב אישור מנהל לגישת מכשירים", "status": "machine-draft" }
+  },
+  "DEVICE-003": {
+    "name": { "value": "אכיפת נעילת מסך", "status": "machine-draft" },
+    "description": { "value": "יש לאכוף נעילת מסך בכל המכשירים הניידים כדי למנוע גישה פיזית בלתי מורשית לנתוני הארגון", "status": "machine-draft" },
+    "recommendedValue": { "value": "נעילת מסך נאכפת עם דרישות מזעריות ל-PIN או לסיסמה", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Devices > Mobile & endpoints > Settings > Universal settings > Screen lock, אכוף נעילת מסך עם מורכבות מזערית", "status": "machine-draft" }
+  },
+  "DEVICE-004": {
+    "name": { "value": "דרישות הצפנת מכשיר", "status": "machine-draft" },
+    "description": { "value": "יש לחייב הצפנת מכשיר בכל המכשירים הניידים כדי להגן על נתונים במנוחה מפני גניבה או אובדן פיזי", "status": "machine-draft" },
+    "recommendedValue": { "value": "הצפנה נדרשת בכל המכשירים המנוהלים", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Devices > Mobile & endpoints > Settings > Universal settings > Encryption, חייב הצפנת מכשיר", "status": "machine-draft" }
+  },
+  "DEVICE-005": {
+    "name": { "value": "חסימת מכשירים שנפרצו", "status": "machine-draft" },
+    "description": { "value": "יש לחסום אוטומטית מכשירים שנפרצו מגישה לנתוני הארגון כדי למנוע חשיפת נתונים", "status": "machine-draft" },
+    "recommendedValue": { "value": "זיהוי וחסימה של מכשירים שנפרצו מופעלים", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Devices > Mobile & endpoints > Settings > Universal settings > Compromised devices, חסום מכשירים שנפרצו מגישה לנתונים", "status": "machine-draft" }
+  },
+  "DEVICE-006": {
+    "name": { "value": "מדיניות מכשירים פרוצים (Jailbroken/Rooted)", "status": "machine-draft" },
+    "description": { "value": "מכשירים פרוצים (Jailbroken ב-iOS) או בעלי הרשאות root (ב-Android) עוקפים בקרות אבטחה ברמת מערכת ההפעלה ויש לחסום אותם מגישה לנתוני הארגון", "status": "machine-draft" },
+    "recommendedValue": { "value": "מכשירים פרוצים או בעלי הרשאות root חסומים מגישה לנתוני הארגון", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Devices > Mobile & endpoints > Settings > Universal settings > Compromised devices, חסום מכשירים פרוצים או בעלי הרשאות root", "status": "machine-draft" }
+  },
+  "DEVICE-007": {
+    "name": { "value": "ניהול דפדפן Chrome", "status": "machine-draft" },
+    "description": { "value": "דפדפני Chrome המשמשים לגישה לנתוני הארגון צריכים להירשם ל-Chrome Browser Cloud Management לאכיפת מדיניות", "status": "machine-draft" },
+    "recommendedValue": { "value": "דפדפני Chrome רשומים ב-Cloud Management עם מדיניות נאכפת", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Devices > Chrome > Settings, בחן והגדר מדיניות דפדפן Chrome עבור דפדפנים מנוהלים", "status": "machine-draft" }
+  },
+  "DEVICE-008": {
+    "name": { "value": "רשימת היתר/חסימה של תוספי Chrome", "status": "machine-draft" },
+    "description": { "value": "יש לנהל תוספי Chrome באמצעות רשימת היתר או רשימת חסימה כדי למנוע מתוספים זדוניים לגשת לנתוני הארגון", "status": "machine-draft" },
+    "recommendedValue": { "value": "התקנת תוספים מוגבלת לתוספים שאושרו על ידי מנהל באמצעות רשימת היתר", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Devices > Chrome > Apps & extensions, הגדר רשימת היתר ורשימת חסימה של תוספים", "status": "machine-draft" }
+  },
+  "DEVICE-009": {
+    "name": { "value": "מדיניות מכשירי Chrome OS", "status": "machine-draft" },
+    "description": { "value": "במכשירי Chrome OS יש לאכוף מדיניות מתאימה הכוללת עדכון אוטומטי, הגבלות כניסה והגדרות אבטחה", "status": "machine-draft" },
+    "recommendedValue": { "value": "מכשירי Chrome OS מנוהלים עם מדיניות נאכפת לעדכונים, כניסה ואבטחה", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Devices > Chrome > Settings > Device settings, הגדר עדכון אוטומטי, הגבלות כניסה ומדיניות אבטחה", "status": "machine-draft" }
+  },
+  "DEVICE-010": {
+    "name": { "value": "הגדרות אימות נקודת קצה", "status": "machine-draft" },
+    "description": { "value": "אימות נקודת הקצה מספק אותות אמון של מכשירים למדיניות גישה מודעת הקשר ויש להפעילו", "status": "machine-draft" },
+    "recommendedValue": { "value": "אימות נקודת קצה מופעל עבור גישה מודעת הקשר", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Devices > Mobile & endpoints > Settings > General, הפעל אימות נקודת קצה עבור מדיניות גישה מודעת הקשר", "status": "machine-draft" }
+  },
+  "DEVICE-011": {
+    "name": { "value": "מצאי מכשירים בבעלות החברה", "status": "machine-draft" },
+    "description": { "value": "יש לתעד במצאי מכשירים בבעלות החברה כדי לשמור על נראות של נכסי הארגון הניגשים לנתונים הארגוניים", "status": "machine-draft" },
+    "recommendedValue": { "value": "מתוחזק מצאי מלא של כל המכשירים בבעלות החברה", "status": "machine-draft" },
+    "remediationSteps": { "value": "Admin Console > Devices > Mobile devices, בחן את מצאי המכשירים וודא שכל המכשירים בבעלות החברה רשומים ומדווחים", "status": "machine-draft" }
+  }
+}
