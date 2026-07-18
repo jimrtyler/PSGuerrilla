@@ -1,0 +1,111 @@
+{
+  "_family": "LoggingAlertingChecks.json",
+  "LOG-001": {
+    "name": {
+      "value": "Definições de retenção do registo de auditoria",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Os registos de auditoria devem ser retidos durante um período adequado para suportar a investigação de incidentes e os requisitos de conformidade. A retenção predefinida varia consoante a edição do Workspace",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Retenção do registo de auditoria de 12 meses ou mais; alargada via exportação para o BigQuery para retenção a longo prazo",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Relatórios > Auditoria e investigação > Reveja a disponibilidade dos registos. Configure a exportação para o BigQuery em Consola de administração > Relatórios > Exportação para o BigQuery para retenção a longo prazo",
+      "status": "machine-draft"
+    }
+  },
+  "LOG-002": {
+    "name": {
+      "value": "Inventário de regras da Central de alertas",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "As regras da Central de alertas devem ser configuradas para detetar e notificar sobre eventos relevantes para a segurança, incluindo inícios de sessão suspeitos, exfiltração de dados e violações de políticas",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Regras de alerta configuradas para os principais eventos de segurança (início de sessão suspeito, exfiltração de dados, alterações de privilégios)",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Segurança > Central de alertas > Reveja as regras existentes > Crie regras para as categorias de eventos de segurança em falta",
+      "status": "machine-draft"
+    }
+  },
+  "LOG-003": {
+    "name": {
+      "value": "Análise da cobertura das regras de atividade",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "As regras de atividade devem proporcionar uma cobertura adequada nos vários domínios de segurança, incluindo eventos de início de sessão, Drive, administração e email",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Regras de atividade que cobrem início de sessão, partilha no Drive, alterações de administração, reencaminhamento de email e eventos OAuth",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Segurança > Central de alertas > Regras > Reveja a cobertura das categorias de eventos > Adicione regras para os domínios de segurança não cobertos",
+      "status": "machine-draft"
+    }
+  },
+  "LOG-004": {
+    "name": {
+      "value": "Definições de exportação de dados",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "O Google Takeout (exportação de dados) deve ser controlado para impedir que os utilizadores exportem em massa os dados organizacionais para fora do domínio",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Google Takeout desativado ou restringido para a maioria dos utilizadores",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Serviços adicionais do Google > Google Takeout > Desative ou restrinja para as OU aplicáveis",
+      "status": "machine-draft"
+    }
+  },
+  "LOG-005": {
+    "name": {
+      "value": "Configuração de alertas de email para administradores",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Os alertas de email devem ser configurados para ações críticas de administração, incluindo alterações a super administradores, modificações de definições de segurança e operações em massa",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Alertas de email ativados para ações críticas de administração e eventos de segurança",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Segurança > Central de alertas > Configure os destinatários das notificações por email para os tipos de alerta críticos",
+      "status": "machine-draft"
+    }
+  },
+  "LOG-006": {
+    "name": {
+      "value": "Acesso à API de relatórios",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "O acesso à API de relatórios (Reports API) deve ser revisto para garantir que apenas as contas de serviço e aplicações autorizadas podem obter dados de auditoria e de utilização",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Acesso à Reports API restringido apenas a contas de serviço autorizadas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Segurança > Controlos de API > Delegação em todo o domínio > Reveja as concessões com âmbitos da Reports API > Remova o acesso não autorizado",
+      "status": "machine-draft"
+    }
+  }
+}

@@ -1,0 +1,183 @@
+{
+  "_family": "OAuthSecurityChecks.json",
+  "OAUTH-001": {
+    "name": {
+      "value": "Lista de permissões/bloqueios de aplicações OAuth",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "O acesso de aplicações OAuth deve ser regido por uma lista de permissões ou de bloqueios, para impedir que aplicações não autorizadas acedam aos dados organizacionais",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Lista de permissões de aplicações OAuth configurada apenas com aplicações aprovadas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Segurança > Controlos de API > Controlo de acesso de aplicações > Gerir o acesso de aplicações de terceiros > Configure as aplicações fidedignas/bloqueadas",
+      "status": "machine-draft"
+    }
+  },
+  "OAUTH-002": {
+    "name": {
+      "value": "Inventário de aplicações OAuth instaladas",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Todas as aplicações OAuth instaladas pelos utilizadores devem ser inventariadas e revistas para identificar aplicações não autorizadas ou de risco que acedem aos dados organizacionais",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas as aplicações OAuth instaladas revistas e aprovadas pela equipa de segurança",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Segurança > Controlos de API > Controlo de acesso de aplicações > Reveja as aplicações instaladas e revogue o acesso às aplicações não autorizadas",
+      "status": "machine-draft"
+    }
+  },
+  "OAUTH-003": {
+    "name": {
+      "value": "Análise dos âmbitos OAuth",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "As aplicações OAuth com âmbitos de alto risco (Gmail, Drive, administração) representam um risco significativo de exfiltração de dados e devem ser revistas e restringidas",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Nenhuma aplicação não autorizada com âmbitos de alto risco (gmail, drive, admin)",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Segurança > Controlos de API > Controlo de acesso de aplicações > Reveja as aplicações com âmbitos sensíveis > Revogue ou restrinja conforme necessário",
+      "status": "machine-draft"
+    }
+  },
+  "OAUTH-004": {
+    "name": {
+      "value": "Classificação de risco das aplicações OAuth",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "As aplicações OAuth devem ser classificadas por risco com base nos âmbitos concedidos e na confiança do publicador, para dar prioridade à revisão de segurança",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas as aplicações de alto risco revistas e aprovadas; nenhuma aplicação não revista com âmbitos amplos",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Segurança > Controlos de API > Controlo de acesso de aplicações > Reveja as aplicações ordenadas pela amplitude dos âmbitos > Trate as aplicações de alto risco",
+      "status": "machine-draft"
+    }
+  },
+  "OAUTH-005": {
+    "name": {
+      "value": "Política de acesso a aplicações não verificadas",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "O acesso a aplicações de terceiros não verificadas deve ser restringido, para impedir que os utilizadores concedam permissões a aplicações potencialmente maliciosas",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Acesso a aplicações não verificadas bloqueado para todos os utilizadores",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Segurança > Controlos de API > Controlo de acesso de aplicações > Definições > Bloquear aplicações não verificadas",
+      "status": "machine-draft"
+    }
+  },
+  "OAUTH-006": {
+    "name": {
+      "value": "Controlo de acesso à API",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "O acesso à API deve ser controlado com restrições e definição de âmbitos adequadas, para impedir o acesso programático não autorizado aos dados organizacionais",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Acesso à API restringido às aplicações e âmbitos aprovados",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Segurança > Controlos de API > Gerir serviços Google > Restrinja o acesso à API apenas a aplicações fidedignas",
+      "status": "machine-draft"
+    }
+  },
+  "OAUTH-007": {
+    "name": {
+      "value": "Restrições de instalação de aplicações do Marketplace",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "A instalação de aplicações do Google Workspace Marketplace deve ser restringida, para impedir que os utilizadores instalem aplicações não autorizadas",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Instalação de aplicações do Marketplace restringida apenas a aplicações aprovadas pelo administrador ou na lista de permissões",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Aplicações do Google Workspace Marketplace > Definições > Restrinja a instalação de aplicações do Marketplace",
+      "status": "machine-draft"
+    }
+  },
+  "OAUTH-008": {
+    "name": {
+      "value": "Auditoria das concessões de delegação em todo o domínio",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "A delegação em todo o domínio permite que as contas de serviço representem qualquer utilizador e acedam aos seus dados. Concessões não autorizadas ou demasiado permissivas representam um risco de segurança crítico",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Concessões mínimas de delegação em todo o domínio com permissões de âmbito restrito; todas as concessões revistas e aprovadas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Segurança > Controlos de API > Delegação em todo o domínio > Reveja todas as concessões, remova as desnecessárias e restrinja os âmbitos ao mínimo necessário",
+      "status": "machine-draft"
+    }
+  },
+  "OAUTH-009": {
+    "name": {
+      "value": "Enumeração de chaves de contas de serviço",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "As chaves de contas de serviço devem ser inventariadas e rodadas regularmente. Chaves divulgadas ou obsoletas fornecem acesso não autorizado persistente",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas as chaves de contas de serviço inventariadas, rodadas no prazo de 90 dias e as chaves não utilizadas removidas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Google Cloud Console > IAM e Admin > Contas de serviço > Reveja e rode as chaves > Remova as chaves de contas de serviço não utilizadas",
+      "status": "machine-draft"
+    }
+  },
+  "OAUTH-010": {
+    "name": {
+      "value": "Aplicações ligadas com âmbitos sensíveis",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "As aplicações com acesso a dados do Drive, Gmail ou Calendar devem ser inventariadas e validadas, para prevenir a exfiltração de dados através de aplicações ligadas",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas as aplicações com âmbitos sensíveis (Drive, Gmail, Calendar) revistas e aprovadas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Segurança > Controlos de API > Controlo de acesso de aplicações > Filtre por âmbito (Drive, Gmail, Calendar) > Reveja e restrinja as aplicações não autorizadas",
+      "status": "machine-draft"
+    }
+  }
+}

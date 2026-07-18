@@ -1,0 +1,111 @@
+{
+  "_family": "GoogleTradecraftChecks.json",
+  "GTRADE-001": {
+    "name": {
+      "value": "Exposição a tomada de controlo da organização por delegação em todo o domínio",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "A delegação em todo o domínio vincula a representação de identidade ao ID de cliente OAuth de uma conta de serviço, e não à sua chave; por isso, qualquer pessoa que possa criar uma chave numa conta de serviço delegada que detenha âmbitos amplos obtém a representação em toda a organização sem ser super administrador (a técnica DeleFriend). As concessões delegadas que transportam âmbitos completos de Gmail/Drive/Directory/cloud-platform são a precondição para a tomada de controlo.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Nenhuma conta de serviço com âmbitos de representação em toda a organização delegados (Gmail/Drive/Directory/cloud-platform completos); apenas âmbitos restritos de só leitura",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Segurança > Controlos de API > Delegação em todo o domínio: remova ou restrinja qualquer concessão que detenha âmbitos completos de mail.google.com, drive completo, admin.directory ou cloud-platform; restrinja aos âmbitos mínimos de só leitura necessários. No GCP, negue a criação de chaves em contas de serviço delegadas (iam.disableServiceAccountKeyCreation).",
+      "status": "machine-draft"
+    }
+  },
+  "GTRADE-002": {
+    "name": {
+      "value": "Grupos do Google legíveis pela Internet",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Os grupos cujos tópicos são visíveis por 'qualquer pessoa na Internet' divulgam silenciosamente todo o seu histórico de mensagens, uma categoria que expôs o correio interno (dados financeiros, credenciais, PII) de milhares de organizações. O Google não fornece qualquer alerta nativo para esta exposição.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Nenhum grupo visível por qualquer pessoa na Internet (whoCanViewGroup diferente de ANYONE_CAN_VIEW)",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Aplicações > Google Workspace > Grupos para empresas > Definições de partilha, e definições de acesso por grupo: defina 'Quem pode ver as conversas' para membros/organização apenas, em vez de 'Qualquer pessoa na Internet'.",
+      "status": "machine-draft"
+    }
+  },
+  "GTRADE-003": {
+    "name": {
+      "value": "Grupos de adesão aberta / com membros externos",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Os grupos aos quais qualquer pessoa (ou qualquer pessoa no domínio) pode aderir, ou que permitem membros externos, alargam a fronteira de confiança e permitem o acesso de autosserviço; se um desses grupos detiver também acesso a recursos ou IAM, aderir a ele herda esse acesso (um caminho de elevação de privilégios que o Google classifica como comportamento previsto).",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Grupos restritos a membros convidados; sem adesão aberta a todos e sem membros externos salvo se explicitamente necessário",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Aplicações > Google Workspace > Grupos para empresas: defina o valor predefinido de 'Quem pode aderir' para 'Apenas utilizadores convidados' e desative 'Permitir membros externos' salvo se um grupo os exigir explicitamente; reveja os grupos que concedem acesso a recursos/IAM.",
+      "status": "machine-draft"
+    }
+  },
+  "GTRADE-004": {
+    "name": {
+      "value": "Proliferação de super administradores",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Os super administradores contornam o SSO e a maioria dos controlos; uma grande população de super administradores expande a superfície de ataque de maior valor da organização. A melhor prática do Google é manter o número reduzido (menos de cinco), com o trabalho do dia a dia realizado sob funções de privilégio mínimo.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Menos de 5 super administradores ativos",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Conta > Funções de administrador > Super Admin: reduza os membros ao conjunto mínimo de emergência (break-glass); transfira as tarefas de rotina para funções personalizadas/predefinidas de privilégio mínimo; imponha 2SV resistente a phishing em todos os super administradores restantes.",
+      "status": "machine-draft"
+    }
+  },
+  "GTRADE-005": {
+    "name": {
+      "value": "Funções personalizadas equivalentes a super administrador",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "As funções de administrador personalizadas que transportam privilégios de elevado poder (gestão de utilizadores, definições de segurança, gestão de funções, exportação de dados/Takeout) podem aproximar-se da capacidade de super administrador ao mesmo tempo que escapam a uma simples contagem de super administradores, um vetor discreto de concentração de privilégios e de persistência.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Nenhuma função personalizada transporta privilégios equivalentes a super administrador (gestão de utilizadores/segurança/funções ou exportação de dados) fora de utilização de emergência (break-glass)",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Conta > Funções de administrador: reveja as funções personalizadas que detêm privilégios de gestão de utilizadores, definições de segurança, gestão de funções ou exportação de dados/Takeout; divida-as em funções de âmbito restrito e limite os responsáveis atribuídos.",
+      "status": "machine-draft"
+    }
+  },
+  "GTRADE-006": {
+    "name": {
+      "value": "Concessões OAuth persistentes / com âmbitos excessivos",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "As concessões OAuth de terceiros que detêm âmbitos completos de Gmail/Drive/admin contornam a MFA e sobrevivem a uma reposição de palavra-passe (o Apps Script, as palavras-passe de aplicação e as sessões IMAP-OAuth não são revogadas por uma reposição), um canal de persistência duradouro. O Google regista as concessões, mas não fornece qualquer classificador predefinido de concessões maliciosas.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Nenhuma aplicação OAuth de terceiros que detenha âmbitos completos de mail/drive/admin; concessões persistentes revistas e explicitamente revogadas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Segurança > Controlos de API > Controlo de acesso de aplicações: reveja as aplicações com âmbitos completos de Gmail/Drive/Directory, restrinja às aplicações na lista de permissões e revogue explicitamente as concessões desnecessárias (uma reposição de palavra-passe, por si só, NÃO revoga o acesso OAuth, por palavra-passe de aplicação ou do Apps Script).",
+      "status": "machine-draft"
+    }
+  }
+}

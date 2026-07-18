@@ -1,0 +1,183 @@
+{
+  "_family": "K12Checks.json",
+  "GWS-K12-001": {
+    "name": {
+      "value": "Partilha da OU de alunos não herdada do pessoal",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Os distritos escolares configuram habitualmente a partilha externa do Drive para as necessidades do pessoal e deixam as OU de alunos herdar essa configuração. A herança é invisível na administração do dia a dia: a OU de alunos apresenta um valor, mas ninguém o escolheu para os alunos. A configuração de partilha externa nas OU de alunos deve ser uma decisão local explícita, ou um valor herdado que esteja totalmente desativado.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "A configuração de partilha externa do Drive é aplicada localmente em cada OU de alunos, ou o valor herdado é DISALLOWED",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Google Workspace > Drive and Docs > Definições de partilha. Selecione a unidade organizacional de alunos no painel esquerdo e defina 'Partilha fora da sua organização' explicitamente para essa OU (a definição mostra 'Aplicada localmente' quando é uma decisão local, 'Herdada' caso contrário).",
+      "status": "machine-draft"
+    }
+  },
+  "GWS-K12-002": {
+    "name": {
+      "value": "Partilha externa do Drive por alunos restringida",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Independentemente da postura do pessoal, as OU de alunos não devem permitir partilha silenciosa e sem restrições fora da organização. As posturas defensáveis para alunos variam entre totalmente desativada e domínios na lista de permissões; a partilha ativada com um aviso é o piso aceitável mais fraco e deve ser uma decisão deliberada do distrito para a faixa etária.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "A partilha externa do Drive na OU de alunos é DISALLOWED ou restringida a domínios na lista de permissões; se estiver ALLOWED, o aviso de partilha externa está ativado e a escolha está documentada",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Google Workspace > Drive and Docs > Definições de partilha. Selecione a unidade organizacional de alunos e defina 'Partilha fora da sua organização' como Desativada ou Domínios na lista de permissões. Se o distrito permitir deliberadamente a partilha externa numa OU de alunos, ative no mínimo 'Avisar quando ficheiros pertencentes a utilizadores da sua organização são partilhados externamente'.",
+      "status": "machine-draft"
+    }
+  },
+  "GWS-K12-003": {
+    "name": {
+      "value": "Os alunos não podem autorizar aplicações de terceiros",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Um aluno que clique em 'Iniciar sessão com o Google' num website arbitrário pode conceder a esse site acesso aos dados da sua conta escolar, a menos que o distrito restrinja o acesso à API de terceiros para as OU de alunos. Os alunos não devem ter qualquer acesso não configurado a aplicações de terceiros, ou apenas uma lista de permissões curada pelo distrito. Esta é uma das definições isoladas de maior alavancagem num tenant escolar.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Aplicações de terceiros não configuradas bloqueadas (BLOCK_ALL_SCOPES) para as OU de alunos; aplicações revistas pelo distrito individualmente na lista de permissões",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Segurança > Controlo de acesso e de dados > Controlos de API > Controlo de acesso de aplicações > Gerir o acesso de aplicações de terceiros. Selecione a unidade organizacional de alunos, defina as aplicações de terceiros não configuradas como 'Bloquear todo o acesso à API de terceiros' e coloque na lista de permissões as aplicações específicas que o distrito reviu.",
+      "status": "machine-draft"
+    }
+  },
+  "GWS-K12-004": {
+    "name": {
+      "value": "Revisão do acesso delegado a fornecedores",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "As concessões de delegação em todo o domínio dão à conta de serviço de um fornecedor acesso permanente aos dados dos utilizadores em todo o tenant, incluindo dados de alunos. As plataformas SIS, as ferramentas de gestão de listas e os fornecedores de EdTech acumulam estas concessões ao longo de anos, e as concessões obsoletas raramente são removidas. Cada concessão com âmbitos sensíveis deve corresponder a um contrato de fornecedor atual e ao conjunto de âmbitos mais restrito possível.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Cada concessão de delegação em todo o domínio corresponde a um fornecedor atual e transporta apenas os âmbitos de que esse fornecedor necessita",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Segurança > Controlo de acesso e de dados > Controlos de API > Delegação em todo o domínio. Para cada ID de cliente, confirme qual o fornecedor que o detém e que o contrato está atual; remova as concessões de fornecedores que saíram; reduza os conjuntos de âmbitos que excedem a função do fornecedor (os âmbitos de correio, Drive, diretório e contactos merecem especial escrutínio).",
+      "status": "machine-draft"
+    }
+  },
+  "GWS-K12-005": {
+    "name": {
+      "value": "Privilégio mínimo dos administradores delegados",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Os distritos atribuem rotineiramente a conselheiros, secretários e administradores de escola funções de administrador delegado para tarefas legítimas, usando funções muito mais amplas do que a tarefa. Uma função delegada que transporte privilégios de gestão de utilizadores ou de segurança em todo o domínio alcança todas as contas de alunos; restringir a mesma função a uma unidade organizacional contém-na. Esta verificação evidencia as atribuições delegadas em todo o domínio para revisão; se cada titular necessita desse alcance é uma decisão do distrito.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "As funções de administrador delegado com privilégios de gestão de utilizadores ou de segurança estão restringidas às unidades organizacionais que o titular apoia, e não a todo o domínio",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Conta > Funções de administrador. Para cada atribuição de função personalizada ou predefinida assinalada nas evidências, restrinja a atribuição à unidade organizacional relevante (edite o âmbito da atribuição) ou substitua a função por uma que transporte apenas os privilégios de que as funções do titular necessitam.",
+      "status": "machine-draft"
+    }
+  },
+  "GWS-K12-006": {
+    "name": {
+      "value": "Fronteiras de comunicação dos alunos",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "O Chat e o Meet têm, cada um, definições independentes que regem se as contas podem comunicar com pessoas fora da organização. Para as OU de alunos, estas definições são uma fronteira de segurança: determinam se uma conta fora do distrito pode iniciar contacto com um aluno através de ferramentas fornecidas pelo distrito. Uma FALHA aqui significa que uma definição permite uma categoria de contacto externo que o distrito não decidiu afirmativamente permitir; não significa que tal contacto tenha ocorrido. As restrições de correio externo do Gmail residem em regras de encaminhamento que esta verificação não consegue ler e são assinaladas para revisão manual.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Chat externo da OU de alunos desativado ou restringido a domínios fidedignos; os alunos participam apenas em reuniões alojadas pelo distrito",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Chat: Consola de administração > Aplicações > Google Workspace > Google Chat > Definições de chat externo; selecione a OU de alunos e desative o chat externo ou restrinja aos domínios na lista de permissões. Meet: Consola de administração > Aplicações > Google Workspace > Google Meet > Definições de segurança do Meet; selecione a OU de alunos e limite as reuniões em que os utilizadores podem participar às da sua organização. Gmail: reveja quaisquer restrições de correio externo de alunos em Aplicações > Google Workspace > Gmail > Encaminhamento.",
+      "status": "machine-draft"
+    }
+  },
+  "GWS-K12-007": {
+    "name": {
+      "value": "Integridade do acesso de encarregados de educação",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Os resumos por email para encarregados de educação existem para que os pais vejam a atividade do seu próprio educando. A propriedade de integridade que é avaliável por máquina é quem pode registar e remover encarregados de educação: apenas administradores do domínio é a superfície mais restrita; os professores verificados alargam-na e exigem um procedimento documentado de verificação de identidade. A forma como o distrito verifica a identidade de um encarregado de educação antes de o convidar é um item de revisão de políticas que esta verificação não consegue ler. As conclusões descrevem a postura de configuração, não incidentes.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Se o acesso de encarregados de educação estiver ativado, a gestão de encarregados está restringida a administradores do domínio, ou existe um procedimento documentado de verificação do lado do professor",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Google Workspace > Classroom > Acesso de encarregados de educação. Selecione a unidade organizacional de alunos. Se os resumos para encarregados estiverem em uso, defina 'Quem pode gerir os encarregados de educação' apenas para administradores do domínio, ou documente o procedimento de verificação que os professores devem seguir antes de convidar um encarregado de educação.",
+      "status": "machine-draft"
+    }
+  },
+  "GWS-K12-008": {
+    "name": {
+      "value": "Postura dos Chromebooks geridos dos alunos",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Os Chromebooks dos alunos são a maior frota do distrito e a mais testada nas suas fronteiras. A postura que mantém a frota gerida: os dispositivos apagados voltam a inscrever-se automaticamente (os alunos não conseguem escapar à gestão apagando-os), as extensões instalam-se a partir de uma lista de permissões do distrito, em vez de uma loja aberta com uma lista de bloqueios, e as extensões carregadas lateralmente de fora da Web Store são bloqueadas.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Reinscrição forçada automática após apagamento; instalação de extensões apenas por lista de permissões; extensões externas (carregadas lateralmente) bloqueadas nas OU de alunos",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Dispositivos > Chrome > Definições. Selecione a unidade organizacional de alunos. Em Definições do dispositivo > Inscrição e acesso, defina a Reinscrição forçada como 'Forçar o dispositivo a voltar a inscrever-se automaticamente após o apagamento'. Em Utilizadores e navegadores > Aplicações e extensões, defina a política de instalação da Chrome Web Store para bloquear todas as aplicações com uma lista de permissões gerida pelo administrador e bloqueie as extensões externas.",
+      "status": "machine-draft"
+    }
+  },
+  "GWS-K12-009": {
+    "name": {
+      "value": "Disposição das contas de alunos que saíram",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "A conclusão de estudos e o abandono produzem contas de que ninguém é dono. Uma conta ativa pertencente a um aluno que saiu é uma identidade não vigiada que continua a receber correio e a deter dados. Esta verificação evidencia as contas nas OU de alunos que estão ativas mas que não iniciam sessão há um ano ou mais, e lembra ao distrito que as contas suspensas ainda detêm dados do Drive cuja propriedade deve ser resolvida antes da eliminação.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Os alunos que saem são suspensos ou arquivados na saída; nenhuma conta de aluno permanece ativa com um ano sem inícios de sessão",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Diretório > Utilizadores. Filtre pela unidade organizacional de alunos e ordene por Último início de sessão. Suspenda ou arquive as contas pertencentes a alunos que abandonaram ou concluíram os estudos. Antes de eliminar as contas suspensas, transfira a propriedade do Drive (Consola de administração > Diretório > Utilizadores > selecione o utilizador > Eliminar > transferir conteúdo) ou exporte via Takeout/Vault conforme exigido pela sua política de retenção.",
+      "status": "machine-draft"
+    }
+  },
+  "GWS-K12-010": {
+    "name": {
+      "value": "Piso de segurança das contas de alunos",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Um piso honesto de segurança para alunos é escalonado por faixa etária: política de palavras-passe forte e recuperação controlada pelo distrito em todo o lado; verificação em dois passos imposta para as OU que servem alunos com idade suficiente para deter um segundo fator. A recuperação de conta própria controlada pelo aluno é um caminho de tomada de controlo de conta em qualquer idade e falha esta verificação; uma imposição de 2SV em falta é reportada como contexto para a decisão do distrito por faixa etária, nunca como uma falha cega de uma OU do ensino primário.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Recuperação própria desativada para as OU de alunos; política de palavras-passe FORTE com comprimento mínimo de 12 ou mais; 2SV imposta onde a faixa etária o suporte, com exceções documentadas noutros casos",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Segurança > Autenticação. Selecione a unidade organizacional de alunos. Em Recuperação de conta, desative a recuperação de conta própria do utilizador para as OU de alunos (a recuperação é feita através do help desk do distrito). Em Gestão de palavras-passe, imponha palavras-passe fortes com comprimento mínimo de 12 ou superior. Em Verificação em dois passos, imponha a 2SV para as faixas etárias que podem deter um segundo fator e documente a exceção para as OU mais jovens.",
+      "status": "machine-draft"
+    }
+  }
+}

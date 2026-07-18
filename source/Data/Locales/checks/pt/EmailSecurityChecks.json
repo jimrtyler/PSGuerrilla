@@ -1,0 +1,561 @@
+{
+  "_family": "EmailSecurityChecks.json",
+  "EMAIL-001": {
+    "name": {
+      "value": "Validação do registo SPF",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Os registos Sender Policy Framework (SPF) devem existir e ser válidos para todos os domínios. O SPF previne a falsificação de email ao especificar quais os servidores de correio autorizados a enviar email em nome de um domínio",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Registo v=spf1 válido publicado para todos os domínios com o qualificador -all ou ~all",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Google Workspace > Gmail > Autenticar email > Publique o registo SPF: v=spf1 include:_spf.google.com ~all para cada domínio",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-002": {
+    "name": {
+      "value": "Assinatura DKIM ativada",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "A assinatura DomainKeys Identified Mail (DKIM) deve estar ativada e ser válida para todos os domínios. O DKIM fornece prova criptográfica de que o conteúdo do email não foi adulterado em trânsito",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Assinatura DKIM ativada com chave válida publicada para todos os domínios",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Google Workspace > Gmail > Autenticar email > Gere a chave DKIM e publique o registo DNS para cada domínio",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-003": {
+    "name": {
+      "value": "Auditoria da política DMARC",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "A política Domain-based Message Authentication, Reporting and Conformance (DMARC) deve estar definida para rejeitar ou colocar em quarentena em todos os domínios. Uma política DMARC de none não oferece qualquer proteção contra falsificação",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Política DMARC definida para rejeitar ou colocar em quarentena em todos os domínios",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Publique o registo TXT DMARC em _dmarc.<domain> com p=reject ou p=quarantine. Comece com p=none para monitorização, depois evolua para quarentena e, por fim, para rejeição",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-004": {
+    "name": {
+      "value": "Política MTA-STS",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "O Mail Transfer Agent Strict Transport Security (MTA-STS) previne ataques de degradação de TLS e a interceção man-in-the-middle de email em trânsito, ao exigir ligações TLS autenticadas",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Registo TXT MTA-STS publicado e política alojada em https://mta-sts.<domain>/.well-known/mta-sts.txt",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Publique o registo TXT _mta-sts.<domain> com v=STSv1; id=<unique_id> e aloje o ficheiro de política MTA-STS em https://mta-sts.<domain>/.well-known/mta-sts.txt",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-005": {
+    "name": {
+      "value": "Imposição de TLS",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "O Transport Layer Security (TLS) deve ser exigido para a transmissão de email de forma a impedir a escuta não autorizada. As definições de conformidade de TLS garantem ligações cifradas com os domínios parceiros especificados",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "TLS exigido para todas as ligações de saída e de entrada",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Google Workspace > Gmail > Conformidade > Conformidade de transporte seguro (TLS) > Adicione uma regra que exija TLS para todos os domínios ou para domínios parceiros específicos",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-006": {
+    "name": {
+      "value": "Revisão das listas de permissões/bloqueios de email",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "As listas de permissões e de bloqueios de email devem ser revistas quanto a entradas demasiado permissivas. Os remetentes na lista de permissões contornam a filtragem de spam e podem ser explorados se estiverem mal configurados",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Entradas mínimas na lista de permissões, sem domínios com carateres universais; lista de bloqueios ativamente mantida",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Google Workspace > Gmail > Spam, phishing e software malicioso > Reveja as listas de permissões de email e de remetentes bloqueados quanto a entradas demasiado abrangentes",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-007": {
+    "name": {
+      "value": "Configuração do gateway de entrada",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Os gateways de email de entrada devem estar corretamente configurados para preservar os resultados de autenticação do remetente. Gateways mal configurados podem remover os cabeçalhos SPF/DKIM/DMARC ou contornar a filtragem de segurança",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Gateways de entrada configurados com os intervalos de IP corretos e preservação dos cabeçalhos",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Google Workspace > Gmail > Spam, phishing e software malicioso > Gateway de entrada > Verifique os IP do gateway e que os cabeçalhos de autenticação são preservados",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-008": {
+    "name": {
+      "value": "Auditoria das regras de encaminhamento de email",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "As regras de encaminhamento de email devem ser revistas quanto a configurações suspeitas ou não autorizadas. Regras de encaminhamento maliciosas podem redirecionar email para destinos controlados pelo atacante",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas as regras de encaminhamento revistas e documentadas com justificação de negócio",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Google Workspace > Gmail > Encaminhamento > Reveja todas as regras de encaminhamento, o encaminhamento predefinido e os mapas de destinatários quanto a entradas não autorizadas",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-009": {
+    "name": {
+      "value": "Política de reencaminhamento automático",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "O reencaminhamento automático de email para endereços externos deve ser desativado para prevenir a exfiltração de dados. Os atacantes configuram frequentemente regras de reencaminhamento após comprometerem uma conta",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Reencaminhamento automático desativado em todas as unidades organizacionais",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Google Workspace > Gmail > Acesso do utilizador final > Desative o reencaminhamento automático em todas as OU. Reveja as regras de reencaminhamento existentes através da API do Gmail",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-010": {
+    "name": {
+      "value": "Definições de acesso delegado",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "A delegação de correio permite que os utilizadores concedam a outros utilizadores acesso de leitura e envio na sua caixa de correio. A delegação excessiva pode conduzir a acesso não autorizado e a representação de identidade",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Delegação de correio restringida e revista periodicamente; sem delegados inesperados",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Google Workspace > Gmail > Acesso do utilizador final > Reveja as definições de delegação de correio. Verifique os utilizadores individuais quanto a delegados não autorizados através da API do Gmail",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-011": {
+    "name": {
+      "value": "Definições de acesso POP/IMAP",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "O acesso POP e IMAP deve ser desativado salvo se for especificamente necessário. Estes protocolos legados contornam os controlos de segurança modernos e podem ser usados em ataques baseados em credenciais",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "POP e IMAP desativados para todos os utilizadores",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Google Workspace > Gmail > Acesso do utilizador final > Desative o acesso POP e IMAP. Reveja as definições dos utilizadores individuais através da API do Gmail",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-012": {
+    "name": {
+      "value": "Definições de filtro de spam e phishing",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Os filtros avançados de spam e phishing devem estar ativados para proporcionar a máxima proteção contra ataques de engenharia social e campanhas de email maliciosas",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Filtragem de spam avançada e deteção agressiva de phishing ativadas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Google Workspace > Gmail > Spam, phishing e software malicioso > Ative 'Ser mais agressivo ao filtrar spam' e todas as opções de proteção contra phishing",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-013": {
+    "name": {
+      "value": "Análise avançada de mensagens antes da entrega",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "A análise avançada de mensagens antes da entrega usa heurísticas avançadas e sandboxing para detetar software malicioso e ameaças antes de as mensagens serem entregues nas caixas de entrada dos utilizadores",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Análise avançada de mensagens antes da entrega ativada",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Google Workspace > Gmail > Spam, phishing e software malicioso > Ative 'Análise avançada de mensagens antes da entrega' para identificar conteúdo suspeito",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-014": {
+    "name": {
+      "value": "Aviso de destinatário externo",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Os utilizadores devem ser avisados ao enviar email para destinatários fora da organização, de forma a prevenir a divulgação acidental de dados e a engenharia social",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Aviso de destinatário externo ativado para todos os utilizadores",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Google Workspace > Gmail > Acesso do utilizador final > Ative 'Avisar os utilizadores quando enviam mensagens para fora do domínio'",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-015": {
+    "name": {
+      "value": "Definições de segurança de anexos",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Todas as proteções de segurança de anexos devem estar ativadas para detetar e bloquear anexos de ficheiros maliciosos, incluindo arquivos cifrados, tipos de ficheiro anómalos e scripts",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas as opções de proteção de anexos ativadas com ação de quarentena",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Google Workspace > Gmail > Segurança > Anexos > Ative todas as proteções: anexos cifrados, scripts de remetentes não fidedignos e tipos de anexo anómalos",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-016": {
+    "name": {
+      "value": "Proteção de ligações e imagens externas",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "A proteção de ligações deve estar ativada para analisar URL quanto a phishing e software malicioso. O proxy de imagens externas previne pixéis de rastreio e a divulgação de IP",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Análise de URL, avisos no momento do clique e proxy de imagens externas ativados",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Google Workspace > Gmail > Segurança > Ligações e imagens externas > Ative 'Identificar ligações por trás de URL abreviados', 'Analisar imagens ligadas' e 'Mostrar aviso ao clicar em ligações para domínios não fidedignos'",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-017": {
+    "name": {
+      "value": "Proteção contra falsificação e autenticação",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "As proteções contra falsificação e de autenticação protegem contra a falsificação de domínio, a falsificação de nomes de colaboradores e o email não autenticado de domínios que se assemelham à organização",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Todas as proteções contra falsificação e de autenticação ativadas com ação de quarentena",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Google Workspace > Gmail > Segurança > Falsificação e autenticação > Ative todas as proteções: falsificação de domínio, falsificação de nomes de colaboradores, falsificação de email de entrada e email não autenticado",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-018": {
+    "name": {
+      "value": "Auditoria das regras de conformidade",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "As regras de conformidade de conteúdo devem ser revistas para garantir que os dados sensíveis são tratados de forma adequada. As regras podem impor cifragem, quarentena ou rejeição com base em padrões de conteúdo",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Regras de conformidade de conteúdo configuradas para tipos de dados sensíveis com ações adequadas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Google Workspace > Gmail > Conformidade > Conformidade de conteúdo > Reveja as regras existentes e crie regras para tipos de conteúdo sensível (PII, dados financeiros, registos de saúde)",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-019": {
+    "name": {
+      "value": "Configuração de regras de DLP",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "As regras de Data Loss Prevention (DLP) devem ser configuradas para detetar e impedir que dados sensíveis saiam da organização por email. A DLP fornece inspeção de conteúdo automatizada e imposição de políticas",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Regras de DLP configuradas para os principais tipos de dados (cartões de crédito, números de segurança social, registos de saúde) com ação de bloqueio ou aviso",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Segurança > Proteção de dados > Gerir regras: crie uma regra de DLP do Gmail que detete padrões de conteúdo sensível (cartões de crédito, números de segurança social, registos de saúde) e aplique uma ação de bloqueio ou aviso",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-020": {
+    "name": {
+      "value": "Modo confidencial do Gmail",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "O modo confidencial do Gmail permite que os remetentes definam datas de expiração e revoguem o acesso às mensagens. Reveja se esta funcionalidade está ativada ou restringida de acordo com a política organizacional",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Modo confidencial do Gmail ativado para os utilizadores que lidam com dados sensíveis",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Google Workspace > Gmail > Acesso do utilizador final > Reveja as definições do modo confidencial do Gmail e ative ou restrinja com base nos requisitos organizacionais",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-021": {
+    "name": {
+      "value": "Definições de S/MIME",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "O S/MIME fornece cifragem de email de ponta a ponta e assinaturas digitais. Se exigido por conformidade, os certificados S/MIME devem estar corretamente configurados e geridos",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "S/MIME ativado se exigido por conformidade; certificados corretamente geridos",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Google Workspace > Gmail > Acesso do utilizador final > S/MIME > Ative o S/MIME alojado se necessário e garanta que os certificados são carregados e válidos",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-022": {
+    "name": {
+      "value": "Enumeração de regras de reencaminhamento de correio",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Todas as regras de reencaminhamento de correio ao nível do utilizador devem ser enumeradas e revistas. Os atacantes configuram habitualmente regras de reencaminhamento para manter acesso persistente ao email após o comprometimento da conta",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Sem regras de reencaminhamento não autorizadas; todas as regras de reencaminhamento documentadas e aprovadas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Enumere as regras de reencaminhamento através da API do Gmail para todos os utilizadores. Remova os endereços de reencaminhamento não autorizados. Desative o reencaminhamento automático ao nível da OU para prevenir abusos futuros",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-023": {
+    "name": {
+      "value": "Gateways de saída por utilizador desativados (GWS.GMAIL.12.1)",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "O SCuBA GWS.GMAIL.12.1 exige que os gateways de saída por utilizador estejam desativados. Quando ativados, os utilizadores podem encaminhar o correio de saída através dos seus próprios servidores SMTP externos, contornando os controlos de segurança de correio da organização e criando um caminho de exfiltração de dados e de falsificação. Esta verificação lê a política gmail.per_user_outbound_gateway da Cloud Identity Policy API e assinala qualquer unidade organizacional onde o encaminhamento SMTP externo é permitido. Quando a política não é devolvida, o resultado é Não Avaliado.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Gateways de saída por utilizador (SMTP externo) desativados em todas as unidades organizacionais",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Na Consola de administração do Google, em Aplicações > Google Workspace > Gmail > Encaminhamento, garanta que os gateways de saída por utilizador não são permitidos, de modo que os utilizadores não possam encaminhar correio através de servidores SMTP externos. Mantenha o encaminhamento de saída centralizado apenas através de gateways aprovados.",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-024": {
+    "name": {
+      "value": "Sandbox de Segurança do Gmail ativada (GWS.GMAIL.16.1)",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "O SCuBA GWS.GMAIL.16.1 recomenda ativar a Sandbox de Segurança do Gmail, que detona os anexos de entrada num ambiente virtual para detetar software malicioso de dia zero que a análise por assinaturas não deteta. Esta verificação lê a política gmail.security_sandbox da Cloud Identity Policy API e assinala as unidades organizacionais onde a sandbox está desativada. O campo exato da política é o melhor possível enquanto se aguarda confirmação num tenant licenciado; quando a política não é devolvida, o resultado é Não Avaliado, em vez de um veredicto fabricado.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Sandbox de Segurança ativada (detonação virtual de anexos) em todas as unidades organizacionais",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Na Consola de administração do Google, em Aplicações > Google Workspace > Gmail > Segurança > Anexos, ative a Sandbox de Segurança para que os anexos de entrada sejam detonados num ambiente virtual antes da entrega. Note que a Sandbox de Segurança requer a edição adequada do Google Workspace.",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-025": {
+    "name": {
+      "value": "Delegação de correio do Gmail desativada (GWS.GMAIL.1.1)",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "SCuBA GWS.GMAIL.1.1: a delegação de correio permite que um utilizador conceda a outra conta acesso de leitura/envio à sua caixa de correio, um caminho de acesso a dados permanente que perdura para além da finalidade da delegação. Lê gmail.mail_delegation; avisa onde enableMailDelegation está ativado.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Delegação de correio desativada salvo se for deliberadamente necessária",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Nas definições do Gmail > Definições do utilizador, desative a delegação de correio salvo se existir uma necessidade de negócio revista.",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-026": {
+    "name": {
+      "value": "Acesso POP e IMAP do Gmail desativado (GWS.GMAIL.9.1)",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "SCuBA GWS.GMAIL.9.1: os protocolos legados POP e IMAP contornam a autenticação moderna e são um vetor de credential-stuffing / contorno de MFA. Lê gmail.imap_access e gmail.pop_access; falha onde qualquer um deles estiver ativado.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Acesso POP e IMAP desativado",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Nas definições do Gmail > Acesso do utilizador final, desative POP e IMAP para que os clientes de correio tenham de usar protocolos autenticados modernos.",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-027": {
+    "name": {
+      "value": "Importação de email/contactos pelo utilizador do Gmail desativada (GWS.GMAIL.8.1)",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "SCuBA GWS.GMAIL.8.1: os carregamentos de email pelo utilizador (importação de correio e contactos de contas externas) trazem dados externos para o tenant e podem exfiltrar no sentido inverso. Lê gmail.user_email_uploads; avisa onde enableMailAndContactsImport está ativado.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Importação de email/contactos pelo utilizador desativada",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Nas definições do Gmail, desative a capacidade de os utilizadores importarem correio e contactos de outras contas salvo se for necessário.",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-028": {
+    "name": {
+      "value": "Google Workspace Sync para Outlook desativado (GWS.GMAIL.10.1)",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "SCuBA GWS.GMAIL.10.1: o Google Workspace Sync for Microsoft Outlook (GWSMO) faz a ponte de dados da caixa de correio para um cliente Outlook, alargando a superfície de dados e contornando algumas proteções web. Lê gmail.workspace_sync_for_outlook; avisa onde está ativado.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "GWSMO desativado salvo se for necessário",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Nas definições de acesso do utilizador final do Gmail, desative o Google Workspace Sync for Microsoft Outlook salvo se existir uma necessidade revista.",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-029": {
+    "name": {
+      "value": "Listas de remetentes de substituição de spam do Gmail revistas (GWS.GMAIL.18.1)",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "SCuBA GWS.GMAIL.18.1: as listas de remetentes aprovados / de substituição de spam fazem com que o correio de domínios listados contorne a filtragem de spam, um contorno de phishing se forem demasiado abrangentes. Lê gmail.spam_override_lists; avisa onde estão configurados domínios de remetentes de substituição.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Listas de remetentes de substituição de spam ausentes ou mínimas e revistas",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Nas definições de spam do Gmail, reveja e minimize as listas de remetentes aprovados / de contorno, de modo que o correio de domínios fidedignos não fique globalmente isento da filtragem de spam.",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-030": {
+    "name": {
+      "value": "Reencaminhamento automático de email desativado (GWS.GMAIL.11.1)",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "O SCuBA GWS.GMAIL.11.1 recomenda desativar o reencaminhamento automático de email, sobretudo para domínios externos. O reencaminhamento automático é um canal comum de exfiltração de dados e um mecanismo de persistência após a tomada de controlo de uma conta, porque copia silenciosamente o correio de entrada para um endereço controlado pelo atacante. Esta verificação lê a política gmail.auto_forwarding da Cloud Identity e assinala qualquer unidade organizacional onde o reencaminhamento automático está ativado.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Reencaminhamento automático de email desativado (enableAutoForwarding = false) em todas as unidades organizacionais.",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Na Consola de administração do Google, em Aplicações > Google Workspace > Gmail > Acesso do utilizador final, desative 'Permitir que os utilizadores reencaminhem automaticamente o email de entrada para outro endereço', dando prioridade aos destinos externos. Reveja as regras de reencaminhamento existentes quanto a destinatários externos inesperados.",
+      "status": "machine-draft"
+    }
+  },
+  "EMAIL-031": {
+    "name": {
+      "value": "Análise avançada de mensagens antes da entrega ativada (GWS.GMAIL.15.1)",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "O SCuBA GWS.GMAIL.15.1 exige a análise avançada de mensagens antes da entrega, que melhora a deteção de conteúdo suspeito e de phishing antes de uma mensagem chegar à caixa de entrada. Esta verificação lê a política gmail.enhanced_pre_delivery_message_scanning da Cloud Identity e assinala qualquer unidade organizacional onde a deteção melhorada de conteúdo suspeito não está ativada.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Análise avançada de mensagens antes da entrega ativada (enableImprovedSuspiciousContentDetection = true) em todas as unidades organizacionais.",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Na Consola de administração do Google, em Aplicações > Google Workspace > Gmail > Spam, phishing e software malicioso, ative a análise avançada de mensagens antes da entrega para que o Gmail realize análise adicional de conteúdo suspeito antes da entrega.",
+      "status": "machine-draft"
+    }
+  }
+}

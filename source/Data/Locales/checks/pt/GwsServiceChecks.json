@@ -1,0 +1,219 @@
+{
+  "_family": "GwsServiceChecks.json",
+  "GWS-SITES-001": {
+    "name": {
+      "value": "Serviço Sites desativado",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "O serviço Google Sites deve ser desativado para todos os utilizadores, de forma a reduzir a superfície de ataque, em consonância com o princípio de privilégio mínimo. O Sites pode ser ativado seletivamente por unidade organizacional ou grupo onde exista uma necessidade documentada.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Serviço Sites DESATIVADO para todos (ativar seletivamente por OU/grupo apenas conforme necessário)",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Google Workspace > Sites > Estado do serviço > Definir como DESATIVADO para todos. Ative seletivamente por unidade organizacional ou grupo apenas onde exista uma necessidade de negócio documentada.",
+      "status": "machine-draft"
+    }
+  },
+  "GWS-CLASS-001": {
+    "name": {
+      "value": "Adesão ao Classroom - Quem pode aderir às turmas",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Quem pode aderir às turmas no seu domínio deve ser restringido apenas a utilizadores do seu domínio, impedindo que contas externas adiram a turmas internas.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Quem pode aderir às turmas definido como 'Apenas utilizadores do seu domínio'",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Serviços adicionais do Google > Classroom > Definições da turma > Sobre a adesão às turmas > Quem pode aderir às turmas no seu domínio > Definir como 'Apenas utilizadores do seu domínio'.",
+      "status": "machine-draft"
+    }
+  },
+  "GWS-CLASS-002": {
+    "name": {
+      "value": "Adesão ao Classroom - A que turmas os utilizadores podem aderir",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "A que turmas os utilizadores do seu domínio podem aderir deve ser restringido apenas a turmas do seu domínio, impedindo que utilizadores internos adiram a turmas externas que poderiam exfiltrar dados.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "A que turmas os utilizadores podem aderir definido como 'Apenas turmas do seu domínio'",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Serviços adicionais do Google > Classroom > Definições da turma > Sobre a adesão às turmas > A que turmas os utilizadores do seu domínio podem aderir > Definir como 'Apenas turmas do seu domínio'.",
+      "status": "machine-draft"
+    }
+  },
+  "GWS-CLASS-003": {
+    "name": {
+      "value": "Acesso a dados da API do Classroom restringido",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Os utilizadores não devem poder autorizar aplicações de terceiros a aceder aos seus dados do Google Classroom, impedindo o acesso não controlado a dados por integrações externas.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Os utilizadores não podem autorizar aplicações a aceder aos dados do Classroom (acesso a dados da API desativado)",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Serviços adicionais do Google > Classroom > Acesso a dados > Desmarque 'Os utilizadores podem autorizar aplicações a aceder aos seus dados do Google Classroom'.",
+      "status": "machine-draft"
+    }
+  },
+  "GWS-CLASS-004": {
+    "name": {
+      "value": "Importação de listas de turma do Classroom desativada",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "A importação de listas de turma através de integração de terceiros deve ser desativada, para que as listas de turma não sejam sincronizadas a partir de sistemas externos sem governação explícita.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Importação de listas de turma DESATIVADA",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Serviços adicionais do Google > Classroom > Importação de listas de turma > Selecionar DESATIVADO.",
+      "status": "machine-draft"
+    }
+  },
+  "GWS-CLASS-005": {
+    "name": {
+      "value": "Anulação de inscrição de alunos do Classroom restringida",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "Apenas os professores devem poder anular a inscrição de alunos nas turmas, impedindo que os alunos se removam a si próprios ou a outros e comprometam a integridade da adesão à turma.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Anulação de inscrição de alunos restringida apenas aos professores",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Serviços adicionais do Google > Classroom > Anulação de inscrição de alunos > Selecionar 'Apenas professores'.",
+      "status": "machine-draft"
+    }
+  },
+  "GWS-CLASS-006": {
+    "name": {
+      "value": "Criação de turmas do Classroom restringida a professores verificados",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "A criação de turmas deve ser restringida apenas a professores verificados, impedindo que utilizadores não autorizados criem turmas e reúnam membros.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Criação de turmas restringida apenas a professores verificados",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > Aplicações > Serviços adicionais do Google > Classroom > Definições gerais > Permissões dos professores > Selecionar 'Apenas professores verificados'.",
+      "status": "machine-draft"
+    }
+  },
+  "GWS-GEMINI-001": {
+    "name": {
+      "value": "Acesso à app Gemini restringido a utilizadores licenciados",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "O acesso dos utilizadores à app Gemini deve ser definido como DESATIVADO para todos os que não possuam licença, garantindo que o acesso à IA generativa é regido pela atribuição de licenças, em vez de estar aberto a todos os utilizadores.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Acesso à app Gemini DESATIVADO para utilizadores sem licença",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > IA generativa > App Gemini > Acesso do utilizador > Desmarque 'Permitir que todos os utilizadores acedam à app Gemini, independentemente da licença'.",
+      "status": "machine-draft"
+    }
+  },
+  "GWS-GEMINI-002": {
+    "name": {
+      "value": "Funcionalidades Alpha do Gemini desativadas",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "As funcionalidades Alpha do Gemini devem ser desativadas. As funcionalidades de pré-lançamento podem não ter concluído a revisão de segurança e podem expor os dados organizacionais a processamento não verificado.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Acesso às funcionalidades Alpha no Gemini for Workspace desativado",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > IA generativa > Gemini for Workspace > Funcionalidades Alpha > Selecionar 'Desativar o acesso às funcionalidades Alpha no Gemini for Google Workspace'.",
+      "status": "machine-draft"
+    }
+  },
+  "GWS-GEMINI-003": {
+    "name": {
+      "value": "Histórico de conversas do Gemini ativado",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "O histórico de conversas do Gemini deve estar ativado para que as interações com a IA sejam retidas para fins de auditoria e conformidade. Um histórico desativado pode ocultar o tratamento de dados.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Histórico de conversas do Gemini ativado",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > IA generativa > App Gemini > Histórico de conversas do Gemini > Garanta que o histórico de conversas está ativado.",
+      "status": "machine-draft"
+    }
+  },
+  "GWS-GEMINI-004": {
+    "name": {
+      "value": "Retenção das conversas do Gemini de, no mínimo, 18 meses",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "A retenção das conversas do Gemini deve ser definida para um mínimo de 18 meses, para suportar os requisitos de auditoria, retenção legal e investigação de incidentes.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Retenção de conversas definida para, pelo menos, 18 meses",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > IA generativa > App Gemini > Histórico de conversas do Gemini > Defina o período de retenção para, pelo menos, 18 meses.",
+      "status": "machine-draft"
+    }
+  },
+  "GWS-GEMINI-005": {
+    "name": {
+      "value": "Partilha de conversas do Gemini desativada",
+      "status": "machine-draft"
+    },
+    "description": {
+      "value": "A partilha de conversas do Gemini através de link deve ser definida como DESATIVADA, para impedir que o conteúdo das conversas com a IA, que pode incluir prompts e resultados sensíveis, seja partilhado fora dos destinatários previstos.",
+      "status": "machine-draft"
+    },
+    "recommendedValue": {
+      "value": "Partilha de conversas através de link definida como DESATIVADA",
+      "status": "machine-draft"
+    },
+    "remediationSteps": {
+      "value": "Consola de administração > IA generativa > App Gemini > Partilha > Defina 'Permitir a partilha de conversas através de link' como DESATIVADO.",
+      "status": "machine-draft"
+    }
+  }
+}
