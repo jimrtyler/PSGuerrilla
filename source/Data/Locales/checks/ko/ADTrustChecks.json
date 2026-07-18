@@ -1,0 +1,69 @@
+{
+  "_family": "ADTrustChecks.json",
+  "ADTRUST-001": {
+    "name": { "value": "트러스트 관계 열거", "status": "machine-draft" },
+    "description": { "value": "인증 경계의 완전한 그림을 파악하기 위해 모든 트러스트 관계를 인벤토리에 포함해야 합니다. 문서화되지 않은 트러스트는 외부 도메인의 사용자가 리소스에 액세스하도록 허용하여 공격 표면을 확장합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "업무상 정당성, 방향, 유형 및 소유자와 함께 문서화된 모든 트러스트 관계", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADTrust -Filter *를 실행하여 모든 트러스트를 열거합니다. 각 트러스트를 방향, 유형(포리스트, 외부, 바로 가기, 영역), 전이성 및 업무상 정당성과 함께 문서화합니다. 더 이상 업무상 필요를 제공하지 않는 트러스트를 검토하고 제거합니다", "status": "machine-draft" }
+  },
+  "ADTRUST-002": {
+    "name": { "value": "트러스트 방향 분석", "status": "machine-draft" },
+    "description": { "value": "인바운드 트러스트는 외부 도메인 사용자가 사용자의 도메인으로 인증하도록 허용합니다. 각 인바운드 또는 양방향 트러스트는 신뢰할 수 있는 도메인이 적절한 보안 제어를 유지하는지 확인하기 위해 검토되어야 합니다. 침해된 신뢰할 수 있는 도메인은 사용자의 환경을 공격하는 데 사용될 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 트러스트 방향이 정당화되고 문서화됨. 공격 표면을 줄이기 위해 가능한 경우 양방향 트러스트를 단방향으로 전환", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADTrust -Filter *를 사용하여 각 트러스트 방향을 검토합니다. 양방향 트러스트의 경우 두 방향이 모두 필요한지 평가합니다. 업무상 한 방향만 필요한 경우 단방향 트러스트로 전환합니다. 모든 인바운드 트러스트 경로에 대한 정당성을 문서화합니다", "status": "machine-draft" }
+  },
+  "ADTRUST-003": {
+    "name": { "value": "트러스트 전이성 분석", "status": "machine-draft" },
+    "description": { "value": "전이적 트러스트는 인증 경로를 직접적인 트러스트 파트너 너머로 확장하여, 신뢰할 수 있는 도메인의 체인을 통해 의도하지 않은 액세스 경로를 만들 수 있습니다. 각 전이적 트러스트는 그것이 만드는 확장된 공격 표면에 대해 평가되어야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "전체 전이성 경로 분석과 함께 문서화된 모든 전이적 트러스트. 전이성이 필요하지 않을 때 포리스트 트러스트보다 외부 트러스트 선호", "status": "machine-draft" },
+    "remediationSteps": { "value": "모든 전이적 트러스트 경로를 매핑하여 간접 인증 경로를 식별합니다. 포리스트 트러스트의 경우 모든 자식 도메인이 전이적으로 신뢰됨을 이해합니다. 특정 도메인 액세스만 필요한 경우 외부(비전이적) 트러스트 사용을 고려합니다", "status": "machine-draft" }
+  },
+  "ADTRUST-004": {
+    "name": { "value": "SID 필터링 상태", "status": "machine-draft" },
+    "description": { "value": "SID 필터링은 인증 토큰에서 외부 도메인의 SID를 제거하여 SID history 삽입 공격을 방지합니다. SID 필터링이 없으면 신뢰할 수 있는 도메인을 침해한 공격자가 사용자의 도메인에서 권한 있는 SID(예: Enterprise Admins)를 포함하는 티켓을 조작하여 완전한 침해를 달성할 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 외부 및 포리스트 트러스트에서 SID 필터링(격리) 활성화됨", "status": "machine-draft" },
+    "remediationSteps": { "value": "'netdom trust /domain:trusted.domain /Quarantine'을 사용하여 SID 필터링 상태를 확인합니다. 'netdom trust /domain:trusted.domain /Quarantine:Yes'로 SID 필터링을 활성화합니다. 참고: SID 필터링은 외부 트러스트에서 기본적으로 활성화되어 있지만, 의도적으로 비활성화되었을 수 있는 포리스트 트러스트에서는 확인해야 합니다", "status": "machine-draft" }
+  },
+  "ADTRUST-005": {
+    "name": { "value": "SID History 악용 탐지", "status": "machine-draft" },
+    "description": { "value": "SID history는 도메인 마이그레이션을 위한 것이지만 트러스트 경계를 넘어 사용자 토큰에 권한 있는 SID를 삽입하는 데 악용될 수 있습니다. 신뢰할 수 있는 도메인을 침해한 공격자는 자신이 제어하는 모든 계정의 SID history에 Enterprise Admin 또는 Domain Admin SID를 추가할 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "권한 있는 그룹을 참조하는 SID history 값을 가진 계정 없음. 모든 마이그레이션 완료 후 정리된 SID history", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADUser -Filter {SIDHistory -like '*'} -Properties SIDHistory를 사용하여 SID history를 가진 계정을 검색합니다. 권한 있는 그룹(Domain Admins, Enterprise Admins 등)을 참조하는 SID history 항목을 식별합니다. SIDHistory 매개 변수와 함께 Remove-ADUser를 사용하여 마이그레이션 후 SID history를 정리합니다. 트러스트에서 SID 필터링을 활성화합니다", "status": "machine-draft" }
+  },
+  "ADTRUST-006": {
+    "name": { "value": "선택적 인증 상태", "status": "machine-draft" },
+    "description": { "value": "선택적 인증은 각 리소스에 대한 명시적 권한을 요구하여 신뢰할 수 있는 도메인의 어떤 사용자가 사용자 도메인의 리소스에 인증할 수 있는지 제한합니다. 이것이 없으면 신뢰할 수 있는 도메인의 모든 인증된 사용자가 권한을 가진 모든 리소스에 액세스할 수 있어 공격 표면이 크게 확장됩니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 포리스트 트러스트에서 선택적 인증 활성화됨. 필요한 리소스에만 인증 허용(Allowed-to-Authenticate) 권한 부여됨", "status": "machine-draft" },
+    "remediationSteps": { "value": "Active Directory 도메인 및 트러스트 > 트러스트 속성 > 인증 탭 > '선택적 인증' 선택을 통해 포리스트 트러스트에서 선택적 인증을 활성화합니다. 그런 다음 외부 사용자가 액세스해야 하는 특정 컴퓨터 개체에 '인증 허용' 권한을 부여합니다", "status": "machine-draft" }
+  },
+  "ADTRUST-007": {
+    "name": { "value": "Azure AD 하이브리드 트러스트 보안", "status": "machine-draft" },
+    "description": { "value": "온프레미스 AD와 Azure AD를 연결하는 하이브리드 ID 구성은 추가 공격 경로를 만듭니다. Azure AD Connect, 통과 인증 에이전트 및 페더레이션 서비스는 클라우드와 온프레미스 환경 사이를 피벗하기 위해 표적이 될 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "강화된 전용 서버에서 최신 버전을 실행하는 Azure AD Connect. PTA/페더레이션보다 PHS 선호. 필요하지 않으면 원활한 SSO 비활성화. 클라우드 전용 비상(break-glass) 계정 구성됨", "status": "machine-draft" },
+    "remediationSteps": { "value": "Azure AD Connect 구성을 검토하고 Tier 0 강화 서버에서 실행되는지 확인합니다. 공격 표면 감소를 위해 페더레이션 또는 PTA에서 암호 해시 동기화(PHS)로 전환을 평가합니다. 원활한 SSO를 사용하는 경우 AZUREADSSOACC 컴퓨터 계정 암호가 교체되는지 확인합니다. 클라우드 전용 비상 액세스 계정이 존재하는지 확인합니다", "status": "machine-draft" }
+  },
+  "ADTRUST-008": {
+    "name": { "value": "외부 도메인 트러스트 열거", "status": "machine-draft" },
+    "description": { "value": "조직 외부의 도메인과의 트러스트는 잠재적으로 다른 보안 표준을 가진 엔터티로 보안 경계를 확장합니다. 신뢰하는 조직은 외부 도메인의 보안 태세를 제어할 수 없으므로 외부 도메인 트러스트는 추가적인 정밀 검토를 받아야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "외부 보안 평가, 계약상 보안 요구 사항 및 연간 검토와 함께 문서화된 모든 외부 도메인 트러스트", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADTrust -Filter *를 사용하여 조직 외부의 도메인과의 트러스트를 식별합니다. 각 외부 트러스트에 대해 보안 계약이 마련되어 있고, SID 필터링이 활성화되어 있으며, 선택적 인증이 구성되어 있고, 트러스트가 매년 검토되는지 확인합니다", "status": "machine-draft" }
+  },
+  "ADTRUST-009": {
+    "name": { "value": "고아 트러스트 탐지", "status": "machine-draft" },
+    "description": { "value": "고아 트러스트는 더 이상 존재하지 않거나 더 이상 연결할 수 없는 도메인을 참조합니다. 이러한 오래된 트러스트 개체는 자격 증명을 유지할 수 있으며 보안 감사 중 혼란을 만듭니다. 불필요한 공격 표면을 줄이고 깨끗한 트러스트 토폴로지를 유지하기 위해 제거되어야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "고아 또는 확인 불가능한 트러스트 관계 없음", "status": "machine-draft" },
+    "remediationSteps": { "value": "모든 트러스트를 열거하고 신뢰할 수 있는 도메인 이름을 확인하고 'netdom trust /verify'로 트러스트를 테스트하여 각각을 검증합니다. 'netdom trust /Remove' 또는 Active Directory 도메인 및 트러스트를 사용하여 파트너 도메인이 더 이상 존재하지 않거나 연결할 수 없는 고아 트러스트를 제거합니다", "status": "machine-draft" }
+  },
+  "ADTRUST-010": {
+    "name": { "value": "트러스트 키 사용 기간 및 교체", "status": "machine-draft" },
+    "description": { "value": "트러스트 암호(영역 간 키)는 정기적으로 교체되어야 합니다. 오래된 트러스트 키는 자격 증명 기반 공격의 창을 늘립니다. 기본적으로 트러스트 암호는 30일마다 교체되지만, 실패한 교체가 탐지되지 않을 수 있으므로 이를 확인해야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "지난 30일 이내에 교체된 트러스트 암호. 자동 트러스트 암호 교체가 비활성화되지 않음", "status": "machine-draft" },
+    "remediationSteps": { "value": "trustAuthOutgoing 특성을 검사하거나 'netdom trust /domain:trusted.domain /verify'를 실행하여 트러스트 암호 마지막 설정 날짜를 확인합니다. 트러스트 암호가 오래된 경우 'netdom trust /domain:trusted.domain /Reset'을 사용하여 재설정합니다. GPO 또는 레지스트리 설정이 자동 트러스트 암호 교체를 비활성화하지 않았는지 확인합니다", "status": "machine-draft" }
+  },
+  "ADTRUST-011": {
+    "name": { "value": "트러스트 계층 시각화", "status": "machine-draft" },
+    "description": { "value": "모든 트러스트 관계, 방향, 유형 및 전이성 경로를 보여주는 완전한 트러스트 토폴로지 맵을 유지해야 합니다. 이 시각화는 전체 인증 경계를 이해하고 예기치 않은 액세스 경로를 식별하는 데 필수적입니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "최신 트러스트 토폴로지 다이어그램을 유지하고 분기별로 검토함", "status": "machine-draft" },
+    "remediationSteps": { "value": "자동화된 도구를 사용하거나 방향, 유형, 전이성, SID 필터링 상태 및 선택적 인증 상태를 포함한 모든 트러스트 관계를 수동으로 문서화하여 트러스트 토폴로지 맵을 생성합니다. 트러스트가 추가, 수정 또는 제거될 때마다 다이어그램을 업데이트합니다. 보안 문서에 맵을 포함하고 분기별로 검토합니다", "status": "machine-draft" }
+  }
+}

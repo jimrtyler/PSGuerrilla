@@ -1,0 +1,183 @@
+{
+  "_family": "ADPrivilegedAccountChecks.json",
+  "ADPRIV-001": {
+    "name": { "value": "Domain Admins 열거", "status": "machine-draft" },
+    "description": { "value": "Domain Admins 그룹은 도메인에 가입된 모든 시스템에 대한 완전한 관리 제어를 제공합니다. 멤버십은 엄격하게 제한되어야 하며 모든 멤버는 문서화된 업무상 정당성을 가져야 합니다. 과도한 멤버십은 자격 증명 도난 및 측면 이동을 위한 공격 표면을 극적으로 증가시킵니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "각 멤버에 대한 문서화된 정당성과 함께 최소한의 멤버십(이상적으로 최대 2~3개 계정). 일상적인 사용자 계정 없음", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADGroupMember -Identity 'Domain Admins' -Recursive를 사용하여 중첩 그룹을 포함한 Domain Admins 멤버십을 열거합니다. 각 멤버의 업무상 필요성을 검토합니다. 불필요한 멤버를 제거하고 위임된 관리 모델로 마이그레이션합니다. 일반 사용자 계정이 멤버가 아닌지 확인합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-002": {
+    "name": { "value": "Enterprise Admins 열거", "status": "machine-draft" },
+    "description": { "value": "Enterprise Admins 그룹은 모든 도메인에 걸친 포리스트 전체 관리 권한을 가집니다. 이 그룹은 정상 운영 중에는 비어 있어야 하며 포리스트 수준 변경을 위해서만 일시적으로 채워져야 합니다. 침해된 Enterprise Admin 계정은 전체 포리스트 침해로 이어집니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "정상 운영 중 비어 있음. 문서화된 승인과 함께 포리스트 수준 변경을 위해서만 멤버를 일시적으로 추가", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADGroupMember -Identity 'Enterprise Admins' -Recursive를 사용하여 Enterprise Admins 멤버십을 열거합니다. 모든 영구 멤버를 제거합니다. 전체 감사 로깅과 함께 멤버를 일시적으로 추가하고 제거하는 포리스트 수준 작업을 위한 적시(just-in-time) 액세스 프로세스를 구현합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-003": {
+    "name": { "value": "Schema Admins 열거", "status": "machine-draft" },
+    "description": { "value": "Schema Admins 그룹은 AD 스키마를 수정할 수 있으며, 이는 되돌릴 수 없고 전체 포리스트에 영향을 미칩니다. 스키마 변경은 드물고 영향이 크므로 이 그룹은 정상 운영 중에는 비어 있어야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "정상 운영 중 비어 있음. 변경 관리 승인과 함께 스키마 수정을 위해서만 멤버를 일시적으로 추가", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADGroupMember -Identity 'Schema Admins'를 사용하여 Schema Admins 멤버십을 열거합니다. 모든 영구 멤버를 제거합니다. 공식적인 변경 관리 프로세스를 통해 스키마 변경이 필요할 때만 멤버를 추가합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-004": {
+    "name": { "value": "Account Operators 열거", "status": "machine-draft" },
+    "description": { "value": "Account Operators는 권한 있는 OU에 계정을 생성하는 것을 포함하여 도메인의 대부분 사용자 및 그룹 계정을 생성하고 수정할 수 있습니다. 이 그룹은 자주 간과되지만 상당한 권한 상승 잠재력을 제공합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "비어 있음. Account Operators 그룹 멤버십 대신 위임된 OU 수준 권한 사용", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADGroupMember -Identity 'Account Operators'를 사용하여 Account Operators 멤버십을 열거합니다. 모든 멤버를 제거하고 Active Directory 제어 위임 마법사를 사용하여 OU 범위 위임으로 교체합니다. 위임된 모든 권한을 문서화합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-005": {
+    "name": { "value": "Server Operators 열거", "status": "machine-draft" },
+    "description": { "value": "Server Operators는 도메인 컨트롤러에 로그온하고, 서비스를 관리하고, 공유 리소스를 수정할 수 있습니다. 이 그룹은 서비스가 SYSTEM으로 임의 코드를 실행하도록 조작하여 DC에서 권한을 상승시키는 데 악용될 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "비어 있음. 대신 특정 위임이 있는 전용 서비스 관리 계정 사용", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADGroupMember -Identity 'Server Operators'를 사용하여 Server Operators 멤버십을 열거합니다. 모든 멤버를 제거하고 필요한 서버 관리 작업에 대해 표적화된 위임을 구현합니다. DC 로그온 권한을 별도로 감사합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-006": {
+    "name": { "value": "Backup Operators 열거", "status": "machine-draft" },
+    "description": { "value": "Backup Operators는 AD 데이터베이스(ntds.dit)를 포함하여 도메인 컨트롤러의 파일을 백업하고 복원할 수 있습니다. 이를 통해 도메인의 모든 암호 해시를 추출할 수 있어, 숙련된 공격자에게 Backup Operators 멤버십은 Domain Admin 액세스와 동등합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "비어 있거나 전용 백업 서비스 계정으로만 제한. 사용자 계정 없음", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADGroupMember -Identity 'Backup Operators'를 사용하여 Backup Operators 멤버십을 열거합니다. 모든 사용자 계정을 제거합니다. 백업 서비스 계정이 멤버십을 필요로 하는 경우, 전용이고 강력한 암호를 가지며 모니터링되는지 확인합니다. Backup Operators 멤버십이 필요하지 않은 에이전트 기반 백업 솔루션을 고려합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-007": {
+    "name": { "value": "Print Operators 열거", "status": "machine-draft" },
+    "description": { "value": "Print Operators는 도메인 컨트롤러에서 프린터를 관리하고 프린터 드라이버를 로드할 수 있습니다. 악성 프린터 드라이버는 DC에서 SYSTEM으로 임의 코드를 실행할 수 있어 전체 도메인 침해로 가는 경로를 제공합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "비어 있음. 도메인 컨트롤러가 아닌 전용 인쇄 서버를 사용하여 프린터 관리", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADGroupMember -Identity 'Print Operators'를 사용하여 Print Operators 멤버십을 열거합니다. 모든 멤버를 제거합니다. 도메인 컨트롤러가 아닌 전용 멤버 서버에 인쇄 서비스를 배포합니다. 그룹 정책을 통해 프린터 드라이버 설치를 제한합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-008": {
+    "name": { "value": "DnsAdmins 그룹 멤버십", "status": "machine-draft" },
+    "description": { "value": "DnsAdmins 그룹의 멤버는 도메인 컨트롤러의 DNS 서비스가 임의 DLL을 로드하도록 구성할 수 있으며, 이는 SYSTEM으로 실행됩니다. 이 잘 알려진 권한 상승 경로는 겉보기에 낮은 권한의 그룹 멤버십에서 전체 도메인 침해로 이어질 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "비어 있거나 전용 DNS 관리 계정으로만 제한. 멤버십을 Tier 0 권한으로 취급", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADGroupMember -Identity 'DnsAdmins'를 사용하여 DnsAdmins 멤버십을 열거합니다. 불필요한 멤버를 제거합니다. 계층화 모델에서 DnsAdmins를 Tier 0 권한 그룹으로 취급합니다. DNS 서버 구성 및 ServerLevelPluginDll 레지스트리 값의 변경을 모니터링합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-009": {
+    "name": { "value": "중첩 그룹 멤버십 분석", "status": "machine-draft" },
+    "description": { "value": "중첩 그룹 멤버십은 그룹 중첩 체인 뒤에 권한 있는 액세스를 숨겨 유효 권한을 모호하게 만들 수 있습니다. 사용자는 단순한 그룹 열거로는 보이지 않는 깊이 중첩된 그룹을 통해 Domain Admin과 동등한 액세스를 가질 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "권한 있는 그룹으로의 모든 중첩 그룹 경로가 문서화됨. 최대 중첩 깊이 2단계. 순환 중첩 없음", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADGroupMember -Recursive를 사용하여 모든 권한 있는 그룹 멤버십을 재귀적으로 열거합니다. 모든 중첩 경로를 매핑하고 간접 멤버십을 통해 권한을 얻는 사용자를 식별합니다. 불필요한 중첩을 평면화하고 남은 모든 중첩 경로를 업무상 정당성과 함께 문서화합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-010": {
+    "name": { "value": "권한 있는 사용자 암호 사용 기간 제한 없음", "status": "machine-draft" },
+    "description": { "value": "'암호 사용 기간 제한 없음' 플래그가 설정된 권한 있는 계정은 암호 교체 정책에서 면제됩니다. 그러한 계정이 침해되면 암호가 강제로 변경되지 않으므로 공격자가 무기한 지속적인 액세스를 유지합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "암호 사용 기간 제한 없음 플래그가 설정된 권한 있는 계정 없음. 모든 권한 있는 계정은 60일 이하의 암호 교체 정책 적용을 받음", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADUser -Filter {PasswordNeverExpires -eq $true -and AdminCount -eq 1}을 사용하여 PasswordNeverExpires가 설정된 권한 있는 계정을 식별합니다. 플래그를 해제하고 이러한 계정이 적절한 암호 정책의 적용을 받도록 합니다. 60일 최대 암호 사용 기간의 권한 있는 계정용 FGPP를 구현합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-011": {
+    "name": { "value": "권한 있는 사용자 암호 필요 없음", "status": "machine-draft" },
+    "description": { "value": "PASSWD_NOTREQD 플래그는 계정이 빈 암호를 가질 수 있게 하여 암호 정책을 완전히 우회합니다. 권한 있는 계정에서 이는 매우 권한 있는 리소스에 대한 인증되지 않은 액세스를 허용하므로 치명적입니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "PASSWD_NOTREQD 플래그가 설정된 권한 있는 계정 없음", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADUser -Filter {PasswordNotRequired -eq $true -and AdminCount -eq 1}을 사용하여 계정을 식별합니다. PASSWD_NOTREQD 플래그를 즉시 해제하고 식별된 모든 계정에 강력한 암호를 설정합니다. 이 플래그가 침해를 나타낼 수 있으므로 어떻게 설정되었는지 조사합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-012": {
+    "name": { "value": "권한 있는 사용자 Kerberos 사전 인증 없음", "status": "machine-draft" },
+    "description": { "value": "Kerberos 사전 인증이 비활성화된 계정은 AS-REP Roasting에 취약합니다. 공격자는 인증 없이 오프라인에서 암호화된 자료를 요청하고 이를 크래킹하여 계정 암호를 복구할 수 있습니다. 권한 있는 계정에서 이는 도메인 침해로 가는 직접적인 경로를 제공합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "'Kerberos 사전 인증 요구 안 함' 플래그가 설정된 권한 있는 계정 없음", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADUser -Filter {DoesNotRequirePreAuth -eq $true -and AdminCount -eq 1}을 사용하여 계정을 식별합니다. 모든 권한 있는 계정에서 즉시 Kerberos 사전 인증을 활성화합니다. AS-REP Roasting을 통해 이미 침해되었을 수 있으므로 영향을 받는 계정의 암호를 교체합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-013": {
+    "name": { "value": "권한 있는 사용자 되돌릴 수 있는 암호화", "status": "machine-draft" },
+    "description": { "value": "'되돌릴 수 있는 암호화를 사용하여 암호 저장'이 활성화된 계정은 암호를 평문으로 해독할 수 있는 형식으로 저장합니다. 이는 암호를 평문으로 저장하는 것과 동등하며 AD 데이터베이스에 액세스할 수 있는 모든 공격자가 실제 암호를 검색할 수 있게 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "되돌릴 수 있는 암호화가 활성화된 계정 없음, 특히 권한 있는 계정에서는 없음", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADUser -Filter {AllowReversiblePasswordEncryption -eq $true -and AdminCount -eq 1}을 사용하여 계정을 식별합니다. 플래그를 해제하고 영향을 받는 모든 계정에서 즉시 암호 변경을 강제합니다. 되돌릴 수 있는 암호화를 요구하지 않도록 암호 정책을 검토합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-014": {
+    "name": { "value": "권한 있는 사용자 DES 전용 Kerberos", "status": "machine-draft" },
+    "description": { "value": "DES 전용 Kerberos 암호화를 사용하도록 구성된 계정은 암호학적으로 손상된 알고리즘을 사용하고 있습니다. DES 키는 빠르게 무차별 대입될 수 있어 공격자가 영향을 받는 계정의 Kerberos 티켓을 위조하거나 해독할 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "'이 계정에 Kerberos DES 암호화 유형 사용' 플래그가 설정된 계정 없음", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADUser -Filter {UseDESKeyOnly -eq $true -and AdminCount -eq 1}을 사용하여 계정을 식별합니다. DES 전용 플래그를 해제하고 계정이 AES256 암호화를 지원하도록 합니다. 새 AES 기반 Kerberos 키를 생성하기 위해 영향을 받는 계정의 암호를 교체합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-015": {
+    "name": { "value": "권한 있는 계정 MFA 지표 없음", "status": "machine-draft" },
+    "description": { "value": "권한 있는 계정은 모든 대화형 및 원격 로그온에 대해 다단계 인증으로 보호되어야 합니다. MFA가 없으면 도난당한 암호 하나만으로도 전체 도메인 관리 액세스를 얻기에 충분합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 권한 있는 계정이 스마트 카드, 비즈니스용 Windows Hello 또는 FIDO2를 통해 MFA를 사용하도록 요구됨. 해당하는 경우 '대화형 로그온에 스마트 카드 필요' 플래그 설정", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADUser -Filter {SmartcardLogonRequired -eq $false -and AdminCount -eq 1}을 사용하여 스마트 카드 로그온 요구 사항에 대해 권한 있는 계정을 검토합니다. 모든 권한 있는 계정에 대해 스마트 카드 또는 비즈니스용 Windows Hello 인증을 배포합니다. Tier 0 계정에서 '대화형 로그온에 스마트 카드 필요' 플래그를 활성화합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-016": {
+    "name": { "value": "권한 있는 계정 약한 암호", "status": "machine-draft" },
+    "description": { "value": "약하거나 흔히 사용되는 암호를 가진 권한 있는 계정은 암호 스프레이, 사전 공격 또는 자격 증명 스터핑을 통해 손쉽게 침해됩니다. Domain Admin 계정의 약한 암호는 몇 분 안에 완전한 도메인 침해로 이어질 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 권한 있는 계정 암호가 최소 25자를 충족하며 흔한 암호 사전에서 발견되지 않음", "status": "machine-draft" },
+    "remediationSteps": { "value": "NT 해시를 알려진 약한 암호 목록과 비교하여(DSInternals와 같은 도구 사용) 권한 있는 계정의 암호 강도를 테스트합니다. 약한 암호를 가진 모든 계정에서 즉시 암호 변경을 강제합니다. 권한 있는 계정에 대해 25자 이상의 암호를 요구하는 FGPP를 구현합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-017": {
+    "name": { "value": "권한 있는 계정 오래된 암호", "status": "machine-draft" },
+    "description": { "value": "90일 이상 변경되지 않은 암호를 가진 권한 있는 계정은 노출 창이 연장됩니다. 자격 증명이 침해된 경우 공격자는 암호가 변경되지 않는 전체 기간 동안 액세스를 유지합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "지난 60일 이내에 변경된 모든 권한 있는 계정 암호", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADUser -Filter {AdminCount -eq 1} -Properties PasswordLastSet | Where-Object {$_.PasswordLastSet -lt (Get-Date).AddDays(-90)}를 사용하여 오래된 암호를 가진 권한 있는 계정을 식별합니다. 식별된 모든 계정에서 암호 교체를 강제합니다. 권한 있는 계정에 대해 60일 최대 암호 사용 기간의 FGPP를 구현합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-018": {
+    "name": { "value": "한 번도 로그인하지 않은 권한 있는 계정", "status": "machine-draft" },
+    "description": { "value": "한 번도 로그인하지 않은 권한 있는 계정은 소유권을 주장하지 않은 프로비저닝된 계정, 테스트 계정 또는 마이그레이션 산출물일 수 있습니다. 권한 있는 그룹에 있는 이러한 관리되지 않는 계정은 기본 또는 약한 암호를 가질 수 있으므로 상당한 위험을 나타냅니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "LastLogonTimestamp가 null인 권한 있는 계정 없음. 모든 권한 있는 계정이 지정된 소유자에 의해 적극적으로 사용됨", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADUser -Filter {AdminCount -eq 1} -Properties LastLogonTimestamp | Where-Object {$_.LastLogonTimestamp -eq $null}을 사용하여 한 번도 로그인하지 않은 권한 있는 계정을 식별합니다. 각 계정이 필요한지 판단하기 위해 조사합니다. 불필요한 계정을 비활성화하거나 권한 있는 그룹에서 제거합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-019": {
+    "name": { "value": "권한 있는 그룹의 비활성화된 계정", "status": "machine-draft" },
+    "description": { "value": "권한 있는 그룹에 남아 있는 비활성화된 계정은 계정을 다시 활성화하면(의도적으로 또는 침해를 통해) 즉시 전체 권한 있는 액세스가 부여되므로 위험을 만듭니다. 비활성화된 계정은 모든 권한 있는 그룹에서 제거되어야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "어떤 권한 있는 그룹에도 비활성화된 계정 없음", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADGroupMember 'Domain Admins' -Recursive | Get-ADUser | Where-Object {$_.Enabled -eq $false}를 사용하여 권한 있는 그룹의 비활성화된 계정을 식별합니다. 모든 권한 있는 그룹에 대해 반복합니다. 모든 권한 있는 그룹 멤버십에서 비활성화된 계정을 즉시 제거합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-020": {
+    "name": { "value": "AdminSDHolder 보호 개체 감사", "status": "machine-draft" },
+    "description": { "value": "AdminSDHolder는 SDProp을 통해 60분마다 보호된 개체(권한 있는 사용자 및 그룹)의 ACL을 덮어쓰는 보안 메커니즘입니다. AdminSDHolder ACL의 수정은 모든 보호된 개체에 전파되므로 지속성을 위한 고가치 표적이 됩니다. AdminSDHolder의 승인되지 않은 ACE는 모든 권한 있는 계정에 대한 백도어 액세스를 부여합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "AdminSDHolder ACL에 승인되지 않았거나 예기치 않은 ACE 없이 기본 항목만 포함됨", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ACL 또는 ADSIEdit를 사용하여 CN=AdminSDHolder,CN=System,DC=domain의 AdminSDHolder ACL을 검토합니다. 문서화된 기준선과 비교합니다. 비기본 ACE를 즉시 제거합니다. 지속적인 보안 모니터링의 일부로 AdminSDHolder 수정을 모니터링합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-021": {
+    "name": { "value": "AdminCount 고아", "status": "machine-draft" },
+    "description": { "value": "개체가 보호된 그룹에서 제거되면 AdminCount 특성은 1로 유지되고 상속된 권한은 계속 차단됩니다. 이러한 'AdminCount 고아'는 권한 상속이 끊어져 있어 보안 정책이 올바르게 적용되지 못하게 하고 권한 상승을 가릴 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "어떤 보호된 그룹의 멤버도 아닌 AdminCount=1 계정 없음", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADUser -Filter {AdminCount -eq 1}을 사용하여 고아 계정을 식별하고 현재 보호된 그룹 멤버십과 상호 참조합니다. 고아의 경우 AdminCount 특성을 지우고 개체의 ACL에서 상속을 다시 활성화합니다. PowerShell 또는 ADSIEdit를 사용하여 상속된 권한을 수정합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-022": {
+    "name": { "value": "krbtgt 암호 사용 기간", "status": "machine-draft" },
+    "description": { "value": "krbtgt 계정 암호는 도메인의 모든 Kerberos 티켓을 암호화하고 서명하는 데 사용됩니다. 침해되면 공격자는 어떤 리소스에도 어떤 기간 동안이든 무제한 액세스를 부여하는 Golden Ticket을 생성할 수 있습니다. krbtgt 암호는 최소 180일마다, 그리고 침해가 의심되는 즉시 교체되어야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "지난 180일 이내에 변경된 krbtgt 암호. 침해가 의심된 후 두 번 교체(기존 모든 티켓을 무효화하기 위해)", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADUser krbtgt -Properties PasswordLastSet를 사용하여 krbtgt 암호 사용 기간을 확인합니다. 기존 모든 티켓을 무효화하기 위해 암호를 두 번 재설정합니다(복제가 완료될 수 있도록 재설정 사이에 충분한 시간을 둡니다). Microsoft의 krbtgt 재설정 스크립트를 사용하여 교체를 안전하게 수행합니다. 180일마다 정기 교체를 예약합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-023": {
+    "name": { "value": "krbtgt 계정 노출 평가", "status": "machine-draft" },
+    "description": { "value": "krbtgt 계정 구성은 지원되는 암호화 유형, 위임 설정 및 SPN을 포함한 노출 지표에 대해 평가되어야 합니다. 잘못된 구성은 Golden Ticket 및 기타 Kerberos 기반 공격의 위험을 높입니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "AES256 암호화만 사용하고 위임이 없으며 기본 kadmin/changepw 외에 추가 SPN이 없도록 구성된 krbtgt 계정", "status": "machine-draft" },
+    "remediationSteps": { "value": "msDS-SupportedEncryptionTypes, 위임 설정 및 SPN을 포함한 krbtgt 계정 속성을 검토합니다. AES256이 기본 암호화 유형인지 확인합니다. 위임 플래그가 설정되지 않았는지 확인합니다. 침해 또는 잘못된 구성을 나타낼 수 있는 예기치 않은 SPN을 확인합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-024": {
+    "name": { "value": "권한 있는 그룹의 서비스 계정", "status": "machine-draft" },
+    "description": { "value": "권한 있는 그룹의 서비스 계정은 일반적으로 만료되지 않는 암호를 가지고, 관리자 간에 공유되며, 스크립트나 구성 파일에 저장될 수 있고, 자격 증명이 수집될 수 있는 여러 서버에서 실행되므로 높은 위험을 나타냅니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "권한 있는 그룹에 서비스 계정 없음. 서비스 계정은 필요한 최소 액세스로 범위가 지정된 위임된 권한을 사용해야 함", "status": "machine-draft" },
+    "remediationSteps": { "value": "모든 멤버를 검토하고 서비스 로그온 ID로 사용되는 계정을 확인하여 권한 있는 그룹의 서비스 계정을 식별합니다. 권한 있는 그룹에서 서비스 계정을 제거하고 위임을 통해 필요한 특정 권한만 부여합니다. 가능한 경우 그룹 관리 서비스 계정(gMSA)으로 마이그레이션합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-025": {
+    "name": { "value": "권한 있는 그룹의 컴퓨터 계정", "status": "machine-draft" },
+    "description": { "value": "권한 있는 그룹의 컴퓨터 계정은 해당 컴퓨터에서 SYSTEM으로 실행되는 모든 프로세스에 그룹의 권한을 부여합니다. 그러한 머신을 침해한 공격자는 Domain Admin과 동등한 액세스를 얻어 측면 이동 공격 표면을 크게 확장합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "어떤 권한 있는 그룹에도 컴퓨터 계정 없음", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADGroupMember 'Domain Admins' | Where-Object {$_.objectClass -eq 'computer'}를 사용하여 권한 있는 그룹 멤버를 열거하고 컴퓨터 계정을 식별합니다. 모든 권한 있는 그룹에 대해 반복합니다. 컴퓨터 계정을 즉시 제거하고 왜 추가되었는지 조사합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-026": {
+    "name": { "value": "DC에서 권한 있는 사용자의 로컬 로그온", "status": "machine-draft" },
+    "description": { "value": "지정된 Tier 0 관리 계정만 도메인 컨트롤러에 로컬로 로그온하도록 허용되어야 합니다. Tier 0가 아닌 계정이 DC에 로그온하도록 허용하면 보안이 덜 강화된 워크스테이션에서의 자격 증명 수집 공격에 권한 있는 자격 증명이 노출됩니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "Domain Admins 및 지정된 Tier 0 계정만 DC에서 로컬 로그온 허용. Domain Controllers OU의 GPO를 통해 '로컬 로그온 허용' 제한", "status": "machine-draft" },
+    "remediationSteps": { "value": "Domain Controllers OU에 적용된 그룹 정책을 통해 구성: 컴퓨터 구성 > 정책 > Windows 설정 > 보안 설정 > 로컬 정책 > 사용자 권한 할당 > '로컬 로그온 허용' = Administrators, Domain Admins만. 다른 모든 항목을 제거하고 철저히 테스트합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-027": {
+    "name": { "value": "DC에서 권한 있는 사용자의 RDP", "status": "machine-draft" },
+    "description": { "value": "도메인 컨트롤러에 대한 원격 데스크톱 액세스는 지정된 Tier 0 관리자로 엄격하게 제한되어야 합니다. RDP 세션은 수집될 수 있는 자격 증명을 캐시하며, 과도한 RDP 액세스는 자격 증명 도난 및 DC로의 측면 이동을 위한 공격 표면을 증가시킵니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "지정된 Tier 0 관리 계정만 DC에 대한 RDP 액세스 허용. GPO를 통해 '원격 데스크톱 서비스를 통한 로그온 허용' 제한", "status": "machine-draft" },
+    "remediationSteps": { "value": "Domain Controllers OU에 적용된 그룹 정책을 통해 구성: 컴퓨터 구성 > 정책 > Windows 설정 > 보안 설정 > 로컬 정책 > 사용자 권한 할당 > '원격 데스크톱 서비스를 통한 로그온 허용' = Administrators만. RDP 세션에 대해 Remote Credential Guard 또는 Restricted Admin 모드 사용을 고려합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-028": {
+    "name": { "value": "DCSync 권한을 가진 사용자", "status": "machine-draft" },
+    "description": { "value": "DCSync는 모든 사용자 해시를 포함하여 Active Directory에서 암호 데이터의 복제를 허용합니다. 'Replicating Directory Changes All' 및 'Replicating Directory Changes' 권한을 가진 계정은 DC를 건드리지 않고 도메인의 모든 암호 해시를 추출할 수 있습니다. 도메인 컨트롤러 컴퓨터 계정과 기본 관리자 계정만 이러한 권한을 가져야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "도메인 컨트롤러 컴퓨터 계정과 기본 관리자 계정만 복제 권한을 가짐. DCSync 권한이 부여된 추가 사용자 또는 그룹 없음", "status": "machine-draft" },
+    "remediationSteps": { "value": "(Get-ACL 'AD:\\DC=domain,DC=com').Access | Where-Object {$_.ObjectType -match '1131f6a[a-d]'}를 사용하여 'Replicating Directory Changes' 및 'Replicating Directory Changes All'에 대한 도메인 루트 ACL을 감사합니다. 승인되지 않은 항목을 즉시 제거합니다. 승인되지 않은 계정이 이미 DCSync를 수행했는지 조사합니다", "status": "machine-draft" }
+  },
+  "ADPRIV-029": {
+    "name": { "value": "Protected Users 그룹 감사", "status": "machine-draft" },
+    "description": { "value": "Protected Users 보안 그룹은 NTLM 인증 비활성화, AES Kerberos 암호화 강제, 자격 증명 캐싱 방지 및 짧은 TGT 수명 설정을 포함한 강화된 인증 보호를 제공합니다. 모든 Tier 0 권한 있는 계정은 멤버여야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 Tier 0 권한 있는 사용자 계정이 Protected Users 그룹의 멤버임", "status": "machine-draft" },
+    "remediationSteps": { "value": "Add-ADGroupMember -Identity 'Protected Users' -Members <account>를 사용하여 모든 Tier 0 계정을 Protected Users 그룹에 추가합니다. Protected Users는 레거시 애플리케이션을 손상시킬 수 있는 NTLM 및 자격 증명 위임을 비활성화하므로 각 계정을 먼저 테스트합니다. 참고: 서비스 계정과 컴퓨터 계정은 추가하면 안 됩니다", "status": "machine-draft" }
+  },
+  "ADPRIV-030": {
+    "name": { "value": "Protected Users에 없는 권한 있는 사용자", "status": "machine-draft" },
+    "description": { "value": "Protected Users 그룹의 멤버가 아닌 권한 있는 계정은 강화된 인증 보호가 없으며 NTLM 릴레이, 자격 증명 캐싱 및 장기 Kerberos 티켓을 포함한 자격 증명 도난 기법에 취약한 상태로 남습니다. 모든 자격이 있는 권한 있는 계정은 보호되어야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "모든 자격이 있는 권한 있는 사용자 계정이 Protected Users 그룹에 등록됨. 예외는 보완 제어와 함께 문서화됨", "status": "machine-draft" },
+    "remediationSteps": { "value": "권한 있는 그룹 멤버를 Protected Users 멤버십과 비교합니다. Protected Users에 없는 각 권한 있는 계정에 대해 호환성(NTLM 종속성, 위임 요구 사항)을 평가하고 그룹에 추가합니다. 예외는 구체적인 기술적 이유와 보완 제어와 함께 문서화합니다", "status": "machine-draft" }
+  }
+}

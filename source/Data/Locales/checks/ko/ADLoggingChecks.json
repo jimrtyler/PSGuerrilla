@@ -1,0 +1,45 @@
+{
+  "_family": "ADLoggingChecks.json",
+  "ADLOG-001": {
+    "name": { "value": "고급 감사 정책 구성됨", "status": "machine-draft" },
+    "description": { "value": "레거시 9개 범주 감사 정책은 최신 조사에 비해 너무 거칩니다: '계정 로그온 이벤트 감사'에서 무언가가 실패했다는 것은 알려줄 수 있지만, 그것이 Kerberos 사전 인증 실패인지, 서비스 티켓 요청인지, 명시적 자격 증명 전달인지는 알 수 없습니다. Windows는 Vista부터 고급 감사 정책(60개 이상의 하위 범주)을 지원해 왔지만 이를 명시적으로 사용하도록 설정해야 합니다. Default Domain Controllers Policy의 SYSVOL 폴더에 audit.csv가 존재하는지가 도메인이 마이그레이션되었음을 나타내는 실질적 지표입니다.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Default Domain Controllers Policy가 audit.csv를 배포합니다(컴퓨터 구성 > 정책 > Windows 설정 > 보안 설정 > 고급 감사 정책 구성 > 감사 정책 > <하위 범주>).", "status": "machine-draft" },
+    "remediationSteps": { "value": "GPMC에서 Default Domain Controllers Policy를 엽니다. 컴퓨터 구성 > 정책 > Windows 설정 > 보안 설정 > 고급 감사 정책 구성 > 감사 정책으로 이동합니다. 최소한 다음을 활성화합니다: 계정 로그온 > Kerberos 서비스 티켓 작업(성공+실패), 로그온/로그오프 > 로그온(성공+실패) + 특수 로그온(성공), 계정 관리 > 전체(성공), 개체 액세스 > 파일 공유 + 상세 파일 공유(측면 이동을 모니터링하는 경우 성공+실패), 상세 추적 > 프로세스 생성(성공). 또한 보안 옵션에서 '감사: 감사 정책 하위 범주 설정 강제 적용'을 활성화하여 레거시 9개 범주 설정보다 우선하도록 합니다.", "status": "machine-draft" }
+  },
+  "ADLOG-002": {
+    "name": { "value": "PowerShell 스크립트 블록 로깅 사용", "status": "machine-draft" },
+    "description": { "value": "이벤트 4104(PowerShell 스크립트 블록 로깅)는 최신 침해 조사에 가장 유용한 단일 Windows 이벤트입니다: 난독화 해제 후 실제로 실행되는 PowerShell 코드를 캡처하며, 여기에는 -EncodedCommand로 전달된 코드도 포함됩니다. 이것이 없으면 PS 기반 랜섬웨어 배포를 조사하는 담당자는 아무것도 볼 수 없습니다. 이 설정은 관리 템플릿을 통해 HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\\ScriptBlockLogging\\EnableScriptBlockLogging에 적용됩니다.", "status": "machine-draft" },
+    "recommendedValue": { "value": "그룹 정책 'PowerShell 스크립트 블록 로깅 켜기'가 도메인 또는 DC OU 수준에서 사용으로 설정됩니다. 레지스트리: EnableScriptBlockLogging = 1.", "status": "machine-draft" },
+    "remediationSteps": { "value": "컴퓨터 구성 > 정책 > 관리 템플릿 > Windows 구성 요소 > Windows PowerShell > 'PowerShell 스크립트 블록 로깅 켜기' = 사용. gpupdate 후 확인: Get-ItemProperty 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\\ScriptBlockLogging'. 'Microsoft-Windows-PowerShell/Operational' 이벤트 로그 용량이 볼륨에 맞게 조정되어 있는지 확인합니다(기본 15MB는 부하 시 몇 시간 만에 순환됩니다).", "status": "machine-draft" }
+  },
+  "ADLOG-003": {
+    "name": { "value": "PowerShell 모듈 로깅 사용", "status": "machine-draft" },
+    "description": { "value": "이벤트 4103(PowerShell 모듈 로깅)은 로깅하도록 구성된 모든 모듈의 cmdlet/매개 변수 호출을 기록합니다. 이를 스크립트 블록 로깅과 함께 사용하면 모든 PS 기반 공격에 대해 높은 신뢰도의 텔레메트리 스택을 확보하게 됩니다. 이 설정은 관리 템플릿을 통해 HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\\ModuleLogging에 적용됩니다.", "status": "machine-draft" },
+    "recommendedValue": { "value": "그룹 정책 '모듈 로깅 켜기'가 최소한 '*' 모듈 이름 목록과 함께 사용으로 설정됩니다. 레지스트리: EnableModuleLogging = 1.", "status": "machine-draft" },
+    "remediationSteps": { "value": "컴퓨터 구성 > 정책 > 관리 템플릿 > Windows 구성 요소 > Windows PowerShell > '모듈 로깅 켜기' = 사용. 모듈 이름 목록에 '*'를 추가하거나(모든 모듈 로깅), Microsoft.PowerShell.* + 사용자 환경에서 관리에 사용하는 모듈을 구체적으로 지정합니다.", "status": "machine-draft" }
+  },
+  "ADLOG-004": {
+    "name": { "value": "명령줄을 포함한 프로세스 생성 감사", "status": "machine-draft" },
+    "description": { "value": "이벤트 4688(프로세스 생성)은 측면 이동을 나타내는 기본 신호입니다: 어떤 프로세스가 누구에 의해 시작되었는지 알려줍니다. 기본 4688 이벤트에는 명령줄이 포함되지 않으므로, PowerShell, wmic, mshta 또는 기타 living-off-the-land 바이너리가 관련된 조사에는 거의 쓸모가 없습니다. '프로세스 생성 이벤트에 명령줄 포함' 정책이 그 공백을 메웁니다.", "status": "machine-draft" },
+    "recommendedValue": { "value": "그룹 정책 '프로세스 생성 이벤트에 명령줄 포함'이 사용으로 설정되고, 고급 감사 정책 하위 범주 '프로세스 생성 감사'가 성공으로 설정됩니다.", "status": "machine-draft" },
+    "remediationSteps": { "value": "두 가지 설정이 모두 필요합니다: (1) 컴퓨터 구성 > 정책 > 관리 템플릿 > 시스템 > 프로세스 생성 감사 > '프로세스 생성 이벤트에 명령줄 포함' = 사용. (2) 컴퓨터 구성 > 정책 > Windows 설정 > 보안 설정 > 고급 감사 정책 구성 > 상세 추적 > 프로세스 생성 감사 = 성공. (1)이 없으면 4688 이벤트에 NewProcessName 인수 문자열이 포함되지 않습니다. (2)가 없으면 이벤트가 아예 도착하지 않습니다.", "status": "machine-draft" }
+  },
+  "ADLOG-005": {
+    "name": { "value": "Microsoft Defender 변조 방지 정책", "status": "machine-draft" },
+    "description": { "value": "EDR가 관리자 작업 없이 엔드포인트에서 꺼질 수 있다면, 모든 공격자는 자신의 플레이북 첫 단계로 그것을 꺼버립니다. Defender 변조 방지(및 모든 최신 EDR의 동등 기능)는 로컬에서의 비활성화를 차단합니다. 이 검사는 Defender 실시간 보호를 관장하는 GPO 설정을 찾습니다: 전체 변조 방지 상태는 클라우드(Intune/MDE 포털)에서 설정되지만, GPO 측 하드닝은 SYSVOL에서 확인할 수 있습니다.", "status": "machine-draft" },
+    "recommendedValue": { "value": "로컬 사용자가 Defender 실시간 보호를 비활성화할 수 없습니다; 제외 항목이 엄격하게 관리됩니다(또는 비어 있음); SmartScreen 향상 기능이 켜져 있습니다. 변조 방지 자체는 Microsoft Defender for Endpoint 클라우드 포털을 통해 설정하므로 대역 외로 확인합니다.", "status": "machine-draft" },
+    "remediationSteps": { "value": "MDE 포털에서: 설정 > 엔드포인트 > 고급 기능 > 변조 방지 = 켜기(모든 장치에 적용). GPO에서: 컴퓨터 구성 > 정책 > 관리 템플릿 > Windows 구성 요소 > Microsoft Defender 바이러스 백신 > 'Microsoft Defender 바이러스 백신 끄기' = 사용 안 함(이중 부정입니다. 즉 'Defender를 끄도록 허용하지 않음'을 의미합니다). 또한: > 실시간 보호 > '실시간 보호 끄기' = 사용 안 함. 제외 하위 키를 주의 깊게 검토합니다: 그곳의 모든 항목은 공격자가 찾아낼 구멍입니다.", "status": "machine-draft" }
+  },
+  "ADLOG-006": {
+    "name": { "value": "Windows 이벤트 전달(WEF) 구독 관리자", "status": "machine-draft" },
+    "description": { "value": "이를 생성한 호스트에만 존재하는 로그는 공격자가 그 호스트의 로컬 디스크를 지운 후에는 딱 그만큼만 유용합니다. Windows 이벤트 전달은 기록 시점에 로그를 수집기로 호스트 외부로 전송합니다. 모든 엔드포인트가 수집기를 가리키도록 하는 SubscriptionManager GPO가 없으면 WEF는 발생하지 않습니다.", "status": "machine-draft" },
+    "recommendedValue": { "value": "그룹 정책 '대상 구독 관리자 구성'이 워크스테이션과 서버에서 WEF 수집기를 가리키도록 설정됩니다.", "status": "machine-draft" },
+    "remediationSteps": { "value": "컴퓨터 구성 > 정책 > 관리 템플릿 > Windows 구성 요소 > 이벤트 전달 > '대상 구독 관리자 구성' = 사용. 값: Server=http://wec-server.domain.tld:5985/wsman/SubscriptionManager/WEC,Refresh=60. 관심 있는 이벤트(4624, 4625, 4688, 4768, 4769, 4104, 1102 등)에 대한 xpath 쿼리로 수집기에서 구독을 구성합니다. WEF 수집기가 없다면 이것이 시작해야 할 프로젝트입니다; 동일한 텔레메트리를 위해 전체 SIEM 에이전트를 배포하는 것보다 거의 항상 저렴합니다.", "status": "machine-draft" }
+  },
+  "ADLOG-007": {
+    "name": { "value": "Sysmon 배포 지표", "status": "machine-draft" },
+    "description": { "value": "Sysmon(System Monitor, Sysinternals)은 Windows 기본 로깅이 잘 다루지 못하는 이벤트에 대한 최고 수준의 엔드포인트 텔레메트리 소스입니다: 프로세스 생성 시 파일 해시, 프로세스별 네트워크 연결, DLL 로드, 레지스트리 모니터링, 명명된 파이프. 커널 모드 드라이버로 실행됩니다. SYSVOL만으로는 'Sysmon이 설치되어 있음'을 GPO 측에서 탐지할 수 없습니다: 지표는 Sysmon 구성 GPO 또는 이를 배포하는 시작 스크립트의 존재입니다. 이 검사는 경고(WARN)를 발생시키고 감사자에게 대역 외로 확인하도록 요청합니다.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Sysmon이 배포 GPO 또는 구성 관리 푸시를 통해 워크스테이션과 서버에 설치되어 있으며, 환경에 맞게 조정된 구성(SwiftOnSecurity, Olaf Hartong 또는 공급업체 제공 기준선)을 사용합니다.", "status": "machine-draft" },
+    "remediationSteps": { "value": "GPO 시작 스크립트 또는 구성 관리 플랫폼을 통해 Sysmon(https://download.sysinternals.com/files/Sysmon.zip)을 배포합니다. 커뮤니티 기준선(SwiftOnSecurity/sysmon-config 또는 Olaf Hartong/sysmon-modular)을 시작점으로 사용합니다. 대표적인 호스트 집합에 대해 Get-CimInstance Win32_Service -Filter \"Name='Sysmon64'\"로 배포를 확인하거나, WEF 수집기에서 'Microsoft-Windows-Sysmon/Operational' 이벤트를 쿼리합니다.", "status": "machine-draft" }
+  }
+}

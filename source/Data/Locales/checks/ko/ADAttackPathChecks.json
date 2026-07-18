@@ -1,0 +1,15 @@
+{
+  "_family": "ADAttackPathChecks.json",
+  "ADPATH-001": {
+    "name": { "value": "Tier-0로의 권한 상승 경로", "status": "machine-draft" },
+    "description": { "value": "Tier-0 개체(도메인 루트, AdminSDHolder, Domain Controllers OU, GPO / Configuration / Schema 컨테이너)에 대한 비기본(non-default) 제어를 권한 상승 경로로 모델링하고, 각 경로가 가능하게 하는 구체적인 탈취 기법을 보고합니다. 이러한 개체 중 하나에 대해 GenericAll / WriteDacl / WriteOwner / 복제 권한을 보유한 비기본 주체는 Domain Admin과 동등한 권한으로 가는 한 홉(one-hop) 경로입니다. 또한 Tier-0 그룹 내부에 중첩된 비기본 그룹을 권한 상승 피벗으로 표시합니다: 그러한 그룹을 제어하거나 그룹에 추가되면 Tier-0 그룹의 권한을 획득하게 됩니다. 도메인 전체에 걸친 완전한 전이적 제어 체인 계산(GenericWrite/AddMember 에지 체인을 통해 낮은 권한 사용자가 Domain Admins에 도달)에는 전체 도메인 ACL 수집이 필요하며, 이는 별도의 로드맵 항목입니다.", "status": "machine-draft" },
+    "recommendedValue": { "value": "비기본 주체가 Tier-0 개체를 제어하지 않습니다.", "status": "machine-draft" },
+    "remediationSteps": { "value": "보고된 각 경로에 대해, 대상 개체의 DACL에서 공격자가 제어할 수 있는 ACE를 제거하거나(Active Directory 사용자 및 컴퓨터 > 고급 보안, 또는 Set-Acl), 해당 권한을 부여하는 그룹에서 주체를 제거합니다. 도메인 루트, AdminSDHolder, Domain Controllers OU, Policies/Configuration/Schema 컨테이너에 대한 GenericAll/WriteDacl/WriteOwner 또는 복제 권한은 Tier-0 관리자만 보유해야 합니다.", "status": "machine-draft" }
+  },
+  "ADPATH-002": {
+    "name": { "value": "Tier-0로의 전이적 권한 상승 체인", "status": "machine-draft" },
+    "description": { "value": "제어(GenericAll / WriteDacl / WriteOwner / AddMember) 및 그룹 멤버십 에지를 전이적으로 따라가면서 Tier-0로의 다중 홉(multi-hop) 권한 상승 체인을 계산합니다. 예를 들어 HelpDesk --[WriteDacl]--> CORP-Admins --[MemberOf]--> Domain Admins. 임의 길이의 에지를 체인으로 연결하고 주체별 최단 경로를 보고하여 ADPATH-001(단일 홉)을 보완합니다. 체인 깊이는 ACL 수집 범위에 의해 제한됩니다: 현재 6개 핵심 개체 수집으로는 대부분의 체인이 한 홉이므로 이 검사는 오늘날 일반적으로 이상이 없습니다; 전체 도메인 ACL 수집기(로드맵, 라이브 게이트)는 임의 개체에 대한 제어 에지를 채워 낮은 권한에서 Domain Admin으로 가는 깊은 체인을 드러냅니다. 엔진 자체는 임의 깊이를 체인으로 연결합니다(BFS 최단 경로, 순환 안전).", "status": "machine-draft" },
+    "recommendedValue": { "value": "전이적 제어 체인이 비권한 주체를 Tier-0로 이끌지 않습니다.", "status": "machine-draft" },
+    "remediationSteps": { "value": "각 체인에 대해 가장 약한 연결 고리를 끊습니다: 첫 번째 홉에서 공격자가 제어할 수 있는 ACE(체인의 다음 개체에 대한 비권한 주체의 제어)를 제거하거나, Tier-0 그룹에서 중첩된 그룹을 제거합니다. 다시 실행하여 체인이 끊어졌는지 확인합니다.", "status": "machine-draft" }
+  }
+}

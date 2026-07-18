@@ -1,0 +1,69 @@
+{
+  "_family": "ADStaleObjectChecks.json",
+  "ADSTALE-001": {
+    "name": { "value": "비활성 사용자 계정", "status": "machine-draft" },
+    "description": { "value": "오랜 기간 사용되지 않은 사용자 계정은 불필요한 공격 표면을 나타냅니다. 비활성 계정은 여전히 유효한 자격 증명과 그룹 멤버십을 가질 수 있어, 활성 사용자와 연결된 경고를 유발하지 않고 잊혀지거나 공유된 자격 증명을 침해할 수 있는 공격자에게 매력적인 표적이 됩니다. 90일 이상 비활성 상태인 계정은 검토하고 비활성화해야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "90일 이상 비활성 상태인 활성화된 사용자 계정 없음; 비활성 계정은 비활성화 또는 제거됨", "status": "machine-draft" },
+    "remediationSteps": { "value": "Search-ADAccount -AccountInactive -TimeSpan 90 -UsersOnly를 사용하여 lastLogonTimestamp가 90일보다 오래되었고 계정이 활성화된 사용자 계정을 쿼리합니다. 조치를 취하기 전에 계정 소유자 또는 관리자와 확인합니다. 비활성 계정을 먼저 비활성화한 다음, 소유권을 주장하지 않으면 30일 유예 기간 후 삭제합니다. 비활성화된 계정을 모든 보안 그룹에서 제거합니다. 자동화된 수명 주기 관리를 구현합니다", "status": "machine-draft" }
+  },
+  "ADSTALE-002": {
+    "name": { "value": "비활성 컴퓨터 계정", "status": "machine-draft" },
+    "description": { "value": "오랜 기간 도메인에 인증하지 않은 컴퓨터 계정은 폐기되었거나, 재이미징되었거나, 오프라인 상태인 시스템을 나타냅니다. 이러한 오래된 컴퓨터 계정은 머신 자격 증명과 그룹 멤버십을 유지하며, 머신 계정 암호를 복구하거나 재설정한 공격자는 컴퓨터로서 인증하여 리소스에 액세스하거나 Kerberos 위임 공격을 수행할 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "90일 이상 비활성 상태인 활성화된 컴퓨터 계정 없음; 비활성 계정은 비활성화 또는 제거됨", "status": "machine-draft" },
+    "remediationSteps": { "value": "Search-ADAccount -AccountInactive -TimeSpan 90 -ComputersOnly를 사용하여 lastLogonTimestamp가 90일보다 오래된 컴퓨터 계정을 쿼리합니다. 자산 관리 시스템과 상호 참조하여 폐기 상태를 확인합니다. 오래된 컴퓨터 계정을 비활성화하고 Disabled Computers OU로 이동합니다. 시스템이 다시 연결되지 않으면 60일 유예 기간 후 삭제합니다. 비활성화 시 보안 그룹에서 제거합니다", "status": "machine-draft" }
+  },
+  "ADSTALE-003": {
+    "name": { "value": "그룹 멤버십을 가진 비활성화된 계정", "status": "machine-draft" },
+    "description": { "value": "보안 그룹의 멤버십을 유지하는 비활성화된 사용자 및 컴퓨터 계정은 그룹 기반 액세스 제어 평가에 계속 나타나며 액세스 검토에 혼란을 줄 수 있습니다. 비활성화된 계정은 인증할 수 없지만, 계정이 다시 활성화되면 그룹 멤버십이 복원될 수 있으며, 유지된 멤버십은 그룹 크기를 부풀리고 최소 권한 분석을 복잡하게 만듭니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "Domain Users를 제외한 모든 보안 그룹에서 제거된 모든 비활성화된 계정", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADUser -Filter {Enabled -eq $false} -Properties MemberOf를 사용하여 비기본 그룹 멤버십을 가진 비활성화된 계정을 식별합니다. 비활성화된 계정에서 모든 보안 그룹 멤버십(기본 그룹 제외)을 제거합니다. 계정이 비활성화될 때 그룹 멤버십을 제거하는 자동화된 워크플로를 구현합니다. 계정 프로비저닝 해제 프로세스에 그룹 멤버십 정리를 포함합니다", "status": "machine-draft" }
+  },
+  "ADSTALE-004": {
+    "name": { "value": "만료된 암호가 비활성화되지 않음", "status": "machine-draft" },
+    "description": { "value": "최대 암호 사용 기간을 초과했지만 활성화된 상태로 남아 있는 암호를 가진 계정은 적극적으로 관리되지 않는 계정을 나타낼 수 있습니다. 이러한 계정은 과거 유출 또는 자격 증명 덤프를 통해 획득한 자격 증명으로 침해되었을 수 있으며, 오랫동안 변경되지 않은 암호는 오프라인 무차별 대입 공격의 창을 늘립니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "문서화된 서비스 계정으로 명시적으로 예외 처리되지 않는 한 최대 암호 사용 기간 정책보다 오래된 암호를 가진 계정 없음", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADUser -Filter * -Properties PasswordLastSet,PasswordNeverExpires를 사용하여 PasswordLastSet이 최대 암호 사용 기간보다 오래된 계정을 쿼리합니다. 문서화된 서비스 계정인 PasswordNeverExpires 계정을 제외합니다. 만료된 암호를 가진 계정에 대해 다음 로그온 시 암호 재설정을 강제합니다. 알림 후 소유권을 주장하지 않는 계정을 비활성화합니다. PasswordNeverExpires 예외를 매년 검토합니다", "status": "machine-draft" }
+  },
+  "ADSTALE-005": {
+    "name": { "value": "구식 OS 컴퓨터", "status": "machine-draft" },
+    "description": { "value": "더 이상 보안 업데이트를 받지 않는 구식 운영 체제(Windows XP, Windows Server 2003, Windows Vista, Windows Server 2008)를 실행하는 도메인 가입 컴퓨터는 고위험 자산을 나타냅니다. 이러한 시스템에는 공격자가 적극적으로 악용하는 알려진 패치되지 않은 취약점이 포함되어 있으며 Credential Guard 또는 LAPS와 같은 최신 보안 제어를 지원할 수 없습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "도메인에 가입된 Windows XP, Server 2003, Vista 또는 Server 2008을 실행하는 컴퓨터 없음", "status": "machine-draft" },
+    "remediationSteps": { "value": "operatingSystem 특성으로 컴퓨터 계정을 쿼리하여 구식 OS 버전을 식별합니다. lastLogonTimestamp 및 ping 테스트를 사용하여 식별된 시스템이 여전히 활성 상태인지 확인합니다. 구식 시스템을 업그레이드하거나 교체하는 마이그레이션 계획을 수립합니다. 즉시 업그레이드할 수 없는 시스템의 경우 VLAN 및 방화벽 규칙을 사용하여 네트워크 격리를 구현합니다. 폐기가 확인된 시스템의 컴퓨터 계정을 비활성화합니다", "status": "machine-draft" }
+  },
+  "ADSTALE-006": {
+    "name": { "value": "지원되지 않는 OS 버전", "status": "machine-draft" },
+    "description": { "value": "지원 종료 날짜가 지난 운영 체제(Windows 7, Windows 8.1, Windows Server 2008 R2, Windows Server 2012/R2)를 실행하는 도메인 가입 컴퓨터는 더 이상 정기 보안 패치를 받지 않습니다. 일부는 확장 보안 업데이트를 사용할 수 있지만, 이러한 시스템은 높은 위험을 나타내며 식별, 추적하고 지원되는 플랫폼으로의 마이그레이션 우선 순위를 지정해야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "문서화된 마이그레이션 계획과 함께 확장 보안 업데이트로 보장되지 않는 한 지원 종료 운영 체제를 실행하는 컴퓨터 없음", "status": "machine-draft" },
+    "remediationSteps": { "value": "operatingSystem 특성으로 컴퓨터 계정을 쿼리하여 지원 종료 OS 버전을 식별합니다. 어떤 시스템이 확장 보안 업데이트(ESU)로 보장되는지 판단합니다. 지원되지 않는 모든 시스템에 대한 마이그레이션 일정을 수립합니다. 즉시 업그레이드할 수 없는 시스템에 대해 보완 제어를 구현합니다: 네트워크 세분화, 향상된 모니터링, 제한된 서비스 액세스. 마이그레이션 일정 대비 진행 상황을 추적합니다", "status": "machine-draft" }
+  },
+  "ADSTALE-007": {
+    "name": { "value": "고아 Foreign Security Principals", "status": "machine-draft" },
+    "description": { "value": "Foreign Security Principal(FSP)은 외부 도메인 사용자 또는 그룹이 트러스트를 통해 로컬 도메인 그룹에 추가될 때 ForeignSecurityPrincipals 컨테이너에 생성되는 자리 표시자 개체입니다. 고아 FSP는 더 이상 존재하지 않는 신뢰할 수 있는 도메인의 SID 또는 삭제된 계정을 참조하여, 액세스 제어를 어지럽히고 감사를 복잡하게 만드는 확인 불가능한 SID를 그룹 멤버십에 남깁니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "도메인에 확인 불가능한 SID를 가진 고아 Foreign Security Principals 없음", "status": "machine-draft" },
+    "remediationSteps": { "value": "CN=ForeignSecurityPrincipals의 모든 개체를 열거하고 해당 트러스트를 사용하여 각 SID를 이름으로 확인을 시도합니다. SID를 확인할 수 없는(트러스트 제거 또는 계정 삭제) FSP를 식별합니다. 모든 그룹 멤버십에서 고아 FSP를 제거합니다. 고아 FSP 개체를 삭제합니다. 남은 FSP를 검토하여 트러스트 관계와 참조된 계정이 여전히 유효한지 확인합니다", "status": "machine-draft" }
+  },
+  "ADSTALE-008": {
+    "name": { "value": "고아 SID History", "status": "machine-draft" },
+    "description": { "value": "SID History는 도메인 마이그레이션 중 원본 도메인의 리소스에 대한 액세스를 보존하는 데 사용됩니다. 마이그레이션이 완료된 후에는 권한 상승에 악용될 수 있으므로 SID History 항목을 제거해야 합니다. 존재하지 않는 도메인 또는 삭제된 계정을 참조하는 고아 SID History 항목은 정당한 이점을 제공하지 않으며 트러스트 경계를 넘는 SID 삽입 공격의 위험을 증가시킵니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "존재하지 않는 도메인을 참조하는 SID History 항목 없음. 마이그레이션 완료 후 정리된 SID History", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADUser -Filter {SIDHistory -like '*'} -Properties SIDHistory를 사용하여 SID History를 가진 모든 사용자 및 그룹 계정을 쿼리합니다. 각 SID History 도메인 구성 요소를 기존 트러스트와 상호 참조하여 고아 항목을 식별합니다. -Remove 매개 변수와 함께 Remove-ADUser를 사용하거나 Netdom trust /CleanupSIDHistory를 사용하여 완료된 마이그레이션의 SID History 항목을 제거합니다. Event ID 4765를 사용하여 새 SID History 추가를 모니터링합니다", "status": "machine-draft" }
+  },
+  "ADSTALE-009": {
+    "name": { "value": "버려진 OU", "status": "machine-draft" },
+    "description": { "value": "더 이상 목적을 제공하지 않는 비어 있거나 거의 비어 있는 조직 구성 단위는 AD 구조에 복잡성을 더하고, 그룹 정책 분석을 복잡하게 만들며, 더 이상 모니터링되지 않는 위임된 권한을 가질 수 있습니다. 과거 조직 개편 또는 폐기된 프로젝트에서 남은 버려진 OU는 관리자를 혼란스럽게 하고 GPO 연결 공격의 잠재적 표적을 만들 수 있습니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "문서화된 목적이 없는 빈 OU 없음; OU 구조가 현재 조직 요구 사항을 반영함", "status": "machine-draft" },
+    "remediationSteps": { "value": "모든 OU를 열거하고 하위 개체를 계산합니다. 개체가 없거나 매우 적은 OU를 식별합니다. OU 설명과 관련 문서를 검토하여 OU가 향후 사용을 위해 계획된 것인지 판단합니다. 버려진 OU에서 위임된 권한을 제거합니다. GPO 연결, 스크립트 또는 자동화에서 참조되지 않는지 확인한 후 문서화된 목적이 없는 빈 OU를 삭제합니다. OU 구조 문서를 업데이트합니다", "status": "machine-draft" }
+  },
+  "ADSTALE-010": {
+    "name": { "value": "프린터 개체", "status": "machine-draft" },
+    "description": { "value": "Active Directory에 게시된 프린터 개체는 정찰에 사용될 수 있는 프린터 공유 경로와 서버 이름을 노출합니다. PrintNightmare 취약점 계열(CVE-2021-34527 및 관련)은 프린터 관련 개체와 구성이 원격 코드 실행에 악용될 수 있음을 보여주었습니다. 폐기된 인쇄 서버를 참조하는 오래된 프린터 개체는 오해의 소지가 있는 정보와 불필요한 공격 표면을 제공합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "AD에 게시된 활성, 관리되는 프린터 개체만; 오래된 프린터 개체는 제거됨", "status": "machine-draft" },
+    "remediationSteps": { "value": "Get-ADObject -Filter {objectClass -eq 'printQueue'}를 사용하여 AD의 모든 printQueue 개체를 열거합니다. 각 프린터 개체가 활성이고 액세스 가능한 인쇄 서버와 프린터를 참조하는지 확인합니다. 폐기된 프린터 또는 인쇄 서버의 프린터 개체를 제거합니다. 환경에 AD 프린터 게시가 필요한지 검토합니다. 인쇄 서버가 PrintNightmare 취약점에 대해 패치되었는지 확인합니다", "status": "machine-draft" }
+  },
+  "ADSTALE-011": {
+    "name": { "value": "DNS 레코드 노후화", "status": "machine-draft" },
+    "description": { "value": "Active Directory 통합 DNS 영역의 오래된 DNS 레코드는 더 이상 원래 호스트에 할당되지 않은 IP 주소를 가리킵니다. 공격자는 이러한 버려진 IP 주소를 차지하고 원래 호스트로 향하는 트래픽을 가로채, 중간자 공격, 자격 증명 수집 및 서비스 사칭을 가능하게 할 수 있습니다. 오래된 레코드를 자동으로 정리하기 위해 DNS 스캐빈징을 활성화해야 합니다", "status": "machine-draft" },
+    "recommendedValue": { "value": "적절한 새로 고침 안 함 및 새로 고침 간격으로 DNS 스캐빈징 활성화됨; 30일보다 오래된 오래된 DNS 레코드 없음", "status": "machine-draft" },
+    "remediationSteps": { "value": "DNS 서버 속성과 각 AD 통합 DNS 영역에서 DNS 스캐빈징을 활성화합니다. 새로 고침 안 함 간격을 7일로, 새로 고침 간격을 7일로 구성합니다. 최소 하나의 DNS 서버에서 스캐빈징 기간을 설정합니다. 제외해야 하는 중요한 정적 레코드를 식별하기 위해 첫 번째 스캐빈징 실행 전에 오래된 DNS 레코드를 수동으로 검토합니다. 스캐빈징하면 안 되는 레코드를 정적으로 표시합니다", "status": "machine-draft" }
+  }
+}

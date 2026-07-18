@@ -1,0 +1,63 @@
+{
+  "_family": "ADNetworkChecks.json",
+  "ADNET-001": {
+    "name": { "value": "도메인 컨트롤러에서 LDAP 서명 필수", "status": "machine-draft" },
+    "description": { "value": "도메인 컨트롤러가 LDAP 서명을 요구하지 않으면, LDAP 트래픽을 가로채거나 강제할 수 있는 공격자(예: PetitPotam 또는 모든 NTLM 인증 트리거를 통해)는 NTLM 인증을 DC의 LDAP 서비스로 릴레이하여 강제된 주체로서 디렉터리 데이터를 읽거나 쓸 수 있습니다. LDAP 서명을 강제하면 도메인 컨트롤러에서 가장 일반적인 릴레이 싱크가 차단됩니다.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Default Domain Controllers Policy가 '도메인 컨트롤러: LDAP 서버 서명 요구 사항'을 '서명 필요'로 설정합니다(LDAPServerIntegrity = 2)", "status": "machine-draft" },
+    "remediationSteps": { "value": "Default Domain Controllers Policy 편집: 컴퓨터 구성 > 정책 > Windows 설정 > 보안 설정 > 로컬 정책 > 보안 옵션 > '도메인 컨트롤러: LDAP 서버 서명 요구 사항' = '서명 필요'. 확인: reg query HKLM\\System\\CurrentControlSet\\Services\\NTDS\\Parameters /v LDAPServerIntegrity(값이 2여야 함). Microsoft는 2020년(ADV190023)부터 이 기본값을 강화해 왔으며 향후 Windows Server 릴리스에서는 기본적으로 강제할 예정입니다.", "status": "machine-draft" }
+  },
+  "ADNET-002": {
+    "name": { "value": "도메인 컨트롤러에서 LDAP 채널 바인딩 강제", "status": "machine-draft" },
+    "description": { "value": "LDAP 채널 바인딩은 LDAPS 인증을 기저 TLS 채널에 연결합니다. 이것이 없으면 TLS로 보호된 LDAP 세션을 가로챈 공격자가 여전히 NTLM 인증을 LDAPS로 릴레이할 수 있습니다. LDAP 서명과 함께 채널 바인딩은 LDAP을 릴레이 대상에서 제거합니다.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Default Domain Controllers Policy가 '도메인 컨트롤러: LDAP 서버 채널 바인딩 토큰 요구 사항'을 '항상'으로 설정합니다(LdapEnforceChannelBinding = 2)", "status": "machine-draft" },
+    "remediationSteps": { "value": "Default Domain Controllers Policy 편집: 컴퓨터 구성 > 정책 > Windows 설정 > 보안 설정 > 로컬 정책 > 보안 옵션 > '도메인 컨트롤러: LDAP 서버 채널 바인딩 토큰 요구 사항' = '항상'. 레지스트리: HKLM\\System\\CurrentControlSet\\Services\\NTDS\\Parameters\\LdapEnforceChannelBinding = 2. 원래 CVE-2017-8563에 대해 도입되었습니다.", "status": "machine-draft" }
+  },
+  "ADNET-003": {
+    "name": { "value": "SMB 서버 서명 필수(도메인 정책)", "status": "machine-draft" },
+    "description": { "value": "서버 측에서 SMB 서명이 필수가 아니면, 네트워크 경로에 자신을 위치시키거나 SMB 인증을 강제할 수 있는 공격자가 NTLM을 SMB로 릴레이하여 강제된 주체로서 파일 작업을 실행할 수 있습니다. 이는 ntlmrelayx와 같은 도구의 전형적인 릴레이 싱크이며, 서버 측 서명을 강제하면 차단됩니다.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Default Domain Policy가 'Microsoft 네트워크 서버: 통신에 디지털 서명(항상)'을 활성화합니다(LanManServer의 RequireSecuritySignature = 1)", "status": "machine-draft" },
+    "remediationSteps": { "value": "Default Domain Policy 편집: 컴퓨터 구성 > 정책 > Windows 설정 > 보안 설정 > 로컬 정책 > 보안 옵션 > 'Microsoft 네트워크 서버: 통신에 디지털 서명(항상)' = 사용. 레지스트리: HKLM\\System\\CurrentControlSet\\Services\\LanmanServer\\Parameters\\RequireSecuritySignature = 1. Windows 11 24H2 / Server 2025는 이를 기본적으로 활성화합니다; 이전 OS 버전은 명시적인 정책이 필요합니다.", "status": "machine-draft" }
+  },
+  "ADNET-004": {
+    "name": { "value": "SMB 클라이언트 서명 필수(도메인 정책)", "status": "machine-draft" },
+    "description": { "value": "클라이언트 측 SMB 서명은 워크스테이션이 악성 SMB 서버로 인증하도록 유인되는 것(responder 방식)을 방지하는 계약의 절반입니다. 이것이 없으면 적대적 이름을 확인하도록 속은(LLMNR 포이즈닝, WPAD 등) 네트워크상의 모든 사용자가 공격자가 크래킹하거나 릴레이할 수 있는 NTLM 해시를 넘겨주게 됩니다.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Default Domain Policy가 'Microsoft 네트워크 클라이언트: 통신에 디지털 서명(항상)'을 활성화합니다(LanmanWorkstation의 RequireSecuritySignature = 1)", "status": "machine-draft" },
+    "remediationSteps": { "value": "Default Domain Policy 편집: 컴퓨터 구성 > 정책 > Windows 설정 > 보안 설정 > 로컬 정책 > 보안 옵션 > 'Microsoft 네트워크 클라이언트: 통신에 디지털 서명(항상)' = 사용. 레지스트리: HKLM\\System\\CurrentControlSet\\Services\\LanmanWorkstation\\Parameters\\RequireSecuritySignature = 1.", "status": "machine-draft" }
+  },
+  "ADNET-005": {
+    "name": { "value": "도메인 정책으로 LLMNR 비활성화", "status": "machine-draft" },
+    "description": { "value": "Link-Local Multicast Name Resolution은 로컬 세그먼트의 모든 호스트가 응답할 수 있는 브로드캐스트 기반 폴백입니다. Responder.py 및 유사 도구는 응답을 가장하여 NTLMv2 챌린지 응답을 수집한 후 오프라인에서 크래킹하거나 릴레이합니다. 도메인 전체에서 LLMNR을 비활성화하는 것은 내부 침투 테스트 관점에서 수행할 수 있는 가장 영향력 있는 단일 워크스테이션 하드닝입니다.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Default Domain Policy가 '멀티캐스트 이름 확인 끄기'를 활성화합니다(DnsClient 정책 EnableMulticast = 0)", "status": "machine-draft" },
+    "remediationSteps": { "value": "Default Domain Policy 편집: 컴퓨터 구성 > 정책 > 관리 템플릿 > 네트워크 > DNS 클라이언트 > '멀티캐스트 이름 확인 끄기' = 사용. 레지스트리: HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows NT\\DNSClient\\EnableMulticast = 0.", "status": "machine-draft" }
+  },
+  "ADNET-006": {
+    "name": { "value": "TCP/IP를 통한 NetBIOS 구성 검토됨", "status": "machine-draft" },
+    "description": { "value": "NetBIOS-NS는 LLMNR 다음으로 이름 확인 포이즈닝 공격의 두 번째 축입니다. DHCP/인터페이스 수준에서 이를 비활성화하려면 GPO가 완전히 표현할 수 없는 네트워크 구성 재설정이 필요합니다; 그러나 Tcpip\\Parameters\\Interfaces NetbiosOptions 값은 DHCP 범위 옵션 1을 통하거나 직접 레지스트리로 설정할 수 있습니다. 이 검사는 도메인 전체 정책 산출물이 이를 다루는지 여부를 보고하여, 감사자가 DHCP 또는 이미징 계층에서 조사해야 하는지 알 수 있도록 합니다.", "status": "machine-draft" },
+    "recommendedValue": { "value": "워크스테이션에서 TCP/IP를 통한 NetBIOS를 비활성화하는 도메인 전체 방법이 존재함(DHCP 옵션 1 = 0x2, 그룹 정책 기본 설정 또는 이미징 기준선)", "status": "machine-draft" },
+    "remediationSteps": { "value": "전체 조직 범위에서 TCP/IP를 통한 NetBIOS를 비활성화합니다. 옵션: (1) DHCP 범위 옵션 Microsoft Disable Netbios Option(옵션 1)을 0x2로 설정; (2) 그룹 정책 기본 설정 > Windows 설정 > 레지스트리를 통해 각 Tcpip_<Interface> 키에 NetbiosOptions = 2를 푸시; (3) 워크스테이션 이미징 기준선에 포함. 이 설정은 인터페이스별로 지정되며 표준 GPO 보안 설정을 통해 직접 지정할 수 없습니다.", "status": "machine-draft" }
+  },
+  "ADNET-007": {
+    "name": { "value": "IPv6 mitm6 완화 태세", "status": "machine-draft" },
+    "description": { "value": "mitm6는 Responder의 IPv6 등가물입니다: 악성 DHCPv6 서버가 링크 로컬 DNS 서버를 배포한 다음 WPAD 조회를 포이즈닝하여 자격 증명을 수집합니다. IPv6를 배포하지 않은 기업은 대개 이를 비활성화하지도 않아, 방어 태세 없이 링크 로컬 IPv6가 활성화된 상태로 남습니다. 완화 방법은 스위치에서 RA Guard / DHCPv6 Guard와 함께 IPv6를 제대로 배포하거나, DisabledComponents = 0xFF를 통해 IPv6 구성 요소를 비활성화하는 것입니다.", "status": "machine-draft" },
+    "recommendedValue": { "value": "DisabledComponents = 0xFF를 통해 도메인 전체에서 IPv6가 비활성화되어 있거나, 네트워크가 액세스 계층에서 RA Guard + DHCPv6 Guard를 배포함(대역 외, AD에서 탐지 불가)", "status": "machine-draft" },
+    "remediationSteps": { "value": "IPv6를 사용하지 않는 경우: GPO 레지스트리를 통해 모든 워크스테이션과 서버에 HKLM\\SYSTEM\\CurrentControlSet\\Services\\Tcpip6\\Parameters\\DisabledComponents = 0xFF(16진수)를 푸시합니다. IPv6를 사용하는 경우: 액세스 스위치가 DHCPv6 Guard / RA Guard를 강제하여 불량 DHCPv6 광고가 포트에서 삭제되도록 합니다. Microsoft는 Windows에서 IPv6를 완전히 비활성화하는 것은 권장하지 않지만 IPv6가 사용되지 않는 환경에서는 허용된다고 명시적으로 밝혔습니다.", "status": "machine-draft" }
+  },
+  "ADNET-008": {
+    "name": { "value": "WPAD 자동 검색 비활성화", "status": "machine-draft" },
+    "description": { "value": "Web Proxy Auto-Discovery는 DNS, NetBIOS 또는 LLMNR을 통해 'wpad' 이름을 확인하고 돌아오는 프록시 구성을 무엇이든 신뢰합니다. 공격자는 이러한 확인 중 어느 것이라도 포이즈닝하여 피해자의 웹 트래픽을 프록시할 수 있습니다. LLMNR과 NetBIOS가 비활성화되어 있어도 WinHttpAutoProxySvc는 여전히 WPAD를 시도할 수 있으므로, WPAD를 완전히 비활성화하는 심층 방어 GPO가 권장됩니다.", "status": "machine-draft" },
+    "recommendedValue": { "value": "GPO가 '자동 프록시 결과 캐싱 끄기'를 통해 또는 WinHttpAutoProxySvc 시작 유형을 4(사용 안 함)로 설정하여 WPAD를 비활성화하거나, DNS 서버에 wpad GlobalQueryBlockList 항목이 있음", "status": "machine-draft" },
+    "remediationSteps": { "value": "세 가지 보완 제어: (1) DNS 서버의 GlobalQueryBlockList에 'wpad' 추가: dnscmd /Config /GlobalQueryBlockList wpad isatap; (2) GPO 서비스 정책을 통해 WinHttpAutoProxySvc 비활성화; (3) GPO Internet Explorer / Edge: '자동 구성 설정 변경 사용 안 함' 및 PAC URL이 자동 구성되지 않았는지 확인. (1)이 가장 영향력 있는 단일 수정입니다.", "status": "machine-draft" }
+  },
+  "ADNET-009": {
+    "name": { "value": "도메인 컨트롤러의 Print Spooler 서비스", "status": "machine-draft" },
+    "description": { "value": "도메인 컨트롤러의 Print Spooler 서비스는 PrinterBug 강제 인증 기법(및 원래의 CVE-2021-1675 PrintNightmare를 포함한 긴 후속 목록)이 악용하는 RPC 엔드포인트입니다. 모든 NTLM 릴레이 싱크(ADCS Web, 서명 없는 LDAP, 서명 없는 SMB)와 결합되면, 인증되지 않은 공격자가 DC 컴퓨터 계정을 강제하여 원하는 대상으로 인증하게 만드는 프리미티브를 제공합니다. Spooler는 DC에서 거의 필요하지 않습니다.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Default Domain Controllers Policy에서 Print Spooler 서비스가 사용 안 함(시작 유형 4)으로 설정됨", "status": "machine-draft" },
+    "remediationSteps": { "value": "Default Domain Controllers Policy 편집: 컴퓨터 구성 > 정책 > Windows 설정 > 보안 설정 > 시스템 서비스 > Print Spooler > '이 정책 설정 정의' = 사용 안 함. 이는 다음 gpupdate에서 모든 DC에 전파됩니다. 각 DC에서 확인: Get-Service Spooler는 Status=Stopped, StartType=Disabled를 표시해야 합니다. DC가 인쇄 서비스도 실행하는 경우(실행하지 않아야 함), 먼저 해당 역할을 위한 다른 호스트를 찾습니다.", "status": "machine-draft" }
+  },
+  "ADNET-010": {
+    "name": { "value": "워크스테이션의 WebClient 서비스 기본 상태", "status": "machine-draft" },
+    "description": { "value": "WebClient 서비스(WebDAV 리디렉터)는 공격자가 '@'를 포함하는 호스트 이름으로 시작하는 UNC 경로(예: \\\\attacker@80\\share)를 참조하여 워크스테이션에서 HTTP 인증을 강제할 수 있게 합니다. 이는 PetitPotam의 워크스테이션 버전이며 ADCS 웹 등록(ESC8)을 공격하는 데 가장 흔히 사용되는 릴레이 소스입니다. WebClient는 요청 시 시작되지만 비모바일 워크스테이션에 대해서는 도메인 전체에서 사용 안 함으로 설정해야 합니다.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Default Domain Policy가 WebDAV가 필요하지 않은 모든 멤버 워크스테이션과 서버에 대해 WebClient 서비스를 비활성화함(시작 유형 4)", "status": "machine-draft" },
+    "remediationSteps": { "value": "Default Domain Policy 편집: 컴퓨터 구성 > 정책 > Windows 설정 > 보안 설정 > 시스템 서비스 > WebClient > '이 정책 설정 정의' = 사용 안 함. 일부 호스트 하위 집합(예: SharePoint 클라이언트)이 실제로 WebDAV가 필요한 경우, 해당 OU에만 반대 GPO의 범위를 지정합니다. 갑작스러운 재활성화를 모니터링합니다.", "status": "machine-draft" }
+  }
+}
