@@ -1,0 +1,1476 @@
+{
+  "_language": {
+    "code": "ko",
+    "name": "한국어"
+  },
+  "common": {
+    "domain": {
+      "value": "도메인",
+      "status": "machine-draft"
+    },
+    "tenant": {
+      "value": "테넌트",
+      "status": "machine-draft"
+    },
+    "generated": {
+      "value": "생성됨",
+      "status": "machine-draft"
+    },
+    "reportGenerated": {
+      "value": "보고서 생성됨",
+      "status": "machine-draft"
+    },
+    "checksSummary": {
+      "value": "{0}개 점검 평가됨 &middot; 통과 {1}개, 실패 {2}개, 경고 {3}개, 건너뜀 {4}개",
+      "status": "machine-draft"
+    },
+    "summaryCounts": {
+      "value": "{0}개 점검 &middot; P:{1} F:{2} W:{3}",
+      "status": "machine-draft"
+    },
+    "totalChecks": {
+      "value": "전체 점검",
+      "status": "machine-draft"
+    },
+    "passed": {
+      "value": "통과",
+      "status": "machine-draft"
+    },
+    "failed": {
+      "value": "실패",
+      "status": "machine-draft"
+    },
+    "warnings": {
+      "value": "경고",
+      "status": "machine-draft"
+    },
+    "skipped": {
+      "value": "건너뜀",
+      "status": "machine-draft"
+    },
+    "pass": {
+      "value": "통과",
+      "status": "machine-draft"
+    },
+    "fail": {
+      "value": "실패",
+      "status": "machine-draft"
+    },
+    "warn": {
+      "value": "경고",
+      "status": "machine-draft"
+    },
+    "skip": {
+      "value": "건너뜀",
+      "status": "machine-draft"
+    },
+    "passLabel": {
+      "value": "통과:",
+      "status": "machine-draft"
+    },
+    "failLabel": {
+      "value": "실패:",
+      "status": "machine-draft"
+    },
+    "warnLabel": {
+      "value": "경고:",
+      "status": "machine-draft"
+    },
+    "skipLabel": {
+      "value": "건너뜀:",
+      "status": "machine-draft"
+    },
+    "critical": {
+      "value": "심각",
+      "status": "machine-draft"
+    },
+    "high": {
+      "value": "높음",
+      "status": "machine-draft"
+    },
+    "medium": {
+      "value": "중간",
+      "status": "machine-draft"
+    },
+    "low": {
+      "value": "낮음",
+      "status": "machine-draft"
+    },
+    "executiveSummary": {
+      "value": "요약 보고",
+      "status": "machine-draft"
+    },
+    "categoryBreakdown": {
+      "value": "카테고리별 분류",
+      "status": "machine-draft"
+    },
+    "categoryScores": {
+      "value": "카테고리 점수",
+      "status": "machine-draft"
+    },
+    "detailedByCategory": {
+      "value": "카테고리별 상세 발견 사항",
+      "status": "machine-draft"
+    },
+    "complianceMapping": {
+      "value": "규정 준수 매핑",
+      "status": "machine-draft"
+    },
+    "complianceCrossReference": {
+      "value": "규정 준수 상호 참조",
+      "status": "machine-draft"
+    },
+    "allFindings": {
+      "value": "전체 발견 사항",
+      "status": "machine-draft"
+    },
+    "thId": {
+      "value": "ID",
+      "status": "machine-draft"
+    },
+    "thSeverity": {
+      "value": "심각도",
+      "status": "machine-draft"
+    },
+    "thStatus": {
+      "value": "상태",
+      "status": "machine-draft"
+    },
+    "thCategory": {
+      "value": "카테고리",
+      "status": "machine-draft"
+    },
+    "thCheck": {
+      "value": "점검",
+      "status": "machine-draft"
+    },
+    "thCheckName": {
+      "value": "점검 이름",
+      "status": "machine-draft"
+    },
+    "thCheckId": {
+      "value": "점검 ID",
+      "status": "machine-draft"
+    },
+    "thFinding": {
+      "value": "발견 사항",
+      "status": "machine-draft"
+    },
+    "thRemediation": {
+      "value": "조치",
+      "status": "machine-draft"
+    },
+    "thCurrentValue": {
+      "value": "현재 값",
+      "status": "machine-draft"
+    },
+    "thRecommended": {
+      "value": "권장",
+      "status": "machine-draft"
+    },
+    "thRecommendedValue": {
+      "value": "권장 값",
+      "status": "machine-draft"
+    },
+    "thRemediationSteps": {
+      "value": "조치 단계",
+      "status": "machine-draft"
+    },
+    "thName": {
+      "value": "이름",
+      "status": "machine-draft"
+    },
+    "thDescription": {
+      "value": "설명",
+      "status": "machine-draft"
+    },
+    "thPlatform": {
+      "value": "플랫폼",
+      "status": "machine-draft"
+    },
+    "thTimestamp": {
+      "value": "타임스탬프",
+      "status": "machine-draft"
+    },
+    "thScore": {
+      "value": "점수",
+      "status": "machine-draft"
+    },
+    "thLabel": {
+      "value": "레이블",
+      "status": "machine-draft"
+    },
+    "thDelta": {
+      "value": "델타",
+      "status": "machine-draft"
+    },
+    "thProfile": {
+      "value": "프로필",
+      "status": "machine-draft"
+    },
+    "thMitre": {
+      "value": "MITRE ATT&CK",
+      "status": "machine-draft"
+    },
+    "thNist": {
+      "value": "NIST SP 800-53",
+      "status": "machine-draft"
+    },
+    "thCisAd": {
+      "value": "CIS AD",
+      "status": "machine-draft"
+    },
+    "thCisBenchmark": {
+      "value": "CIS Benchmark",
+      "status": "machine-draft"
+    },
+    "thAnssi": {
+      "value": "ANSSI",
+      "status": "machine-draft"
+    },
+    "accepted": {
+      "value": "수용됨",
+      "status": "machine-draft"
+    }
+  },
+  "sections": {
+    "affectedItems": {
+      "value": "영향받는 항목",
+      "status": "machine-draft"
+    }
+  },
+  "maturity": {
+    "heading": {
+      "value": "보안 성숙도",
+      "status": "machine-draft"
+    },
+    "overall": {
+      "value": "전체 성숙도: 5단계 중 {0}단계 &middot; {1}",
+      "status": "machine-draft"
+    },
+    "anchorNote": {
+      "value": "충족되지 않은 가장 낮은 통제 항목이 등급을 결정하며(CMMI 방식 척도: 1단계 초기부터 5단계 최적화까지), 따라서 단 하나의 심각한 노출만으로도 해결될 때까지 점수가 제한됩니다.",
+      "status": "machine-draft"
+    },
+    "toReach": {
+      "value": "<strong>{0}단계</strong>에 도달하려면 다음을 해결하십시오:",
+      "status": "machine-draft"
+    },
+    "thCategory": {
+      "value": "카테고리",
+      "status": "machine-draft"
+    },
+    "thLevel": {
+      "value": "단계",
+      "status": "machine-draft"
+    },
+    "thMaturity": {
+      "value": "성숙도",
+      "status": "machine-draft"
+    },
+    "levelCell": {
+      "value": "{0}단계",
+      "status": "machine-draft"
+    },
+    "na": {
+      "value": "해당 없음",
+      "status": "machine-draft"
+    }
+  },
+  "ioe": {
+    "heading": {
+      "value": "노출 지표",
+      "status": "machine-draft"
+    },
+    "note": {
+      "value": "{0}건의 열린 노출, 심각도 및 피해 범위 순으로 정렬됨.",
+      "status": "machine-draft"
+    },
+    "critical": {
+      "value": "심각",
+      "status": "machine-draft"
+    },
+    "high": {
+      "value": "높음",
+      "status": "machine-draft"
+    },
+    "medium": {
+      "value": "중간",
+      "status": "machine-draft"
+    },
+    "low": {
+      "value": "낮음",
+      "status": "machine-draft"
+    },
+    "affected": {
+      "value": "{0}건 영향받음",
+      "status": "machine-draft"
+    },
+    "warning": {
+      "value": "경고",
+      "status": "machine-draft"
+    },
+    "more": {
+      "value": "+ 아래 상세 발견 사항에 {0}건의 노출이 추가로 있습니다.",
+      "status": "machine-draft"
+    }
+  },
+  "attackpath": {
+    "heading": {
+      "value": "Tier-0에 대한 공격 경로",
+      "status": "machine-draft"
+    },
+    "noneRan": {
+      "value": "수집된 ACL 범위에서 Tier-0로 향하는 권한 상승 경로가 발견되지 않았습니다. 심층적인 저권한 체인은 전체 도메인 ACL 수집이 필요합니다 &middot; 범위를 넓히려면 <code>-FullDomainAcl</code>로 다시 실행하십시오.",
+      "status": "machine-draft"
+    },
+    "noneNotRun": {
+      "value": "공격 경로 분석이 실행되지 않았습니다. <code>ACLDelegation</code> + <code>PrivilegedAccounts</code> 카테고리(또는 <code>All</code>)를 활성화하고, 심층 전이 체인을 위해 <code>-FullDomainAcl</code>을 추가하십시오.",
+      "status": "machine-draft"
+    },
+    "summary": {
+      "value": "Tier-0에 도달하는 {0}개의 권한 상승 경로 &middot; {1}개는 비권한 주체에서 시작됨(가장 먼저 표시, 위험도 최고). 각 화살표는 공격자가 통과할 수 있는 통제 또는 멤버십 경로입니다.",
+      "status": "machine-draft"
+    },
+    "hop": {
+      "value": "홉",
+      "status": "machine-draft"
+    },
+    "hops": {
+      "value": "홉",
+      "status": "machine-draft"
+    },
+    "nonPrivSource": {
+      "value": "비권한 출발점",
+      "status": "machine-draft"
+    },
+    "privSource": {
+      "value": "이미 권한이 있는 출발점",
+      "status": "machine-draft"
+    }
+  },
+  "cartography": {
+    "heading": {
+      "value": "공격 경로 지도",
+      "status": "machine-draft"
+    },
+    "legend": {
+      "value": "Tier-0로 향하는 권한 상승 경로의 시각적 지도. <span style='color:var(--g-sev-critical)'>&#9873; 빨강</span> = 비권한 시작점, <span style='color:var(--g-sev-high)'>주황</span> = 이미 권한 있음, <span style='color:var(--g-accent)'>&#9733; 파랑</span> = Tier-0 목표. 화살표를 왼쪽에서 오른쪽으로 따라가십시오.",
+      "status": "machine-draft"
+    },
+    "showingFirst": {
+      "value": " 처음 {0}개 경로를 표시합니다.",
+      "status": "machine-draft"
+    }
+  },
+  "comparison": {
+    "heading": {
+      "value": "지난 실행 이후 변경 사항",
+      "status": "machine-draft"
+    },
+    "firstRun": {
+      "value": "이 범위에서 처음으로 기록된 실행입니다. 실행 이력은 이\n버전의 통합 비교 엔진으로 시작되므로 이전 델타 파일은 읽지 않으며,\n비교는 이 실행이 기준선이 되는 다음 평가부터 시작됩니다.",
+      "status": "machine-draft"
+    },
+    "previousRun": {
+      "value": "이전 실행: {0}, 모듈 버전 {1}",
+      "status": "machine-draft"
+    },
+    "versionSkew": {
+      "value": " (이번 실행: {0}, 점검 카탈로그가 다르므로 아래의 신규 및 폐기 항목은 예상된 것입니다)",
+      "status": "machine-draft"
+    },
+    "scoreLabel": {
+      "value": "점수 (현재 {0}, 이전 {1})",
+      "status": "machine-draft"
+    },
+    "notAssessedLabel": {
+      "value": "미평가 수",
+      "status": "machine-draft"
+    },
+    "pillarsMoved": {
+      "value": "변동된 제로 트러스트 요소:",
+      "status": "machine-draft"
+    },
+    "newlyFailing": {
+      "value": "신규 실패",
+      "status": "machine-draft"
+    },
+    "lostVisibility": {
+      "value": "가시성 상실 (이전에는 평가됨, 현재 미평가)",
+      "status": "machine-draft"
+    },
+    "stillNotAssessed": {
+      "value": "여전히 미평가 (이번 실행과 이전 실행 모두 확인 불가)",
+      "status": "machine-draft"
+    },
+    "newlyPassing": {
+      "value": "신규 통과 (조치 확인됨)",
+      "status": "machine-draft"
+    },
+    "regressed": {
+      "value": "경고로 후퇴",
+      "status": "machine-draft"
+    },
+    "improved": {
+      "value": "경고로 개선 (아직 통과 아님)",
+      "status": "machine-draft"
+    },
+    "restoredVisibility": {
+      "value": "가시성 복원됨",
+      "status": "machine-draft"
+    },
+    "newChecks": {
+      "value": "이번 실행의 신규 점검 (상태 전환 아님)",
+      "status": "machine-draft"
+    },
+    "retiredChecks": {
+      "value": "폐기된 점검 (이전에는 있었으나 현재 없음, 상태 전환 아님)",
+      "status": "machine-draft"
+    },
+    "noChange": {
+      "value": "이전 실행 이후 변경된 판정이 없습니다. {0}개 점검이 변동 없습니다.{1}",
+      "status": "machine-draft"
+    },
+    "unchanged": {
+      "value": "{0}개 점검 변동 없음.{1}",
+      "status": "machine-draft"
+    }
+  },
+  "filter": {
+    "status": {
+      "value": "상태",
+      "status": "machine-draft"
+    },
+    "severity": {
+      "value": "심각도",
+      "status": "machine-draft"
+    },
+    "all": {
+      "value": "전체",
+      "status": "machine-draft"
+    },
+    "searchPlaceholder": {
+      "value": "발견 사항 검색 (ID, 이름, 값)...",
+      "status": "machine-draft"
+    },
+    "empty": {
+      "value": "현재 필터와 일치하는 발견 사항이 없습니다.",
+      "status": "machine-draft"
+    },
+    "platform": {
+      "value": "플랫폼",
+      "status": "machine-draft"
+    },
+    "showingAll": {
+      "value": "전체 발견 사항 표시 중",
+      "status": "machine-draft"
+    }
+  },
+  "ad": {
+    "title": {
+      "value": "Active Directory 보고서",
+      "status": "machine-draft"
+    },
+    "topbar": {
+      "value": "Active Directory 평가",
+      "status": "machine-draft"
+    },
+    "htmlTitle": {
+      "value": "Guerrilla Active Directory 보고서",
+      "status": "machine-draft"
+    },
+    "postureDesc": {
+      "value": "Active Directory 보안 태세 점수 (0-100)",
+      "status": "machine-draft"
+    },
+    "footer": {
+      "value": "Active Directory 감사",
+      "status": "machine-draft"
+    },
+    "verdict90": {
+      "value": "Active Directory 환경은 발견 사항이 거의 없는 강력한 보안 태세를 보여줍니다.",
+      "status": "machine-draft"
+    },
+    "verdict75": {
+      "value": "AD 환경은 양호한 보안 태세를 갖추고 있으며, 일부 영역에 주의가 필요합니다.",
+      "status": "machine-draft"
+    },
+    "verdict60": {
+      "value": "AD 환경의 보안 태세는 보통입니다. 몇 가지 중요한 발견 사항에 조치가 필요합니다.",
+      "status": "machine-draft"
+    },
+    "verdict40": {
+      "value": "AD 환경의 보안 태세가 미흡합니다. 다수의 심각 및 높은 심각도 발견 사항에 즉각적인 주의가 필요합니다.",
+      "status": "machine-draft"
+    },
+    "verdict0": {
+      "value": "AD 환경에 심각한 보안 결함이 있습니다. 침해를 방지하기 위해 즉각적인 조치가 필요합니다.",
+      "status": "machine-draft"
+    },
+    "sevSummary": {
+      "value": "심각: <strong>{0}</strong> &middot; 높음: <strong>{1}</strong> &middot;\n     중간: <strong>{2}</strong> &middot; 낮음: <strong>{3}</strong>",
+      "status": "machine-draft"
+    },
+    "bloodhoundHeading": {
+      "value": "BloodHound 내보내기",
+      "status": "machine-draft"
+    },
+    "bloodhoundExport": {
+      "value": "수집된 AD 공격 그래프의 OpenGraph 내보내기가 <code>{0}</code>에 기록되었습니다.",
+      "status": "machine-draft"
+    },
+    "bloodhoundImport": {
+      "value": "BloodHound CE에서 가져오기: <strong>Administration &rarr; File Ingest</strong> &rarr; 파일을 업로드한 다음 내장된 경로 탐색 쿼리를 실행하십시오. 노드는 SID 기반으로 인덱싱되며(기본 SharpHound 데이터에 겹쳐짐) 엣지는 기본 BloodHound 종류를 사용합니다.",
+      "status": "machine-draft"
+    },
+    "findingsByPriority": {
+      "value": "우선순위별 발견 사항",
+      "status": "machine-draft"
+    }
+  },
+  "entra": {
+    "title": {
+      "value": "Entra ID / M365 보고서",
+      "status": "machine-draft"
+    },
+    "topbar": {
+      "value": "Entra ID / M365 평가",
+      "status": "machine-draft"
+    },
+    "htmlTitle": {
+      "value": "Guerrilla Entra ID / M365 보고서",
+      "status": "machine-draft"
+    },
+    "postureDesc": {
+      "value": "Entra ID / Azure / M365 보안 태세 점수 (0-100)",
+      "status": "machine-draft"
+    },
+    "footer": {
+      "value": "Entra ID / M365 감사",
+      "status": "machine-draft"
+    },
+    "zeroTrust": {
+      "value": "제로 트러스트 태세",
+      "status": "machine-draft"
+    },
+    "openInPortal": {
+      "value": "관리 포털에서 열기",
+      "status": "machine-draft"
+    }
+  },
+  "gws": {
+    "title": {
+      "value": "Google Workspace 보고서",
+      "status": "machine-draft"
+    },
+    "topbar": {
+      "value": "Google Workspace 평가",
+      "status": "machine-draft"
+    },
+    "htmlTitle": {
+      "value": "Guerrilla Google Workspace 보고서",
+      "status": "machine-draft"
+    },
+    "postureDesc": {
+      "value": "Google Workspace 보안 태세 점수 (0-100)",
+      "status": "machine-draft"
+    },
+    "footer": {
+      "value": "Google Workspace 감사",
+      "status": "machine-draft"
+    },
+    "configChecksEvaluated": {
+      "value": "{0}개 구성 점검 평가됨",
+      "status": "machine-draft"
+    },
+    "verdictCrit": {
+      "value": "즉각적인 조치가 필요합니다. 테넌트를 상당한 위험에 노출시키는 심각 수준의 구성 실패 {0}건이 감지되었습니다.",
+      "status": "machine-draft"
+    },
+    "verdictHigh": {
+      "value": "조치가 권장됩니다. 신속히 처리해야 할 높은 심각도 발견 사항 {0}건이 확인되었습니다.",
+      "status": "machine-draft"
+    },
+    "verdictMed": {
+      "value": "모니터링 및 개선이 필요합니다. 검토 및 강화가 필요한 중간 심각도 발견 사항 {0}건이 있습니다.",
+      "status": "machine-draft"
+    },
+    "verdictLow": {
+      "value": "경미한 격차가 감지되었습니다. 낮은 심각도 발견 사항 {0}건이 있습니다. 전반적인 태세는 양호합니다.",
+      "status": "machine-draft"
+    },
+    "verdictPass": {
+      "value": "모든 점검을 통과했습니다. 테넌트 구성이 기본 보안 기대치를 충족합니다.",
+      "status": "machine-draft"
+    },
+    "assessmentLabel": {
+      "value": "평가:",
+      "status": "machine-draft"
+    },
+    "scopeLabel": {
+      "value": "범위:",
+      "status": "machine-draft"
+    },
+    "resultsLabel": {
+      "value": "결과:",
+      "status": "machine-draft"
+    },
+    "scope": {
+      "value": "{1}개 카테고리에 걸친 {0}개 구성 점검.",
+      "status": "machine-draft"
+    },
+    "results": {
+      "value": "통과 {0}개, 실패 {1}개, 경고 {2}개, 건너뜀 {3}개.",
+      "status": "machine-draft"
+    },
+    "criticalRequire": {
+      "value": "{0}건의 심각한 발견 사항에 즉각적인 조치가 필요합니다.",
+      "status": "machine-draft"
+    },
+    "priorityCritHigh": {
+      "value": "우선순위 발견 사항 &middot; 심각 &amp; 높음",
+      "status": "machine-draft"
+    },
+    "fixInConsole": {
+      "value": "관리 콘솔에서 수정",
+      "status": "machine-draft"
+    },
+    "whyUnsafe": {
+      "value": "안전하지 않은 이유",
+      "status": "machine-draft"
+    },
+    "whyUnsafeDefault": {
+      "value": "안전하지 않은 이유",
+      "status": "machine-draft"
+    },
+    "whyUnsafeArticle": {
+      "value": "안전하지 않은 이유: {0}",
+      "status": "machine-draft"
+    }
+  },
+  "campaign": {
+    "title": {
+      "value": "캠페인 보고서",
+      "status": "machine-draft"
+    },
+    "topbar": {
+      "value": "통합 캠페인 평가",
+      "status": "machine-draft"
+    },
+    "htmlTitle": {
+      "value": "Guerrilla 캠페인 보고서",
+      "status": "machine-draft"
+    },
+    "footer": {
+      "value": "통합 캠페인 감사",
+      "status": "machine-draft"
+    },
+    "subtitleLead": {
+      "value": "통합 보안 태세 평가",
+      "status": "machine-draft"
+    },
+    "subtitleChecks": {
+      "value": "{1}개 플랫폼에 걸친 {0}개 점검 ({2})",
+      "status": "machine-draft"
+    },
+    "scanId": {
+      "value": "스캔 ID",
+      "status": "machine-draft"
+    },
+    "duration": {
+      "value": "소요 시간",
+      "status": "machine-draft"
+    },
+    "scoreDesc": {
+      "value": "캠페인 점수 (0-100) &middot; {1}개 플랫폼에 걸친 {0}개 점검의 가중 평가",
+      "status": "machine-draft"
+    },
+    "platformSummary": {
+      "value": "플랫폼 요약",
+      "status": "machine-draft"
+    },
+    "categoryScoresByPlatform": {
+      "value": "플랫폼별 카테고리 점수",
+      "status": "machine-draft"
+    },
+    "checksWord": {
+      "value": "점검",
+      "status": "machine-draft"
+    },
+    "categoriesWord": {
+      "value": "카테고리",
+      "status": "machine-draft"
+    },
+    "unknown": {
+      "value": "알 수 없음",
+      "status": "machine-draft"
+    },
+    "descriptionLabel": {
+      "value": "설명",
+      "status": "machine-draft"
+    },
+    "affectedEntities": {
+      "value": "영향받는 엔터티",
+      "status": "machine-draft"
+    },
+    "currentValueLabel": {
+      "value": "현재 값",
+      "status": "machine-draft"
+    },
+    "recommendedValueLabel": {
+      "value": "권장 값",
+      "status": "machine-draft"
+    },
+    "remediationStepsLabel": {
+      "value": "조치 단계",
+      "status": "machine-draft"
+    },
+    "remediationUrlLabel": {
+      "value": "조치 URL",
+      "status": "machine-draft"
+    },
+    "complianceMappingsLabel": {
+      "value": "규정 준수 매핑",
+      "status": "machine-draft"
+    },
+    "showingAllFindings": {
+      "value": "전체 {0}개 발견 사항 표시 중",
+      "status": "machine-draft"
+    },
+    "showingSome": {
+      "value": "{1}개 중 {0}개 발견 사항 표시 중",
+      "status": "machine-draft"
+    }
+  },
+  "technical": {
+    "title": {
+      "value": "기술 보안 평가 보고서",
+      "status": "machine-draft"
+    },
+    "topbar": {
+      "value": "기술 보고서",
+      "status": "machine-draft"
+    },
+    "htmlTitle": {
+      "value": "기술 보안 보고서",
+      "status": "machine-draft"
+    },
+    "footer": {
+      "value": "기술 보고서",
+      "status": "machine-draft"
+    },
+    "thTotal": {
+      "value": "전체",
+      "status": "machine-draft"
+    },
+    "detailedFindings": {
+      "value": "상세 발견 사항 ({0})",
+      "status": "machine-draft"
+    },
+    "descriptionLabel": {
+      "value": "설명",
+      "status": "machine-draft"
+    },
+    "recommendedLabel": {
+      "value": "권장",
+      "status": "machine-draft"
+    },
+    "remediationStepsLabel": {
+      "value": "조치 단계",
+      "status": "machine-draft"
+    },
+    "referenceLabel": {
+      "value": "참조",
+      "status": "machine-draft"
+    },
+    "riskAcceptanceLabel": {
+      "value": "위험 수용",
+      "status": "machine-draft"
+    },
+    "acceptedBy": {
+      "value": "{0} 수용 &middot; {1}",
+      "status": "machine-draft"
+    },
+    "complianceLabel": {
+      "value": "규정 준수",
+      "status": "machine-draft"
+    },
+    "noFindings": {
+      "value": "사용 가능한 감사 발견 사항이 없습니다. 먼저 스캔을 실행하십시오.",
+      "status": "machine-draft"
+    }
+  },
+  "exec": {
+    "title": {
+      "value": "보안 요약 보고",
+      "status": "machine-draft"
+    },
+    "topbar": {
+      "value": "요약 보고",
+      "status": "machine-draft"
+    },
+    "htmlTitle": {
+      "value": "Guerrilla 요약 보고",
+      "status": "machine-draft"
+    },
+    "footer": {
+      "value": "요약 보고",
+      "status": "machine-draft"
+    },
+    "profileSuffix": {
+      "value": "프로필",
+      "status": "machine-draft"
+    },
+    "securityPosture": {
+      "value": "보안 태세: {0}",
+      "status": "machine-draft"
+    },
+    "verdictNoScore": {
+      "value": "사용 가능한 발견 사항으로 점수를 계산할 수 없습니다. 기준선을 설정하려면 스캔을 실행하십시오.",
+      "status": "machine-draft"
+    },
+    "verdict75": {
+      "value": "귀 조직은 견고한 보안 기반을 갖추고 있습니다. 모니터링을 지속하고 남은 격차를 해결하십시오.",
+      "status": "machine-draft"
+    },
+    "verdict50": {
+      "value": "귀 조직의 보안 태세는 개선의 여지가 있습니다. 심각한 발견 사항에 대한 우선 조치가 권장됩니다.",
+      "status": "machine-draft"
+    },
+    "verdict0": {
+      "value": "즉각적인 주의가 필요합니다. 심각한 보안 격차가 귀 조직을 높은 위험에 노출시키고 있습니다.",
+      "status": "machine-draft"
+    },
+    "passRate": {
+      "value": "통과율",
+      "status": "machine-draft"
+    },
+    "criticalIssues": {
+      "value": "심각 문제",
+      "status": "machine-draft"
+    },
+    "highIssues": {
+      "value": "높음 문제",
+      "status": "machine-draft"
+    },
+    "maturityStat": {
+      "value": "성숙도 ({0})",
+      "status": "machine-draft"
+    },
+    "maturityHeading": {
+      "value": "보안 성숙도",
+      "status": "machine-draft"
+    },
+    "maturityOverall": {
+      "value": "전체 성숙도: <strong style=\"color:{0}\">5단계 중 {1}단계: {2}</strong>. 충족되지 않은 가장 낮은 통제 항목이 등급을 결정하므로, 단 하나의 심각한 노출만으로도 해결될 때까지 점수가 제한됩니다(CMMI 방식 척도: 1단계 초기부터 5단계 최적화까지).",
+      "status": "machine-draft"
+    },
+    "maturityToReach": {
+      "value": "<strong>{0}단계</strong>에 도달하려면 다음을 해결하십시오:",
+      "status": "machine-draft"
+    },
+    "thCategory": {
+      "value": "카테고리",
+      "status": "machine-draft"
+    },
+    "thLevel": {
+      "value": "단계",
+      "status": "machine-draft"
+    },
+    "thMaturity": {
+      "value": "성숙도",
+      "status": "machine-draft"
+    },
+    "matLevelCell": {
+      "value": "{0}단계",
+      "status": "machine-draft"
+    },
+    "keyFindings": {
+      "value": "주의가 필요한 핵심 발견 사항",
+      "status": "machine-draft"
+    },
+    "complianceImpact": {
+      "value": "규정 준수 영향",
+      "status": "machine-draft"
+    },
+    "complianceIntro": {
+      "value": "다음 규정 준수 프레임워크에서 격차가 확인되었습니다:",
+      "status": "machine-draft"
+    },
+    "gaps": {
+      "value": "{0}건 격차",
+      "status": "machine-draft"
+    },
+    "quickWins": {
+      "value": "권장 빠른 개선 (무비용)",
+      "status": "machine-draft"
+    },
+    "quickWinsIntro": {
+      "value": "다음 조치는 기존 도구를 사용하여 무비용으로 완료할 수 있습니다:",
+      "status": "machine-draft"
+    },
+    "quickWinItem": {
+      "value": "({0}, 약 {1}시간 소요)",
+      "status": "machine-draft"
+    },
+    "nextSteps": {
+      "value": "다음 단계",
+      "status": "machine-draft"
+    },
+    "nextStep1": {
+      "value": "심각한 발견 사항을 즉시 해결하십시오 &middot; 이는 귀 조직에 가장 높은 위험을 나타냅니다.",
+      "status": "machine-draft"
+    },
+    "nextStep2": {
+      "value": "위의 빠른 개선을 구현하여 최소한의 노력으로 보안 점수를 향상시키십시오.",
+      "status": "machine-draft"
+    },
+    "nextStep3": {
+      "value": "완전한 조치 지침은 상세 기술 보고서를 참조하십시오.",
+      "status": "machine-draft"
+    },
+    "nextStep4": {
+      "value": "개선을 측정하기 위해 30일 후 후속 스캔을 예약하십시오.",
+      "status": "machine-draft"
+    },
+    "disclaimer": {
+      "value": "이 보고서는 내부 계획 목적의 특정 시점 보안 평가를 제공합니다. 발견 사항은 조직의 위험 허용 수준에 따라 검증하고 조치해야 합니다.",
+      "status": "machine-draft"
+    }
+  },
+  "playbook": {
+    "title": {
+      "value": "조치 플레이북",
+      "status": "machine-draft"
+    },
+    "topbar": {
+      "value": "조치 플레이북",
+      "status": "machine-draft"
+    },
+    "htmlTitle": {
+      "value": "Guerrilla 조치 플레이북",
+      "status": "machine-draft"
+    },
+    "footer": {
+      "value": "조치 플레이북",
+      "status": "machine-draft"
+    },
+    "subtitle": {
+      "value": "실행 가능한 항목 {0}개 &middot; 최대 비용: {1}",
+      "status": "machine-draft"
+    },
+    "phase1": {
+      "value": "1단계: 심각 항목 수정",
+      "status": "machine-draft"
+    },
+    "phase2": {
+      "value": "2단계: 높은 우선순위",
+      "status": "machine-draft"
+    },
+    "phase3": {
+      "value": "3단계: 중간 우선순위",
+      "status": "machine-draft"
+    },
+    "phase4": {
+      "value": "4단계: 낮은 우선순위",
+      "status": "machine-draft"
+    },
+    "phaseItems": {
+      "value": "{0} ({1}개 항목)",
+      "status": "machine-draft"
+    },
+    "idLabel": {
+      "value": "ID:",
+      "status": "machine-draft"
+    },
+    "costLabel": {
+      "value": "비용:",
+      "status": "machine-draft"
+    },
+    "effortLabel": {
+      "value": "노력:",
+      "status": "machine-draft"
+    },
+    "categoryLabel": {
+      "value": "카테고리:",
+      "status": "machine-draft"
+    },
+    "stepsLabel": {
+      "value": "단계:",
+      "status": "machine-draft"
+    },
+    "targetLabel": {
+      "value": "대상:",
+      "status": "machine-draft"
+    },
+    "noteLabel": {
+      "value": "참고:",
+      "status": "machine-draft"
+    },
+    "disclaimer": {
+      "value": "각 조치 단계를 구현하기 전에 검토하십시오. 변경 사항을 먼저 비운영 환경에서 테스트하십시오.",
+      "status": "machine-draft"
+    }
+  },
+  "budget": {
+    "title": {
+      "value": "보안 예산 정당화",
+      "status": "machine-draft"
+    },
+    "topbar": {
+      "value": "예산 정당화",
+      "status": "machine-draft"
+    },
+    "htmlTitle": {
+      "value": "Guerrilla 예산 정당화",
+      "status": "machine-draft"
+    },
+    "footer": {
+      "value": "예산 정당화",
+      "status": "machine-draft"
+    },
+    "profileLabel": {
+      "value": "프로필",
+      "status": "machine-draft"
+    },
+    "executiveSummary": {
+      "value": "요약 보고",
+      "status": "machine-draft"
+    },
+    "guerrillaScore": {
+      "value": "Guerrilla 점수",
+      "status": "machine-draft"
+    },
+    "criticalFailures": {
+      "value": "심각 실패",
+      "status": "machine-draft"
+    },
+    "highFailures": {
+      "value": "높음 실패",
+      "status": "machine-draft"
+    },
+    "totalChecksBreakdown": {
+      "value": "전체 점검 ({0} 통과 / {1} 실패 / {2} 경고)",
+      "status": "machine-draft"
+    },
+    "complianceImpact": {
+      "value": "규정 준수 영향",
+      "status": "machine-draft"
+    },
+    "complianceIntro": {
+      "value": "다음 규정 준수 프레임워크는 현재 감사 발견 사항을 기준으로 격차가 있습니다:",
+      "status": "machine-draft"
+    },
+    "thFramework": {
+      "value": "프레임워크",
+      "status": "machine-draft"
+    },
+    "thGapsFound": {
+      "value": "발견된 격차",
+      "status": "machine-draft"
+    },
+    "gaps": {
+      "value": "{0}건 격차",
+      "status": "machine-draft"
+    },
+    "investmentPhases": {
+      "value": "권장 투자 단계",
+      "status": "machine-draft"
+    },
+    "phase1Title": {
+      "value": "1단계: 빠른 개선 (무비용)",
+      "status": "machine-draft"
+    },
+    "phase1Desc": {
+      "value": "기존 도구를 사용한 구성 변경 &middot; 최고의 투자 대비 효과, 즉각적인 보안 개선.",
+      "status": "machine-draft"
+    },
+    "phase2Title": {
+      "value": "2단계: 저비용 개선",
+      "status": "machine-draft"
+    },
+    "phase2Desc": {
+      "value": "기존 예산 내의 소규모 구매 또는 라이선스 추가.",
+      "status": "machine-draft"
+    },
+    "phase3Title": {
+      "value": "3단계: 중간 투자",
+      "status": "machine-draft"
+    },
+    "phase3Desc": {
+      "value": "향상된 보안 기능을 위한 라이선스 업그레이드 또는 추가 제품.",
+      "status": "machine-draft"
+    },
+    "phase4Title": {
+      "value": "4단계: 전략적 투자",
+      "status": "machine-draft"
+    },
+    "phase4Desc": {
+      "value": "장기적인 보안 태세 개선을 위한 대규모 구매 또는 인프라 변경.",
+      "status": "machine-draft"
+    },
+    "phase4Body": {
+      "value": "상당한 투자가 필요한 <strong>{0}개 항목</strong>이 확인되었습니다. 상세한 범위 산정을 위해 보안 자문가에게 문의하십시오.",
+      "status": "machine-draft"
+    },
+    "thCheck": {
+      "value": "점검",
+      "status": "machine-draft"
+    },
+    "thFinding": {
+      "value": "발견 사항",
+      "status": "machine-draft"
+    },
+    "thSeverity": {
+      "value": "심각도",
+      "status": "machine-draft"
+    },
+    "thEffort": {
+      "value": "노력",
+      "status": "machine-draft"
+    },
+    "thTime": {
+      "value": "시간",
+      "status": "machine-draft"
+    },
+    "actions": {
+      "value": "{0}개 조치",
+      "status": "machine-draft"
+    },
+    "estimatedEffort": {
+      "value": "예상 총 노력: {0}시간",
+      "status": "machine-draft"
+    },
+    "noFree": {
+      "value": "무료 수정 항목이 확인되지 않았습니다.",
+      "status": "machine-draft"
+    },
+    "noLow": {
+      "value": "저비용 수정 항목이 확인되지 않았습니다.",
+      "status": "machine-draft"
+    },
+    "noMed": {
+      "value": "중간 비용 수정 항목이 확인되지 않았습니다.",
+      "status": "machine-draft"
+    },
+    "disclaimer": {
+      "value": "이 보고서는 내부 계획 목적입니다.",
+      "status": "machine-draft"
+    }
+  },
+  "dashboard": {
+    "title": {
+      "value": "보안 대시보드",
+      "status": "machine-draft"
+    },
+    "topbar": {
+      "value": "대시보드",
+      "status": "machine-draft"
+    },
+    "htmlTitle": {
+      "value": "보안 대시보드",
+      "status": "machine-draft"
+    },
+    "footer": {
+      "value": "통합 대시보드",
+      "status": "machine-draft"
+    },
+    "scoreDesc": {
+      "value": "Guerrilla 점수 (0-100)",
+      "status": "machine-draft"
+    },
+    "checksSummary": {
+      "value": "{0}개 점검 평가됨 &middot; 통과 {1}개, 실패 {2}개, 경고 {3}개",
+      "status": "machine-draft"
+    },
+    "scoreComponents": {
+      "value": "점수 구성 요소",
+      "status": "machine-draft"
+    },
+    "passRate": {
+      "value": "통과율",
+      "status": "machine-draft"
+    },
+    "failures": {
+      "value": "실패",
+      "status": "machine-draft"
+    },
+    "platformOverview": {
+      "value": "플랫폼 개요",
+      "status": "machine-draft"
+    },
+    "checks": {
+      "value": "점검: {0}",
+      "status": "machine-draft"
+    },
+    "failuresLabel": {
+      "value": "실패: {0}",
+      "status": "machine-draft"
+    },
+    "notScanned": {
+      "value": "스캔되지 않음",
+      "status": "machine-draft"
+    },
+    "topFindings": {
+      "value": "주요 발견 사항",
+      "status": "machine-draft"
+    },
+    "showingTop50": {
+      "value": "상위 50개 발견 사항을 표시합니다. 전체 목록은 상세 보고서를 참조하십시오.",
+      "status": "machine-draft"
+    },
+    "posture": {
+      "value": "태세",
+      "status": "machine-draft"
+    },
+    "threats": {
+      "value": "위협",
+      "status": "machine-draft"
+    },
+    "coverage": {
+      "value": "커버리지",
+      "status": "machine-draft"
+    },
+    "trend": {
+      "value": "추세",
+      "status": "machine-draft"
+    }
+  },
+  "trend": {
+    "title": {
+      "value": "보안 추세 보고서",
+      "status": "machine-draft"
+    },
+    "topbar": {
+      "value": "점수 추세",
+      "status": "machine-draft"
+    },
+    "htmlTitle": {
+      "value": "보안 추세 보고서",
+      "status": "machine-draft"
+    },
+    "footer": {
+      "value": "점수 추세",
+      "status": "machine-draft"
+    },
+    "scansCount": {
+      "value": "{0}회 스캔",
+      "status": "machine-draft"
+    },
+    "currentScore": {
+      "value": "현재 점수",
+      "status": "machine-draft"
+    },
+    "averageScore": {
+      "value": "평균 점수",
+      "status": "machine-draft"
+    },
+    "trendLabel": {
+      "value": "추세 ({0})",
+      "status": "machine-draft"
+    },
+    "improving": {
+      "value": "개선 중",
+      "status": "machine-draft"
+    },
+    "declining": {
+      "value": "하락 중",
+      "status": "machine-draft"
+    },
+    "stable": {
+      "value": "안정적",
+      "status": "machine-draft"
+    },
+    "highestLowest": {
+      "value": "최고 / 최저",
+      "status": "machine-draft"
+    },
+    "scoreHistory": {
+      "value": "점수 이력",
+      "status": "machine-draft"
+    },
+    "scanLog": {
+      "value": "스캔 로그",
+      "status": "machine-draft"
+    },
+    "defaultProfile": {
+      "value": "기본값",
+      "status": "machine-draft"
+    }
+  },
+  "category": {
+    "adacldelegation": {
+      "value": "AD ACL 및 위임",
+      "status": "machine-draft"
+    },
+    "adadversarytradecraftindicators": {
+      "value": "AD 공격자 기법 지표",
+      "status": "machine-draft"
+    },
+    "adcertificateservices": {
+      "value": "AD 인증서 서비스",
+      "status": "machine-draft"
+    },
+    "addomainforestconfiguration": {
+      "value": "AD 도메인 및 포리스트 구성",
+      "status": "machine-draft"
+    },
+    "adgrouppolicy": {
+      "value": "AD 그룹 정책",
+      "status": "machine-draft"
+    },
+    "adkerberossecurity": {
+      "value": "AD Kerberos 보안",
+      "status": "machine-draft"
+    },
+    "adloggingedrposture": {
+      "value": "AD 로깅 및 EDR 태세",
+      "status": "machine-draft"
+    },
+    "adlogonscriptsnetworkshares": {
+      "value": "AD 로그온 스크립트 및 네트워크 공유",
+      "status": "machine-draft"
+    },
+    "adnetworkrelaypreconditions": {
+      "value": "AD 네트워크 및 릴레이 사전 조건",
+      "status": "machine-draft"
+    },
+    "adpasswordlockoutpolicies": {
+      "value": "AD 암호 및 계정 잠금 정책",
+      "status": "machine-draft"
+    },
+    "adprivilegedaccountsecurity": {
+      "value": "AD 권한 계정 보안",
+      "status": "machine-draft"
+    },
+    "adstaleobsoleteobjects": {
+      "value": "AD 오래된 및 사용되지 않는 개체",
+      "status": "machine-draft"
+    },
+    "adtrustrelationships": {
+      "value": "AD 트러스트 관계",
+      "status": "machine-draft"
+    },
+    "adminusermanagement": {
+      "value": "관리자 및 사용자 관리",
+      "status": "machine-draft"
+    },
+    "adversarytradecraft": {
+      "value": "공격자 기법",
+      "status": "machine-draft"
+    },
+    "attackpaths": {
+      "value": "공격 경로",
+      "status": "machine-draft"
+    },
+    "authenticationaccesscontrols": {
+      "value": "인증 및 접근 통제",
+      "status": "machine-draft"
+    },
+    "azureiamresourcesecurity": {
+      "value": "Azure IAM 및 리소스 보안",
+      "status": "machine-draft"
+    },
+    "collaborationcommunicationsecurity": {
+      "value": "협업 및 커뮤니케이션 보안",
+      "status": "machine-draft"
+    },
+    "copilotstudioaiagentgovernance": {
+      "value": "Copilot Studio AI 에이전트 거버넌스",
+      "status": "machine-draft"
+    },
+    "defenderforoffice365": {
+      "value": "Defender for Office 365",
+      "status": "machine-draft"
+    },
+    "deviceendpointmanagement": {
+      "value": "장치 및 엔드포인트 관리",
+      "status": "machine-draft"
+    },
+    "drivesecuritydataprotection": {
+      "value": "Drive 보안 및 데이터 보호",
+      "status": "machine-draft"
+    },
+    "eidscabaseline": {
+      "value": "EIDSCA 기준",
+      "status": "machine-draft"
+    },
+    "emailsecurity": {
+      "value": "이메일 보안",
+      "status": "machine-draft"
+    },
+    "entraidapplicationserviceprincipalsecurity": {
+      "value": "Entra ID 애플리케이션 및 서비스 주체 보안",
+      "status": "machine-draft"
+    },
+    "entraidauthenticationmethodsmfa": {
+      "value": "Entra ID 인증 방법 및 MFA",
+      "status": "machine-draft"
+    },
+    "entraidconditionalaccess": {
+      "value": "Entra ID 조건부 액세스",
+      "status": "machine-draft"
+    },
+    "entraidfederationhybrididentity": {
+      "value": "Entra ID 페더레이션 및 하이브리드 ID",
+      "status": "machine-draft"
+    },
+    "entraidgovernance": {
+      "value": "Entra ID 거버넌스",
+      "status": "machine-draft"
+    },
+    "entraidprivilegedidentitymanagement": {
+      "value": "Entra ID 권한 ID 관리",
+      "status": "machine-draft"
+    },
+    "entraidtenantconfiguration": {
+      "value": "Entra ID 테넌트 구성",
+      "status": "machine-draft"
+    },
+    "exchangeonlinesecurity": {
+      "value": "Exchange Online 보안",
+      "status": "machine-draft"
+    },
+    "intuneendpointmanagement": {
+      "value": "Intune / 엔드포인트 관리",
+      "status": "machine-draft"
+    },
+    "k12baseline": {
+      "value": "K12 기준",
+      "status": "machine-draft"
+    },
+    "loggingalertingmonitoring": {
+      "value": "로깅, 경고 및 모니터링",
+      "status": "machine-draft"
+    },
+    "microsoftteamssecurity": {
+      "value": "Microsoft Teams 보안",
+      "status": "machine-draft"
+    },
+    "oauthapisecurity": {
+      "value": "OAuth 및 API 보안",
+      "status": "machine-draft"
+    },
+    "powerplatformsecurity": {
+      "value": "Power Platform 보안",
+      "status": "machine-draft"
+    },
+    "sharepointonedrivesecurity": {
+      "value": "SharePoint 및 OneDrive 보안",
+      "status": "machine-draft"
+    },
+    "tier0hygienehybrididentitysurface": {
+      "value": "Tier-0 위생 및 하이브리드 ID 표면",
+      "status": "machine-draft"
+    },
+    "unifiedauditlogging": {
+      "value": "통합 감사 및 로깅",
+      "status": "machine-draft"
+    },
+    "workspaceservicesecuritysitesclassroomgemini": {
+      "value": "Workspace 서비스 보안 (Sites / Classroom / Gemini)",
+      "status": "machine-draft"
+    }
+  }
+}
