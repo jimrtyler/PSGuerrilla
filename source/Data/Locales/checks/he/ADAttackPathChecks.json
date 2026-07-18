@@ -1,0 +1,15 @@
+{
+  "_family": "ADAttackPathChecks.json",
+  "ADPATH-001": {
+    "name": { "value": "נתיבי הסלמה אל Tier-0", "status": "machine-draft" },
+    "description": { "value": "ממדל שליטה שאינה ברירת מחדל על אובייקטי Tier-0 (שורש הדומיין, AdminSDHolder, יחידת הארגון של בקרי הדומיין, ומכולות ה-GPO / Configuration / Schema) כנתיבי הסלמת הרשאות, ומדווח על טכניקת ההשתלטות הקונקרטית שכל אחד מהם מאפשר. כל ישות שאינה ברירת מחדל המחזיקה בהרשאות GenericAll / WriteDacl / WriteOwner / הרשאות שכפול על אחד מאובייקטים אלה מהווה נתיב בן צעד אחד לשוויון ל-Domain Admin. הבדיקה מסמנת גם קבוצות שאינן ברירת מחדל המקוננות בתוך קבוצת Tier-0 כצירי הסלמה: שליטה בקבוצה כזו, או צירוף אליה, מקנה את ההרשאות של קבוצת ה-Tier-0. חישוב מלא של שרשרת שליטה טרנזיטיבית ברחבי הדומיין (ממשתמש בעל הרשאות נמוכות דרך שרשרת של קשתות GenericWrite/AddMember אל Domain Admins) דורש איסוף ACL מלא של הדומיין, שהוא פריט נפרד במפת הדרכים.", "status": "machine-draft" },
+    "recommendedValue": { "value": "אין ישויות שאינן ברירת מחדל המחזיקות בשליטה על אובייקטי Tier-0.", "status": "machine-draft" },
+    "remediationSteps": { "value": "עבור כל נתיב מדווח, הסר את ה-ACE הניתן לשליטה בידי תוקף מה-DACL של אובייקט היעד (Active Directory Users and Computers > Advanced Security, או Set-Acl), או הסר את הישות מכל קבוצה המעניקה זאת. רק מנהלי Tier-0 אמורים להחזיק בהרשאות GenericAll/WriteDacl/WriteOwner או בהרשאות שכפול על שורש הדומיין, על AdminSDHolder, על יחידת הארגון של בקרי הדומיין, ועל מכולות ה-Policies/Configuration/Schema.", "status": "machine-draft" }
+  },
+  "ADPATH-002": {
+    "name": { "value": "שרשראות הסלמה טרנזיטיביות אל Tier-0", "status": "machine-draft" },
+    "description": { "value": "מחשב שרשראות הסלמת הרשאות רב-צעדיות אל Tier-0 באמצעות מעקב טרנזיטיבי אחר קשתות שליטה (GenericAll / WriteDacl / WriteOwner / AddMember) וקשתות חברות בקבוצות, לדוגמה HelpDesk --[WriteDacl]--> CORP-Admins --[MemberOf]--> Domain Admins. משלים את ADPATH-001 (צעד יחיד) על ידי שרשור קשתות באורך שרירותי ודיווח על הנתיב הקצר ביותר לכל ישות. עומק השרשרת מוגבל בהיקף איסוף ה-ACL: עם איסוף ששת האובייקטים הקריטיים הנוכחי רוב השרשראות הן בנות צעד אחד, כך שבדיקה זו בדרך כלל נקייה כיום; אוסף ה-ACL המלא של הדומיין (מפת דרכים, מגודר-חי) מאכלס קשתות שליטה על אובייקטים שרירותיים ופותח שרשראות עמוקות מהרשאה נמוכה ל-Domain Admin. המנוע עצמו משרשר בעומק שרירותי (BFS למסלול הקצר ביותר, בטוח מפני מעגלים).", "status": "machine-draft" },
+    "recommendedValue": { "value": "אין שרשרת שליטה טרנזיטיבית המובילה ישות ללא הרשאות אל Tier-0.", "status": "machine-draft" },
+    "remediationSteps": { "value": "עבור כל שרשרת, נתק את החוליה החלשה ביותר: הסר את ה-ACE הניתן לשליטה בידי תוקף בצעד הראשון (שליטת הישות ללא ההרשאות על האובייקט הבא בשרשרת), או הסר את הקבוצה המקוננת מקבוצת ה-Tier-0. הרץ מחדש כדי לאשר שהשרשרת נותקה.", "status": "machine-draft" }
+  }
+}

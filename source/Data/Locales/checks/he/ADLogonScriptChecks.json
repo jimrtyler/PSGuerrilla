@@ -1,0 +1,69 @@
+{
+  "_family": "ADLogonScriptChecks.json",
+  "ADSCRIPT-001": {
+    "name": { "value": "הרשאות שיתוף NETLOGON", "status": "machine-draft" },
+    "description": { "value": "שיתוף NETLOGON מארח סקריפטים של כניסה המורצים על כל מערכת המצורפת לדומיין בעת כניסת המשתמש. הרשאות NTFS או הרשאות שיתוף מתירניות מדי על NETLOGON מאפשרות לכל משתמש מאומת לשנות סקריפטים, ובכך לאפשר הרצת קוד נרחבת. רק Domain Admins ומנהלים מורשים אמורים להחזיק בגישת כתיבה", "status": "machine-draft" },
+    "recommendedValue": { "value": "שיתוף NETLOGON: Authenticated Users בהרשאת קריאה בלבד; גישת כתיבה מוגבלת ל-Domain Admins ולמנהלי GPO מורשים", "status": "machine-draft" },
+    "remediationSteps": { "value": "בחן את הרשאות ה-NTFS על תיקיית NETLOGON (בדרך כלל %SystemRoot%\\SYSVOL\\sysvol\\<domain>\\Scripts) בכל בקר דומיין. הסר הרשאות כתיבה, שינוי או שליטה מלאה עבור קבוצות שאינן ניהוליות. אמת שהרשאות השיתוף תואמות להרשאות ה-NTFS. ודא שההרשאות עקביות בכל בקרי הדומיין באמצעות שכפול DFSR.", "status": "machine-draft" }
+  },
+  "ADSCRIPT-002": {
+    "name": { "value": "הרשאות שיתוף SYSVOL", "status": "machine-draft" },
+    "description": { "value": "שיתוף SYSVOL מכיל תבניות מדיניות קבוצתית, סקריפטים וקובצי תצורה המוחלים על כל המערכות המצורפות לדומיין. הרשאות SYSVOL שגויות עלולות לאפשר למשתמשים בלתי מורשים לשנות הגדרות מדיניות קבוצתית, לפרוס סקריפטים זדוניים, או לשבש תצורות אבטחה המשפיעות על הדומיין כולו", "status": "machine-draft" },
+    "recommendedValue": { "value": "שיתוף SYSVOL: Authenticated Users בהרשאת קריאה בלבד; גישת כתיבה מוגבלת ל-Domain Admins ול-SYSTEM", "status": "machine-draft" },
+    "remediationSteps": { "value": "בקר את הרשאות ה-NTFS על עץ תיקיות SYSVOL בכל בקר דומיין. תיקיית השורש של SYSVOL אמורה להעניק ל-Authenticated Users הרשאת Read and Execute. תיקיות המשנה של GPO אמורות להתאים להרשאות המוגדרות על אובייקט ה-GPC המתאים ב-AD. הרץ dcdiag /test:sysvolcheck כדי לזהות בעיות הרשאה. אפס הרשאות באמצעות icacls במידת הצורך.", "status": "machine-draft" }
+  },
+  "ADSCRIPT-003": {
+    "name": { "value": "מלאי סקריפטים של כניסה", "status": "machine-draft" },
+    "description": { "value": "מלאי של כל סקריפטי הכניסה שאליהם מפנים חשבונות משתמש (התכונה scriptPath), סקריפטי כניסה/יציאה של מדיניות קבוצתית, וסקריפטי אתחול/כיבוי מספק נראות לכל הקוד המורץ אוטומטית בסביבה. סקריפטים הקיימים ב-NETLOGON אך אינם מופנים אליהם עשויים להיות יתומים או מחוונים לפריצה מהעבר", "status": "machine-draft" },
+    "recommendedValue": { "value": "מלאי מלא של כל סקריפטי הכניסה עם מטרה, בעלים ותאריך שינוי אחרון מתועדים", "status": "machine-draft" },
+    "remediationSteps": { "value": "מנה את כל התכונות scriptPath של המשתמשים באמצעות Get-ADUser -Filter {scriptPath -like '*'} -Properties scriptPath. רשום את כל הסקריפטים המוגדרים ב-GPO מתוך דוחות ה-GPO. ערוך מלאי של כל הקבצים בשיתוף NETLOGON. הצלב הפניות כדי לזהות סקריפטים יתומים, סקריפטים שאינם בשימוש, וסקריפטים שאליהם מפנים חשבונות משתמש אך חסרים ב-NETLOGON. תעד את מטרתו ובעליו של כל סקריפט.", "status": "machine-draft" }
+  },
+  "ADSCRIPT-004": {
+    "name": { "value": "פרטי הזדהות מקודדים בסקריפטים", "status": "machine-draft" },
+    "description": { "value": "סקריפטי כניסה מכילים לעתים קרובות פרטי הזדהות מקודדים בקוד, כולל סיסמאות למיפויי כונני רשת, חשבונות שירות, חיבורי מסד נתונים ומפתחות API. פרטי הזדהות אלה קריאים בידי כל המשתמשים המאומתים דרך שיתוף NETLOGON ומהווים הזדמנות טריוויאלית לקציר פרטי הזדהות עבור תוקפים", "status": "machine-draft" },
+    "recommendedValue": { "value": "אין פרטי הזדהות, סיסמאות או מפתחות API מקודדים בקוד באף סקריפט של NETLOGON או SYSVOL", "status": "machine-draft" },
+    "remediationSteps": { "value": "סרוק את כל הסקריפטים ב-NETLOGON וב-SYSVOL אחר תבניות המצביעות על פרטי הזדהות: password, passwd, pwd, credential, secret, apikey, token, connectionstring ומילות מפתח דומות. החלף פרטי הזדהות מקודדים בקוד בחלופות מאובטחות כגון Windows Credential Manager, חשבונות gMSA, או קובצי תצורה מוצפנים בעלי גישה מוגבלת. החלף מיד כל פרטי הזדהות שנמצאו בסקריפטים.", "status": "machine-draft" }
+  },
+  "ADSCRIPT-005": {
+    "name": { "value": "שימוש ב-LOLBins בסקריפטים", "status": "machine-draft" },
+    "description": { "value": "קבצים בינאריים מסוג Living Off The Land (LOLBins) הם קובצי הפעלה לגיטימיים של Windows הניתנים לניצול לרעה למטרות זדוניות. נוכחותם בסקריפטי כניסה עשויה להעיד על כך שתוקף הזריק פקודות זדוניות המשתלבות בתפעול הרגיל. LOLBins נפוצים כוללים את certutil, bitsadmin, mshta, regsvr32, rundll32 ו-wscript המשמשים להורדה או הרצה של מטענים", "status": "machine-draft" },
+    "recommendedValue": { "value": "אין שימוש ב-LOLBins בסקריפטי כניסה אלא אם הוא מתועד ומוצדק תפעולית", "status": "machine-draft" },
+    "remediationSteps": { "value": "סרוק את כל הסקריפטים אחר הפניות ל-LOLBins ידועים, כולל certutil, bitsadmin, mshta, regsvr32, rundll32, wscript, cscript, msiexec, installutil, regasm, regsvcs, msconfig ו-control. בחן כל מופע כדי לקבוע אם השימוש לגיטימי. החלף LOLBins בחלופות בטוחות יותר במידת האפשר. תעד כל שימוש ב-LOLBins הנדרש תפעולית.", "status": "machine-draft" }
+  },
+  "ADSCRIPT-006": {
+    "name": { "value": "סיסמאות בטקסט גלוי בסקריפטים", "status": "machine-draft" },
+    "description": { "value": "סקריפטים המכילים סיסמאות בטקסט גלוי בפקודות net use, במחרוזות חיבור למסד נתונים, או בהשמות משתנים חושפים פרטי הזדהות בפני כל משתמש דומיין מאומת שיכול לקרוא את שיתוף NETLOGON. הדבר כולל סיסמאות לחשבונות שירות, חשבונות מסד נתונים ומשאבי רשת העשויים לספק נתיבי תנועה רוחבית", "status": "machine-draft" },
+    "recommendedValue": { "value": "אין סיסמאות בטקסט גלוי באף קובץ סקריפט; כל האימות משתמש באבטחה משולבת או באחסון פרטי הזדהות מאובטח", "status": "machine-draft" },
+    "remediationSteps": { "value": "חפש בכל קובצי הסקריפט אחר תבניות כגון 'net use * /user:', השמות סיסמה ב-PowerShell או ב-batch, מחרוזות חיבור עם Password= או Pwd=, וקריאות WScript.Network.MapNetworkDrive עם פרטי הזדהות. החלף כל שימוש בפרטי הזדהות בטקסט גלוי באימות משולב של Windows, ב-Credential Manager, או בחשבונות gMSA. החלף מיד את כל הסיסמאות שנחשפו.", "status": "machine-draft" }
+  },
+  "ADSCRIPT-007": {
+    "name": { "value": "הרשאות סקריפט הניתנות לכתיבה בידי כולם", "status": "machine-draft" },
+    "description": { "value": "קובצי סקריפט בודדים ב-NETLOGON או ב-SYSVOL המעניקים הרשאות כתיבה או שינוי למשתמשים שאינם ניהוליים ניתנים לשינוי בידי כל תוקף בעל פרטי הזדהות של הדומיין. אפילו אם הרשאות ברמת השיתוף תקינות, הרשאות NTFS מתירניות מדי ברמת הקובץ על סקריפטים בודדים יוצרות הזדמנות להרצת קוד", "status": "machine-draft" },
+    "recommendedValue": { "value": "כל קובצי הסקריפט ב-NETLOGON וב-SYSVOL ניתנים לכתיבה רק בידי Domain Admins ו-SYSTEM; אין גישת כתיבה ל-Domain Users או ל-Authenticated Users", "status": "machine-draft" },
+    "remediationSteps": { "value": "מנה את הרשאות ה-NTFS על כל קובץ בשיתוף NETLOGON ובתיקיות הסקריפטים של SYSVOL. זהה קבצים שבהם ל-Domain Users, ל-Authenticated Users, ל-Everyone או לקבוצות רחבות אחרות יש הרשאות Write, Modify או Full Control. אפס הרשאות באמצעות icacls כדי להעניק Read and Execute ל-Authenticated Users ו-Full Control ל-Domain Admins ול-SYSTEM בלבד.", "status": "machine-draft" }
+  },
+  "ADSCRIPT-008": {
+    "name": { "value": "הפניות למשאבים חיצוניים", "status": "machine-draft" },
+    "description": { "value": "סקריפטי כניסה המפנים למשאבים חיצוניים כגון כתובות URL באינטרנט, נתיבי UNC שאינם של הדומיין, או מיקומי אחסון בענן מכניסים סיכון של שרשרת אספקה. אם המשאב החיצוני נפרץ, כל המערכות המריצות את הסקריפט יורידו ויריצו תוכן זדוני. הפניות חיצוניות יוצרות גם הזדמנויות לחילוץ נתונים", "status": "machine-draft" },
+    "recommendedValue": { "value": "אין הפניות לכתובות URL חיצוניות, למשאבי אינטרנט, או לנתיבי UNC שאינם של הדומיין בסקריפטי כניסה", "status": "machine-draft" },
+    "remediationSteps": { "value": "סרוק את כל הסקריפטים אחר כתובות URL מסוג HTTP/HTTPS, הפניות FTP, נתיבי UNC שאינם של הדומיין, וכתובות URL של אחסון בענן (OneDrive, SharePoint Online, Azure Blob, AWS S3). החלף הפניות חיצוניות בעותקים המתארחים מקומית בשיתופי קבצים פנימיים. אם נדרשים משאבים חיצוניים, יישם אימות שלמות (בדיקות גיבוב) לפני ההרצה. תעד את כל התלויות במשאבים חיצוניים המאושרות.", "status": "machine-draft" }
+  },
+  "ADSCRIPT-009": {
+    "name": { "value": "סקריפטים פגומים", "status": "machine-draft" },
+    "description": { "value": "סקריפטים בעלי שגיאות תחביר, בעיות קידוד, או תוכן משובש עלולים להיכשל בשקט במהלך ההרצה, ולגרום לתצורת אבטחה חלקית או למיפויי כוננים חסרים. סקריפטים פגומים יכולים גם להעיד על שיבוש שבו תוקף שינה סקריפט אך הכניס שגיאות, או שבעיות קידוד מסתירות תוכן זדוני שהוזרק", "status": "machine-draft" },
+    "recommendedValue": { "value": "כל הסקריפטים עוברים אימות תחביר ללא חריגות קידוד או שגיאות מבניות", "status": "machine-draft" },
+    "remediationSteps": { "value": "אמת את תחביר הסקריפטים באמצעות כלים מתאימים: סקריפטי PowerShell עם Test-ScriptFileInfo או PSScriptAnalyzer, קובצי batch עם בחינה ידנית אחר בלוקים לא סגורים ופקודות לא חוקיות, VBScript עם בדיקת תחביר של WSH. בדוק את קידוד הקבצים אחר רצפי בתים בלתי צפויים או קידוד מעורב. בחן סקריפטים בעלי קידוד חריג (UTF-16 עם BOM בקובצי batch, בתים אפסיים) מפני הזרקה אפשרית.", "status": "machine-draft" }
+  },
+  "ADSCRIPT-010": {
+    "name": { "value": "נתיבי UNC למיקומים שאינם בקר דומיין", "status": "machine-draft" },
+    "description": { "value": "סקריפטי כניסה המפנים לנתיבי UNC המצביעים על שיתופי קבצים שאינם בקר דומיין יוצרים תלות במערכות נוספות ומרחיבים את משטח ההתקפה. אם שרת הקבצים המופנה נפרץ, תוקף יכול לשנות את המשאבים המשותפים כדי לספק מטענים זדוניים דרך מנגנון סקריפט הכניסה המהימן. נתיבי UNC ניתנים לניצול גם עבור התקפות ממסר NTLM", "status": "machine-draft" },
+    "recommendedValue": { "value": "כל נתיבי ה-UNC בסקריפטים מפנים אל SYSVOL או NETLOGON בבקרי דומיין; אין הפניות לשיתופי קבצים שאינם בקר דומיין עבור תוכן סקריפט", "status": "machine-draft" },
+    "remediationSteps": { "value": "סרוק את כל הסקריפטים אחר נתיבי UNC (תבניות \\\\server\\share). זהה נתיבים שאינם מצביעים אל שיתופי ה-SYSVOL או NETLOGON של הדומיין. העבר את המשאבים המופנים אל שיתוף NETLOGON היכן שמתאים. עבור הפניות לגיטימיות לשיתופי קבצים, ודא ששרתי היעד הם נכסי Tier 0 או Tier 1 עם חיזוק מתאים. תעד את כל התלויות המאושרות בנתיבי UNC שאינם בקר דומיין.", "status": "machine-draft" }
+  },
+  "ADSCRIPT-011": {
+    "name": { "value": "ניתוח תוכן סקריפטים", "status": "machine-draft" },
+    "description": { "value": "ניתוח תוכן מקיף של כל סקריפטי הכניסה יכול לחשוף תבניות חשודות מעבר לבדיקות ספציפיות, כגון קוד מעורפל, פקודות מקודדות ב-base64, קלטות הורדה של PowerShell, קובצי הפעלה מקודדים, וטכניקות נגד ניתוח. תבניות אלה הן מחוונים חזקים להזרקת סקריפט זדוני או לדלתות אחוריות ששתלו תוקפים", "status": "machine-draft" },
+    "recommendedValue": { "value": "אין קוד מעורפל, מטענים מקודדים, קלטות הורדה, או טכניקות נגד ניתוח באף סקריפט כניסה", "status": "machine-draft" },
+    "remediationSteps": { "value": "נתח את כל הסקריפטים אחר תבניות חשודות, כולל קידוד base64 (Convert-FromBase64, certutil -decode), קלטות הורדה (Invoke-WebRequest, Net.WebClient, BitsTransfer), טכניקות ערפול (שרשור מחרוזות, קודי תווים, החלפת משתנים להסתרת פקודות), וטכניקות נגד ניתוח (טיימרים של השהיה, בדיקות סביבה). חקור והחלף כל סקריפט המכיל תבניות חשודות.", "status": "machine-draft" }
+  }
+}

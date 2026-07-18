@@ -1,0 +1,45 @@
+{
+  "_family": "ADLoggingChecks.json",
+  "ADLOG-001": {
+    "name": { "value": "מדיניות ביקורת מתקדמת מוגדרת", "status": "machine-draft" },
+    "description": { "value": "מדיניות הביקורת המורשת בת תשע הקטגוריות גסה מדי לחקירות מודרניות: היא יכולה לומר לך שמשהו נכשל תחת 'Audit account logon events' אך לא אם מדובר בכשל אימות מוקדם של Kerberos, בבקשת כרטיס שירות, או במעבר מפורש של פרטי הזדהות. Windows תומך במדיניות ביקורת מתקדמת (Advanced Audit Policy, 60+ תת-קטגוריות) מאז Vista, אך יש להצטרף אליה במפורש. נוכחות audit.csv בתיקיית ה-SYSVOL של Default Domain Controllers Policy היא המחוון על גבי הרשת לכך שהדומיין ביצע את המעבר.", "status": "machine-draft" },
+    "recommendedValue": { "value": "מדיניות Default Domain Controllers Policy כוללת audit.csv (Computer Configuration > Policies > Windows Settings > Security Settings > Advanced Audit Policy Configuration > Audit Policies > <subcategories>).", "status": "machine-draft" },
+    "remediationSteps": { "value": "פתח את Default Domain Controllers Policy ב-GPMC. נווט אל Computer Configuration > Policies > Windows Settings > Security Settings > Advanced Audit Policy Configuration > Audit Policies. הפעל לכל הפחות: Account Logon > Kerberos Service Ticket Operations (Success+Failure), Logon/Logoff > Logon (Success+Failure) + Special Logon (Success), Account Management > all (Success), Object Access > File Share + Detailed File Share (Success+Failure אם מנטרים תנועה רוחבית), Detailed Tracking > Process Creation (Success). הפעל גם את 'Audit: Force audit policy subcategory settings' תחת Security Options כדי שיקבל עדיפות על פני הגדרות תשע הקטגוריות המורשות.", "status": "machine-draft" }
+  },
+  "ADLOG-002": {
+    "name": { "value": "רישום חסימות סקריפט של PowerShell מופעל", "status": "machine-draft" },
+    "description": { "value": "אירוע 4104 (PowerShell Script Block Logging) הוא אירוע ה-Windows השימושי ביותר בודד לחקירת חדירות מודרניות: הוא לוכד את קוד ה-PowerShell שהורץ בפועל לאחר ביטול הערפול, כולל קוד המועבר באמצעות -EncodedCommand. בלעדיו, חוקר המתבונן בפריסת כופרה מבוססת PowerShell עיוור. ההגדרה מסופקת באמצעות תבנית ניהולית אל HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\\ScriptBlockLogging\\EnableScriptBlockLogging.", "status": "machine-draft" },
+    "recommendedValue": { "value": "מדיניות קבוצתית 'Turn on PowerShell Script Block Logging' מופעלת ברמת הדומיין או ברמת יחידת הארגון של בקרי הדומיין. רישום: EnableScriptBlockLogging = 1.", "status": "machine-draft" },
+    "remediationSteps": { "value": "Computer Configuration > Policies > Administrative Templates > Windows Components > Windows PowerShell > 'Turn on PowerShell Script Block Logging' = Enabled. אמת לאחר gpupdate: Get-ItemProperty 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\\ScriptBlockLogging'. ודא שקיבולת יומן האירועים עבור 'Microsoft-Windows-PowerShell/Operational' תוכננה לנפח המתאים (ברירת המחדל של 15 MB תתחלף תוך שעות תחת עומס).", "status": "machine-draft" }
+  },
+  "ADLOG-003": {
+    "name": { "value": "רישום מודולים של PowerShell מופעל", "status": "machine-draft" },
+    "description": { "value": "אירוע 4103 (PowerShell Module Logging) רושם את הפעלות ה-cmdlet והפרמטרים של כל מודול המוגדר לרישום. שלב זאת עם Script Block Logging ותקבל מחסנית טלמטריה בעלת ודאות גבוהה עבור כל התקפה מבוססת PowerShell. ההגדרה מסופקת באמצעות תבנית ניהולית אל HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\\ModuleLogging.", "status": "machine-draft" },
+    "recommendedValue": { "value": "מדיניות קבוצתית 'Turn on Module Logging' מופעלת עם רשימת שמות מודולים הכוללת לכל הפחות את '*'. רישום: EnableModuleLogging = 1.", "status": "machine-draft" },
+    "remediationSteps": { "value": "Computer Configuration > Policies > Administrative Templates > Windows Components > Windows PowerShell > 'Turn on Module Logging' = Enabled. הוסף את '*' לרשימת Module Names (רושם את כל המודולים) או ליתר דיוק את Microsoft.PowerShell.* בתוספת המודולים שסביבתך משתמשת בהם לניהול.", "status": "machine-draft" }
+  },
+  "ADLOG-004": {
+    "name": { "value": "ביקורת יצירת תהליכים עם שורת פקודה", "status": "machine-draft" },
+    "description": { "value": "אירוע 4688 (יצירת תהליך) הוא אות התנועה הרוחבית הבסיסי: הוא מציין איזה תהליך הופעל ובידי מי. אירוע 4688 שבברירת מחדל אינו כולל את שורת הפקודה, מה שהופך אותו לחסר תועלת כמעט לחלוטין בחקירות המערבות PowerShell, wmic, mshta או קבצים בינאריים אחרים מסוג living-off-the-land. מדיניות 'Include command line in process creation events' ממלאת פער זה.", "status": "machine-draft" },
+    "recommendedValue": { "value": "מדיניות קבוצתית 'Include command line in process creation events' מופעלת, וגם תת-הקטגוריה של מדיניות הביקורת המתקדמת 'Audit Process Creation' מוגדרת ל-Success.", "status": "machine-draft" },
+    "remediationSteps": { "value": "שתי הגדרות, שתיהן נדרשות: (1) Computer Configuration > Policies > Administrative Templates > System > Audit Process Creation > 'Include command line in process creation events' = Enabled. (2) Computer Configuration > Policies > Windows Settings > Security Settings > Advanced Audit Policy Configuration > Detailed Tracking > Audit Process Creation = Success. בלי (1), אירועי 4688 מגיעים ללא מחרוזת הארגומנט NewProcessName. בלי (2), הם אינם מגיעים כלל.", "status": "machine-draft" }
+  },
+  "ADLOG-005": {
+    "name": { "value": "מדיניות הגנה מפני שיבוש של Microsoft Defender", "status": "machine-draft" },
+    "description": { "value": "אם ניתן לכבות את ה-EDR שלך מנקודת הקצה ללא פעולת מנהל, כל תוקף מכבה אותו כצעד הראשון בספר הפעולות שלו. הגנה מפני שיבוש של Defender (והמקבילה שלה בכל EDR מודרני) חוסמת השבתה מקומית. בדיקה זו מחפשת את הגדרות ה-GPO החולשות על ההגנה בזמן אמת של Defender: מצב מלא של הגנה מפני שיבוש נקבע בענן (פורטל Intune/MDE), אך חיזוק צד ה-GPO ניתן לאימות מ-SYSVOL.", "status": "machine-draft" },
+    "recommendedValue": { "value": "לא ניתן להשבית את ההגנה בזמן אמת של Defender בידי המשתמש המקומי; החרגות נשלטות באופן הדוק (או ריקות); SmartScreen Enhanced מופעל. הגנה מפני שיבוש עצמה נקבעת דרך פורטל הענן של Microsoft Defender for Endpoint: אמת מחוץ לפס.", "status": "machine-draft" },
+    "remediationSteps": { "value": "בפורטל MDE: Settings > Endpoints > Advanced features > Tamper Protection = On (החל על כל ההתקנים). ב-GPO: Computer Configuration > Policies > Administrative Templates > Windows Components > Microsoft Defender Antivirus > 'Turn off Microsoft Defender Antivirus' = Disabled (כן, שלילה כפולה, פירושו 'אל תאפשר כיבוי של Defender'). כמו כן: > Real-Time Protection > 'Turn off real-time protection' = Disabled. בחן בקפידה את מפתח המשנה Exclusions: כל רשומה בו היא חור שהתוקף ימצא.", "status": "machine-draft" }
+  },
+  "ADLOG-006": {
+    "name": { "value": "מנהל מנויים של העברת אירועי Windows (WEF)", "status": "machine-draft" },
+    "description": { "value": "יומנים הקיימים רק במארח שהפיק אותם שימושיים בדיוק כמו הדיסק המקומי של אותו מארח לאחר שהתוקף מחק אותו. העברת אירועי Windows (Windows Event Forwarding) שולחת יומנים אל מחוץ למארח, אל אספן, בזמן הכתיבה. ללא GPO של SubscriptionManager המפנה כל נקודת קצה אל האספן, WEF אינו מתרחש.", "status": "machine-draft" },
+    "recommendedValue": { "value": "מדיניות קבוצתית 'Configure target Subscription Manager' מוגדרת בתחנות עבודה ובשרתים כך שתצביע אל אספן ה-WEF.", "status": "machine-draft" },
+    "remediationSteps": { "value": "Computer Configuration > Policies > Administrative Templates > Windows Components > Event Forwarding > 'Configure target Subscription Manager' = Enabled. ערך: Server=http://wec-server.domain.tld:5985/wsman/SubscriptionManager/WEC,Refresh=60. הגדר מנויים באספן עם שאילתות xpath עבור האירועים החשובים לך (4624, 4625, 4688, 4768, 4769, 4104, 1102 וכו'). אם אין לך אספן WEF, זהו הפרויקט שכדאי להתחיל בו; הוא כמעט תמיד זול יותר מפריסת סוכן SIEM מלאה עבור אותה טלמטריה.", "status": "machine-draft" }
+  },
+  "ADLOG-007": {
+    "name": { "value": "מחוון פריסה של Sysmon", "status": "machine-draft" },
+    "description": { "value": "Sysmon (System Monitor, מ-Sysinternals) הוא מקור טלמטריית נקודות הקצה בסטנדרט הזהב עבור האירועים שהרישום המובנה של Windows אינו מכסה היטב: גיבוב קובץ ביצירת תהליך, חיבורי רשת לפי תהליך, טעינות DLL, ניטור רישום, ותעלות מבוססות שם. הוא פועל כמנהל התקן במצב ליבה. אין זיהוי מצד ה-GPO של 'Sysmon מותקן' מ-SYSVOL בלבד: המחוון הוא נוכחות של GPO תצורת Sysmon או סקריפט אתחול הפורס אותו. בדיקה זו מפיקה אזהרה ומבקשת מהמבקר לאמת מחוץ לפס.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Sysmon מותקן בתחנות עבודה ובשרתים באמצעות GPO פריסה או דחיפה של ניהול תצורה, עם תצורה מכווננת לסביבה (SwiftOnSecurity, Olaf Hartong, או קווי בסיס מסופקי ספק).", "status": "machine-draft" },
+    "remediationSteps": { "value": "פרוס את Sysmon (https://download.sysinternals.com/files/Sysmon.zip) באמצעות סקריפט אתחול של GPO או פלטפורמת ניהול התצורה שלך. השתמש בקו בסיס קהילתי כנקודת התחלה (SwiftOnSecurity/sysmon-config או Olaf Hartong/sysmon-modular). אמת את הפריסה באמצעות Get-CimInstance Win32_Service -Filter \"Name='Sysmon64'\" כנגד מערך מייצג של מארחים, או שאילתה על אספן ה-WEF עבור אירועי 'Microsoft-Windows-Sysmon/Operational'.", "status": "machine-draft" }
+  }
+}

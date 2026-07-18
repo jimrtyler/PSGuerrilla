@@ -1,0 +1,63 @@
+{
+  "_family": "ADNetworkChecks.json",
+  "ADNET-001": {
+    "name": { "value": "חתימת LDAP נדרשת בבקרי דומיין", "status": "machine-draft" },
+    "description": { "value": "כאשר בקרי דומיין אינם דורשים חתימת LDAP, תוקף המסוגל ליירט או לכפות תעבורת LDAP (למשל באמצעות PetitPotam או כל מפעיל אימות NTLM) יכול לממסר אימות NTLM אל שירות ה-LDAP של בקר דומיין ולקרוא או לכתוב נתוני מדריך בשם הישות שנכפתה. אכיפת חתימת LDAP סוגרת את סינק הממסר הנפוץ ביותר בבקר דומיין.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Default Domain Controllers Policy מגדירה את 'Domain controller: LDAP server signing requirements' ל-'Require signing' (LDAPServerIntegrity = 2)", "status": "machine-draft" },
+    "remediationSteps": { "value": "ערוך את Default Domain Controllers Policy: Computer Configuration > Policies > Windows Settings > Security Settings > Local Policies > Security Options > 'Domain controller: LDAP server signing requirements' = 'Require signing'. אמת באמצעות: reg query HKLM\\System\\CurrentControlSet\\Services\\NTDS\\Parameters /v LDAPServerIntegrity (אמור להיות 2). Microsoft מחזקת ברירת מחדל זו מאז 2020 (ADV190023) ותאכוף אותה כברירת מחדל בגרסאות עתידיות של Windows Server.", "status": "machine-draft" }
+  },
+  "ADNET-002": {
+    "name": { "value": "כריכת ערוץ LDAP נאכפת בבקרי דומיין", "status": "machine-draft" },
+    "description": { "value": "כריכת ערוץ LDAP קושרת אימות LDAPS לערוץ ה-TLS הבסיסי. בלעדיה, תוקף שיירט הפעלת LDAP המוגנת ב-TLS עדיין יכול לממסר אימות NTLM אל LDAPS. בשילוב עם חתימת LDAP, כריכת ערוץ מבטלת את LDAP כיעד ממסר.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Default Domain Controllers Policy מגדירה את 'Domain controller: LDAP server channel binding token requirements' ל-'Always' (LdapEnforceChannelBinding = 2)", "status": "machine-draft" },
+    "remediationSteps": { "value": "ערוך את Default Domain Controllers Policy: Computer Configuration > Policies > Windows Settings > Security Settings > Local Policies > Security Options > 'Domain controller: LDAP server channel binding token requirements' = 'Always'. רישום: HKLM\\System\\CurrentControlSet\\Services\\NTDS\\Parameters\\LdapEnforceChannelBinding = 2. הוצג במקור עבור CVE-2017-8563.", "status": "machine-draft" }
+  },
+  "ADNET-003": {
+    "name": { "value": "חתימת שרת SMB נדרשת (מדיניות דומיין)", "status": "machine-draft" },
+    "description": { "value": "ללא חתימת SMB נדרשת בצד השרת, תוקף המסוגל למקם את עצמו בנתיב הרשת או לכפות אימות SMB יכול לממסר NTLM אל SMB ולבצע פעולות קבצים בשם הישות שנכפתה. זהו סינק הממסר הקלאסי עבור כלים כמו ntlmrelayx; אכיפת חתימה בצד השרת סוגרת אותו.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Default Domain Policy מפעילה את 'Microsoft network server: Digitally sign communications (always)' (RequireSecuritySignature ב-LanManServer = 1)", "status": "machine-draft" },
+    "remediationSteps": { "value": "ערוך את Default Domain Policy: Computer Configuration > Policies > Windows Settings > Security Settings > Local Policies > Security Options > 'Microsoft network server: Digitally sign communications (always)' = Enabled. רישום: HKLM\\System\\CurrentControlSet\\Services\\LanmanServer\\Parameters\\RequireSecuritySignature = 1. Windows 11 24H2 / Server 2025 מפעילים זאת כברירת מחדל; גרסאות מערכת הפעלה ישנות יותר זקוקות למדיניות מפורשת.", "status": "machine-draft" }
+  },
+  "ADNET-004": {
+    "name": { "value": "חתימת לקוח SMB נדרשת (מדיניות דומיין)", "status": "machine-draft" },
+    "description": { "value": "חתימת SMB בצד הלקוח היא החצי השני של החוזה המונע מתחנת עבודה להתפתות לאמת מול שרת SMB זדוני (בסגנון responder). בלעדיה, כל משתמש ברשת שיפותה לפתור שם עוין (הרעלת LLMNR, WPAD וכו') פולט גיבוב NTLM שתוקף יכול לפצח או לממסר.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Default Domain Policy מפעילה את 'Microsoft network client: Digitally sign communications (always)' (RequireSecuritySignature ב-LanmanWorkstation = 1)", "status": "machine-draft" },
+    "remediationSteps": { "value": "ערוך את Default Domain Policy: Computer Configuration > Policies > Windows Settings > Security Settings > Local Policies > Security Options > 'Microsoft network client: Digitally sign communications (always)' = Enabled. רישום: HKLM\\System\\CurrentControlSet\\Services\\LanmanWorkstation\\Parameters\\RequireSecuritySignature = 1.", "status": "machine-draft" }
+  },
+  "ADNET-005": {
+    "name": { "value": "LLMNR מושבת באמצעות מדיניות דומיין", "status": "machine-draft" },
+    "description": { "value": "Link-Local Multicast Name Resolution הוא מנגנון גיבוי מבוסס שידור שכל מארח במקטע המקומי יכול לענות עליו. Responder.py וכלים דומים מתחזים לתשובה, קוצרים אתגר-מענה של NTLMv2, ואז מפצחים אותם במצב לא מקוון או מממסרים אותם. השבתת LLMNR ברחבי הדומיין היא פעולת חיזוק תחנת העבודה בעלת ההשפעה הגדולה ביותר שניתן לבצע עבור עמידות בפני בדיקת חדירה פנימית.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Default Domain Policy מפעילה את 'Turn off multicast name resolution' (מדיניות DnsClient, EnableMulticast = 0)", "status": "machine-draft" },
+    "remediationSteps": { "value": "ערוך את Default Domain Policy: Computer Configuration > Policies > Administrative Templates > Network > DNS Client > 'Turn off multicast name resolution' = Enabled. רישום: HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows NT\\DNSClient\\EnableMulticast = 0.", "status": "machine-draft" }
+  },
+  "ADNET-006": {
+    "name": { "value": "תצורת NetBIOS over TCP/IP נבחנה", "status": "machine-draft" },
+    "description": { "value": "NetBIOS-NS הוא הרגל השנייה של התקפות הרעלת פתרון שמות לאחר LLMNR. השבתתו ברמת ה-DHCP/הממשק דורשת איפוס של תצורת הרשת שה-GPO אינו יכול לבטא במלואו; עם זאת, ערך NetbiosOptions ב-Tcpip\\Parameters\\Interfaces ניתן להגדרה באמצעות אפשרות טווח DHCP מספר 1 או באמצעות רישום ישיר. בדיקה זו מדווחת אם קיים ארטיפקט מדיניות כלשהו ברחבי הדומיין המתייחס לכך, כך שהמבקר יידע אם לחקור בשכבת ה-DHCP או שכבת האימג'ינג.", "status": "machine-draft" },
+    "recommendedValue": { "value": "קיימת שיטה ברחבי הדומיין להשבתת NetBIOS over TCP/IP בתחנות עבודה (DHCP אפשרות 1 = 0x2, העדפת מדיניות קבוצתית, או קו בסיס של אימג'ינג)", "status": "machine-draft" },
+    "remediationSteps": { "value": "השבת NetBIOS over TCP/IP בכל הצי. אפשרויות: (1) הגדר את אפשרות טווח ה-DHCP Microsoft Disable Netbios Option (אפשרות 1) ל-0x2; (2) Group Policy Preferences > Windows Settings > Registry כדי לדחוף NetbiosOptions = 2 לכל מפתח Tcpip_<Interface>; (3) שלב זאת בקו הבסיס של אימג'ינג תחנות העבודה. הגדרה זו ספציפית לממשק ואינה ניתנת לטיפול ישיר באמצעות הגדרות האבטחה הסטנדרטיות של GPO.", "status": "machine-draft" }
+  },
+  "ADNET-007": {
+    "name": { "value": "עמידות למיתון mitm6 של IPv6", "status": "machine-draft" },
+    "description": { "value": "mitm6 הוא המקבילה ב-IPv6 ל-Responder: שרת DHCPv6 זדוני מחלק שרת DNS מקומי לקישור, ואז מרעיל חיפושי WPAD כדי לקצור פרטי הזדהות. ארגונים שלא פרסו IPv6 בדרך כלל גם לא השביתו אותו, ומשאירים IPv6 מקומי לקישור מופעל ללא עמידות הגנתית. המיתון הוא או לפרוס IPv6 כראוי עם RA Guard / DHCPv6 Guard במתג, או להשבית את רכיבי ה-IPv6 באמצעות DisabledComponents = 0xFF.", "status": "machine-draft" },
+    "recommendedValue": { "value": "או ש-IPv6 מושבת ברחבי הדומיין באמצעות DisabledComponents = 0xFF, או שברשת פרוסים RA Guard + DHCPv6 Guard בשכבת הגישה (מחוץ לפס, אינו ניתן לזיהוי מ-AD)", "status": "machine-draft" },
+    "remediationSteps": { "value": "אם אינך משתמש ב-IPv6: דחוף HKLM\\SYSTEM\\CurrentControlSet\\Services\\Tcpip6\\Parameters\\DisabledComponents = 0xFF (הקסדצימלי) באמצעות GPO Registry לכל תחנות העבודה והשרתים. אם אתה כן משתמש ב-IPv6: ודא שמתגי הגישה שלך אוכפים DHCPv6 Guard / RA Guard כך שהודעות DHCPv6 נוכלות ננטשות ביציאה. Microsoft הצהירה במפורש שהשבתת IPv6 לחלוטין אינה מומלצת עבור Windows אך היא מקובלת בסביבות שבהן IPv6 אינו בשימוש.", "status": "machine-draft" }
+  },
+  "ADNET-008": {
+    "name": { "value": "גילוי אוטומטי של WPAD מושבת", "status": "machine-draft" },
+    "description": { "value": "Web Proxy Auto-Discovery פותר את השם 'wpad' באמצעות DNS, NetBIOS או LLMNR ומהין בכל תצורת פרוקסי שחוזרת. תוקף יכול להרעיל כל אחד מפתרונות אלה ולתווך את תעבורת האינטרנט של הקורבן. אפילו עם LLMNR ו-NetBIOS מושבתים, ה-WinHttpAutoProxySvc עדיין יכול לנסות WPAD, ולכן מומלץ GPO של הגנה לעומק המשבית את WPAD כליל.", "status": "machine-draft" },
+    "recommendedValue": { "value": "GPO משבית את WPAD באמצעות 'Turn off auto-proxy result caching' או על ידי הגדרת סוג ההפעלה של WinHttpAutoProxySvc ל-4 (מושבת), או ששרת ה-DNS כולל רשומת wpad ב-GlobalQueryBlockList", "status": "machine-draft" },
+    "remediationSteps": { "value": "שלושה בקרים משלימים: (1) הוסף את 'wpad' ל-GlobalQueryBlockList של שרת ה-DNS: dnscmd /Config /GlobalQueryBlockList wpad isatap; (2) השבת את WinHttpAutoProxySvc באמצעות מדיניות שירותים של GPO; (3) GPO Internet Explorer / Edge: 'Disable changing Automatic Configuration settings' וודא שאין כתובת PAC המוגדרת אוטומטית. (1) הוא התיקון בעל ההשפעה הגדולה ביותר.", "status": "machine-draft" }
+  },
+  "ADNET-009": {
+    "name": { "value": "שירות Print Spooler בבקרי דומיין", "status": "machine-draft" },
+    "description": { "value": "שירות Print Spooler בבקר דומיין הוא נקודת הקצה של RPC המנוצלת בטכניקת הכפייה PrinterBug (ורשימה ארוכה של המשכים כולל CVE-2021-1675 המקורי של PrintNightmare). בשילוב עם כל סינק ממסר NTLM (ADCS Web, LDAP ללא חתימה, SMB ללא חתימה), הוא מעניק לתוקף בלתי מאומת פרימיטיב לכפות על חשבון המחשב של בקר הדומיין לאמת מול יעד לבחירתו. Spooler כמעט אף פעם אינו נחוץ בבקר דומיין.", "status": "machine-draft" },
+    "recommendedValue": { "value": "שירות Print Spooler מושבת (סוג הפעלה 4) ב-Default Domain Controllers Policy", "status": "machine-draft" },
+    "remediationSteps": { "value": "ערוך את Default Domain Controllers Policy: Computer Configuration > Policies > Windows Settings > Security Settings > System Services > Print Spooler > 'Define this policy setting' = Disabled. זה מופץ לכל בקר דומיין ב-gpupdate הבא. אמת בכל בקר דומיין: Get-Service Spooler אמור להציג Status=Stopped, StartType=Disabled. אם בקר דומיין מריץ גם שירותי הדפסה (הוא לא אמור), מצא מארח אחר לתפקיד זה תחילה.", "status": "machine-draft" }
+  },
+  "ADNET-010": {
+    "name": { "value": "מצב ברירת המחדל של שירות WebClient בתחנות עבודה", "status": "machine-draft" },
+    "description": { "value": "שירות WebClient (מנתב מחדש של WebDAV) מאפשר לתוקף לכפות אימות HTTP מתחנת עבודה על ידי הפניה לנתיב UNC המתחיל בשם מארח המכיל '@' (למשל \\\\attacker@80\\share). זוהי המקבילה של PetitPotam בתחנות עבודה והוא מקור הממסר הנפוץ ביותר לתקיפת ADCS Web Enrollment (ESC8). WebClient מופעל לפי דרישה אך יש להגדירו כמושבת ברחבי הדומיין עבור תחנות עבודה שאינן ניידות.", "status": "machine-draft" },
+    "recommendedValue": { "value": "Default Domain Policy משביתה את שירות WebClient (סוג הפעלה 4) עבור כל תחנות העבודה והשרתים החברים שאינם דורשים WebDAV", "status": "machine-draft" },
+    "remediationSteps": { "value": "ערוך את Default Domain Policy: Computer Configuration > Policies > Windows Settings > Security Settings > System Services > WebClient > 'Define this policy setting' = Disabled. אם קבוצת משנה של מארחים (למשל לקוחות SharePoint) אכן זקוקה ל-WebDAV, החל GPO נגדי על יחידות ארגון אלה בלבד. נטר הפעלה מחדש פתאומית.", "status": "machine-draft" }
+  }
+}
