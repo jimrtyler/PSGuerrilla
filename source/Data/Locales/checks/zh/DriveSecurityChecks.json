@@ -1,0 +1,105 @@
+{
+  "_family": "DriveSecurityChecks.json",
+  "DRIVE-001": {
+    "name": { "value": "外部共享默认设置", "status": "machine-draft" },
+    "description": { "value": "应默认限制或禁用向组织外部的共享，以防止意外将数据暴露给外部各方", "status": "machine-draft" },
+    "recommendedValue": { "value": "将外部共享限制为允许列表中的域，或予以禁用", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Drive and Docs > 共享设置 > 将向组织外部的共享设置为“关闭”或“允许列表中的域”", "status": "machine-draft" }
+  },
+  "DRIVE-002": {
+    "name": { "value": "链接共享默认设置", "status": "machine-draft" },
+    "description": { "value": "默认链接共享应设置为“受限”（指定人员），而非宽泛访问，以防止意外的数据暴露", "status": "machine-draft" },
+    "recommendedValue": { "value": "默认链接共享设置为“受限”（仅限指定人员）", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Drive and Docs > 共享设置 > 将默认链接共享设置为“受限”", "status": "machine-draft" }
+  },
+  "DRIVE-003": {
+    "name": { "value": "“知道链接的任何人”共享审计", "status": "machine-draft" },
+    "description": { "value": "以“知道链接的任何人”共享的文件可被互联网上的任何人访问，代表着重大的数据暴露风险", "status": "machine-draft" },
+    "recommendedValue": { "value": "禁用或严格控制“知道链接的任何人”共享", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Drive and Docs > 共享设置 > 禁用“知道链接的任何人”选项，或将其限制为“知道链接的域内用户”", "status": "machine-draft" }
+  },
+  "DRIVE-004": {
+    "name": { "value": "共享云端硬盘创建限制", "status": "machine-draft" },
+    "description": { "value": "应限制共享云端硬盘的创建，以防止不受控制的泛滥，并确保对共享数据存储库进行妥善治理", "status": "machine-draft" },
+    "recommendedValue": { "value": "将共享云端硬盘的创建限制为特定群组或管理员", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Drive and Docs > 共享设置 > 共享云端硬盘创建 > 限制谁可以创建共享云端硬盘", "status": "machine-draft" }
+  },
+  "DRIVE-005": {
+    "name": { "value": "共享云端硬盘成员管理", "status": "machine-draft" },
+    "description": { "value": "应控制共享云端硬盘的成员管理，以防止未经授权的用户被添加或权限被提升", "status": "machine-draft" },
+    "recommendedValue": { "value": "仅管理者可以添加成员和更改访问级别", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Drive and Docs > 共享设置 > 共享云端硬盘设置 > 配置成员管理权限", "status": "machine-draft" }
+  },
+  "DRIVE-006": {
+    "name": { "value": "共享云端硬盘外部共享", "status": "machine-draft" },
+    "description": { "value": "应限制共享云端硬盘上的外部共享，以防止敏感的组织数据被共享到域外", "status": "machine-draft" },
+    "recommendedValue": { "value": "禁用共享云端硬盘上的外部共享，或将其限制为允许列表中的域", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Drive and Docs > 共享设置 > 共享云端硬盘共享 > 限制外部共享", "status": "machine-draft" }
+  },
+  "DRIVE-007": {
+    "name": { "value": "文件所有权转移设置", "status": "machine-draft" },
+    "description": { "value": "应控制文件所有权转移，以防止未经授权的数据迁移，并维护妥善的数据治理链条", "status": "machine-draft" },
+    "recommendedValue": { "value": "将文件所有权转移限制为管理员或受控流程", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Drive and Docs > 所有权转移设置 > 配置限制", "status": "machine-draft" }
+  },
+  "DRIVE-008": {
+    "name": { "value": "允许/阻止 Drive 桌面版", "status": "machine-draft" },
+    "description": { "value": "Drive 桌面版会将文件同步到本地，应加以控制，以防止数据被存储在未受管理的端点上", "status": "machine-draft" },
+    "recommendedValue": { "value": "将 Drive 桌面版限制为受管理的设备，或予以禁用", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Drive and Docs > 功能与应用 > Drive 桌面版 > 配置访问权限", "status": "machine-draft" }
+  },
+  "DRIVE-009": {
+    "name": { "value": "第三方应用的 Drive 访问", "status": "machine-draft" },
+    "description": { "value": "应审查并限制有权访问 Drive 数据的第三方应用，以防止未经授权的数据泄露", "status": "machine-draft" },
+    "recommendedValue": { "value": "限制并审查第三方应用对 Drive 数据的访问", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 安全 > API 控制 > 第三方应用访问权限 > 审查并限制有 Drive 访问权限的应用", "status": "machine-draft" }
+  },
+  "DRIVE-010": {
+    "name": { "value": "Drive DLP 规则审计", "status": "machine-draft" },
+    "description": { "value": "应配置数据丢失防护规则，以检测并防止通过 Google Drive 共享敏感数据", "status": "machine-draft" },
+    "recommendedValue": { "value": "为敏感数据类型（个人身份信息、财务、健康数据）配置 DLP 规则", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 安全 > 数据保护 > 管理规则 > 为 Drive 中的敏感数据类型创建规则", "status": "machine-draft" }
+  },
+  "DRIVE-011": {
+    "name": { "value": "目标受众设置", "status": "machine-draft" },
+    "description": { "value": "目标受众设置控制着共享文件时可以建议的对象，应加以配置以限制意外共享", "status": "machine-draft" },
+    "recommendedValue": { "value": "配置目标受众以适当地限制共享建议", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 目录 > 目标受众 > 审查并配置目标受众群组", "status": "machine-draft" }
+  },
+  "DRIVE-012": {
+    "name": { "value": "Drive 插件设置", "status": "machine-draft" },
+    "description": { "value": "Drive 插件可以访问文件内容，应加以控制，以防止通过不受信任的扩展程序造成数据暴露", "status": "machine-draft" },
+    "recommendedValue": { "value": "将 Drive 插件安装限制为管理员批准的插件", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Drive and Docs > 功能与应用 > 插件 > 配置安装限制", "status": "machine-draft" }
+  },
+  "DRIVE-013": {
+    "name": { "value": "离线访问设置", "status": "machine-draft" },
+    "description": { "value": "离线访问允许 Drive 文件被缓存到设备本地，应加以控制，以防止在共享或未受管理的设备上造成数据暴露", "status": "machine-draft" },
+    "recommendedValue": { "value": "禁用离线访问，或将其限制为受管理的设备", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Drive and Docs > 功能与应用 > 离线 > 禁用或限制离线访问", "status": "machine-draft" }
+  },
+  "DRIVE-014": {
+    "name": { "value": "已禁用 Drive SDK API 访问 (GWS.DRIVEDOCS.4.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.DRIVEDOCS.4.1：Drive SDK 允许第三方应用通过 API 读写 Drive 内容，在被广泛启用时会成为一条直接的数据泄露通道。读取 drive_and_docs.drive_sdk；在 enableDriveSdkApiAccess 处于开启状态时判定为失败。", "status": "machine-draft" },
+    "recommendedValue": { "value": "已禁用 Drive SDK API 访问", "status": "machine-draft" },
+    "remediationSteps": { "value": "在管理控制台 > 应用 > Google Workspace > Drive and Docs > 功能与应用中，禁用 Drive SDK，除非特定的、经过审查的集成需要它。", "status": "machine-draft" }
+  },
+  "DRIVE-015": {
+    "name": { "value": "已启用 Drive 外部文件警告 (GWS.DRIVEDOCS.1.9)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.DRIVEDOCS.1.9：在用户对外共享文件时向其发出警告是一项低摩擦的数据丢失控制措施。读取 drive_and_docs.external_file_warning；在 highlightingEnabled 处于关闭状态时发出警告。", "status": "machine-draft" },
+    "recommendedValue": { "value": "已启用外部文件共享警告", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Drive 共享设置中，启用用户与组织外部人员共享文件时的警告。", "status": "machine-draft" }
+  },
+  "DRIVE-016": {
+    "name": { "value": "已强制实施 Drive 文件安全更新 (GWS.DRIVEDOCS.3.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.DRIVEDOCS.3.1：文件安全更新会收紧受影响文件的链接共享；允许用户移除它会重新开放访问。读取 drive_and_docs.file_security_update；在允许用户移除/管理该安全更新时发出警告。", "status": "machine-draft" },
+    "recommendedValue": { "value": "已应用安全更新，且用户无法移除它", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Drive 设置中，应用文件安全更新，并且不允许用户从其拥有的文件中移除它。", "status": "machine-draft" }
+  },
+  "DRIVE-017": {
+    "name": { "value": "默认文件访问权限设置为“仅所有者可见” (GWS.DRIVEDOCS.1.8)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.DRIVEDOCS.1.8 要求将“仅所有者可见”作为新创建 Drive 内容的默认访问级别，使文件在创建时不会被共享得比预期更广。此检查读取 drive_and_docs.general_access_default Cloud Identity 策略，并标记任何默认文件访问权限不是 PRIVATE_TO_OWNER 的组织部门。", "status": "machine-draft" },
+    "recommendedValue": { "value": "在所有组织部门中，新文件的默认访问级别设置为 PRIVATE_TO_OWNER（defaultFileAccess）。", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Google 管理控制台中，依次进入应用 > Google Workspace > Drive and Docs > 共享设置 > 常规访问权限默认设置，将默认设置为“仅所有者可见”，使新创建的文件起初处于私有状态，仅通过有意的操作进行共享。", "status": "machine-draft" }
+  }
+}

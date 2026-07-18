@@ -1,0 +1,69 @@
+{
+  "_family": "DeviceManagementChecks.json",
+  "DEVICE-001": {
+    "name": { "value": "MDM 策略审计", "status": "machine-draft" },
+    "description": { "value": "访问组织数据的移动设备应通过 MDM 策略进行管理，以强制实施安全控制", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有移动设备均纳入 MDM 管理，并强制实施安全策略", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 设备 > 移动设备 > 审查设备管理状态 > 对未受管理的设备启用高级 MDM", "status": "machine-draft" }
+  },
+  "DEVICE-002": {
+    "name": { "value": "设备审批要求", "status": "machine-draft" },
+    "description": { "value": "移动设备在访问组织数据之前应要求管理员审批，以防止未经授权的设备访问", "status": "machine-draft" },
+    "recommendedValue": { "value": "在访问组织数据之前需要设备审批", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 设备 > 移动设备和端点 > 设置 > 常规 > 要求设备访问需经管理员审批", "status": "machine-draft" }
+  },
+  "DEVICE-003": {
+    "name": { "value": "屏幕锁定强制实施", "status": "machine-draft" },
+    "description": { "value": "应在所有移动设备上强制实施屏幕锁定，以防止未经授权的物理访问接触到组织数据", "status": "machine-draft" },
+    "recommendedValue": { "value": "强制实施屏幕锁定，并设置最低 PIN/密码要求", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 设备 > 移动设备和端点 > 设置 > 通用设置 > 屏幕锁定 > 强制实施屏幕锁定并设置最低复杂度", "status": "machine-draft" }
+  },
+  "DEVICE-004": {
+    "name": { "value": "设备加密要求", "status": "machine-draft" },
+    "description": { "value": "应对所有移动设备要求设备加密，以保护静态数据免遭物理盗窃或丢失的影响", "status": "machine-draft" },
+    "recommendedValue": { "value": "对所有受管理的设备要求加密", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 设备 > 移动设备和端点 > 设置 > 通用设置 > 加密 > 要求设备加密", "status": "machine-draft" }
+  },
+  "DEVICE-005": {
+    "name": { "value": "已攻陷设备阻止", "status": "machine-draft" },
+    "description": { "value": "应自动阻止已被攻陷的设备访问组织数据，以防止数据泄露", "status": "machine-draft" },
+    "recommendedValue": { "value": "已启用对已攻陷设备的检测和阻止", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 设备 > 移动设备和端点 > 设置 > 通用设置 > 已攻陷设备 > 阻止已攻陷设备访问数据", "status": "machine-draft" }
+  },
+  "DEVICE-006": {
+    "name": { "value": "越狱/Root 设备策略", "status": "machine-draft" },
+    "description": { "value": "越狱（iOS）或 Root（Android）的设备会绕过操作系统级别的安全控制，应阻止其访问组织数据", "status": "machine-draft" },
+    "recommendedValue": { "value": "阻止越狱/Root 的设备访问组织数据", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 设备 > 移动设备和端点 > 设置 > 通用设置 > 已攻陷设备 > 阻止越狱/Root 的设备", "status": "machine-draft" }
+  },
+  "DEVICE-007": {
+    "name": { "value": "Chrome 浏览器管理", "status": "machine-draft" },
+    "description": { "value": "用于访问组织数据的 Chrome 浏览器应注册到 Chrome 浏览器云端管理中，以便强制实施策略", "status": "machine-draft" },
+    "recommendedValue": { "value": "Chrome 浏览器已注册到云端管理并强制实施策略", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 设备 > Chrome > 设置 > 审查并配置受管理浏览器的 Chrome 浏览器策略", "status": "machine-draft" }
+  },
+  "DEVICE-008": {
+    "name": { "value": "Chrome 扩展程序白名单/黑名单", "status": "machine-draft" },
+    "description": { "value": "应通过允许列表或阻止列表管理 Chrome 扩展程序，以防止恶意扩展程序访问组织数据", "status": "machine-draft" },
+    "recommendedValue": { "value": "通过允许列表将扩展程序安装限制为管理员批准的扩展程序", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 设备 > Chrome > 应用和扩展程序 > 配置扩展程序允许列表和阻止列表", "status": "machine-draft" }
+  },
+  "DEVICE-009": {
+    "name": { "value": "Chrome OS 设备策略", "status": "machine-draft" },
+    "description": { "value": "Chrome OS 设备应强制实施适当的策略，包括自动更新、登录限制和安全设置", "status": "machine-draft" },
+    "recommendedValue": { "value": "Chrome OS 设备受管理，并强制实施更新、登录和安全策略", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 设备 > Chrome > 设置 > 设备设置 > 配置自动更新、登录限制和安全策略", "status": "machine-draft" }
+  },
+  "DEVICE-010": {
+    "name": { "value": "端点验证设置", "status": "machine-draft" },
+    "description": { "value": "端点验证为情境感知访问策略提供设备信任信号，应予以启用", "status": "machine-draft" },
+    "recommendedValue": { "value": "为情境感知访问启用端点验证", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 设备 > 移动设备和端点 > 设置 > 常规 > 为情境感知访问策略启用端点验证", "status": "machine-draft" }
+  },
+  "DEVICE-011": {
+    "name": { "value": "公司自有设备清单", "status": "machine-draft" },
+    "description": { "value": "应对公司自有设备进行清点，以保持对访问企业数据的组织资产的可见性", "status": "machine-draft" },
+    "recommendedValue": { "value": "维护所有公司自有设备的完整清单", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 设备 > 移动设备 > 审查设备清单 > 确保所有公司自有设备均已注册并纳入统计", "status": "machine-draft" }
+  }
+}

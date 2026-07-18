@@ -1,0 +1,135 @@
+{
+  "_family": "AdminManagementChecks.json",
+  "ADMIN-001": {
+    "name": { "value": "超级管理员账户清单", "status": "machine-draft" },
+    "description": { "value": "所有超级管理员账户都应被清点并审查。超级管理员对所有组织设置和数据拥有不受限制的访问权限", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有超级管理员账户均记录在案，并以明确的业务需要作为理由", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 目录 > 用户 > 按管理员角色筛选 > 审查所有超级管理员账户并移除不必要的分配", "status": "machine-draft" }
+  },
+  "ADMIN-002": {
+    "name": { "value": "管理员角色分配审计", "status": "machine-draft" },
+    "description": { "value": "管理角色分配应遵循最小权限原则。应使用自定义角色，而非宽泛的内置角色", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有管理员角色分配均已审查，并尽可能使用最小权限的自定义角色", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 账号 > 管理员角色 > 审查每一项角色分配 > 用范围受限的自定义角色替换宽泛的角色", "status": "machine-draft" }
+  },
+  "ADMIN-003": {
+    "name": { "value": "委派的管理员权限审查", "status": "machine-draft" },
+    "description": { "value": "应审查自定义管理员角色，以确保委派的权限范围适当，不会授予过多的访问权限", "status": "machine-draft" },
+    "recommendedValue": { "value": "自定义管理员角色的权限范围限定为所需的最低限度", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 账号 > 管理员角色 > 审查每个自定义角色 > 确认权限范围划定适当", "status": "machine-draft" }
+  },
+  "ADMIN-004": {
+    "name": { "value": "未激活/已停用的管理员账户", "status": "machine-draft" },
+    "description": { "value": "已停用或未激活的用户不应保留管理员角色分配。这些账户可能成为重新激活攻击的目标", "status": "machine-draft" },
+    "recommendedValue": { "value": "没有任何已停用或未激活的用户拥有管理员角色分配", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 目录 > 用户 > 筛选已停用的用户 > 从所有已停用账户中移除管理员角色", "status": "machine-draft" }
+  },
+  "ADMIN-005": {
+    "name": { "value": "用户账户清单", "status": "machine-draft" },
+    "description": { "value": "应维护用户账户清单，明确统计处于活动、已停用和已归档状态的账户数量，以便进行治理", "status": "machine-draft" },
+    "recommendedValue": { "value": "完整的用户清单，所有账户均处于适当的活动/已停用/已归档状态", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 目录 > 用户 > 审查用户列表 > 停用或归档不再需要的账户", "status": "machine-draft" }
+  },
+  "ADMIN-006": {
+    "name": { "value": "陈旧的用户账户", "status": "machine-draft" },
+    "description": { "value": "90 天或更长时间无登录记录的用户账户可能已被弃用，应审查是否需要停用或删除", "status": "machine-draft" },
+    "recommendedValue": { "value": "没有任何用户账户在无书面理由的情况下处于非活动状态超过 90 天", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 目录 > 用户 > 按上次登录时间排序 > 审查并停用非活动达 90 天以上的账户", "status": "machine-draft" }
+  },
+  "ADMIN-007": {
+    "name": { "value": "组织部门结构审查", "status": "machine-draft" },
+    "description": { "value": "应审查组织部门结构，以确保能够在适当的范围内有效地应用策略", "status": "machine-draft" },
+    "recommendedValue": { "value": "组织部门结构已记录在案，并有清晰的策略映射", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 目录 > 组织部门 > 审查组织部门层次结构，确保其与策略应用需求相符", "status": "machine-draft" }
+  },
+  "ADMIN-008": {
+    "name": { "value": "目录共享设置", "status": "machine-draft" },
+    "description": { "value": "目录共享控制着谁可以查看组织的联系人和个人资料。应限制外部目录共享", "status": "machine-draft" },
+    "recommendedValue": { "value": "目录共享仅限于内部用户", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 目录 > 目录设置 > 共享设置 > 将联系人共享限制为域内用户", "status": "machine-draft" }
+  },
+  "ADMIN-009": {
+    "name": { "value": "用户个人资料可见性", "status": "machine-draft" },
+    "description": { "value": "应控制用户个人资料信息的可见性，以限制外部行为者进行侦察的可能性", "status": "machine-draft" },
+    "recommendedValue": { "value": "用户个人资料可见性仅限于内部用户", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 目录 > 目录设置 > 个人资料共享 > 限制个人资料可见性", "status": "machine-draft" }
+  },
+  "ADMIN-010": {
+    "name": { "value": "群组设置与外部成员资格", "status": "machine-draft" },
+    "description": { "value": "允许外部成员加入的 Google Groups 可能会将内部通信和数据暴露给未经授权的各方", "status": "machine-draft" },
+    "recommendedValue": { "value": "禁用外部群组成员资格，或在有书面理由的情况下将其限制为特定群组", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Groups for Business > 共享设置 > 限制外部成员资格", "status": "machine-draft" }
+  },
+  "ADMIN-011": {
+    "name": { "value": "群组创建限制", "status": "machine-draft" },
+    "description": { "value": "应限制群组的创建，以防止不受管理的群组泛滥，从而暴露组织数据", "status": "machine-draft" },
+    "recommendedValue": { "value": "群组创建仅限于管理员或特定的委派角色", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Groups for Business > 共享设置 > 限制谁可以创建群组", "status": "machine-draft" }
+  },
+  "ADMIN-012": {
+    "name": { "value": "Groups for Business 设置", "status": "machine-draft" },
+    "description": { "value": "Groups for Business 设置控制着群组功能，包括外部发帖、成员可见性和内容共享", "status": "machine-draft" },
+    "recommendedValue": { "value": "Groups for Business 配置为限制外部访问和发帖", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Groups for Business > 共享设置 > 审查所有设置", "status": "machine-draft" }
+  },
+  "ADMIN-013": {
+    "name": { "value": "超级管理员数量", "status": "machine-draft" },
+    "description": { "value": "超级管理员账户的数量应在 2 到 4 个之间。过少会形成单点故障；过多则会增大攻击面", "status": "machine-draft" },
+    "recommendedValue": { "value": "2 至 4 个超级管理员账户", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 目录 > 用户 > 按超级管理员角色筛选 > 通过移除不必要的超级管理员或添加一个备份账户，将数量调整为 2 至 4 个", "status": "machine-draft" }
+  },
+  "ADMIN-014": {
+    "name": { "value": "Assured Controls：已启用访问审批", "status": "machine-draft" },
+    "description": { "value": "应启用访问审批，以便 Google 支持人员在访问受保护数据之前必须请求并获得组织的批准，从而降低提供商未经授权访问的风险。", "status": "machine-draft" },
+    "recommendedValue": { "value": "已启用访问审批（Google 员工在访问数据前需获得客户批准）", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 数据 > 合规 > Access Management / Access Approvals > 启用要求 Google 支持人员在访问组织数据前请求批准的设置。需要 Assured Controls。", "status": "machine-draft" }
+  },
+  "ADMIN-015": {
+    "name": { "value": "Assured Controls：支持访问权限仅限美国员工", "status": "machine-draft" },
+    "description": { "value": "应将支持访问权限限制为位于美国的 Google 员工，以维护数据主权，并防止受保护数据由非美国人员处理。", "status": "machine-draft" },
+    "recommendedValue": { "value": "支持访问受众仅限于美国的 Google 员工", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 数据 > 合规 > Access Management > 将允许的支持受众设置为仅限美国的 Google 员工。需要 Assured Controls。", "status": "machine-draft" }
+  },
+  "ADMIN-016": {
+    "name": { "value": "Assured Controls：已禁用多区域数据处理", "status": "machine-draft" },
+    "description": { "value": "应对所有 Google Workspace 产品禁用跨多个区域的数据处理，使受保护数据仅在其指定的存储区域内处理，从而维护数据主权。", "status": "machine-draft" },
+    "recommendedValue": { "value": "数据处理仅限于存储区域（已禁用多区域处理）", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 数据 > 合规 > 数据区域 > 在 Calendar、Drive and Docs、Gmail、Chat、Meet 和 Gemini 中启用“将数据处理限制在所选存储区域”。需要 Assured Controls / Data Regions。", "status": "machine-draft" }
+  },
+  "ADMIN-017": {
+    "name": { "value": "不自动信任内部应用 (GWS.COMMONCONTROLS.10.3)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.COMMONCONTROLS.10.3：自动信任内部（域拥有的）OAuth 应用会在未经审查的情况下授予其访问权限，形成一条内部人员/横向数据访问路径。读取 api_controls.internal_apps；在 trustInternalApps 处于开启状态时发出警告。", "status": "machine-draft" },
+    "recommendedValue": { "value": "内部应用不会被自动信任", "status": "machine-draft" },
+    "remediationSteps": { "value": "在管理控制台 > 安全 > API 控制中，禁用对内部应用的自动信任，使其与第三方应用一样接受相同的审查。", "status": "machine-draft" }
+  },
+  "ADMIN-018": {
+    "name": { "value": "已配置静态数据区域 (GWS.COMMONCONTROLS.15.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.COMMONCONTROLS.15.1：设置静态数据区域可强制规定组织数据的存储位置（驻留/合规）。读取 data_regions.data_at_rest_region；在未设置任何区域偏好时发出警告。", "status": "machine-draft" },
+    "recommendedValue": { "value": "已根据组织策略配置特定的静态数据区域", "status": "machine-draft" },
+    "remediationSteps": { "value": "在管理控制台 > 数据 > 数据区域中，设置组织驻留策略所要求的静态数据区域，而不是让它保持未设置状态。", "status": "machine-draft" }
+  },
+  "ADMIN-019": {
+    "name": { "value": "数据处理限制在存储区域内 (GWS.COMMONCONTROLS.15.2)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.COMMONCONTROLS.15.2 要求数据在为静态数据所选的同一区域内进行处理，使处理过程不会将受保护数据移出所选的司法管辖区。此检查读取 data_regions.data_processing_region Cloud Identity 策略，并标记任何未将处理限制在存储区域内的组织部门。", "status": "machine-draft" },
+    "recommendedValue": { "value": "在所有组织部门中，数据处理均限制在存储区域内（limitToStorageRegion = true）。", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Google 管理控制台中，依次进入账号 > 数据区域，启用“仅在所选区域内处理数据”，使处理过程保持在为静态数据所选的区域内。", "status": "machine-draft" }
+  },
+  "ADMIN-020": {
+    "name": { "value": "已阻止访问未配置的第三方应用 (GWS.COMMONCONTROLS.10.4)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.COMMONCONTROLS.10.4 要求不得允许用户访问未配置的第三方应用，因为未经明确审查的应用可能请求宽泛的 OAuth 范围，成为数据泄露或账户接管的途径。此检查读取 api_controls.unconfigured_third_party_apps Cloud Identity 策略，并标记任何访问级别不是 BLOCK_ALL_SCOPES（阻止对未配置应用的所有访问的值）的组织部门。", "status": "machine-draft" },
+    "recommendedValue": { "value": "在所有组织部门中，未配置的第三方应用的访问级别设置为 BLOCK_ALL_SCOPES。", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Google 管理控制台中，依次进入安全 > API 控制 > 应用访问权限控制，将未配置的第三方应用设置为“已阻止”，使用户无法向未经明确配置和审查的应用授予任何访问权限。", "status": "machine-draft" }
+  },
+  "ADMIN-021": {
+    "name": { "value": "限制没有单独控制项的其他 Google 服务 (GWS.COMMONCONTROLS.16.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.COMMONCONTROLS.16.1 建议将没有各自单独管理控制项的 Google 服务对所有人关闭。Google 采用反向语义对此建模：必须启用 enterprise_service_restrictions 服务，才能限制（阻止）这些其他服务。此检查读取 enterprise_service_restrictions.service_status Cloud Identity 策略，并标记任何 serviceState 不是 ENABLED 的组织部门，这意味着用户仍可访问未配置的其他服务。", "status": "machine-draft" },
+    "recommendedValue": { "value": "在所有组织部门中，enterprise_service_restrictions 的 serviceState 设置为 ENABLED（已限制其他服务）。", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Google 管理控制台中，依次进入应用 > 其他 Google 服务，将没有单独控制项的服务的访问设置对所有人设为关闭。这会启用企业服务限制，使用户无法访问那些其他服务。", "status": "machine-draft" }
+  },
+  "ADMIN-022": {
+    "name": { "value": "已禁用抢先体验应用 (GWS.COMMONCONTROLS.16.2)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.COMMONCONTROLS.16.2 建议禁用用户对抢先体验应用的访问，这些应用是尚未完成 Google 完整审查的预发布功能，可能带有未经评估的风险。此检查读取 early_access_apps.service_status Cloud Identity 策略，并标记任何 serviceState 为 ENABLED 的组织部门。", "status": "machine-draft" },
+    "recommendedValue": { "value": "在所有组织部门中，early_access_apps 的 serviceState 不为 ENABLED（已禁用抢先体验应用）。", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Google 管理控制台中，依次进入应用 > 其他 Google 服务 > Early Access Apps，将该服务对所有人关闭，使用户无法启用预发布的抢先体验应用。", "status": "machine-draft" }
+  }
+}

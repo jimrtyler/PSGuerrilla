@@ -1,0 +1,111 @@
+{
+  "_family": "AuthenticationChecks.json",
+  "AUTH-001": {
+    "name": { "value": "2SV 强制实施", "status": "machine-draft" },
+    "description": { "value": "应对所有用户强制实施两步验证（2SV/MFA），以防止攻击者利用被盗凭据接管账户", "status": "machine-draft" },
+    "recommendedValue": { "value": "对所有组织部门强制实施", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 安全 > 身份验证 > 两步验证 > 将强制实施设置为“开启”", "status": "machine-draft" }
+  },
+  "AUTH-002": {
+    "name": { "value": "2SV 注册率", "status": "machine-draft" },
+    "description": { "value": "所有活动用户都应注册 2SV。注册率偏低会使账户容易受到基于凭据的攻击", "status": "machine-draft" },
+    "recommendedValue": { "value": "活动用户的注册率达到 95% 或更高", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 报告 > 用户报告 > 安全 > 审查未使用 2SV 的用户。通过安全 > 两步验证设置注册截止日期", "status": "machine-draft" }
+  },
+  "AUTH-003": {
+    "name": { "value": "2SV 方法强度", "status": "machine-draft" },
+    "description": { "value": "安全密钥应作为主要的 2SV 方法。基于短信和语音的 2SV 容易受到 SIM 卡交换和拦截攻击", "status": "machine-draft" },
+    "recommendedValue": { "value": "强制将安全密钥作为主要方法", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 安全 > 身份验证 > 两步验证 > 将允许的方法设置为“仅安全密钥”", "status": "machine-draft" }
+  },
+  "AUTH-004": {
+    "name": { "value": "密码最小长度", "status": "machine-draft" },
+    "description": { "value": "密码最小长度应至少为 12 个字符，以抵御暴力破解和字典攻击", "status": "machine-draft" },
+    "recommendedValue": { "value": "最少 12 个字符", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 安全 > 身份验证 > 密码管理 > 将最小长度设置为 12 或更高", "status": "machine-draft" }
+  },
+  "AUTH-005": {
+    "name": { "value": "密码重用限制", "status": "machine-draft" },
+    "description": { "value": "用户不应能够重用近期使用过的密码，以防止凭据循环攻击", "status": "machine-draft" },
+    "recommendedValue": { "value": "不允许重用密码", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 安全 > 身份验证 > 密码管理 > 启用“在下次登录时强制实施密码策略”并限制重用", "status": "machine-draft" }
+  },
+  "AUTH-006": {
+    "name": { "value": "会话时长", "status": "machine-draft" },
+    "description": { "value": "应限制 Web 会话时长，以缩小会话劫持和从共享设备进行未经授权访问的时间窗口", "status": "machine-draft" },
+    "recommendedValue": { "value": "会话时长为 12 小时或更短", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 安全 > Google 会话控制 > 设置 Web 会话时长", "status": "machine-draft" }
+  },
+  "AUTH-007": {
+    "name": { "value": "SSO 配置", "status": "machine-draft" },
+    "description": { "value": "如果配置了 SSO，则应使用安全的协议和受信任的身份提供商", "status": "machine-draft" },
+    "recommendedValue": { "value": "SAML SSO 已正确配置并使用受信任的 IdP", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 安全 > 身份验证 > 使用第三方 IdP 的 SSO > 验证配置", "status": "machine-draft" }
+  },
+  "AUTH-008": {
+    "name": { "value": "安全性较低的应用访问", "status": "machine-draft" },
+    "description": { "value": "应阻止安全性较低的应用（不支持现代身份验证的应用），以防止凭据暴露", "status": "machine-draft" },
+    "recommendedValue": { "value": "对所有用户禁用", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 安全 > 身份验证 > 安全性较低的应用 > 设置为“禁止访问安全性较低的应用”", "status": "machine-draft" }
+  },
+  "AUTH-009": {
+    "name": { "value": "应用专用密码策略", "status": "machine-draft" },
+    "description": { "value": "应用专用密码会绕过 2SV，应加以控制。如果允许使用，则应先要求注册 2SV", "status": "machine-draft" },
+    "recommendedValue": { "value": "限制或禁用应用专用密码", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 安全 > 身份验证 > 两步验证 > 审查应用专用密码设置", "status": "machine-draft" }
+  },
+  "AUTH-010": {
+    "name": { "value": "恢复选项配置", "status": "machine-draft" },
+    "description": { "value": "应适当配置用户自助恢复。超级管理员不应设置个人恢复选项，以防止社会工程攻击", "status": "machine-draft" },
+    "recommendedValue": { "value": "超级管理员：无个人恢复。普通用户：允许恢复选项，但由管理员覆盖控制", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 安全 > 身份验证 > 账户恢复 > 对超级管理员组织部门禁用个人恢复", "status": "machine-draft" }
+  },
+  "AUTH-011": {
+    "name": { "value": "登录验证挑战设置", "status": "machine-draft" },
+    "description": { "value": "应启用登录验证挑战，以便在检测到可疑登录尝试时提供额外的验证", "status": "machine-draft" },
+    "recommendedValue": { "value": "已启用登录验证挑战，并使用员工 ID 或其他验证方式", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 安全 > 身份验证 > 登录验证挑战 > 启用", "status": "machine-draft" }
+  },
+  "AUTH-012": {
+    "name": { "value": "超级管理员 2SV 注册", "status": "machine-draft" },
+    "description": { "value": "所有超级管理员账户都必须注册 2SV。超级管理员对所有设置和数据拥有不受限制的访问权限", "status": "machine-draft" },
+    "recommendedValue": { "value": "100% 的超级管理员均已注册 2SV", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 报告 > 用户报告 > 安全 > 按管理员状态筛选 > 确保所有超级管理员均已注册 2SV", "status": "machine-draft" }
+  },
+  "AUTH-013": {
+    "name": { "value": "陈旧的超级管理员账户", "status": "machine-draft" },
+    "description": { "value": "近期未登录的超级管理员账户可能已被弃用，存在被攻陷的风险。所有超级管理员账户都应受到积极管理", "status": "machine-draft" },
+    "recommendedValue": { "value": "没有任何超级管理员账户处于非活动状态超过 90 天", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 目录 > 用户 > 按管理员角色筛选 > 审查并移除或停用非活动的超级管理员账户", "status": "machine-draft" }
+  },
+  "AUTH-014": {
+    "name": { "value": "允许注册 2SV", "status": "machine-draft" },
+    "description": { "value": "必须允许用户注册两步验证。禁用 2SV 注册会阻碍 MFA 的采用，使账户仅靠密码保护", "status": "machine-draft" },
+    "recommendedValue": { "value": "在所有组织部门中允许注册 2SV", "status": "machine-draft" },
+    "remediationSteps": { "value": "安全 > 身份验证 > 两步验证 > 对所有组织部门将“允许用户开启两步验证”设置为开启", "status": "machine-draft" }
+  },
+  "AUTH-015": {
+    "name": { "value": "2SV 注册宽限期", "status": "machine-draft" },
+    "description": { "value": "新添加的用户在必须注册 2SV 之前的宽限期应尽量短。过长的宽限期会使账户在创建后的很长一段时间内得不到 MFA 保护", "status": "machine-draft" },
+    "recommendedValue": { "value": "宽限期为 7 天（168 小时）或更短", "status": "machine-draft" },
+    "remediationSteps": { "value": "安全 > 身份验证 > 两步验证 > 将新用户的注册宽限期设置为 7 天或更短", "status": "machine-draft" }
+  },
+  "AUTH-016": {
+    "name": { "value": "高级保护计划自助注册", "status": "machine-draft" },
+    "description": { "value": "允许自助注册高级保护计划可让高风险用户在无需管理员干预的情况下采用可用的最强账户保护措施", "status": "machine-draft" },
+    "recommendedValue": { "value": "在所有组织部门中允许自助注册高级保护计划", "status": "machine-draft" },
+    "remediationSteps": { "value": "安全 > 身份验证 > 高级保护计划 > 允许用户自助注册高级保护", "status": "machine-draft" }
+  },
+  "AUTH-017": {
+    "name": { "value": "超级管理员账户自助恢复", "status": "machine-draft" },
+    "description": { "value": "超级管理员的自助账户恢复是一条通过社会工程实现账户接管的途径，应予以关闭。超级管理员应仅由另一名管理员进行恢复", "status": "machine-draft" },
+    "recommendedValue": { "value": "在所有组织部门中禁用超级管理员自助恢复", "status": "machine-draft" },
+    "remediationSteps": { "value": "安全 > 身份验证 > 账户恢复 > 对所有组织部门关闭“允许超级管理员恢复其账户”", "status": "machine-draft" }
+  },
+  "AUTH-018": {
+    "name": { "value": "对用户和非超级管理员禁用账户自助恢复 (GWS.COMMONCONTROLS.8.2)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.COMMONCONTROLS.8.2 要求对用户和非超级管理员账户禁用账户自助恢复。自助恢复是一条账户接管途径：控制了恢复渠道的攻击者无需求助台帮助即可夺取账户。此检查读取 security.user_account_recovery Cloud Identity 策略，并标记任何启用了自助恢复的组织部门。", "status": "machine-draft" },
+    "recommendedValue": { "value": "在所有组织部门中，对用户和非超级管理员禁用账户自助恢复（enableAccountRecovery = false）。", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Google 管理控制台中，依次进入安全 > 账户恢复，对用户（和非超级管理员）禁用自助恢复，使账户恢复通过管理员或求助台流程处理，而不是通过用户控制的渠道。", "status": "machine-draft" }
+  }
+}

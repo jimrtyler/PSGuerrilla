@@ -1,0 +1,153 @@
+{
+  "_family": "CollaborationChecks.json",
+  "COLLAB-001": {
+    "name": { "value": "Meet 录制设置", "status": "machine-draft" },
+    "description": { "value": "应控制会议录制设置，以防止未经授权地捕获敏感讨论内容", "status": "machine-draft" },
+    "recommendedValue": { "value": "将录制限制为会议组织者，或对敏感组织部门禁用", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Google Meet > Meet 视频设置 > 录制 > 配置录制权限", "status": "machine-draft" }
+  },
+  "COLLAB-002": {
+    "name": { "value": "Meet 外部参与者设置", "status": "machine-draft" },
+    "description": { "value": "应控制外部参与者对会议的访问，以防止未经授权的出席和信息泄露", "status": "machine-draft" },
+    "recommendedValue": { "value": "外部参与者需经批准或敲门方可加入", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Google Meet > Meet 视频设置 > 参与者 > 要求外部参与者需经批准", "status": "machine-draft" }
+  },
+  "COLLAB-003": {
+    "name": { "value": "Meet 匿名加入设置", "status": "machine-draft" },
+    "description": { "value": "匿名用户（没有 Google 账户）在未经主持人明确批准的情况下不应能够加入会议", "status": "machine-draft" },
+    "recommendedValue": { "value": "禁用匿名加入，或要求主持人批准", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Google Meet > Meet 视频设置 > 参与者 > 禁用匿名加入或要求敲门", "status": "machine-draft" }
+  },
+  "COLLAB-004": {
+    "name": { "value": "Chat 外部通信", "status": "machine-draft" },
+    "description": { "value": "应限制外部聊天通信，以防止通过与外部用户的私信造成数据泄露", "status": "machine-draft" },
+    "recommendedValue": { "value": "对大多数用户限制或禁用外部聊天", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Google Chat > Chat 设置 > 外部聊天 > 将外部聊天限制为特定组织部门", "status": "machine-draft" }
+  },
+  "COLLAB-005": {
+    "name": { "value": "Chat 历史记录设置", "status": "machine-draft" },
+    "description": { "value": "应启用并保留聊天历史记录，以用于合规和审计目的。禁用历史记录可能会掩盖恶意通信", "status": "machine-draft" },
+    "recommendedValue": { "value": "启用聊天历史记录，并按照保留策略予以保留", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Google Chat > Chat 设置 > 历史记录 > 启用历史记录并配置保留", "status": "machine-draft" }
+  },
+  "COLLAB-006": {
+    "name": { "value": "Chat 聊天室外部访问", "status": "machine-draft" },
+    "description": { "value": "允许外部成员加入的聊天室（会议室）可能会将内部通信和共享文件暴露给未经授权的各方", "status": "machine-draft" },
+    "recommendedValue": { "value": "限制或禁用对聊天室的外部访问", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Google Chat > Chat 设置 > 聊天室 > 限制对聊天室的外部访问", "status": "machine-draft" }
+  },
+  "COLLAB-007": {
+    "name": { "value": "Chat 应用安装设置", "status": "machine-draft" },
+    "description": { "value": "应控制聊天应用（机器人）的安装，以防止未经授权的集成访问对话数据", "status": "machine-draft" },
+    "recommendedValue": { "value": "将聊天应用安装限制为管理员批准的应用", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Google Chat > Chat 设置 > 应用 > 将应用安装限制为已批准的应用", "status": "machine-draft" }
+  },
+  "COLLAB-008": {
+    "name": { "value": "Calendar 外部共享", "status": "machine-draft" },
+    "description": { "value": "与外部用户的日历共享应限制为忙/闲信息，以防止暴露会议详情和与会者", "status": "machine-draft" },
+    "recommendedValue": { "value": "外部日历共享仅限于忙/闲信息", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Calendar > 共享设置 > 外部共享选项 > 设置为“仅忙/闲信息”", "status": "machine-draft" }
+  },
+  "COLLAB-009": {
+    "name": { "value": "Calendar 外部邀请", "status": "machine-draft" },
+    "description": { "value": "用户向外部收件人发送日历邀请时应收到警告或受到限制，以防止意外的信息泄露", "status": "machine-draft" },
+    "recommendedValue": { "value": "已启用外部邀请警告", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Calendar > 共享设置 > 启用外部邀请警告", "status": "machine-draft" }
+  },
+  "COLLAB-010": {
+    "name": { "value": "Calendar 预约时段外部可见性", "status": "machine-draft" },
+    "description": { "value": "应控制日历预约时段的可见性，以限制对空闲时间和日程安排详情的外部暴露", "status": "machine-draft" },
+    "recommendedValue": { "value": "限制预约时段的外部可见性", "status": "machine-draft" },
+    "remediationSteps": { "value": "管理控制台 > 应用 > Google Workspace > Calendar > 共享设置 > 审查预约时段可见性设置", "status": "machine-draft" }
+  },
+  "COLLAB-011": {
+    "name": { "value": "Meet 外部参与者标注", "status": "machine-draft" },
+    "description": { "value": "会议中的外部参与者应被明显标注，以便主持人和与会者能够轻松识别外部人员，避免泄露敏感信息", "status": "machine-draft" },
+    "recommendedValue": { "value": "已启用外部参与者标注", "status": "machine-draft" },
+    "remediationSteps": { "value": "应用 > Google Workspace > Google Meet > Meet 安全设置 > 外部参与者 > 启用外部参与者标注", "status": "machine-draft" }
+  },
+  "COLLAB-012": {
+    "name": { "value": "Meet 主持人管理", "status": "machine-draft" },
+    "description": { "value": "应启用主持人管理，使会议主持人保留静音、移除和锁定等审核控制权，以防止会议被劫持和扰乱", "status": "machine-draft" },
+    "recommendedValue": { "value": "已启用主持人管理", "status": "machine-draft" },
+    "remediationSteps": { "value": "应用 > Google Workspace > Google Meet > Meet 安全设置 > 主持人管理 > 启用主持人管理控制", "status": "machine-draft" }
+  },
+  "GROUP-001": {
+    "name": { "value": "已限制对 Google Groups 的外部访问 (GWS.GROUPS.1.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GROUPS.1.1 要求限制 Groups for Business 的共享，使群组无法被组织外部的人访问。当群组共享协作能力未设置为仅限域内用户时，群组内容（在学校中可能包含学生和教职员工数据）就会变得可被外部各方访问。此检查读取 Cloud Identity Policy API 中的 groups_for_business.groups_sharing 策略，并标记任何协作能力不是 DOMAIN_USERS_ONLY 的组织部门。", "status": "machine-draft" },
+    "recommendedValue": { "value": "在所有组织部门中，将群组共享协作能力设置为 DOMAIN_USERS_ONLY", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Google 管理控制台中，依次进入应用 > Google Workspace > Groups for Business > 共享设置，将群组访问权限限制为组织内的用户（而非“互联网上的任何人”），使外部各方无法访问群组内容。", "status": "machine-draft" }
+  },
+  "GROUP-002": {
+    "name": { "value": "群组所有者无法添加外部成员 (GWS.GROUPS.1.2)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GROUPS.1.2 要求不得允许群组所有者添加来自组织外部的成员。外部成员会获得对与群组共享的一切内容的访问权限。此检查标记允许所有者添加外部成员的组织部门（ownersCanAllowExternalMembers 已启用）。", "status": "machine-draft" },
+    "recommendedValue": { "value": "群组所有者无法允许外部成员（ownersCanAllowExternalMembers 已禁用）", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Groups for Business 共享设置中，禁用允许群组所有者添加组织外部成员的选项，使外部成员资格需经管理操作。", "status": "machine-draft" }
+  },
+  "GROUP-003": {
+    "name": { "value": "群组无法接收来自组织外部的邮件 (GWS.GROUPS.1.3)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GROUPS.1.3 要求不得允许群组所有者允许来自组织外部的传入电子邮件。允许公众向群组发送传入邮件是一条传入钓鱼和垃圾邮件途径。此检查标记允许所有者允许来自公众的传入邮件的组织部门（ownersCanAllowIncomingMailFromPublic 已启用）。", "status": "machine-draft" },
+    "recommendedValue": { "value": "群组所有者无法允许来自公众的传入邮件（ownersCanAllowIncomingMailFromPublic 已禁用）", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Groups for Business 共享设置中，禁用允许群组所有者接受来自组织外部的传入电子邮件的选项，除非明确配置，否则将群组邮件限制为内部发件人。", "status": "machine-draft" }
+  },
+  "GROUP-004": {
+    "name": { "value": "群组创建仅限于管理员 (GWS.GROUPS.2.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GROUPS.2.1 建议将创建 Groups for Business 的权限限制为管理员。当任何用户都可以创建群组时，群组的激增会超出治理能力，且外部共享的默认设置可能会在未经审查的情况下被应用。此检查标记创建群组访问级别不是 ADMIN_ONLY 的组织部门。", "status": "machine-draft" },
+    "recommendedValue": { "value": "将群组创建访问级别设置为 ADMIN_ONLY", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Groups for Business 设置中，将“谁可以创建群组”设置为仅限管理员，使新群组的创建经过深思熟虑，并继承经过审查的共享设置。", "status": "machine-draft" }
+  },
+  "GROUP-005": {
+    "name": { "value": "群组对话可见性默认为成员 (GWS.GROUPS.3.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GROUPS.3.1 要求将查看群组对话的默认权限限制为群组成员，而非整个域或公众。过于开放的对话可见性会暴露讨论存档，其中可能包含敏感的学生和教职员工信息。此检查读取 groups_for_business.groups_sharing 策略中的 viewTopicsDefaultAccessLevel，并在默认设置比群组成员更宽泛时发出警告。", "status": "machine-draft" },
+    "recommendedValue": { "value": "将默认对话查看访问权限设置为 GROUP_MEMBERS", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Groups for Business 设置中，将“谁可以查看对话”的默认权限设置为群组成员。", "status": "machine-draft" }
+  },
+  "COLLAB-013": {
+    "name": { "value": "已禁用 Chat 外部文件共享 (GWS.CHAT.2.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.CHAT.2.1 要求禁用 Google Chat 中的外部文件共享（设置为不允许文件）。允许通过 Chat 与外部用户共享文件是一条直接的数据泄露途径。此检查读取 chat.chat_file_sharing，并将任何外部文件共享未设置为 NO_FILES 的组织部门判定为失败。", "status": "machine-draft" },
+    "recommendedValue": { "value": "将 Chat 中的外部文件共享设置为 NO_FILES", "status": "machine-draft" },
+    "remediationSteps": { "value": "在管理控制台中，依次进入应用 > Google Workspace > Google Chat > 外部文件共享，将外部文件共享设置为“不允许文件”，使文件无法通过 Chat 共享给组织外部的人。", "status": "machine-draft" }
+  },
+  "COLLAB-014": {
+    "name": { "value": "Chat 聊天室历史记录处于开启状态 (GWS.CHAT.3.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.CHAT.3.1 要求 Chat 聊天室的历史记录始终开启，使对话得以保留，以用于监督、调查和电子取证。此检查读取 chat.space_history，并在聊天室历史记录未设置为 HISTORY_ALWAYS_ON 时对任何组织部门发出警告。", "status": "machine-draft" },
+    "recommendedValue": { "value": "将 Chat 聊天室历史记录设置为 HISTORY_ALWAYS_ON", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Google Chat 设置中，将聊天室历史记录设置为始终开启，使对话得以保留并可用于监督和电子取证。", "status": "machine-draft" }
+  },
+  "COLLAB-015": {
+    "name": { "value": "会议加入仅限于组织 (GWS.MEET.2.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.MEET.2.1 要求限制对会议的访问，使只有组织内的用户（或受信任的 Workspace 组织）才能加入。让会议对任何人开放会使外部和未经身份验证的各方进入可能涉及学生的会话。此检查读取 meet.safety_access，并将任何 meetingsAllowedToJoin 比 SAME_ORGANIZATION_ONLY / ANY_WORKSPACE_ORGANIZATION 更宽泛的组织部门判定为失败。", "status": "machine-draft" },
+    "recommendedValue": { "value": "将 meetingsAllowedToJoin 设置为 SAME_ORGANIZATION_ONLY（或 ANY_WORKSPACE_ORGANIZATION）", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Google Meet 安全设置中，将可加入会议的人限制为组织内的用户，使外部/未经身份验证的参与者默认无法加入。", "status": "machine-draft" }
+  },
+  "COLLAB-016": {
+    "name": { "value": "Meet 自动转录默认为关闭 (GWS.MEET.5.2)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.MEET.5.2 建议将 Google Meet 中的自动转录默认设为关闭。自动转录会议会在没有深思熟虑决定的情况下捕获并存储对话内容，当有学生在场时尤为敏感。此检查读取 meet.automatic_transcription，并在其默认启用时对任何组织部门发出警告。", "status": "machine-draft" },
+    "recommendedValue": { "value": "默认禁用自动转录", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Google Meet 设置中，默认禁用自动转录，使会议内容仅在主持人有意启用时才被捕获。", "status": "machine-draft" }
+  },
+  "COLLAB-017": {
+    "name": { "value": "已管理 Calendar 外部互操作性 (GWS.CALENDAR.3.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.CALENDAR.3.1 要求 Calendar Interop（与外部系统如 Microsoft Exchange 共享忙/闲和日历数据）保持关闭，除非有意加以管理。Interop 会将日历数据桥接到外部平台。此检查读取 calendar.interoperability，并在 enableInteroperability 处于开启状态时对任何组织部门发出警告。", "status": "machine-draft" },
+    "recommendedValue": { "value": "禁用日历互操作性，除非有意加以管理", "status": "machine-draft" },
+    "remediationSteps": { "value": "在管理控制台中，依次进入应用 > Google Workspace > Calendar > Calendar Interop 管理，禁用互操作性，除非经过审查的集成需要它。", "status": "machine-draft" }
+  },
+  "COLLAB-018": {
+    "name": { "value": "已禁用 Calendar 预约付款 (GWS.CALENDAR.4.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.CALENDAR.4.1 建议禁用付费预约日程。此检查读取 calendar.appointment_schedules，并在 enablePayments 处于开启状态时对任何组织部门发出警告。", "status": "machine-draft" },
+    "recommendedValue": { "value": "已禁用付费预约日程", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Google Calendar 预约日程设置中，禁用付款，除非组织有意使用付费预约。", "status": "machine-draft" }
+  },
+  "COLLAB-019": {
+    "name": { "value": "Meet 自动录制默认为关闭 (GWS.MEET.5.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.MEET.5.1 建议将 Google Meet 中的自动录制默认设为关闭。自动录制会在没有深思熟虑决定的情况下捕获并存储会议视频/音频，当有学生在场时尤为敏感。此检查读取 meet.automatic_recording，并在其默认启用时对任何组织部门发出警告。", "status": "machine-draft" },
+    "recommendedValue": { "value": "默认禁用自动录制", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Google Meet 设置中，默认禁用自动录制，使会议仅在主持人有意开始录制时才被录制。", "status": "machine-draft" }
+  },
+  "GROUP-006": {
+    "name": { "value": "群组在目录中可见 (GWS.GROUPS.4.1)", "status": "machine-draft" },
+    "description": { "value": "SCuBA GWS.GROUPS.4.1 要求群组不得可从目录中隐藏，隐藏的群组会削弱对谁可被联系以及存在哪些访问权限的透明度和监督。此检查读取 groups_for_business.groups_sharing 策略，并在所有者可以隐藏群组（ownersCanHideGroups）或新群组默认被隐藏（newGroupsAreHidden）时对任何组织部门发出警告。", "status": "machine-draft" },
+    "recommendedValue": { "value": "所有者无法隐藏群组，且新群组默认不被隐藏", "status": "machine-draft" },
+    "remediationSteps": { "value": "在 Groups for Business 设置中，阻止群组所有者从目录中隐藏群组，并确保新群组默认不被隐藏，以保持目录透明度。", "status": "machine-draft" }
+  }
+}
