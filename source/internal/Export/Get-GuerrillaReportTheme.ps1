@@ -310,6 +310,9 @@ tr.finding-extra:hover td { background: var(--g-surface); }
 .affected-items { margin: 0.3em 0 0; padding-left: 1.4rem; }
 .affected-items li { word-break: break-word; margin: 0.1em 0; }
 .affected-items li.more { list-style: none; margin-left: -1.4rem; font-style: italic; color: var(--g-muted); }
+.affected-items li.affected-group { margin: 0.35em 0; font-weight: 600; }
+.affected-sub { margin: 0.15em 0 0; padding-left: 1.2rem; list-style-type: circle; }
+.affected-sub li { font-weight: 400; color: var(--g-muted); word-break: break-all; margin: 0.05em 0; }
 
 /* Interactive findings filter */
 .gg-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin: 1rem 0; padding: 0.7rem 0.9rem; background: var(--g-surface); border-radius: var(--radius); }

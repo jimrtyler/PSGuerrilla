@@ -343,44 +343,85 @@ function Get-GuerrillaIndicatorsOfExposureHtml {
 # 25 items, appending a "+N more" bullet beyond that. HTML-encodes every item. Returns '' when there
 # is nothing to render. Shared so the AD / Entra / GWS / Campaign reports all surface affected entities
 # the same way.
+#
+# An entry may also be an array of GROUPS — elements carrying both a Label and an Items collection
+# (hashtable or object) — which render as a bullet per group with its own indented sub-list. That is
+# how a finding surfaces two-level evidence, e.g. GWS-K12-004's one-bullet-per-delegation-grant with
+# the scopes each grant holds nested beneath it. Both levels are capped independently at 25.
+# Arrays of any OTHER object shape are still skipped deliberately: findings whose rich detail already
+# has a dedicated section (ADPATH's Details.Paths/Chains -> the Attack Paths section) must not be
+# duplicated here, so opting in means adopting the Label/Items shape.
 function Get-GuerrillaReportAffectedHtml {
     param([hashtable]$Details, [string]$Language = 'en')
     if (-not $Details -or $Details.Count -eq 0) { return '' }
+
+    # Reads a named member from either a hashtable or an object; $null when absent.
+    $member = {
+        param($o, [string]$n)
+        if ($null -eq $o) { return $null }
+        if ($o -is [System.Collections.IDictionary]) {
+            if ($o.Contains($n)) { return $o[$n] }
+            return $null
+        }
+        $prop = $o.PSObject.Properties[$n]
+        if ($prop) { return $prop.Value }
+        return $null
+    }
 
     $t = Get-GuerrillaReportStringResolver -Language $Language -Raw
     $pairs = [System.Collections.Generic.List[object]]::new()
     if ($Details.ContainsKey('AffectedItems')) {
         $lbl = if ($Details.AffectedLabel) { [string]$Details.AffectedLabel } else { & $t 'sections.affectedItems' }
-        $pairs.Add(@{ Label = $lbl; Items = @($Details.AffectedItems) })
+        $pairs.Add(@{ Label = $lbl; Items = @($Details.AffectedItems); Grouped = $false })
     } else {
         foreach ($k in $Details.Keys) {
             if ($k -in @('AffectedItems', 'AffectedLabel')) { continue }
             $v = $Details[$k]
             if ($v -is [string] -or $v -is [valuetype]) { continue }
             if ($v -is [System.Collections.IEnumerable]) {
-                $arr = @($v)
+                $arr = @($v | Where-Object { $null -ne $_ })
                 if ($arr.Count -eq 0) { continue }
                 $scalar = $true
+                $grouped = $true
                 foreach ($el in $arr) {
-                    if (-not ($el -is [string] -or $el -is [valuetype])) { $scalar = $false; break }
+                    if ($el -is [string] -or $el -is [valuetype]) { $grouped = $false; continue }
+                    $scalar = $false
+                    if ($null -eq (& $member $el 'Label') -or $null -eq (& $member $el 'Items')) { $grouped = $false }
                 }
-                if (-not $scalar) { continue }
+                if (-not $scalar -and -not $grouped) { continue }
                 $label = ($k -creplace '([a-z0-9])([A-Z])', '$1 $2')
-                $pairs.Add(@{ Label = $label; Items = $arr })
+                $pairs.Add(@{ Label = $label; Items = $arr; Grouped = (-not $scalar) })
             }
         }
     }
 
+    $enc = { param($s) [System.Web.HttpUtility]::HtmlEncode([string]$s) }
     $out = [System.Text.StringBuilder]::new()
     foreach ($p in $pairs) {
         $items = @($p.Items)
         if ($items.Count -eq 0) { continue }
         $cap = 25
         $shown = @($items | Select-Object -First $cap)
-        $lbl = [System.Web.HttpUtility]::HtmlEncode([string]$p.Label)
+        $lbl = & $enc $p.Label
         [void]$out.Append("<div class=`"affected`"><span class=`"affected-label`">$lbl ($($items.Count)):</span><ul class=`"affected-items`">")
         foreach ($it in $shown) {
-            [void]$out.Append("<li>$([System.Web.HttpUtility]::HtmlEncode([string]$it))</li>")
+            if (-not $p.Grouped) {
+                [void]$out.Append("<li>$(& $enc $it)</li>")
+                continue
+            }
+            [void]$out.Append("<li class=`"affected-group`">$(& $enc (& $member $it 'Label'))")
+            $sub = @((& $member $it 'Items') | Where-Object { $null -ne $_ })
+            if ($sub.Count -gt 0) {
+                [void]$out.Append('<ul class="affected-sub">')
+                foreach ($s in @($sub | Select-Object -First $cap)) {
+                    [void]$out.Append("<li>$(& $enc $s)</li>")
+                }
+                if ($sub.Count -gt $cap) {
+                    [void]$out.Append("<li class=`"more`">+$($sub.Count - $cap) more</li>")
+                }
+                [void]$out.Append('</ul>')
+            }
+            [void]$out.Append('</li>')
         }
         if ($items.Count -gt $cap) {
             [void]$out.Append("<li class=`"more`">+$($items.Count - $cap) more</li>")

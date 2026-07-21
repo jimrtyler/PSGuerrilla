@@ -66,25 +66,44 @@ function Test-GWSK12004 {
     # list; which vendors are legitimate is the district's determination, so
     # this reports WARN with the list, never a hard FAIL.
     $sensitivePattern = '(?i)auth/(gmail|drive|admin\.directory|contacts|calendar|cloud-platform|apps\.groups|classroom)'
-    $review = foreach ($g in $grants) {
-        $scopes = @($g.scopes)
-        $sensitive = @($scopes | Where-Object { "$_" -match $sensitivePattern })
-        if ($sensitive.Count) {
-            [pscustomobject]@{
-                ClientId       = "$($g.clientId)"
-                DisplayText    = "$($g.displayText)"
-                SensitiveCount = $sensitive.Count
-                ScopeCount     = $scopes.Count
-            }
+
+    # Every grant, with the scopes it actually holds. The remediation asks the operator to narrow
+    # scope sets, so the report has to name the scopes -- a count alone sends them back to the Admin
+    # Console to re-derive what we already read. Rendered as one bullet per grant with its scopes
+    # nested beneath (the Label/Items group shape Get-GuerrillaReportAffectedHtml understands).
+    $catalog = foreach ($g in $grants) {
+        $scopes = @($g.scopes | Where-Object { $null -ne $_ } | ForEach-Object { "$_" })
+        $sensitive = @($scopes | Where-Object { $_ -match $sensitivePattern })
+        $label = if ($g.displayText) { "$($g.displayText) (client $($g.clientId))" } else { "client $($g.clientId)" }
+        $suffix = if ($sensitive.Count) { "$($sensitive.Count) of $($scopes.Count) scope(s) sensitive" }
+                  elseif ($scopes.Count)  { "$($scopes.Count) scope(s), none sensitive" }
+                  else                    { 'no scopes granted' }
+        [pscustomobject]@{
+            ClientId       = "$($g.clientId)"
+            DisplayText    = "$($g.displayText)"
+            SensitiveCount = $sensitive.Count
+            ScopeCount     = $scopes.Count
+            # Strip the constant googleapis prefix so the distinguishing part of each scope leads;
+            # anything not matching that shape stays verbatim.
+            Label          = "$label - $suffix"
+            Items          = @($scopes | ForEach-Object {
+                $short = $_ -replace '^https?://www\.googleapis\.com/auth/', ''
+                if ($_ -match $sensitivePattern) { "$short  [sensitive]" } else { $short }
+            })
         }
     }
-    $review = @($review)
+    $catalog = @($catalog)
+    $review = @($catalog | Where-Object { $_.SensitiveCount -gt 0 })
 
     if ($review.Count -eq 0) {
         return New-AuditFinding -CheckDefinition $CheckDefinition -Status 'PASS' `
             -CurrentValue ("$($grants.Count) domain-wide delegation grant(s) exist; none carries mail, Drive, " +
                 'directory, contacts, calendar, or Classroom scopes. Review the list for departed vendors as part of routine hygiene.') `
-            -OrgUnitPath $OrgUnitPath -Details @{ GrantCount = $grants.Count }
+            -OrgUnitPath $OrgUnitPath `
+            -Details @{
+                GrantCount       = $grants.Count
+                DelegationGrants = $catalog
+            }
     }
 
     $names = @($review | ForEach-Object {
@@ -97,10 +116,10 @@ function Test-GWSK12004 {
             'and the narrowest workable scope set; remove grants for departed vendors.') `
         -OrgUnitPath $OrgUnitPath `
         -Details @{
-            GrantCount     = $grants.Count
-            ReviewCount    = $review.Count
-            ReviewClients  = @($review | ForEach-Object { $_.ClientId })
-            Note           = 'Grant age and last use are not exposed by the delegation API; a token-activity collector is proposed to strengthen staleness detection.'
+            GrantCount       = $grants.Count
+            ReviewCount      = $review.Count
+            DelegationGrants = $catalog
+            Note             = 'Grant age and last use are not exposed by the delegation API; a token-activity collector is proposed to strengthen staleness detection.'
         }
 }
 
